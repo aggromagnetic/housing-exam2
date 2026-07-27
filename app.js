@@ -259,6 +259,9 @@ function renderQuizQuestion() {
     const currentQ = quizQuestions[quizCurrentIndex];
     if (!currentQ) return;
 
+    // Reset instant answer box
+    document.getElementById('quiz-instant-answer-box').style.display = 'none';
+
     // Progress bar
     const progress = ((quizCurrentIndex + 1) / quizQuestions.length) * 100;
     document.getElementById('quiz-progress-fill').style.width = `${progress}%`;
@@ -285,6 +288,32 @@ function renderQuizQuestion() {
         nextBtn.innerText = '다음 문제';
         nextBtn.style.background = 'var(--accent-blue)';
     }
+}
+
+function showInstantAnswer() {
+    const currentQ = quizQuestions[quizCurrentIndex];
+    if (!currentQ) return;
+
+    // Mark as wrong answer in user input
+    userAnswers[quizCurrentIndex] = '(모름/정답확인)';
+    document.getElementById('quiz-answer-input').value = '(모름/정답확인)';
+
+    // Increase wrong count in stats immediately
+    if (!quizStats[currentQ.id]) {
+        quizStats[currentQ.id] = { wrongCount: 0, tryCount: 0 };
+    }
+    quizStats[currentQ.id].wrongCount += 1;
+    quizStats[currentQ.id].tryCount += 1;
+    saveLocalStats();
+
+    // Show answer box
+    const box = document.getElementById('quiz-instant-answer-box');
+    const ansTextEl = document.getElementById('quiz-instant-ans-text');
+    const linkBtn = document.getElementById('quiz-instant-link-btn');
+
+    ansTextEl.innerHTML = `정답: <span style="color: #34d399; font-size: 16px;">${escapeHtml(currentQ.answerRaw)}</span>`;
+    linkBtn.onclick = () => selectLecture(currentQ.noteFileName, currentQ.anchorId);
+    box.style.display = 'block';
 }
 
 function handleQuizEnter(e) {
