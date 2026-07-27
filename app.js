@@ -16,17 +16,29 @@ let quizCurrentIndex = 0;
 let userAnswers = [];
 let quizStats = {}; // LocalStorage synced: { quizId: { wrongCount, tryCount, weight } }
 
-document.addEventListener('DOMContentLoaded', async () => {
-    loadLocalStats();
-    initSidebarState();
-    await fetchStudyData();
-    renderLectureList();
-    
-    // Auto load first lecture if available
-    if (studyData.lectures.length > 0) {
-        selectLecture(studyData.lectures[0].fileName);
-    }
+document.addEventListener('DOMContentLoaded', () => {
+    initSavedTheme();
+    initApp();
 });
+
+async function initApp() {
+    try {
+        const response = await fetch('data/study_data.json');
+        studyData = await response.json();
+
+        loadLocalStats();
+        renderLectureList();
+        initSidebarState();
+        
+        // Default View is Home Landing Cover
+        switchView('home');
+
+        // Handle URL Hash if deep linked
+        handleUrlHash();
+    } catch (err) {
+        console.error('Failed to load study data:', err);
+    }
+}
 
 function initSidebarState() {
     if (window.innerWidth > 768) {
@@ -204,6 +216,8 @@ function selectLecture(fileNameOrPath, anchorId = null) {
             applyClozeMaskToIframe();
         }
     };
+
+    switchView('viewer');
 
     if (window.innerWidth <= 768) {
         closeSidebar();
