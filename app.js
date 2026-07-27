@@ -18,6 +18,7 @@ let quizStats = {}; // LocalStorage synced: { quizId: { wrongCount, tryCount, we
 
 document.addEventListener('DOMContentLoaded', async () => {
     loadLocalStats();
+    initSidebarState();
     await fetchStudyData();
     renderLectureList();
     
@@ -26,6 +27,22 @@ document.addEventListener('DOMContentLoaded', async () => {
         selectLecture(studyData.lectures[0].fileName);
     }
 });
+
+function initSidebarState() {
+    const isCollapsed = localStorage.getItem('sidebar_collapsed') === 'true';
+    if (isCollapsed) {
+        document.querySelector('.sidebar')?.classList.add('collapsed');
+    }
+}
+
+function toggleSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    if (!sidebar) return;
+
+    sidebar.classList.toggle('collapsed');
+    const collapsed = sidebar.classList.contains('collapsed');
+    localStorage.setItem('sidebar_collapsed', collapsed);
+}
 
 function loadLocalStats() {
     try {

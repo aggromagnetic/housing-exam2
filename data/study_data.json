@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-07-27T09:06:27.778Z",
-  "totalLectures": 68,
+  "updatedAt": "2026-07-27T09:28:56.470Z",
+  "totalLectures": 72,
   "totalQuizzes": 322,
   "lectures": [
     {
@@ -1062,6 +1062,54 @@
         "5. 구직급여 · 육아휴직 급여 · 출산전후휴가 급여 핵심 조건 종합 비교표"
       ],
       "quizCount": 17
+    },
+    {
+      "relativePath": "단원별문제/관리실무/1주택법관련30문제.html",
+      "fileName": "1주택법관련30문제.html",
+      "subject": "관리실무(문제)",
+      "lectureNum": 0,
+      "title": "주택법 일타마스터 2차 모의고사",
+      "subHeadings": [
+        "시험장으로 가기 전, 마지막으로 확인해야 할 주택법 30제",
+        "학습 종료! 실시간 레포트"
+      ],
+      "quizCount": 0
+    },
+    {
+      "relativePath": "단원별문제/관리실무/2주택법공동주택관리법.html",
+      "fileName": "2주택법공동주택관리법.html",
+      "subject": "관리실무(문제)",
+      "lectureNum": 0,
+      "title": "주택관리사보 2차 1타 강사 실전 모의고사",
+      "subHeadings": [
+        "주택관리사보 2차 실전 모의고사 40문항",
+        "채점 및 성능 분석 완료"
+      ],
+      "quizCount": 0
+    },
+    {
+      "relativePath": "단원별문제/관리실무/3 단원별학습.html",
+      "fileName": "3 단원별학습.html",
+      "subject": "관리실무(문제)",
+      "lectureNum": 0,
+      "title": "주택관리사보 2차 합격 메이커",
+      "subHeadings": [
+        "건축법령상 주택에 관한 설명 중 옳은 것은?",
+        "학습 성적 종합 리포트"
+      ],
+      "quizCount": 0
+    },
+    {
+      "relativePath": "단원별문제/관리실무/4 단원별학습.html",
+      "fileName": "4 단원별학습.html",
+      "subject": "관리실무(문제)",
+      "lectureNum": 0,
+      "title": "주택관리사보 2차 합격 일타강사",
+      "subHeadings": [
+        "일타강사의 합격 레슨 정밀 검수 완료",
+        "실전 모의고사 최종 결과"
+      ],
+      "quizCount": 0
     },
     {
       "relativePath": "단원별문제/2주택법공동주택관리법.html",
