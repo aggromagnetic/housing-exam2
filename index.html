@@ -47,12 +47,19 @@
         </div>
     </header>
 
+    <!-- Sidebar Overlay Backdrop for Mobile -->
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
     <!-- App Container -->
     <div class="app-container">
         
         <!-- Sidebar: Lecture Tree -->
-        <aside class="sidebar">
+        <aside class="sidebar" id="app-sidebar">
             <div class="sidebar-header">
+                <div class="sidebar-title-row">
+                    <span>📚 강의 노트 목차</span>
+                    <button class="btn-icon" onclick="closeSidebar()" style="width:28px; height:28px;">✕</button>
+                </div>
                 <div class="subject-filter">
                     <button class="filter-chip active" id="chip-all" onclick="filterSubject('all')">전체</button>
                     <button class="filter-chip" id="chip-rel" onclick="filterSubject('관계법규')">관계법규</button>
@@ -79,7 +86,7 @@
                     </div>
                     <div class="viewer-controls">
                         <button class="toggle-btn" id="btn-mask-toggle" onclick="toggleClozeMask()">
-                            🔒 숫자/조문 가리기 (암기장 모드)
+                            🔒 숫자/조문 가리기
                         </button>
                     </div>
                 </div>
@@ -157,6 +164,26 @@
 
         </main>
     </div>
+
+    <!-- Mobile Bottom Navigation Bar -->
+    <nav class="mobile-bottom-nav">
+        <button class="mobile-nav-item active" id="m-nav-viewer" onclick="switchView('viewer')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+            <span>강의노트</span>
+        </button>
+        <button class="mobile-nav-item" id="m-nav-quiz" onclick="startQuizMode()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            <span>20퀴즈</span>
+        </button>
+        <button class="mobile-nav-item" id="m-nav-result" onclick="switchView('result')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+            <span>오답노트</span>
+        </button>
+        <button class="mobile-nav-item" id="m-nav-search" onclick="focusSearch()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <span>검색</span>
+        </button>
+    </nav>
 
     <script src="app.js"></script>
 </body>
