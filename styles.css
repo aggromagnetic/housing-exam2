@@ -225,35 +225,6 @@ body {
     border-color: var(--accent-blue);
 }
 
-.floating-sidebar-btn {
-    position: absolute;
-    top: 14px;
-    left: 14px;
-    z-index: 80;
-    background: var(--accent-blue);
-    color: #fff;
-    border: none;
-    padding: 8px 14px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
-    display: none;
-    align-items: center;
-    gap: 6px;
-    transition: all 0.2s ease;
-}
-
-.floating-sidebar-btn:hover {
-    transform: scale(1.05);
-    background: var(--accent-blue-hover);
-}
-
-.sidebar.collapsed + .main-content .floating-sidebar-btn {
-    display: flex;
-}
-
 /* Responsive design for tablets & mobile */
 @media (max-width: 1024px) {
     :root {
