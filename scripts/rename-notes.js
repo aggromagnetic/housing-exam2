@@ -38,29 +38,34 @@ function autoRenameNotes() {
     fileObjs.forEach(fileObj => {
         const content = fs.readFileSync(fileObj.fullPath, 'utf-8');
         
-        // Match <h1> (e.g. 제29강. 하자보수보증금...)
+        // Extract lecture number and title from <h1>
         const h1Match = content.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i);
         if (!h1Match) return;
 
-        const h1Text = h1Match[1].replace(/<[^>]*>/g, '').replace(/&nbsp;/gi, ' ').trim();
-        const lectureMatch = h1Text.match(/제\s*(\d+)\s*강/);
-        
-        if (lectureMatch) {
-            const num = parseInt(lectureMatch[1], 10);
-            const numStr = num < 10 ? `0${num}` : `${num}`;
-            
-            // Extract clean title part after "제XX강."
-            const titlePart = h1Text.replace(/^제\s*\d+\s*강[\.\s]*/, '').trim();
-            const cleanTitle = cleanFileName(titlePart).slice(0, 30);
+        const h1Text = h1Match[1].replace(/<[^>]+>/g, '').trim();
 
-            const newFileName = `${numStr}강_${cleanTitle}.html`;
-            const newPath = path.join(fileObj.dirPath, newFileName);
+        // Pattern A: 제XX강. 타이틀 / Pattern B: [XX강] 타이틀 / Pattern C: XX강. 타이틀
+        const numMatch = h1Text.match(/제\s*(\d+)\s*강|\[\s*(\d+)\s*강\s*\]|^(\d+)\s*강/);
+        if (!numMatch) return;
 
-            if (fileObj.fileName !== newFileName && !fs.existsSync(newPath)) {
-                console.log(`Renaming: "${fileObj.fileName}" -> "${newFileName}"`);
-                fs.renameSync(fileObj.fullPath, newPath);
-                renamedCount++;
-            }
+        const lecNumInt = parseInt(numMatch[1] || numMatch[2] || numMatch[3], 10);
+        const padNum = String(lecNumInt).padStart(2, '0');
+
+        // Extract title body
+        let cleanTitle = h1Text.replace(/^제\s*\d+\s*강[\.\s]*|^\[\s*\d+\s*강\s*\][\.\s]*/, '').trim();
+        cleanTitle = cleanTitle.replace(/[/\\?%*:|"<>]/g, '').replace(/\s+/g, '_');
+
+        if (cleanTitle.length > 30) {
+            cleanTitle = cleanTitle.slice(0, 30);
+        }
+
+        const newFileName = `${padNum}강_${cleanTitle}.html`;
+        const newPath = path.join(fileObj.dirPath, newFileName);
+
+        if (fileObj.fileName !== newFileName && !fs.existsSync(newPath)) {
+            console.log(`Renaming: "${fileObj.fileName}" -> "${newFileName}"`);
+            fs.renameSync(fileObj.fullPath, newPath);
+            renamedCount++;
         }
     });
 

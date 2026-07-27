@@ -145,6 +145,8 @@ function renderLectureList() {
         return l.subject === currentSubjectFilter;
     });
 
+    filtered.sort((a, b) => a.lectureNum - b.lectureNum);
+
     if (filtered.length === 0) {
         container.innerHTML = `<div style="padding: 20px; color: var(--text-muted); font-size: 13px;">해당하는 강의 노트가 없습니다.</div>`;
         return;
