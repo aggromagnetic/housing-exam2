@@ -59,15 +59,29 @@ function toggleSidebar() {
 function openSidebar() {
     const sidebar = document.getElementById('app-sidebar');
     const overlay = document.getElementById('sidebar-overlay');
-    sidebar?.classList.add('open');
-    overlay?.classList.add('active');
+    if (!sidebar) return;
+
+    if (window.innerWidth <= 768) {
+        sidebar.classList.add('open');
+        overlay?.classList.add('active');
+    } else {
+        sidebar.classList.remove('collapsed');
+        localStorage.setItem('sidebar_collapsed', 'false');
+    }
 }
 
 function closeSidebar() {
     const sidebar = document.getElementById('app-sidebar');
     const overlay = document.getElementById('sidebar-overlay');
-    sidebar?.classList.remove('open');
-    overlay?.classList.remove('active');
+    if (!sidebar) return;
+
+    if (window.innerWidth <= 768) {
+        sidebar.classList.remove('open');
+        overlay?.classList.remove('active');
+    } else {
+        sidebar.classList.add('collapsed');
+        localStorage.setItem('sidebar_collapsed', 'true');
+    }
 }
 
 function focusSearch() {
