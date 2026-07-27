@@ -22,34 +22,27 @@
         </div>
 
         <div class="nav-tabs">
-            <button class="nav-btn active" id="btn-tab-home" onclick="switchView('home')">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-                홈
-            </button>
-            <button class="nav-btn" id="btn-tab-viewer" onclick="switchView('viewer')">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 1 4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
-                강의 노트
+            <button class="nav-btn active" id="btn-tab-viewer" onclick="switchView('viewer')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                강의 노트 뷰어
             </button>
             <button class="nav-btn" id="btn-tab-quiz" onclick="resumeQuizMode()">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                풀던 퀴즈
+                풀던 퀴즈로 돌아가기
             </button>
             <button class="nav-btn" id="btn-tab-result" onclick="switchView('result')" style="display: none;">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                오답 리포트
+                퀴즈 오답 리포트
             </button>
         </div>
 
         <div class="header-actions">
-            <button class="btn-icon" id="btn-theme-toggle" onclick="toggleTheme()" title="다크/라이트 모드 전환" style="margin-right: 4px;">
-                🌙
-            </button>
             <div class="search-box">
                 <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                 <input type="text" id="global-search-input" class="search-input" placeholder="조문, 숫자, 키워드 검색..." onkeyup="handleGlobalSearch(event)">
             </div>
             <button class="btn-quiz-start" onclick="startQuizMode()">
-                🎯 새 퀴즈 (20문제)
+                🎯 실전 퀴즈 시작 (20문제)
             </button>
         </div>
     </header>
@@ -83,56 +76,6 @@
 
         <!-- Main Content Area -->
         <main class="main-content">
-            <!-- 0. Home Welcome Dashboard View -->
-            <section id="panel-home" class="view-panel active">
-                <div class="home-hero-container">
-                    <img src="assets/housing_exam_hero.jpg" alt="주택관리사 2차 관계법규 관리실무 커버 비주얼" class="home-hero-img">
-                    <div class="home-hero-overlay">
-                        <div class="home-hero-badge">2026 주택관리사보 2차 합격 스마트 패스</div>
-                        <h1 class="home-hero-title">관계법규 & 관리실무<br>스마트 합격 마스터</h1>
-                        <p class="home-hero-sub">최신 개정 법령 완벽 반영 · 스마트 오답 가중치 훈련 시스템 · 조문 & 숫자 기출 완전 정복</p>
-                        
-                        <div class="home-hero-actions">
-                            <button class="btn-hero-primary" onclick="selectLecture('관계법규/01강_오리엔테이션_및_주택법·건축법의_기초.html')">
-                                📚 관계법규 1강부터 공부하기
-                            </button>
-                            <button class="btn-hero-secondary" onclick="selectLecture('관리실무/01강_오리엔테이션_및_공동주택의_정의.html')">
-                                📘 관리실무 1강부터 공부하기
-                            </button>
-                            <button class="btn-hero-quiz" onclick="startQuizMode()">
-                                🎯 20문항 실전 퀴즈 풀기
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="home-dashboard-grid">
-                    <div class="dashboard-card" onclick="filterSubject('관계법규'); switchView('viewer');">
-                        <div class="card-icon">🏛️</div>
-                        <div class="card-title">주택관리 관계법규</div>
-                        <div class="card-desc">주택법, 공동주택관리법, 건축법, 민간임대주택법 등 핵심 법률 총 32강 완료</div>
-                        <div class="card-stat">강의 노트 32개</div>
-                    </div>
-                    <div class="dashboard-card" onclick="filterSubject('관리실무'); switchView('viewer');">
-                        <div class="card-icon">🏢</div>
-                        <div class="card-title">공동주택 관리실무</div>
-                        <div class="card-desc">시설관리, 회계, 남녀고용, 노동조합, 안전관리 및 입주자 관리 총 32강 완료</div>
-                        <div class="card-stat">강의 노트 32개</div>
-                    </div>
-                    <div class="dashboard-card" onclick="filterSubject('관계법규(문제)'); switchView('viewer');">
-                        <div class="card-icon">📝</div>
-                        <div class="card-title">단원별 문제집 (관계법규)</div>
-                        <div class="card-desc">관계법규 적중 예상 문제 및 단원별 훈련 실전 모의고사 세트</div>
-                        <div class="card-stat">실전 문제 2세트</div>
-                    </div>
-                    <div class="dashboard-card" onclick="filterSubject('관리실무(문제)'); switchView('viewer');">
-                        <div class="card-icon">🎯</div>
-                        <div class="card-title">단원별 문제집 (관리실무)</div>
-                        <div class="card-desc">관리실무 1타 강사 엄선 단원별 실전 문제 및 마스터 해설</div>
-                        <div class="card-stat">실전 문제 4세트</div>
-                    </div>
-                </div>
-            </section>
             
             <!-- 1. Note Viewer Panel -->
             <section id="panel-viewer" class="view-panel active">
@@ -228,11 +171,7 @@
 
     <!-- Mobile Bottom Navigation Bar -->
     <nav class="mobile-bottom-nav">
-        <button class="mobile-nav-item active" id="m-nav-home" onclick="switchView('home')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-            <span>홈</span>
-        </button>
-        <button class="mobile-nav-item" id="m-nav-viewer" onclick="switchView('viewer')">
+        <button class="mobile-nav-item active" id="m-nav-viewer" onclick="switchView('viewer')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
             <span>강의노트</span>
         </button>
@@ -242,7 +181,7 @@
         </button>
         <button class="mobile-nav-item" id="m-nav-result" onclick="switchView('result')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-            <span>오답리포트</span>
+            <span>오답노트</span>
         </button>
         <button class="mobile-nav-item" id="m-nav-search" onclick="focusSearch()">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>

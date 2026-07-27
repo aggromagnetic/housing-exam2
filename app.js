@@ -16,29 +16,17 @@ let quizCurrentIndex = 0;
 let userAnswers = [];
 let quizStats = {}; // LocalStorage synced: { quizId: { wrongCount, tryCount, weight } }
 
-document.addEventListener('DOMContentLoaded', () => {
-    initSavedTheme();
-    initApp();
-});
-
-async function initApp() {
-    try {
-        const response = await fetch('data/study_data.json');
-        studyData = await response.json();
-
-        loadLocalStats();
-        renderLectureList();
-        initSidebarState();
-        
-        // Default View is Home Landing Cover
-        switchView('home');
-
-        // Handle URL Hash if deep linked
-        handleUrlHash();
-    } catch (err) {
-        console.error('Failed to load study data:', err);
+document.addEventListener('DOMContentLoaded', async () => {
+    loadLocalStats();
+    initSidebarState();
+    await fetchStudyData();
+    renderLectureList();
+    
+    // Auto load first lecture if available
+    if (studyData.lectures.length > 0) {
+        selectLecture(studyData.lectures[0].fileName);
     }
-}
+});
 
 function initSidebarState() {
     if (window.innerWidth > 768) {
@@ -191,55 +179,37 @@ function renderLectureList() {
 }
 
 function selectLecture(fileNameOrPath, anchorId = null) {
-    if (!studyData || !studyData.lectures) return;
-
-    const cleanInput = fileNameOrPath.replace(/\\/g, '/');
-    const lec = studyData.lectures.find(l => 
-        l.fileName === cleanInput || 
-        l.relativePath === cleanInput || 
-        cleanInput.endsWith(l.fileName) ||
-        cleanInput.includes(l.relativePath)
-    );
-
-    if (!lec) {
-        console.warn('Lecture not found for input:', fileNameOrPath);
-        return;
-    }
+    const lec = studyData.lectures.find(l => l.fileName === fileNameOrPath || l.relativePath === fileNameOrPath);
+    if (!lec) return;
 
     currentLecture = lec;
     renderLectureList();
 
     // Update Note Header Info
-    const noteTitleEl = document.getElementById('current-note-title');
-    if (noteTitleEl) noteTitleEl.innerText = lec.title;
-    
+    document.getElementById('current-note-title').innerText = lec.title;
     const badgeEl = document.getElementById('current-note-badge');
-    if (badgeEl) {
-        badgeEl.innerText = lec.subject;
-        badgeEl.className = `subject-badge ${lec.subject.includes('관계법규') ? 'rel' : (lec.subject.includes('관리실무') ? 'prac' : 'etc')}`;
-    }
+    badgeEl.innerText = lec.subject;
+    badgeEl.className = `subject-badge ${lec.subject === '관계법규' ? 'rel' : (lec.subject === '관리실무' ? 'prac' : 'etc')}`;
 
     // Load iframe with relativePath
     const iframe = document.getElementById('note-frame');
-    if (iframe) {
-        let targetUrl = `notes/${lec.relativePath || lec.fileName}`;
-        if (anchorId) {
-            targetUrl += `#${anchorId}`;
-        }
-        iframe.src = targetUrl;
-
-        iframe.onload = () => {
-            if (clozeMaskEnabled) {
-                applyClozeMaskToIframe();
-            }
-        };
+    let targetUrl = `notes/${lec.relativePath || lec.fileName}`;
+    if (anchorId) {
+        targetUrl += `#${anchorId}`;
     }
+    iframe.src = targetUrl;
 
-    switchView('viewer');
+    iframe.onload = () => {
+        if (clozeMaskEnabled) {
+            applyClozeMaskToIframe();
+        }
+    };
 
     if (window.innerWidth <= 768) {
         closeSidebar();
     }
+
+    switchView('viewer');
 }
 
 // -------------------------------------------------------------
@@ -732,30 +702,21 @@ function switchView(viewName) {
     document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.mobile-nav-item').forEach(b => b.classList.remove('active'));
 
-    if (viewName === 'home') {
-        document.getElementById('panel-home')?.classList.add('active');
-        document.getElementById('btn-tab-home')?.classList.add('active');
-        document.getElementById('m-nav-home')?.classList.add('active');
-    } else if (viewName === 'viewer') {
-        document.getElementById('panel-viewer')?.classList.add('active');
+    if (viewName === 'viewer') {
+        document.getElementById('panel-viewer').classList.add('active');
         document.getElementById('btn-tab-viewer')?.classList.add('active');
         document.getElementById('m-nav-viewer')?.classList.add('active');
     } else if (viewName === 'quiz') {
-        document.getElementById('panel-quiz')?.classList.add('active');
+        document.getElementById('panel-quiz').classList.add('active');
         document.getElementById('btn-tab-quiz')?.classList.add('active');
         document.getElementById('m-nav-quiz')?.classList.add('active');
     } else if (viewName === 'result') {
-        document.getElementById('panel-result')?.classList.add('active');
+        document.getElementById('panel-result').classList.add('active');
         document.getElementById('btn-tab-result')?.classList.add('active');
         document.getElementById('m-nav-result')?.classList.add('active');
     } else if (viewName === 'search') {
-        document.getElementById('panel-search')?.classList.add('active');
+        document.getElementById('panel-search').classList.add('active');
         document.getElementById('m-nav-search')?.classList.add('active');
-    }
-
-    // Only close drawer overlay on mobile screens
-    if (window.innerWidth <= 768) {
-        closeSidebar();
     }
 }
 
