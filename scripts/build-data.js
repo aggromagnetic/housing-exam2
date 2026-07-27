@@ -103,9 +103,9 @@ function parseHtmlNote(fileObj) {
         }
     }
 
-    if (quizOlMatch && answerGridMatch) {
+    if (quizOlMatch) {
         const liMatches = [...quizOlMatch.matchAll(/<li[^>]*>([\s\S]*?)<\/li>/gi)];
-        const answerDivMatches = [...answerGridMatch[1].matchAll(/<div[^>]*>([\s\S]*?)<\/div>/gi)];
+        const answerDivMatches = answerGridMatch ? [...answerGridMatch[1].matchAll(/<div[^>]*>([\s\S]*?)<\/div>/gi)] : [];
 
         const answersMap = {};
         answerDivMatches.forEach(m => {
@@ -118,13 +118,26 @@ function parseHtmlNote(fileObj) {
 
         let quizIndex = 0;
         liMatches.forEach((liMatch) => {
-            const qText = cleanText(liMatch[1]);
+            let rawLiHtml = liMatch[1];
+            let qText = cleanText(rawLiHtml);
+            let extractedAnswer = '';
 
-            // Only register valid quiz questions containing blank symbols like '㉠'
-            if (qText && (qText.includes('㉠') || qText.includes('㉡'))) {
-                quizIndex++;
-                const ansText = answersMap[quizIndex] || '';
+            // Case A: Inline answer inside span.blank-answer like <span class="blank-answer">( 부속토지 )</span>
+            const spanBlankMatch = rawLiHtml.match(/<span\s+class="blank-answer"[^>]*>\s*\(\s*([^)]+)\s*\)\s*<\/span>/i) ||
+                                  rawLiHtml.match(/\(\s*([가-힣0-9a-zA-Z\s·,]+)\s*\)/);
+            
+            if (spanBlankMatch && !qText.includes('㉠') && !qText.includes('㉡')) {
+                extractedAnswer = spanBlankMatch[1].trim();
+                // Replace the answer in HTML with blank marker ( ㉠ )
+                rawLiHtml = rawLiHtml.replace(/<span\s+class="blank-answer"[^>]*>\s*\(\s*[^)]+\s*\)\s*<\/span>/i, '( ㉠ )')
+                                     .replace(/\(\s*[가-힣0-9a-zA-Z\s·,]+\s*\)/, '( ㉠ )');
+                qText = cleanText(rawLiHtml);
+            }
 
+            quizIndex++;
+            let ansText = extractedAnswer || answersMap[quizIndex] || '';
+
+            if (qText && (qText.includes('㉠') || qText.includes('㉡') || qText.includes('('))) {
                 if (ansText) {
                     quizzes.push({
                         id: `${fileObj.fileName.replace(/\.html$/i, '')}_q${quizIndex}`,
