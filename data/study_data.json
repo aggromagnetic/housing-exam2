@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-07-27T09:38:02.448Z",
-  "totalLectures": 72,
+  "updatedAt": "2026-07-27T16:30:42.538Z",
+  "totalLectures": 74,
   "totalQuizzes": 322,
   "lectures": [
     {
@@ -517,6 +517,18 @@
       "quizCount": 15
     },
     {
+      "relativePath": "단원별문제/관계법규/1주택법관련30문제.html",
+      "fileName": "1주택법관련30문제.html",
+      "subject": "관계법규(문제)",
+      "lectureNum": 0,
+      "title": "주택법 일타마스터 2차 모의고사",
+      "subHeadings": [
+        "시험장으로 가기 전, 마지막으로 확인해야 할 주택법 30제",
+        "학습 종료! 실시간 레포트"
+      ],
+      "quizCount": 0
+    },
+    {
       "relativePath": "단원별문제/관계법규/2주택법공동주택관리법.html",
       "fileName": "2주택법공동주택관리법.html",
       "subject": "관계법규(문제)",
@@ -537,6 +549,18 @@
       "subHeadings": [
         "일타강사의 합격 레슨 정밀 검수 완료",
         "실전 모의고사 최종 결과"
+      ],
+      "quizCount": 0
+    },
+    {
+      "relativePath": "단원별문제/관계법규/5단원별학습.html",
+      "fileName": "5단원별학습.html",
+      "subject": "관계법규(문제)",
+      "lectureNum": 0,
+      "title": "주택관리사보 2차 핵심 마스터",
+      "subHeadings": [
+        "",
+        "모의고사 최종 평가 결과"
       ],
       "quizCount": 0
     },
