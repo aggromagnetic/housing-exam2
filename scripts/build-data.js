@@ -91,8 +91,8 @@ function parseHtmlNote(fileObj) {
 
     const quizScopeHtml = quizStartIndex !== -1 ? quizSearchArea.slice(quizStartIndex) : quizSearchArea;
     
-    // Enhanced answer block detector: matches class="answer-grid" OR any div/p containing "정답" and numbers "1."
-    let answerGridMatch = content.match(/<div[^>]*class=["']answer-grid["'][^>]*>([\s\S]*?)<\/div>/i);
+    // Enhanced answer block detector: matches class="answer-grid" / "answer-container" until </body> or section end
+    let answerGridMatch = content.match(/<div[^>]*class=["'][^"']*answer-(?:container|grid)[^"']*["'][^>]*>([\s\S]*?)(?:<\/body>|$)/i);
     if (!answerGridMatch) {
         const divMatches = [...content.matchAll(/<div[^>]*>([\s\S]*?)<\/div>/gi)];
         for (const m of divMatches) {
@@ -106,26 +106,46 @@ function parseHtmlNote(fileObj) {
     const answersMap = {};
     if (answerGridMatch) {
         const rawAnsBlock = answerGridMatch[1];
-        const divItems = [...rawAnsBlock.matchAll(/<div[^>]*>([\s\S]*?)<\/div>/gi)];
-        
-        if (divItems.length > 0) {
-            divItems.forEach(item => {
-                const txt = cleanText(item[1]);
-                const numMatch = txt.match(/(\d+)(?:번\s*문항|번|\.)/);
+
+        // 1) Match class="answer-item" specifically if available (e.g. Rel-Law 19-32)
+        const itemMatches = [...rawAnsBlock.matchAll(/<div[^>]*class=["'][^"']*answer-item[^"']*["'][^>]*>([\s\S]*?)<\/div>/gi)];
+        if (itemMatches.length > 0) {
+            itemMatches.forEach(m => {
+                const txt = cleanText(m[1]);
+                const numMatch = txt.match(/^(\d+)\./);
                 if (numMatch) {
                     const qNum = parseInt(numMatch[1], 10);
-                    const ansText = txt.replace(/^(?:<strong>)?\s*\d+(?:번\s*문항|번|\.)\s*(?:<\/strong>)?/i, '').trim();
+                    const ansText = txt.replace(/^\d+\.\s*/, '').trim();
                     if (qNum && ansText) {
                         answersMap[qNum] = ansText;
                     }
                 }
             });
         }
+
+        // 2) Match standard div elements
+        if (Object.keys(answersMap).length === 0) {
+            const divItems = [...rawAnsBlock.matchAll(/<div[^>]*>([\s\S]*?)<\/div>/gi)];
+            if (divItems.length > 0) {
+                divItems.forEach(item => {
+                    const txt = cleanText(item[1]);
+                    const numMatch = txt.match(/(\d+)(?:번\s*문항|번|\.)/);
+                    if (numMatch) {
+                        const qNum = parseInt(numMatch[1], 10);
+                        const ansText = txt.replace(/^(?:<strong>)?\s*\d+(?:번\s*문항|번|\.)\s*(?:<\/strong>)?/i, '').trim();
+                        if (qNum && ansText) {
+                            answersMap[qNum] = ansText;
+                        }
+                    }
+                });
+            }
+        }
         
+        // 3) Global regex fallback
         if (Object.keys(answersMap).length === 0) {
             const cleanAnsBlock = cleanText(rawAnsBlock);
-            const itemMatches = [...cleanAnsBlock.matchAll(/(\d+)\.\s*([\s\S]*?)(?=(?:\s*\d+\.|$))/g)];
-            itemMatches.forEach(m => {
+            const globalMatches = [...cleanAnsBlock.matchAll(/(\d+)\.\s*([\s\S]*?)(?=(?:\s*\d+\.|$))/g)];
+            globalMatches.forEach(m => {
                 const qNum = parseInt(m[1], 10);
                 const ansContent = m[2].trim().replace(/^[\s,·]+|[\s,·]+$/g, '');
                 if (qNum && ansContent) {
