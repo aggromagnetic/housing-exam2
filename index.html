@@ -138,9 +138,12 @@
                         <h2 style="font-size: 20px; font-weight: 700;">🎉 퀴즈 평가 결과 리포트</h2>
                         <div class="score-display" id="result-score-text">85점</div>
                         <p style="color: var(--text-muted); font-size: 14px;" id="result-summary-text">총 20문제 중 17문제를 맞히셨습니다!</p>
-                        <div style="margin-top: 20px;">
+                        <div style="margin-top: 20px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
                             <button class="btn-quiz-start" onclick="startQuizMode()" style="display: inline-flex;">
                                 🔄 새로운 가중치 퀴즈 풀기
+                            </button>
+                            <button class="btn-secondary" onclick="resetQuizStats()" style="font-size: 12px; color: var(--text-muted);">
+                                🗑️ 오답 가중치 기록 초기화
                             </button>
                         </div>
                     </div>

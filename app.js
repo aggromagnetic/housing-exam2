@@ -246,6 +246,18 @@ function applyClozeMaskToIframe() {
     }
 }
 
+function resetQuizStats() {
+    if (confirm('모든 퀴즈의 누적 오답 가중치 기록을 초기화하시겠습니까?\n(모든 문제가 동일한 기본 확률 1/N 로 출제됩니다)')) {
+        quizStats = {};
+        try {
+            localStorage.removeItem('housing_exam_quiz_stats');
+        } catch (e) {
+            console.error('Error resetting stats', e);
+        }
+        alert('오답 가중치 기록이 깔끔하게 초기화되었습니다!');
+    }
+}
+
 // -------------------------------------------------------------
 // Weighted Random Quiz Engine
 // -------------------------------------------------------------
@@ -255,12 +267,17 @@ function startQuizMode() {
         return;
     }
 
-    // 1. Calculate Weights for each quiz
+    // 1. Calculate Weights for each quiz (Cap at 5.0x max)
+    // wrongCount 0 -> 1.0 (1/N)
+    // wrongCount 1 -> 2.0 (2/N)
+    // wrongCount 2 -> 3.0 (3/N)
+    // wrongCount 3 -> 4.0 (4/N)
+    // wrongCount >= 4 -> 5.0 (5/N max cap)
     const quizPool = studyData.quizzes.map(q => {
         const stat = quizStats[q.id] || { wrongCount: 0, tryCount: 0 };
-        // Base weight = 1.0. Wrong answers add +2.0 weight per fail.
-        let weight = 1.0 + (stat.wrongCount * 2.0);
-        return { quiz: q, weight: weight };
+        const rawWeight = 1.0 + (stat.wrongCount * 1.0);
+        const cappedWeight = Math.min(5.0, rawWeight); // Cap at 5배 max
+        return { quiz: q, weight: cappedWeight };
     });
 
     // 2. Weighted Random Sampling without replacement (up to 20 items)
