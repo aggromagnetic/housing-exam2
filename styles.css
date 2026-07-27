@@ -265,13 +265,8 @@ body {
 .subject-filter {
     display: flex;
     flex-wrap: nowrap;
-    gap: 3px;
+    gap: 4px;
     width: 100%;
-    overflow-x: auto;
-}
-
-.subject-filter::-webkit-scrollbar {
-    display: none;
 }
 
 .filter-chip {
@@ -279,9 +274,9 @@ body {
     background: rgba(15, 23, 42, 0.6);
     border: 1px solid var(--border-color);
     color: var(--text-muted);
-    padding: 6px 4px;
+    padding: 6px 6px;
     border-radius: var(--radius-sm);
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 500;
     cursor: pointer;
     text-align: center;

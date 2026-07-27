@@ -6,7 +6,7 @@ let studyData = {
 };
 
 let currentView = 'viewer';
-let currentSubjectFilter = 'all';
+let currentSubjectFilter = '관계법규';
 let currentLecture = null;
 let clozeMaskEnabled = false;
 
@@ -128,11 +128,10 @@ function filterSubject(subject) {
     currentSubjectFilter = subject;
     document.querySelectorAll('.filter-chip').forEach(el => el.classList.remove('active'));
     
-    if (subject === 'all') document.getElementById('chip-all').classList.add('active');
-    else if (subject === '관계법규') document.getElementById('chip-rel').classList.add('active');
-    else if (subject === '관리실무') document.getElementById('chip-prac').classList.add('active');
-    else if (subject === '관계법규(문제)') document.getElementById('chip-rel-test').classList.add('active');
-    else if (subject === '관리실무(문제)') document.getElementById('chip-prac-test').classList.add('active');
+    if (subject === '관계법규') document.getElementById('chip-rel')?.classList.add('active');
+    else if (subject === '관리실무') document.getElementById('chip-prac')?.classList.add('active');
+    else if (subject === '관계법규(문제)') document.getElementById('chip-rel-test')?.classList.add('active');
+    else if (subject === '관리실무(문제)') document.getElementById('chip-prac-test')?.classList.add('active');
 
     renderLectureList();
 }
