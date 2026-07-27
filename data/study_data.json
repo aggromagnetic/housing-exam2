@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-07-27T17:05:25.778Z",
-  "totalLectures": 74,
+  "updatedAt": "2026-07-27T17:08:07.641Z",
+  "totalLectures": 72,
   "totalQuizzes": 572,
   "lectures": [
     {
@@ -1127,30 +1127,6 @@
       "relativePath": "단원별문제/관리실무/4 단원별학습.html",
       "fileName": "4 단원별학습.html",
       "subject": "관리실무(문제)",
-      "lectureNum": 0,
-      "title": "주택관리사보 2차 합격 일타강사",
-      "subHeadings": [
-        "일타강사의 합격 레슨 정밀 검수 완료",
-        "실전 모의고사 최종 결과"
-      ],
-      "quizCount": 0
-    },
-    {
-      "relativePath": "단원별문제/2주택법공동주택관리법.html",
-      "fileName": "2주택법공동주택관리법.html",
-      "subject": "단원별문제",
-      "lectureNum": 0,
-      "title": "주택관리사보 2차 1타 강사 실전 모의고사",
-      "subHeadings": [
-        "주택관리사보 2차 실전 모의고사 40문항",
-        "채점 및 성능 분석 완료"
-      ],
-      "quizCount": 0
-    },
-    {
-      "relativePath": "단원별문제/4단원별학습.html",
-      "fileName": "4단원별학습.html",
-      "subject": "단원별문제",
       "lectureNum": 0,
       "title": "주택관리사보 2차 합격 일타강사",
       "subHeadings": [

@@ -41,8 +41,8 @@ function getAllHtmlFiles(dirPath, arrayOfFiles = []) {
 function parseHtmlNote(fileObj) {
     const content = fs.readFileSync(fileObj.fullPath, 'utf-8');
     
-    // Subject detection by full relative path or title
-    const relPathNorm = fileObj.relativePath.replace(/\\/g, '/');
+    // Normalize NFD unicode characters (Mac OS Hangul fix)
+    const relPathNorm = fileObj.relativePath.normalize('NFC').replace(/\\/g, '/');
     let subject = '기타';
 
     if (relPathNorm.includes('단원별문제/관계법규')) {
