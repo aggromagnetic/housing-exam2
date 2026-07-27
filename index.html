@@ -116,7 +116,7 @@
 
                     <!-- Instant Answer & Explanation Box (Initially Hidden) -->
                     <div id="quiz-instant-answer-box" class="quiz-instant-box" style="display: none;">
-                        <div class="quiz-instant-header">❌ 오답 처리됨 (정답 및 법정 해설)</div>
+                        <div class="quiz-instant-header" id="quiz-instant-header">❌ 오답 처리됨 (정답 및 법정 해설)</div>
                         <div class="quiz-instant-ans-text" id="quiz-instant-ans-text">정답: </div>
                         <button class="btn-deeplink" id="quiz-instant-link-btn" style="margin-top: 8px;">
                             📖 원본 강의 노트 파트로 이동 복습
@@ -125,8 +125,9 @@
 
                     <div class="quiz-actions">
                         <button class="btn-secondary" id="btn-prev-quiz" onclick="prevQuizQuestion()">이전 문제</button>
-                        <button class="btn-dont-know" id="btn-dont-know" onclick="showInstantAnswer()">💡 모르겠어요 (정답 보기)</button>
-                        <button class="btn-primary" id="btn-next-quiz" onclick="nextQuizQuestion()">다음 문제</button>
+                        <button class="btn-dont-know" id="btn-dont-know" onclick="showInstantAnswer()">💡 모르겠어요</button>
+                        <button class="btn-submit-check" id="btn-check-quiz" onclick="checkCurrentQuestionAnswer()">✅ 정답 확인</button>
+                        <button class="btn-primary" id="btn-next-quiz" onclick="nextQuizQuestion()">다음 문제 ➔</button>
                     </div>
                 </div>
             </section>
