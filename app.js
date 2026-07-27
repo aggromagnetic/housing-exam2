@@ -395,9 +395,61 @@ function showInstantAnswer() {
     box.style.display = 'block';
 }
 
+function checkCurrentQuestionAnswer() {
+    const currentQ = quizQuestions[quizCurrentIndex];
+    if (!currentQ) return;
+
+    const inputVal = document.getElementById('quiz-answer-input').value.trim();
+    if (!inputVal) {
+        alert('답안을 입력한 후 정답 확인을 눌러주세요. (모를 때는 [💡 모르겠어요] 클릭)');
+        return;
+    }
+
+    userAnswers[quizCurrentIndex] = inputVal;
+
+    const isCorrect = checkAnswerCorrectness(inputVal, currentQ.answerRaw);
+
+    // Update local stats for weighted sampling immediately
+    if (!quizStats[currentQ.id]) {
+        quizStats[currentQ.id] = { wrongCount: 0, tryCount: 0 };
+    }
+    quizStats[currentQ.id].tryCount += 1;
+
+    if (!isCorrect) {
+        quizStats[currentQ.id].wrongCount += 1;
+    } else if (quizStats[currentQ.id].wrongCount > 0) {
+        quizStats[currentQ.id].wrongCount = Math.max(0, quizStats[currentQ.id].wrongCount - 1);
+    }
+    saveLocalStats();
+
+    // Render Instant Feedback Box
+    const box = document.getElementById('quiz-instant-answer-box');
+    const headerEl = document.getElementById('quiz-instant-header');
+    const ansTextEl = document.getElementById('quiz-instant-ans-text');
+    const linkBtn = document.getElementById('quiz-instant-link-btn');
+
+    if (isCorrect) {
+        box.className = 'quiz-instant-box correct';
+        headerEl.innerHTML = '⭕ 축하합니다! 정답입니다 🎉';
+        ansTextEl.innerHTML = `법정 정답: <span style="color: #34d399; font-size: 16px;">${escapeHtml(currentQ.answerRaw)}</span>`;
+    } else {
+        box.className = 'quiz-instant-box';
+        headerEl.innerHTML = '❌ 오답입니다 (정답 및 법정 해설)';
+        ansTextEl.innerHTML = `내 제출답: <span style="color: #f87171;">${escapeHtml(inputVal)}</span> | 법정 정답: <span style="color: #34d399; font-size: 16px;">${escapeHtml(currentQ.answerRaw)}</span>`;
+    }
+
+    linkBtn.onclick = () => selectLecture(currentQ.noteFileName, currentQ.anchorId);
+    box.style.display = 'block';
+}
+
 function handleQuizEnter(e) {
     if (e.key === 'Enter') {
-        nextQuizQuestion();
+        const box = document.getElementById('quiz-instant-answer-box');
+        if (box && box.style.display === 'none') {
+            checkCurrentQuestionAnswer();
+        } else {
+            nextQuizQuestion();
+        }
     }
 }
 
