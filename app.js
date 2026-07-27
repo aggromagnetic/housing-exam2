@@ -17,7 +17,6 @@ let userAnswers = [];
 let quizStats = {}; // LocalStorage synced: { quizId: { wrongCount, tryCount, weight } }
 
 document.addEventListener('DOMContentLoaded', async () => {
-    initSavedTheme();
     loadLocalStats();
     initSidebarState();
     await fetchStudyData();
@@ -28,104 +27,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         selectLecture(studyData.lectures[0].fileName);
     }
 });
-
-function toggleTheme() {
-    const isLight = document.body.classList.toggle('light-mode');
-    const themeBtn = document.getElementById('btn-theme-toggle');
-    if (themeBtn) {
-        themeBtn.innerHTML = isLight ? '☀️ 라이트모드' : '🌙 다크모드';
-    }
-
-    try {
-        localStorage.setItem('housing_theme', isLight ? 'light' : 'dark');
-    } catch (e) {}
-
-    applyDarkThemeToIframe();
-}
-
-function applyDarkThemeToIframe() {
-    const iframe = document.getElementById('note-frame');
-    if (!iframe) return;
-    try {
-        const doc = iframe.contentDocument || iframe.contentWindow.document;
-        if (!doc || !doc.body) return;
-
-        const isLight = document.body.classList.contains('light-mode');
-        let styleEl = doc.getElementById('dark-theme-style');
-
-        if (!isLight) { // Deep Dark Mode
-            if (!styleEl) {
-                styleEl = doc.createElement('style');
-                styleEl.id = 'dark-theme-style';
-                doc.head.appendChild(styleEl);
-            }
-            styleEl.innerHTML = `
-                body {
-                    background-color: #0b0f19 !important;
-                    color: #e2e8f0 !important;
-                }
-                h1, h2, h3, h4, strong {
-                    color: #f8fafc !important;
-                }
-                table {
-                    border-color: #334155 !important;
-                }
-                th {
-                    background-color: #1e293b !important;
-                    color: #38bdf8 !important;
-                    border-color: #334155 !important;
-                }
-                td {
-                    border-color: #334155 !important;
-                    color: #cbd5e1 !important;
-                }
-                .highlight-red {
-                    color: #f87171 !important;
-                    font-weight: bold;
-                }
-                .highlight-green {
-                    color: #34d399 !important;
-                    font-weight: bold;
-                }
-                /* Enhanced high-contrast Blue & Purple for Dark Mode */
-                .highlight-blue {
-                    color: #38bdf8 !important; /* 선명한 네온 파란색 */
-                    background-color: rgba(56, 189, 248, 0.18) !important;
-                    padding: 2px 5px;
-                    border-radius: 4px;
-                    font-weight: bold;
-                }
-                .highlight-purple {
-                    color: #c084fc !important; /* 눈에 확 띄는 오키드 보라색 */
-                    background-color: rgba(192, 132, 252, 0.18) !important;
-                    padding: 2px 5px;
-                    border-radius: 4px;
-                    font-weight: bold;
-                }
-                .blank-answer {
-                    color: #fbbf24 !important;
-                }
-            `;
-            doc.body.style.filter = 'none';
-        } else { // Clean Light Mode
-            if (styleEl) styleEl.remove();
-            doc.body.style.filter = 'none';
-        }
-    } catch (e) {
-        console.error('Error applying theme to iframe', e);
-    }
-}
-
-function initSavedTheme() {
-    try {
-        const savedTheme = localStorage.getItem('housing_theme');
-        if (savedTheme === 'light') {
-            document.body.classList.add('light-mode');
-            const themeBtn = document.getElementById('btn-theme-toggle');
-            if (themeBtn) themeBtn.innerHTML = '☀️ 라이트모드';
-        }
-    } catch (e) {}
-}
 
 function initSidebarState() {
     if (window.innerWidth > 768) {
@@ -302,7 +203,6 @@ function selectLecture(fileNameOrPath, anchorId = null) {
         if (clozeMaskEnabled) {
             applyClozeMaskToIframe();
         }
-        applyDarkThemeToIframe();
     };
 
     if (window.innerWidth <= 768) {
