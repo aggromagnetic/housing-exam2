@@ -75,7 +75,7 @@ function parseHtmlNote(fileObj) {
     // 4. Parse Quiz & Answers inside HTML
     const quizzes = [];
     
-    // Enhanced answer block detector: matches class="answer-grid" OR any div containing "정답" and numbers "1."
+    // Enhanced answer block detector: matches class="answer-grid" OR any div/p containing "정답" and numbers "1."
     let answerGridMatch = content.match(/<div[^>]*class=["']answer-grid["'][^>]*>([\s\S]*?)<\/div>/i);
     if (!answerGridMatch) {
         const divMatches = [...content.matchAll(/<div[^>]*>([\s\S]*?)<\/div>/gi)];
@@ -87,65 +87,54 @@ function parseHtmlNote(fileObj) {
         }
     }
 
-    // Look for <ol> specifically located after quiz headings or containing multiple '㉠'
-    const olMatches = [...content.matchAll(/<ol[^>]*>([\s\S]*?)<\/ol>/gi)];
-    let quizOlMatch = null;
+    const answersMap = {};
+    if (answerGridMatch) {
+        const rawAnsBlock = answerGridMatch[1];
+        const cleanAnsBlock = cleanText(rawAnsBlock);
 
-    // Search for <ol> that has at least one '㉠' (quiz blank marker)
-    for (const match of olMatches) {
-        if (match[1].includes('㉠')) {
-            quizOlMatch = match[1];
-            break;
-        }
-    }
-
-    // Fallback: search for <ol> after '주관식' text
-    if (!quizOlMatch) {
-        const quizSectionIndex = content.search(/주관식|실전\s*훈련|단답형/i);
-        if (quizSectionIndex !== -1) {
-            const contentAfterQuizHeader = content.slice(quizSectionIndex);
-            const olMatchAfterHeader = contentAfterQuizHeader.match(/<ol[^>]*>([\s\S]*?)<\/ol>/i);
-            if (olMatchAfterHeader) {
-                quizOlMatch = olMatchAfterHeader[1];
+        // Global regex matching "1. ㉠ ...", "2. ㉠ ...", etc.
+        const itemMatches = [...cleanAnsBlock.matchAll(/(\d+)\.\s*([\s\S]*?)(?=(?:\s*\d+\.|$))/g)];
+        itemMatches.forEach(m => {
+            const qNum = parseInt(m[1], 10);
+            const ansContent = m[2].trim().replace(/^[\s,·]+|[\s,·]+$/g, '');
+            if (qNum && ansContent) {
+                answersMap[qNum] = ansContent;
             }
-        }
+        });
     }
 
-    if (quizOlMatch) {
-        const liMatches = [...quizOlMatch.matchAll(/<li[^>]*>([\s\S]*?)<\/li>/gi)];
+    // Collect ALL <li> items from ALL <ol> and <ul> lists in the document
+    const allListMatches = [...content.matchAll(/<(?:ol|ul)[^>]*>([\s\S]*?)<\/(?:ol|ul)>/gi)];
+    
+    let quizIndex = 0;
+    const symbols = ['㉠', '㉡', '㉢', '㉣', '㉤'];
+
+    allListMatches.forEach(listMatch => {
+        const listHtml = listMatch[1];
+        // Ignore if list is inside answerGrid
+        if (answerGridMatch && answerGridMatch[0].includes(listHtml)) return;
+
+        const liMatches = [...listHtml.matchAll(/<li[^>]*>([\s\S]*?)<\/li>/gi)];
         
-        const answersMap = {};
-        if (answerGridMatch) {
-            const rawAnsBlock = answerGridMatch[1];
-            const cleanAnsBlock = cleanText(rawAnsBlock);
-
-            // Global regex matching "1. ㉠ ...", "2. ㉠ ...", etc.
-            const itemMatches = [...cleanAnsBlock.matchAll(/(\d+)\.\s*([\s\S]*?)(?=(?:\s*\d+\.|$))/g)];
-            itemMatches.forEach(m => {
-                const qNum = parseInt(m[1], 10);
-                const ansContent = m[2].trim().replace(/^[\s,·]+|[\s,·]+$/g, '');
-                if (qNum && ansContent) {
-                    answersMap[qNum] = ansContent;
-                }
-            });
-        }
-
-        let quizIndex = 0;
-        liMatches.forEach((liMatch) => {
+        liMatches.forEach(liMatch => {
             let rawLiHtml = liMatch[1].replace(/&nbsp;/gi, ' ');
             let qText = cleanText(rawLiHtml);
+
+            // Check if this LI is a quiz item (contains '㉠', '㉡', '(', or 'blank-answer')
+            const isQuizCandidate = qText.includes('㉠') || 
+                                    qText.includes('㉡') || 
+                                    qText.includes('(') || 
+                                    rawLiHtml.includes('blank-answer');
+
+            if (!isQuizCandidate) return;
+
             let inlineAnswers = [];
 
-            // Pattern 1: <span class="blank-answer">( 정답 )</span> or ( 정답 ) where answer is inside parenthesis
-            // Find all parentheses inside the question LI
+            // Pattern 1: Inline answer inside span.blank-answer like <span class="blank-answer">( 정답 )</span>
             const parenMatches = [...rawLiHtml.matchAll(/\(\s*([^)]*)\s*\)/g)];
-
-            parenMatches.forEach((pm, pIdx) => {
+            parenMatches.forEach(pm => {
                 const innerTxt = cleanText(pm[1]);
-                // Remove ㉠, ㉡, ㉢ prefixes if any
                 const cleanAns = innerTxt.replace(/^[㉠㉡㉢㉣㉤]\s*/, '').trim();
-
-                // If inner text looks like an inline answer (contains Korean/numbers and not just spaces)
                 if (cleanAns.length > 0 && !cleanAns.match(/^[㉠㉡㉢㉣㉤\s]*$/)) {
                     inlineAnswers.push(cleanAns);
                 }
@@ -153,8 +142,6 @@ function parseHtmlNote(fileObj) {
 
             // Standardize all parentheses in the question text to ( ㉠ ), ( ㉡ ), etc.
             let blankCount = 0;
-            const symbols = ['㉠', '㉡', '㉢', '㉣', '㉤'];
-            
             let standardizedHtml = rawLiHtml.replace(/<span\s+class="blank-answer"[^>]*>[\s\S]*?<\/span>/gi, () => {
                 const sym = symbols[blankCount] || '㉠';
                 blankCount++;
@@ -166,10 +153,9 @@ function parseHtmlNote(fileObj) {
             });
 
             qText = cleanText(standardizedHtml);
-
             quizIndex++;
-            
-            // Determine answer: use answersMap if available, else combine inlineAnswers
+
+            // Determine answer: use answersMap if available, else inlineAnswers
             let ansText = '';
             if (answersMap[quizIndex]) {
                 ansText = answersMap[quizIndex];
@@ -180,23 +166,21 @@ function parseHtmlNote(fileObj) {
                 }).join(', ');
             }
 
-            if (qText && (qText.includes('㉠') || qText.includes('('))) {
-                if (ansText) {
-                    quizzes.push({
-                        id: `${fileObj.fileName.replace(/\.html$/i, '')}_q${quizIndex}`,
-                        num: quizIndex,
-                        question: qText,
-                        answerRaw: ansText,
-                        subject: subject,
-                        lectureNum: lectureNum,
-                        lectureTitle: h1Text,
-                        noteFileName: fileObj.relativePath,
-                        anchorId: `quiz-${quizIndex}`
-                    });
-                }
+            if (qText && ansText) {
+                quizzes.push({
+                    id: `${fileObj.fileName.replace(/\.html$/i, '')}_q${quizIndex}`,
+                    num: quizIndex,
+                    question: qText,
+                    answerRaw: ansText,
+                    subject: subject,
+                    lectureNum: lectureNum,
+                    lectureTitle: h1Text,
+                    noteFileName: fileObj.relativePath,
+                    anchorId: `quiz-${quizIndex}`
+                });
             }
         });
-    }
+    });
 
     return {
         relativePath: fileObj.relativePath,
