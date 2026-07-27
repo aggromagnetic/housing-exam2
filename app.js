@@ -419,27 +419,53 @@ function finishAndGradeQuiz() {
 }
 
 function checkAnswerCorrectness(userAns, realAnsRaw) {
-    if (!userAns) return false;
+    if (!userAns || !realAnsRaw) return false;
 
-    // Normalize strings (remove spaces, parentheses, etc)
-    const normUser = userAns.replace(/\s+/g, '').toLowerCase();
-    const normReal = realAnsRaw.replace(/\s+/g, '').toLowerCase();
+    // Helper: Clean string removing symbol prefixes (㉠, ㉡, ㉢) and redundant spaces
+    const cleanStr = (s) => s.replace(/[㉠㉡㉢㉣㉤|:;\-_]/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase();
 
-    // Exact or contained check
-    if (normUser === normReal) return true;
+    const normUser = cleanStr(userAns);
+    const normReal = cleanStr(realAnsRaw);
 
-    // Split keywords if multi-answer
-    const userTokens = normUser.split(/[,,\/]/).filter(Boolean);
-    const realTokens = normReal.split(/[,,\/]/).filter(Boolean);
+    // 1. Direct match (ignoring all spaces)
+    const normUserNoSpace = normUser.replace(/\s+/g, '');
+    const normRealNoSpace = normReal.replace(/\s+/g, '');
 
-    if (userTokens.length > 0 && realTokens.length > 0) {
-        let matchMatches = 0;
-        userTokens.forEach(ut => {
-            if (realTokens.some(rt => rt.includes(ut) || ut.includes(rt))) {
-                matchMatches++;
-            }
-        });
-        if (matchMatches >= Math.min(userTokens.length, realTokens.length)) return true;
+    if (normUserNoSpace === normRealNoSpace) return true;
+
+    // Helper to strip numerical units for relaxed matching (e.g. 30일 -> 30, 500만원 -> 500)
+    const stripUnit = (t) => t.replace(/(\d+)(일|명|년|개|원|만원|억원|세대|%|퍼센트)$/, '$1');
+
+    // 2. Tokenize real answer into key elements
+    // Split by comma, slash, "또는", or whitespace
+    const realTokens = normReal.split(/[,,\/\s]+/).filter(Boolean);
+    const userTokens = normUser.split(/[,,\/\s]+/).filter(Boolean);
+
+    const cleanRealTokens = realTokens
+        .map(stripUnit)
+        .filter(t => t.length > 0 && t !== '또는' && t !== '등' && t !== '및');
+
+    const cleanUserTokens = userTokens.map(stripUnit).filter(t => t.length > 0);
+
+    if (cleanRealTokens.length === 0) return false;
+
+    // Check how many key tokens of real answer are satisfied by user answer
+    let matchedCount = 0;
+
+    cleanRealTokens.forEach(rt => {
+        const rtNoSpace = rt.replace(/\s+/g, '');
+        // Match if user's combined string or any user token contains the real key element
+        if (
+            normUserNoSpace.includes(rtNoSpace) ||
+            cleanUserTokens.some(ut => ut.includes(rtNoSpace) || rtNoSpace.includes(ut))
+        ) {
+            matchedCount++;
+        }
+    });
+
+    // If all key tokens of real answer are covered in user's response -> Correct!
+    if (matchedCount >= cleanRealTokens.length) {
+        return true;
     }
 
     return false;
