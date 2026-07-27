@@ -732,21 +732,30 @@ function switchView(viewName) {
     document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.mobile-nav-item').forEach(b => b.classList.remove('active'));
 
-    if (viewName === 'viewer') {
-        document.getElementById('panel-viewer').classList.add('active');
+    if (viewName === 'home') {
+        document.getElementById('panel-home')?.classList.add('active');
+        document.getElementById('btn-tab-home')?.classList.add('active');
+        document.getElementById('m-nav-home')?.classList.add('active');
+    } else if (viewName === 'viewer') {
+        document.getElementById('panel-viewer')?.classList.add('active');
         document.getElementById('btn-tab-viewer')?.classList.add('active');
         document.getElementById('m-nav-viewer')?.classList.add('active');
     } else if (viewName === 'quiz') {
-        document.getElementById('panel-quiz').classList.add('active');
+        document.getElementById('panel-quiz')?.classList.add('active');
         document.getElementById('btn-tab-quiz')?.classList.add('active');
         document.getElementById('m-nav-quiz')?.classList.add('active');
     } else if (viewName === 'result') {
-        document.getElementById('panel-result').classList.add('active');
+        document.getElementById('panel-result')?.classList.add('active');
         document.getElementById('btn-tab-result')?.classList.add('active');
         document.getElementById('m-nav-result')?.classList.add('active');
     } else if (viewName === 'search') {
-        document.getElementById('panel-search').classList.add('active');
+        document.getElementById('panel-search')?.classList.add('active');
         document.getElementById('m-nav-search')?.classList.add('active');
+    }
+
+    // Only close drawer overlay on mobile screens
+    if (window.innerWidth <= 768) {
+        closeSidebar();
     }
 }
 
