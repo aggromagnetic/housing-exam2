@@ -72,14 +72,39 @@ function parseHtmlNote(fileObj) {
     const h2Matches = [...content.matchAll(/<h2[^>]*>([\s\S]*?)<\/h2>/gi)];
     const subHeadings = h2Matches.map(m => cleanText(m[1])).filter(t => !t.includes('주관식'));
 
-    // Quizzes inside HTML
+    // 4. Parse Quiz & Answers inside HTML
     const quizzes = [];
-    const olMatch = content.match(/<ol[^>]*>([\s\S]*?)<\/ol>/i);
+    
+    // Find answer grid first
     const answerGridMatch = content.match(/<div\s+class="answer-grid"[^>]*>([\s\S]*?)<\/div>\s*<\/div>/i) ||
                           content.match(/\[.*?정답.*\][\s\S]*?<div[^>]*>([\s\S]*?)<\/div>\s*<\/div>/i);
 
-    if (olMatch && answerGridMatch) {
-        const liMatches = [...olMatch[1].matchAll(/<li[^>]*>([\s\S]*?)<\/li>/gi)];
+    // Look for <ol> specifically located after quiz headings or containing multiple '㉠'
+    const olMatches = [...content.matchAll(/<ol[^>]*>([\s\S]*?)<\/ol>/gi)];
+    let quizOlMatch = null;
+
+    // Search for <ol> that has at least one '㉠' (quiz blank marker)
+    for (const match of olMatches) {
+        if (match[1].includes('㉠')) {
+            quizOlMatch = match[1];
+            break;
+        }
+    }
+
+    // Fallback: search for <ol> after '주관식' text
+    if (!quizOlMatch) {
+        const quizSectionIndex = content.search(/주관식|실전\s*훈련|단답형/i);
+        if (quizSectionIndex !== -1) {
+            const contentAfterQuizHeader = content.slice(quizSectionIndex);
+            const olMatchAfterHeader = contentAfterQuizHeader.match(/<ol[^>]*>([\s\S]*?)<\/ol>/i);
+            if (olMatchAfterHeader) {
+                quizOlMatch = olMatchAfterHeader[1];
+            }
+        }
+    }
+
+    if (quizOlMatch && answerGridMatch) {
+        const liMatches = [...quizOlMatch.matchAll(/<li[^>]*>([\s\S]*?)<\/li>/gi)];
         const answerDivMatches = [...answerGridMatch[1].matchAll(/<div[^>]*>([\s\S]*?)<\/div>/gi)];
 
         const answersMap = {};
@@ -91,23 +116,28 @@ function parseHtmlNote(fileObj) {
             }
         });
 
-        liMatches.forEach((liMatch, idx) => {
-            const qNum = idx + 1;
+        let quizIndex = 0;
+        liMatches.forEach((liMatch) => {
             const qText = cleanText(liMatch[1]);
-            const ansText = answersMap[qNum] || '';
 
-            if (qText && ansText) {
-                quizzes.push({
-                    id: `${fileObj.fileName.replace(/\.html$/i, '')}_q${qNum}`,
-                    num: qNum,
-                    question: qText,
-                    answerRaw: ansText,
-                    subject: subject,
-                    lectureNum: lectureNum,
-                    lectureTitle: h1Text,
-                    noteFileName: fileObj.relativePath,
-                    anchorId: `quiz-${qNum}`
-                });
+            // Only register valid quiz questions containing blank symbols like '㉠'
+            if (qText && (qText.includes('㉠') || qText.includes('㉡'))) {
+                quizIndex++;
+                const ansText = answersMap[quizIndex] || '';
+
+                if (ansText) {
+                    quizzes.push({
+                        id: `${fileObj.fileName.replace(/\.html$/i, '')}_q${quizIndex}`,
+                        num: quizIndex,
+                        question: qText,
+                        answerRaw: ansText,
+                        subject: subject,
+                        lectureNum: lectureNum,
+                        lectureTitle: h1Text,
+                        noteFileName: fileObj.relativePath,
+                        anchorId: `quiz-${quizIndex}`
+                    });
+                }
             }
         });
     }
