@@ -120,24 +120,53 @@ function parseHtmlNote(fileObj) {
         liMatches.forEach((liMatch) => {
             let rawLiHtml = liMatch[1];
             let qText = cleanText(rawLiHtml);
-            let extractedAnswer = '';
+            let inlineAnswers = [];
 
-            // Case A: Inline answer inside span.blank-answer like <span class="blank-answer">( 부속토지 )</span>
-            const spanBlankMatch = rawLiHtml.match(/<span\s+class="blank-answer"[^>]*>\s*\(\s*([^)]+)\s*\)\s*<\/span>/i) ||
-                                  rawLiHtml.match(/\(\s*([가-힣0-9a-zA-Z\s·,]+)\s*\)/);
+            // Pattern 1: <span class="blank-answer">( 정답 )</span> or ( 정답 ) where answer is inside parenthesis
+            // Find all parentheses inside the question LI
+            const parenMatches = [...rawLiHtml.matchAll(/\(\s*([^)]*)\s*\)/g)];
+
+            parenMatches.forEach((pm, pIdx) => {
+                const innerTxt = cleanText(pm[1]);
+                // Remove ㉠, ㉡, ㉢ prefixes if any
+                const cleanAns = innerTxt.replace(/^[㉠㉡㉢㉣㉤]\s*/, '').trim();
+
+                // If inner text looks like an inline answer (contains Korean/numbers and not just spaces)
+                if (cleanAns.length > 0 && !cleanAns.match(/^[㉠㉡㉢㉣㉤\s]*$/)) {
+                    inlineAnswers.push(cleanAns);
+                }
+            });
+
+            // Standardize all parentheses in the question text to ( ㉠ ), ( ㉡ ), etc.
+            let blankCount = 0;
+            const symbols = ['㉠', '㉡', '㉢', '㉣', '㉤'];
             
-            if (spanBlankMatch && !qText.includes('㉠') && !qText.includes('㉡')) {
-                extractedAnswer = spanBlankMatch[1].trim();
-                // Replace the answer in HTML with blank marker ( ㉠ )
-                rawLiHtml = rawLiHtml.replace(/<span\s+class="blank-answer"[^>]*>\s*\(\s*[^)]+\s*\)\s*<\/span>/i, '( ㉠ )')
-                                     .replace(/\(\s*[가-힣0-9a-zA-Z\s·,]+\s*\)/, '( ㉠ )');
-                qText = cleanText(rawLiHtml);
-            }
+            let standardizedHtml = rawLiHtml.replace(/<span\s+class="blank-answer"[^>]*>[\s\S]*?<\/span>/gi, () => {
+                const sym = symbols[blankCount] || '㉠';
+                blankCount++;
+                return `( ${sym} )`;
+            }).replace(/\(\s*[^)]*\s*\)/g, () => {
+                const sym = symbols[blankCount] || '㉠';
+                blankCount++;
+                return `( ${sym} )`;
+            });
+
+            qText = cleanText(standardizedHtml);
 
             quizIndex++;
-            let ansText = extractedAnswer || answersMap[quizIndex] || '';
+            
+            // Determine answer: use answersMap if available, else combine inlineAnswers
+            let ansText = '';
+            if (answersMap[quizIndex]) {
+                ansText = answersMap[quizIndex];
+            } else if (inlineAnswers.length > 0) {
+                ansText = inlineAnswers.map((ans, idx) => {
+                    const sym = symbols[idx] || '㉠';
+                    return inlineAnswers.length > 1 ? `${sym} ${ans}` : ans;
+                }).join(', ');
+            }
 
-            if (qText && (qText.includes('㉠') || qText.includes('㉡') || qText.includes('('))) {
+            if (qText && (qText.includes('㉠') || qText.includes('('))) {
                 if (ansText) {
                     quizzes.push({
                         id: `${fileObj.fileName.replace(/\.html$/i, '')}_q${quizIndex}`,
