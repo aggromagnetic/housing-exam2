@@ -74,6 +74,22 @@ function parseHtmlNote(fileObj) {
 
     // 4. Parse Quiz & Answers inside HTML
     const quizzes = [];
+
+    // Remove explanation/callout boxes to prevent counting lecture explanation lists as quiz items
+    let quizSearchArea = content.replace(/<div[^>]*class=["'][^"']*explanation[^"']*["'][^>]*>[\s\S]*?<\/div>/gi, '');
+
+    // Locate the LAST quiz section heading in the document to isolate true quiz items
+    const hMatches = [...quizSearchArea.matchAll(/<h[23][^>]*>([\s\S]*?)<\/h[23]>/gi)];
+    let quizStartIndex = -1;
+    for (let i = hMatches.length - 1; i >= 0; i--) {
+        const text = cleanText(hMatches[i][1]);
+        if (text.match(/주관식|빈칸|단답형|실전\s*훈련|핵심\s*용어|확인\s*문제|실전\s*출제/i)) {
+            quizStartIndex = hMatches[i].index + hMatches[i][0].length;
+            break;
+        }
+    }
+
+    const quizScopeHtml = quizStartIndex !== -1 ? quizSearchArea.slice(quizStartIndex) : quizSearchArea;
     
     // Enhanced answer block detector: matches class="answer-grid" OR any div/p containing "정답" and numbers "1."
     let answerGridMatch = content.match(/<div[^>]*class=["']answer-grid["'][^>]*>([\s\S]*?)<\/div>/i);
@@ -90,21 +106,37 @@ function parseHtmlNote(fileObj) {
     const answersMap = {};
     if (answerGridMatch) {
         const rawAnsBlock = answerGridMatch[1];
-        const cleanAnsBlock = cleanText(rawAnsBlock);
-
-        // Global regex matching "1. ㉠ ...", "2. ㉠ ...", etc.
-        const itemMatches = [...cleanAnsBlock.matchAll(/(\d+)\.\s*([\s\S]*?)(?=(?:\s*\d+\.|$))/g)];
-        itemMatches.forEach(m => {
-            const qNum = parseInt(m[1], 10);
-            const ansContent = m[2].trim().replace(/^[\s,·]+|[\s,·]+$/g, '');
-            if (qNum && ansContent) {
-                answersMap[qNum] = ansContent;
-            }
-        });
+        const divItems = [...rawAnsBlock.matchAll(/<div[^>]*>([\s\S]*?)<\/div>/gi)];
+        
+        if (divItems.length > 0) {
+            divItems.forEach(item => {
+                const txt = cleanText(item[1]);
+                const numMatch = txt.match(/(\d+)(?:번\s*문항|번|\.)/);
+                if (numMatch) {
+                    const qNum = parseInt(numMatch[1], 10);
+                    const ansText = txt.replace(/^(?:<strong>)?\s*\d+(?:번\s*문항|번|\.)\s*(?:<\/strong>)?/i, '').trim();
+                    if (qNum && ansText) {
+                        answersMap[qNum] = ansText;
+                    }
+                }
+            });
+        }
+        
+        if (Object.keys(answersMap).length === 0) {
+            const cleanAnsBlock = cleanText(rawAnsBlock);
+            const itemMatches = [...cleanAnsBlock.matchAll(/(\d+)\.\s*([\s\S]*?)(?=(?:\s*\d+\.|$))/g)];
+            itemMatches.forEach(m => {
+                const qNum = parseInt(m[1], 10);
+                const ansContent = m[2].trim().replace(/^[\s,·]+|[\s,·]+$/g, '');
+                if (qNum && ansContent) {
+                    answersMap[qNum] = ansContent;
+                }
+            });
+        }
     }
 
-    // Collect ALL <li> items from ALL <ol> and <ul> lists in the document
-    const allListMatches = [...content.matchAll(/<(?:ol|ul)[^>]*>([\s\S]*?)<\/(?:ol|ul)>/gi)];
+    // Collect ALL <li> items from <ol> or <ul> inside the true quiz scope area
+    const allListMatches = [...quizScopeHtml.matchAll(/<(?:ol|ul)[^>]*>([\s\S]*?)<\/(?:ol|ul)>/gi)];
     
     let quizIndex = 0;
     const symbols = ['㉠', '㉡', '㉢', '㉣', '㉤'];
