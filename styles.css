@@ -184,7 +184,7 @@ body {
     overflow: hidden;
 }
 
-/* Sidebar */
+/* Sidebar Collapse & Floating Toggle */
 .sidebar {
     width: var(--sidebar-width);
     background: var(--bg-secondary);
@@ -192,6 +192,95 @@ body {
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 90;
+}
+
+.sidebar.collapsed {
+    width: 0 !important;
+    min-width: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.btn-icon {
+    background: rgba(30, 41, 59, 0.8);
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-icon:hover {
+    background: rgba(59, 130, 246, 0.2);
+    color: #fff;
+    border-color: var(--accent-blue);
+}
+
+.floating-sidebar-btn {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    z-index: 80;
+    background: var(--accent-blue);
+    color: #fff;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+    display: none;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+}
+
+.floating-sidebar-btn:hover {
+    transform: scale(1.05);
+    background: var(--accent-blue-hover);
+}
+
+.sidebar.collapsed + .main-content .floating-sidebar-btn {
+    display: flex;
+}
+
+/* Responsive design for tablets & mobile */
+@media (max-width: 1024px) {
+    :root {
+        --sidebar-width: 280px;
+    }
+}
+
+@media (max-width: 768px) {
+    .app-header {
+        padding: 0 12px;
+    }
+    .logo-badge {
+        display: none;
+    }
+    .search-box {
+        width: 140px;
+    }
+    .search-input:focus {
+        width: 180px;
+    }
+    .sidebar {
+        position: absolute;
+        top: var(--header-height);
+        bottom: 0;
+        left: 0;
+        box-shadow: 5px 0 20px rgba(0, 0, 0, 0.5);
+    }
 }
 
 .sidebar-header {
