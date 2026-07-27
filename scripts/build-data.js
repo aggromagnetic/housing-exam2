@@ -65,8 +65,8 @@ function parseHtmlNote(fileObj) {
     const h1Text = h1Match ? cleanText(h1Match[1]) : rawTitle;
 
     // Extract lecture number
-    const lectureMatch = h1Text.match(/제\s*(\d+)\s*강/);
-    const lectureNum = lectureMatch ? parseInt(lectureMatch[1], 10) : 0;
+    const lectureMatch = h1Text.match(/제\s*(\d+)\s*강|\[\s*(\d+)\s*강\s*\]|^(\d+)\s*강/);
+    const lectureNum = lectureMatch ? parseInt(lectureMatch[1] || lectureMatch[2] || lectureMatch[3], 10) : 0;
 
     // Subheadings (h2)
     const h2Matches = [...content.matchAll(/<h2[^>]*>([\s\S]*?)<\/h2>/gi)];
