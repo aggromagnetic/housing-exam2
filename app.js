@@ -516,49 +516,63 @@ function checkAnswerCorrectness(userAns, realAnsRaw) {
 
     // Helper: Clean string removing symbol prefixes (㉠, ㉡, ㉢) and redundant spaces
     const cleanStr = (s) => s.replace(/[㉠㉡㉢㉣㉤|:;\-_]/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase();
-
-    const normUser = cleanStr(userAns);
-    const normReal = cleanStr(realAnsRaw);
-
-    // 1. Direct match (ignoring all spaces)
-    const normUserNoSpace = normUser.replace(/\s+/g, '');
-    const normRealNoSpace = normReal.replace(/\s+/g, '');
-
-    if (normUserNoSpace === normRealNoSpace) return true;
-
-    // Helper to strip numerical units for relaxed matching (e.g. 30일 -> 30, 500만원 -> 500)
     const stripUnit = (t) => t.replace(/(\d+)(일|명|년|개|원|만원|억원|세대|%|퍼센트)$/, '$1');
 
-    // 2. Tokenize real answer into key elements
-    // Split by comma, slash, "또는", or whitespace
-    const realTokens = normReal.split(/[,,\/\s]+/).filter(Boolean);
-    const userTokens = normUser.split(/[,,\/\s]+/).filter(Boolean);
+    const cleanUser = cleanStr(userAns);
+    const cleanUserNoSpace = cleanUser.replace(/\s+/g, '');
+    const userUserClean = stripUnit(cleanUserNoSpace);
 
-    const cleanRealTokens = realTokens
-        .map(stripUnit)
-        .filter(t => t.length > 0 && t !== '또는' && t !== '등' && t !== '및');
+    // Split real answer by alternative choices like "(또는 ...)" or "/" or "|"
+    // e.g. "㉠ 60(또는 육십)" -> ["㉠ 60", "육십"]
+    const rawOptions = realAnsRaw
+        .split(/\(또는\s*|\/|\|/)
+        .map(s => s.replace(/[()]/g, '').trim())
+        .filter(Boolean);
 
-    const cleanUserTokens = userTokens.map(stripUnit).filter(t => t.length > 0);
+    // Test each alternative option: if user matches ANY option -> CORRECT!
+    for (const option of rawOptions) {
+        const normOpt = cleanStr(option);
+        const normOptNoSpace = normOpt.replace(/\s+/g, '');
+        const normOptClean = stripUnit(normOptNoSpace);
 
-    if (cleanRealTokens.length === 0) return false;
-
-    // Check how many key tokens of real answer are satisfied by user answer
-    let matchedCount = 0;
-
-    cleanRealTokens.forEach(rt => {
-        const rtNoSpace = rt.replace(/\s+/g, '');
-        // Match if user's combined string or any user token contains the real key element
+        // 1. Direct equality check (with or without units)
         if (
-            normUserNoSpace.includes(rtNoSpace) ||
-            cleanUserTokens.some(ut => ut.includes(rtNoSpace) || rtNoSpace.includes(ut))
+            userUserClean === normOptClean ||
+            cleanUserNoSpace === normOptNoSpace ||
+            cleanUser.includes(normOpt) ||
+            normOpt.includes(cleanUser)
         ) {
-            matchedCount++;
+            return true;
         }
-    });
 
-    // If all key tokens of real answer are covered in user's response -> Correct!
-    if (matchedCount >= cleanRealTokens.length) {
-        return true;
+        // 2. Token match for multi-blank (㉠, ㉡)
+        const realTokens = normOpt
+            .split(/[,,\/\s]+/)
+            .filter(Boolean)
+            .map(stripUnit)
+            .filter(t => t.length > 0 && t !== '또는' && t !== '등' && t !== '및');
+
+        const userTokens = cleanUser
+            .split(/[,,\/\s]+/)
+            .filter(Boolean)
+            .map(stripUnit)
+            .filter(t => t.length > 0);
+
+        if (realTokens.length > 0) {
+            let matchedCount = 0;
+            realTokens.forEach(rt => {
+                const rtNoSpace = rt.replace(/\s+/g, '');
+                if (
+                    cleanUserNoSpace.includes(rtNoSpace) ||
+                    userTokens.some(ut => ut.includes(rtNoSpace) || rtNoSpace.includes(ut))
+                ) {
+                    matchedCount++;
+                }
+            });
+            if (matchedCount >= realTokens.length) {
+                return true;
+            }
+        }
     }
 
     return false;
