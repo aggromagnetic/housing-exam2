@@ -96,6 +96,8 @@ function parseHtmlNote(fileObj) {
     if (!answerGridMatch) {
         const divMatches = [...content.matchAll(/<div[^>]*>([\s\S]*?)<\/div>/gi)];
         for (const m of divMatches) {
+            if (m[0].includes('explanation')) continue;
+
             if (m[1].includes('정답') && m[1].match(/\d+\./)) {
                 answerGridMatch = m;
                 break;
@@ -123,33 +125,42 @@ function parseHtmlNote(fileObj) {
             });
         }
 
-        // 2) Match standard div elements
+        // 2) Match standard div elements and inner <br> lines
         if (Object.keys(answersMap).length === 0) {
             const divItems = [...rawAnsBlock.matchAll(/<div[^>]*>([\s\S]*?)<\/div>/gi)];
             if (divItems.length > 0) {
                 divItems.forEach(item => {
-                    const txt = cleanText(item[1]);
-                    const numMatch = txt.match(/(\d+)(?:번\s*문항|번|\.)/);
-                    if (numMatch) {
-                        const qNum = parseInt(numMatch[1], 10);
-                        const ansText = txt.replace(/^(?:<strong>)?\s*\d+(?:번\s*문항|번|\.)\s*(?:<\/strong>)?/i, '').trim();
-                        if (qNum && ansText) {
-                            answersMap[qNum] = ansText;
+                    const itemHtml = item[1];
+                    const lines = itemHtml.split(/<br\s*\/?>|\n/gi);
+                    lines.forEach(line => {
+                        const txt = cleanText(line);
+                        const numMatch = txt.match(/^(\d+)(?:번\s*문항|번|\.)\s*(.*)/);
+                        if (numMatch) {
+                            const qNum = parseInt(numMatch[1], 10);
+                            const ansText = numMatch[2].trim();
+                            if (qNum && ansText) {
+                                answersMap[qNum] = ansText;
+                            }
                         }
-                    }
+                    });
                 });
             }
         }
         
-        // 3) Global regex fallback
+        // 3) Global line-by-line fallback
         if (Object.keys(answersMap).length === 0) {
-            const cleanAnsBlock = cleanText(rawAnsBlock);
-            const globalMatches = [...cleanAnsBlock.matchAll(/(\d+)\.\s*([\s\S]*?)(?=(?:\s*\d+\.|$))/g)];
-            globalMatches.forEach(m => {
-                const qNum = parseInt(m[1], 10);
-                const ansContent = m[2].trim().replace(/^[\s,·]+|[\s,·]+$/g, '');
-                if (qNum && ansContent) {
-                    answersMap[qNum] = ansContent;
+            const rawText = answerGridMatch[1];
+            // Split by br tags or newlines
+            const lines = rawText.split(/<br\s*\/?>|\n/gi);
+            lines.forEach(line => {
+                const txt = cleanText(line);
+                const numMatch = txt.match(/^(\d+)\.\s*(.*)/);
+                if (numMatch) {
+                    const qNum = parseInt(numMatch[1], 10);
+                    const ansContent = numMatch[2].trim();
+                    if (qNum && ansContent) {
+                        answersMap[qNum] = ansContent;
+                    }
                 }
             });
         }
