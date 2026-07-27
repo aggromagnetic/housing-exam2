@@ -17,6 +17,7 @@ let userAnswers = [];
 let quizStats = {}; // LocalStorage synced: { quizId: { wrongCount, tryCount, weight } }
 
 document.addEventListener('DOMContentLoaded', async () => {
+    initSavedTheme();
     loadLocalStats();
     initSidebarState();
     await fetchStudyData();
@@ -27,6 +28,38 @@ document.addEventListener('DOMContentLoaded', async () => {
         selectLecture(studyData.lectures[0].fileName);
     }
 });
+
+function toggleTheme() {
+    const isLight = document.body.classList.toggle('light-mode');
+    const themeBtn = document.getElementById('btn-theme-toggle');
+    if (themeBtn) {
+        themeBtn.innerHTML = isLight ? '☀️ 라이트모드' : '🌙 다크모드';
+    }
+
+    try {
+        localStorage.setItem('housing_theme', isLight ? 'light' : 'dark');
+    } catch (e) {}
+
+    const iframe = document.getElementById('note-frame');
+    if (iframe && iframe.contentDocument && iframe.contentDocument.body) {
+        if (isLight) {
+            iframe.contentDocument.body.style.filter = 'invert(0.9) hue-rotate(180deg)';
+        } else {
+            iframe.contentDocument.body.style.filter = 'none';
+        }
+    }
+}
+
+function initSavedTheme() {
+    try {
+        const savedTheme = localStorage.getItem('housing_theme');
+        if (savedTheme === 'light') {
+            document.body.classList.add('light-mode');
+            const themeBtn = document.getElementById('btn-theme-toggle');
+            if (themeBtn) themeBtn.innerHTML = '☀️ 라이트모드';
+        }
+    } catch (e) {}
+}
 
 function initSidebarState() {
     if (window.innerWidth > 768) {
