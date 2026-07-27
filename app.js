@@ -191,39 +191,55 @@ function renderLectureList() {
 }
 
 function selectLecture(fileNameOrPath, anchorId = null) {
-    const lec = studyData.lectures.find(l => l.fileName === fileNameOrPath || l.relativePath === fileNameOrPath);
-    if (!lec) return;
+    if (!studyData || !studyData.lectures) return;
+
+    const cleanInput = fileNameOrPath.replace(/\\/g, '/');
+    const lec = studyData.lectures.find(l => 
+        l.fileName === cleanInput || 
+        l.relativePath === cleanInput || 
+        cleanInput.endsWith(l.fileName) ||
+        cleanInput.includes(l.relativePath)
+    );
+
+    if (!lec) {
+        console.warn('Lecture not found for input:', fileNameOrPath);
+        return;
+    }
 
     currentLecture = lec;
     renderLectureList();
 
     // Update Note Header Info
-    document.getElementById('current-note-title').innerText = lec.title;
+    const noteTitleEl = document.getElementById('current-note-title');
+    if (noteTitleEl) noteTitleEl.innerText = lec.title;
+    
     const badgeEl = document.getElementById('current-note-badge');
-    badgeEl.innerText = lec.subject;
-    badgeEl.className = `subject-badge ${lec.subject === '관계법규' ? 'rel' : (lec.subject === '관리실무' ? 'prac' : 'etc')}`;
+    if (badgeEl) {
+        badgeEl.innerText = lec.subject;
+        badgeEl.className = `subject-badge ${lec.subject.includes('관계법규') ? 'rel' : (lec.subject.includes('관리실무') ? 'prac' : 'etc')}`;
+    }
 
     // Load iframe with relativePath
     const iframe = document.getElementById('note-frame');
-    let targetUrl = `notes/${lec.relativePath || lec.fileName}`;
-    if (anchorId) {
-        targetUrl += `#${anchorId}`;
-    }
-    iframe.src = targetUrl;
-
-    iframe.onload = () => {
-        if (clozeMaskEnabled) {
-            applyClozeMaskToIframe();
+    if (iframe) {
+        let targetUrl = `notes/${lec.relativePath || lec.fileName}`;
+        if (anchorId) {
+            targetUrl += `#${anchorId}`;
         }
-    };
+        iframe.src = targetUrl;
+
+        iframe.onload = () => {
+            if (clozeMaskEnabled) {
+                applyClozeMaskToIframe();
+            }
+        };
+    }
 
     switchView('viewer');
 
     if (window.innerWidth <= 768) {
         closeSidebar();
     }
-
-    switchView('viewer');
 }
 
 // -------------------------------------------------------------
