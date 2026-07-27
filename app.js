@@ -272,6 +272,16 @@ function resetQuizStats() {
     }
 }
 
+function resumeQuizMode() {
+    if (!quizQuestions || quizQuestions.length === 0) {
+        startQuizMode();
+        return;
+    }
+
+    renderQuizQuestion();
+    switchView('quiz');
+}
+
 // -------------------------------------------------------------
 // Weighted Random Quiz Engine
 // -------------------------------------------------------------
