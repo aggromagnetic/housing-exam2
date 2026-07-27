@@ -75,9 +75,17 @@ function parseHtmlNote(fileObj) {
     // 4. Parse Quiz & Answers inside HTML
     const quizzes = [];
     
-    // Find answer grid first
-    const answerGridMatch = content.match(/<div\s+class="answer-grid"[^>]*>([\s\S]*?)<\/div>\s*<\/div>/i) ||
-                          content.match(/\[.*?정답.*\][\s\S]*?<div[^>]*>([\s\S]*?)<\/div>\s*<\/div>/i);
+    // Enhanced answer block detector: matches class="answer-grid" OR any div containing "정답" and numbers "1."
+    let answerGridMatch = content.match(/<div[^>]*class=["']answer-grid["'][^>]*>([\s\S]*?)<\/div>/i);
+    if (!answerGridMatch) {
+        const divMatches = [...content.matchAll(/<div[^>]*>([\s\S]*?)<\/div>/gi)];
+        for (const m of divMatches) {
+            if (m[1].includes('정답') && m[1].match(/\d+\./)) {
+                answerGridMatch = m;
+                break;
+            }
+        }
+    }
 
     // Look for <ol> specifically located after quiz headings or containing multiple '㉠'
     const olMatches = [...content.matchAll(/<ol[^>]*>([\s\S]*?)<\/ol>/gi)];
@@ -105,20 +113,26 @@ function parseHtmlNote(fileObj) {
 
     if (quizOlMatch) {
         const liMatches = [...quizOlMatch.matchAll(/<li[^>]*>([\s\S]*?)<\/li>/gi)];
-        const answerDivMatches = answerGridMatch ? [...answerGridMatch[1].matchAll(/<div[^>]*>([\s\S]*?)<\/div>/gi)] : [];
-
+        
         const answersMap = {};
-        answerDivMatches.forEach(m => {
-            const txt = cleanText(m[1]);
-            const numMatch = txt.match(/^(\d+)\.\s*(.*)/);
-            if (numMatch) {
-                answersMap[parseInt(numMatch[1], 10)] = numMatch[2].trim();
-            }
-        });
+        if (answerGridMatch) {
+            const rawAnsBlock = answerGridMatch[1];
+            const cleanAnsBlock = cleanText(rawAnsBlock);
+
+            // Global regex matching "1. ㉠ ...", "2. ㉠ ...", etc.
+            const itemMatches = [...cleanAnsBlock.matchAll(/(\d+)\.\s*([\s\S]*?)(?=(?:\s*\d+\.|$))/g)];
+            itemMatches.forEach(m => {
+                const qNum = parseInt(m[1], 10);
+                const ansContent = m[2].trim().replace(/^[\s,·]+|[\s,·]+$/g, '');
+                if (qNum && ansContent) {
+                    answersMap[qNum] = ansContent;
+                }
+            });
+        }
 
         let quizIndex = 0;
         liMatches.forEach((liMatch) => {
-            let rawLiHtml = liMatch[1];
+            let rawLiHtml = liMatch[1].replace(/&nbsp;/gi, ' ');
             let qText = cleanText(rawLiHtml);
             let inlineAnswers = [];
 
