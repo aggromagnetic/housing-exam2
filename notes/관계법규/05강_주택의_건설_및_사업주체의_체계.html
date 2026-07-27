@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 관계법규 - 제5강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.6;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+        }
+        
+        /* 대제목 제거 요청에 따라 다이렉트로 h1 시작, 미니멀하고 고급스러운 헤더 마감 */
+        h1 {
+            font-size: 13pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8; /* 시그니처 프리미엄 블루 포인트 */
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        /* 텍스트 강조를 위한 2색 프리미엄 강조색 (배경색 배제) */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+        
+        /* 토너 절약형 얇은 점선 설명 상자 */
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* 자가 진단 및 인쇄용 정답 처리 */
+        .blank-answer {
+            color: #e5e7eb; 
+            font-weight: bold;
+            transition: color 0.2s;
+            cursor: pointer;
+            border-bottom: 1px dashed #666666;
+            padding: 0 4px;
+        }
+        
+        .blank-answer:hover {
+            color: #1d4ed8;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        /* 인쇄 최적화 설정 */
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .blank-answer {
+                color: #e5e7eb !important;
+                border-bottom: 1px dashed #666666 !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        제5강. 주택의 건설 및 사업주체의 체계
+    </h1>
+    
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        1. 사업주체의 정의 및 사업계획 승인 기준
+    </h2>
+    <ul>
+        <li><strong>사업주체의 개념:</strong> 주택법에 따라 <span class="highlight-blue">사업계획승인</span>을 받아 주택건설사업 또는 대지조성사업을 시행하는 자를 말한다. (30세대 미만의 건축주는 사업주체라 부르지 않음)</li>
+        <li><strong>주택법상 시행 사업의 종류 (2가지):</strong>
+            <ul>
+                <li><strong>주택건설사업:</strong> 아파트를 건설하는 사업. 단독/공동주택 <span class="highlight-red">30세대(호) 이상</span>일 때 사업계획승인을 받는다.</li>
+                <li><strong>대지조성사업:</strong> 주택을 짓기 위한 땅을 조성하는 사업. 세대수와 관계없이 면적 <span class="highlight-red">1만㎡ 이상</span>일 때 사업계획승인을 받는다.</li>
+            </ul>
+        </li>
+        <li><strong>사업주체의 대분류 (3가지):</strong> 
+            <span class="highlight-blue">국가·지자체·공사(국가등)</span>, 등록요건을 갖추어 국토교통부장관에게 등록한 <span class="highlight-blue">등록사업자</span>, 법정 요건을 갖춘 <span class="highlight-blue">주택조합</span>이 있다.</li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="9" x2="15" y2="9"></line><line x1="9" y1="13" x2="15" y2="13"></line><line x1="9" y1="17" x2="15" y2="17"></line></svg>
+        2. 등록사업자의 등록 요건 및 예외
+    </h2>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 20%;">구분</th>
+                <th style="width: 50%;">등록 기준 및 세부 요건</th>
+                <th style="width: 30%;">핵심 시험 출제 포인트</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>등록 대상<br>(연간 기준)</th>
+                <td>
+                    - 주택건설: 연간 단독주택 <span class="highlight-blue">20호</span>, 공동주택 <span class="highlight-blue">20세대</span> 이상<br>
+                    - 대지조성: 연간 <span class="highlight-red">1만㎡</span> 이상
+                </td>
+                <td>
+                    도시형 생활주택은 연간 <span class="highlight-red">30세대 이상</span>일 때 등록 적용 (완화 특례)
+                </td>
+            </tr>
+            <tr>
+                <th>등록 관청</th>
+                <td><span class="highlight-red">국토교통부장관</span>에게 등록</td>
+                <td>주택관리업자(<span class="highlight-blue">시장·군수·구청장</span> 등록)와 매칭 오답 유의</td>
+            </tr>
+            <tr>
+                <th>자본금 기준</th>
+                <td>법인: <span class="highlight-blue">3억 원</span> 이상 / 개인: 자산평가액 <span class="highlight-blue">6억 원</span> 이상</td>
+                <td>법인 <span class="highlight-red">3억 원</span> 주관식 빈출</td>
+            </tr>
+            <tr>
+                <th>기술 인력</th>
+                <td>
+                    - 주택건설: <span class="highlight-red">건축 분야</span> 기술인 1명 이상<br>
+                    - 대지조성: <span class="highlight-red">토목 분야</span> 기술인 1명 이상
+                </td>
+                <td>분야별 기술인 교차 매칭 주의</td>
+            </tr>
+            <tr>
+                <th>비등록 대상<br>(등록 면제)</th>
+                <td>
+                    1. <span class="highlight-blue">국가, 지방자치단체, 한국토지주택공사(LH), 지방공사</span><br>
+                    2. 등록사업자와 공동으로 사업을 시행하는 <span class="highlight-red">주택조합</span><br>
+                    3. 등록사업자와 공동으로 사업을 시행하는 <span class="highlight-red">고용자</span>
+                </td>
+                <td>
+                    주택조합과 고용자는 <span class="highlight-blue">공동으로 시행할 때만</span> 등록이 면제됨에 유의
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#b91c1c" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+            💡 [수험 족집게] 공동사업주체의 법적 지위 차이 분석 (핵심 암기)
+        </div>
+        <ul>
+            <li>공동사업주체는 '시행자'의 지위를 가지지만, 사업 승인 과정에서 <span class="highlight-red">시공자 책임</span>도 함께 지게 된다.</li>
+            <li><strong>토지소유자 + 등록사업자:</strong> 공동으로 사업을 시행할 수 있다 (<span class="highlight-blue">임의 규정</span>).</li>
+            <li><strong>주택조합 + 등록사업자:</strong> 공동으로 사업을 시행할 수 있다 (<span class="highlight-blue">임의 규정</span> / 단, 세대수를 증가하지 않는 리모델링 조합은 제외).</li>
+            <li><strong>고용자 + 등록사업자:</strong> 공동으로 사업을 시행하여야 한다 (<span class="highlight-red">강제 규정</span> / 고용주가 직원 주택을 직접 짓는 경우의 강력한 투기 방지 조치).</li>
+        </ul>
+    </div>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+        3. 공동사업주체의 요건 및 결합 메커니즘
+    </h2>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">조합/소유자 유형</th>
+                <th style="width: 50%;">법적 소유권 확보 기준 및 의무</th>
+                <th style="width: 25%;">업무 및 분담 형태</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>토지소유자</th>
+                <td>사업 대지의 소유권을 <span class="highlight-red">100% 확보</span>할 것 (저당권 등 말소 필수)</td>
+                <td rowspan="3">당사자 간의 합의에 따른 <span class="highlight-blue font-bold">협약(Agreement)</span>에 의거하여 책임과 업무를 분담함</td>
+            </tr>
+            <tr>
+                <th>고용자<br>(삼성전자 등)</th>
+                <td>자사 근로자 주택 건설 목적이며, 대지 소유권 <span class="highlight-red">100% 확보</span> 필수</td>
+            </tr>
+            <tr>
+                <th>주택조합<br>(지역/직장/리모델링)</th>
+                <td>
+                    - 원칙: 대지 소유권 <span class="highlight-blue">100% 확보</span><br>
+                    - 예외: 지역/직장조합이 지구단위계획 결정 필요 사업 시 소유권 <span class="highlight-red">95% 이상 확보</span>로 완화
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+        4. 등록사업자의 시공 자격 및 건설 층수 제한
+    </h2>
+    <ul>
+        <li><strong>시공이 가능한 자:</strong> 원칙적으로 건설산업기본법에 따른 <span class="highlight-blue">건설사업자</span>여야 하나, 일정한 시공 능력을 갖추어 <span class="highlight-blue">건설사업자로 간주되는 등록사업자</span>도 시공할 수 있다.</li>
+        <li><strong>간주 등록사업자의 시공 요건:</strong>
+            <ul>
+                <li>자본금: 법인 <span class="highlight-red">5억 원</span> 이상 / 개인: 자산평가액 <span class="highlight-red">10억 원</span> 이상 (일반 등록 요건인 3억/6억보다 훨씬 엄격함)</li>
+                <li>기술인력: 건축 분야 기술자 포함 총 <span class="highlight-blue">3명</span> 이상 확보</li>
+                <li>실적: 최근 5년간 주택건설실적 <span class="highlight-blue">100호(세대)</span> 이상 확보</li>
+            </ul>
+        </li>
+        <li><strong>주택 건설 층수 제한 및 예외 특례:</strong></li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">허용 층수 기준</th>
+                <th style="width: 50%;">충족해야 하는 법적 요건 및 구조</th>
+                <th style="width: 25%;">적용 한도 및 특징</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>5개층 이하<br>(원칙)</th>
+                <td>기본 간주 등록사업자가 시공할 수 있는 주택의 층수 한계</td>
+                <td>5개층 이하 주택만 시공</td>
+            </tr>
+            <tr>
+                <th>6층까지 가능<br>(완화 1)</th>
+                <td>각 층 거실 바닥면적 <span class="highlight-red">300㎡ 이내</span>마다 1개소 이상의 <span class="highlight-blue">직통계단</span>을 설치한 경우</td>
+                <td>정확히 <span class="highlight-red">6층까지</span> 완화 허용</td>
+            </tr>
+            <tr>
+                <th>6개층 이상 가능<br>(완화 2)</th>
+                <td>
+                    - 최근 3년간 <span class="highlight-blue">300세대 이상</span>의 공동주택을 건설한 실적이 있는 자<br>
+                    - 주택으로 쓰는 층수가 6개층 이상인 아파트 건설 실적이 있는 자
+                </td>
+                <td>층수 제한 없이 고층 아파트 시공 가능</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li><strong>공사 한도의 한계:</strong> 시공할 수 있는 자가 건설하는 주택의 연간 공사 규모는 해당 등록사업자의 자기자본(자본금 + 자본준비금 + 이익준비금)의 <span class="highlight-red">10배</span> 범위 내로 제한된다. (개인의 경우 평가액의 5배)</li>
+    </ul>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#b91c1c" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+            💡 [비교 분석] 주택상환사채의 발행 요건과 등록 자본금 비교
+        </div>
+        <ul>
+            <li><strong>주택상환사채:</strong> 등록사업자가 발행하여 주택으로 상환하는 사채로, 공신력을 위해 <span class="highlight-red">법인인 등록사업자만</span> 발행이 가능하며 개인은 원천적으로 발행할 수 없다. (자산평가액이 아무리 높아도 불가능)</li>
+            <li><strong>사채 발행 자본금 기준:</strong> 자본금 <span class="highlight-blue">5억 원</span> 이상이어야 하며, 최근 3년간 연평균 주택건설실적이 <span class="highlight-blue">300세대 이상</span>인 등록사업자만 금융기관 등의 지급보증을 받아 발행이 가능하다.</li>
+            <li><strong>발행 규모 제한:</strong> 최근 3년간 <span class="highlight-red">연평균 주택건설 호수 이내</span>로만 발행 규모를 한정한다.</li>
+        </ul>
+    </div>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><line x1="18" y1="2" x2="22" y2="6"></line><path d="M7.5 20.5L19 9l-4-4L3.5 16.5 2 22z"></path></svg>
+        5. 주관식 단답형 대비 핵심 용어 리스트 (빈칸 채우기)
+    </h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 괄호 안의 연한 영역을 마우스 드래그로 긁거나 인쇄하여 정답을 직접 적어보며 회독하십시오.</p>
+    
+    <ol>
+        <li>주택법령상 연간 20호 이상의 주택건설사업을 시행하려는 자는 누구에게 등록해야 하는가? 정답은 <span class="blank-answer">( 국토교통부장관 )</span>이다.</li>
+        <li>등록사업자로 등록하기 위해 법인이 확보해야 하는 법정 최소 자본금 기준은 <span class="blank-answer">( 3억 원 )</span> 이상이다.</li>
+        <li>등록사업자와 공동으로 주택건설사업을 시행하는 고용자는 주택법령상 등록을 <span class="blank-answer">( 하지 아니할 수 있다 )</span>. (또는 하지 않아도 된다)</li>
+        <li>근로자를 고용하는 고용자가 등록사업자와 공동으로 사업을 시행하려는 경우, 법적 지위 규정에 따라 공동으로 사업을 시행<span class="blank-answer">( 하여야 한다 )</span>.</li>
+        <li>주택조합이 등록사업자와 공동으로 사업을 시행하려는 경우에는 법정 지위 규정에 따라 공동으로 사업을 시행<span class="blank-answer">( 할 수 있다 )</span>.</li>
+        <li>주택조합 중 등록사업자와 공동시행 조합에서 원천 배제되는 대상은 세대수를 <span class="blank-answer">( 증가하지 아니하는 )</span> 리모델링주택조합이다.</li>
+        <li>건설사업자로 간주되는 등록사업자가 시공 자격을 갖추기 위해 법인이 확보해야 하는 자본금은 <span class="blank-answer">( 5억 원 )</span> 이상이다.</li>
+        <li>간주 등록사업자가 지상 6층 주택을 건설하기 위해 설치해야 하는 피난 시설 조건은 각 층 거실 바닥면적 300㎡ 이내마다 설치하는 <span class="blank-answer">( 직통계단 )</span>이다.</li>
+        <li>등록사업자가 시공할 수 있는 주택의 연간 공사 규모는 법인의 경우 해당 등록사업자 자기자본의 <span class="blank-answer">( 10 )</span>배를 초과할 수 없다.</li>
+        <li>주택조합이 등록사업자와 공동으로 대지를 조성할 때, 지구단위계획 결정이 필요한 사업의 경우 최소 <span class="blank-answer">( 95 )</span>퍼센트 이상의 소유권을 확보해야 한다.</li>
+        <li>등록사업자가 주택상환사채를 발행하기 위해 확보해야 하는 최근 3년간 연평균 주택건설실적은 최소 <span class="blank-answer">( 300 )</span>세대 이상이어야 한다.</li>
+        <li>주택상환사채를 발행하려는 등록사업자는 개인 자산평가액 기준이 존재하지 않으며 반드시 <span class="blank-answer">( 법인 )</span> 형태여야만 한다.</li>
+    </ol>
+
+</body>
+</html>

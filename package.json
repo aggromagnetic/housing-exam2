@@ -1,0 +1,13 @@
+{
+  "name": "housing-manager-exam-app",
+  "version": "1.0.0",
+  "description": "주택관리사보 2차 학습 플랫폼 및 오답 가중치 퀴즈 엔진",
+  "main": "app.js",
+  "scripts": {
+    "build": "node scripts/rename-notes.js && node scripts/build-data.js",
+    "start": "python3 -m http.server 8085"
+  },
+  "keywords": ["주택관리사보", "관계법규", "관리실무"],
+  "author": "",
+  "license": "MIT"
+}

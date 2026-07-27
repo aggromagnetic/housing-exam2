@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 공동주택관리실무 - 제26강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+            letter-spacing: -0.05em;
+        }
+        
+        h1 {
+            font-size: 13pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        /* 토너 절약 4색 강조 클래스 */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #16803d; 
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #6d28d9; 
+        }
+        
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        ol {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        /* 정답 리스트 3열 격자 레이아웃 */
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px 15px;
+        }
+
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        제26강. 남녀고용평등법상 차별적 처우 시정절차 및 노동조합법상 단결권·설립신고·총회 의결 종합 정리
+    </h1>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        1. 남녀고용평등법상 차별적 처우 등의 시정 신청 · 심리 및 손해배상(3배) 규정
+    </h2>
+    <ul>
+        <li><strong>시정신청 기간 및 신청 관청 (★출제 핵심 6개월 공식)</strong>:
+            <ul>
+                <li>근로자는 남녀별 차별적 처우를 받은 경우 차별적 처우가 있은 날(계속되는 차별적 처우는 그 종료일)부터 <span class="highlight-red">6개월 이내</span>에 노동위원회(지방노동위원회)에 시정을 신청할 수 있다.</li>
+                <li><strong>구제신청 vs 시정신청 제척기간 비교</strong>: 근로기준법상 부당해고 등 구제신청은 <span class="highlight-purple">3개월 이내</span>, 차별적 처우 시정신청은 <span class="highlight-red">6개월 이내</span>이다.</li>
+                <li><strong>시정신청 절차·방법 고시 주체</strong>: 필요한 사항은 고용노동부장관이 아닌 <span class="highlight-blue">중앙노동위원회</span>가 따로 정하여 고시한다.</li>
+            </ul>
+        </li>
+        <li><strong>조사·신문 및 증인출석 요구 (직권 가능)</strong>:
+            <ul>
+                <li>노동위원회는 시정신청을 받은 경우 <span class="highlight-blue">지체 없이</span> 필요한 조사 및 관계 당사자 신문을 실시하여야 한다 (14일 등 기한 제한 없음).</li>
+                <li>증인 출석 요구는 당사자의 신청뿐만 아니라 노동위원회의 <span class="highlight-red">직권으로도 가능</span>하다 ('직권으로 증인을 출석시킬 수 없다'는 지문은 오답).</li>
+            </ul>
+        </li>
+        <li><strong>조정 및 중재 절차 비교</strong>:
+            <ul>
+                <li><strong>조정 (시정명령 전 사전 절차)</strong>: 관계 당사자 쌍방 또는 일방의 신청이나 노동위원회의 <span class="highlight-purple">직권으로 개시</span>할 수 있다.</li>
+                <li><strong>중재 (강제력이 강한 절차)</strong>: 관계 당사자 <span class="highlight-red">쌍방이 합의하여 신청</span>한 경우에만 행하며, 일방 신청이나 직권에 의한 중재는 불가하다.</li>
+                <li><strong>조정·중재 처리기한 및 효력</strong>: 신청일부터 <span class="highlight-blue">60일 이내</span>에 조정안 제시 또는 중재결정을 하며, 완성 시 <span class="highlight-purple">재판상 화해</span>와 동일한 효력을 갖는다.</li>
+            </ul>
+        </li>
+        <li><strong>손해배상 명령 및 징벌적 손해배상 특례 (★3배 배상 규칙)</strong>:
+            <ul>
+                <li><strong>원칙</strong>: 차별적 처우로 인하여 근로자에게 발생한 <span class="highlight-blue">손해액을 기준</span>으로 배상을 명한다.</li>
+                <li><strong>징벌적 손해배상 특례</strong>: 사업주의 차별적 처우에 <span class="highlight-red">명백한 고의가 인정</span>되거나 차별적 처우가 <span class="highlight-red">반복되는 경우</span>에는 발생한 손해액의 <span class="highlight-red">3배를 넘지 아니하는 범위</span>에서 배상을 명할 수 있다 (2배로 출제 시 오답).</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        2. 차별시정 불복 절차(재심·행소) 및 행정기관(고용노동부장관 vs 노동위원회) 역할 완벽 비교
+    </h2>
+    <ul>
+        <li><strong>재심 및 행정소송 제기 기간 (★10일 / 15일 규칙)</strong>:
+            <ul>
+                <li><strong>중앙노동위원회 재심 신청</strong>: 지방노동위원회의 시정명령서나 기각결정서를 송달받은 날부터 <span class="highlight-red">10일 이내</span>에 중노위에 재심을 신청할 수 있다.</li>
+                <li><strong>행정소송 제기</strong>: 중앙노동위원회의 재심판정서를 송달받은 날부터 <span class="highlight-purple">15일 이내</span>에 행정소송법에 따른 소를 제기할 수 있다.</li>
+                <li><strong>확정 효력</strong>: 기간 내에 재심을 신청하지 않거나 행정소송을 제기하지 아니하면 시정명령, 기각결정 또는 재심판정은 <span class="highlight-blue">확정</span>된다.</li>
+            </ul>
+        </li>
+        <li><strong>행정기관 역할 분담 (★주어 바꾸기 문제 대처)</strong>:
+            <ul>
+                <li><strong>노동위원회 권한</strong>: 시정신청 접수, 조사·신문, 조정·중재, 시정명령 및 기각결정, 재심 심판.</li>
+                <li><strong>고용노동부장관 권한</strong>: 확정된 시정명령에 대한 <span class="highlight-red">이행상황 제출 요구</span>, 시정명령 불이행 <span class="highlight-red">신고 접수</span>, 사업주에 대한 <span class="highlight-blue">직권 시정요구</span>, 확정 시정명령의 <span class="highlight-purple">효력 확대 요구</span>, <span class="highlight-green">명예고용평등감독관 위촉</span>.</li>
+            </ul>
+        </li>
+        <li><strong>입증책임 및 문서 보존 기간</strong>:
+            <ul>
+                <li><strong>입증책임의 주체</strong>: 남녀고용평등법상 발생한 분쟁에 대한 모든 입증책임은 <span class="highlight-red">사업주가 부담</span>한다 (근로자와 공동 부담이 아님).</li>
+                <li><strong>서류 보존 기간</strong>: 남녀고용평등법 및 노동관계법상 작성·비치해야 하는 제반 서류의 보존기간은 원칙적으로 <span class="highlight-blue">3년</span>이다 (퇴직금 중간정산 서류 5년 등 일부 예외 제외).</li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 22%;">구분</th>
+                <th style="width: 39%;">노동위원회 (지노위 / 중노위)</th>
+                <th style="width: 39%;">고용노동부장관 (지방고용노동관서)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>주요 관할 업무</th>
+                <td class="highlight-blue">차별시정 신청 접수, 조사·신문, 조정·중재, 시정명령·기각결정, 재심판정</td>
+                <td class="highlight-red">시정명령 이행상황 제출 요구, 불이행 신고 수령, 직권 시정요구, 명예감독관 위촉</td>
+            </tr>
+            <tr>
+                <th>신청 / 불복 기한</th>
+                <td>차별일로부터 <span class="highlight-red">6개월 이내</span> 시정신청<br>지노위 결정 송달 후 <span class="highlight-purple">10일 이내</span> 재심</td>
+                <td>중노위 재심판정 송달 후 <span class="highlight-purple">15일 이내</span> 행정소송 제기 (법원)</td>
+            </tr>
+            <tr>
+                <th>징벌적 배상 한도</th>
+                <td class="highlight-red">고의·반복 시 손해액의 3배 이내 배상 명령</td>
+                <td>이행상황 미제출 시 과태료 부과 및 이행 지도</td>
+            </tr>
+            <tr>
+                <th>명예감독관 위촉</th>
+                <td>-</td>
+                <td class="highlight-green">노사가 추천한 근로자를 명예고용평등감독관으로 위촉 (사업주 권한 아님)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+        3. 노동조합법상 핵심 용어 정의(근로자·사용자·노동쟁의·쟁의행위) 및 노조 결격사유
+    </h2>
+    <ul>
+        <li><strong>노동조합법상 근로자 및 사용자 정의</strong>:
+            <ul>
+                <li><strong>근로자</strong>: 직업의 종류를 불문하고 임금·급료 기타 이에 준하는 <span class="highlight-blue">수입에 의하여 생활하는 자</span>를 말한다 (근로기준법상 '임금을 목적으로 근로를 제공하는 자'와 구별).</li>
+                <li><strong>사용자</strong>: 사업주, 사업 경영 담당자 또는 <span class="highlight-purple">근로자에 관한 사항에 대하여 사업주를 위하여 행동하는 자</span>를 말한다. (※ 사업주의 이익을 대표하여 행동하는 자는 사용자 지위에 해당하여 노조 가입 불가).</li>
+            </ul>
+        </li>
+        <li><strong>노동조합의 결격사유 (소극적 요건 4가지★)</strong>: 다음 중 어느 하나에 해당하는 단체는 노동조합법상 노동조합으로 보지 아니한다.
+            <ul>
+                <li>① 사용자나 항상 그의 이익을 대표하여 행동하는 자의 참가를 허용하는 경우.</li>
+                <li>② 경비의 주된 부분을 사용자로부터 원조받는 경우 (단, <span class="highlight-blue">최소한의 규모의 노동조합 사무소 제공</span>, 상급단체의 원조, 일부분 원조는 허용).</li>
+                <li>③ 공제, 수양 기타 복리사업<span class="highlight-red">'만을'</span> 목적으로 하는 경우 (복리사업 수행 자체는 가능하나 만을 목적으로 할 때 결격).</li>
+                <li>④ <span class="highlight-purple">'주로'</span> 정치운동을 목적으로 하는 경우 (부수적 정치운동은 가능).</li>
+            </ul>
+        </li>
+        <li><strong>해고자 등의 조합원 자격 특례 (종사근로자 의제)</strong>:
+            <ul>
+                <li>해고된 자가 노동위원회에 <span class="highlight-red">부당노동행위 구제신청</span>을 한 경우에는 <span class="highlight-purple">중앙노동위원회의 재심판정이 있을 때까지</span>는 조합원 자격을 유지하며 종사근로자로 본다.</li>
+            </ul>
+        </li>
+        <li><strong>노동쟁의 vs 쟁의행위 법적 개념 비교</strong>:
+            <ul>
+                <li><strong>노동쟁의</strong>: <span class="highlight-blue">노동조합과 사용자(또는 사용자단체)</span> 간에 근로조건의 결정 등에 관한 주장의 불일치로 인하여 발생한 분쟁 상태 (사용자의 명백한 단체협약 위반 포함). ※ 근로자 개인과 사용자의 분쟁이 아님에 유의.</li>
+                <li><strong>쟁의행위</strong>: 파업, 태업, 직장폐쇄 등 주장을 관철할 목적으로 업무의 정상적인 운영을 방해하는 행위 (파업·태업 = 노조, 직장폐쇄 = 사용자).</li>
+            </ul>
+        </li>
+        <li><strong>조세 부과 금지 규정</strong>: 노동조합에 대해서는 조세를 부과하지 아니한다. 단, <span class="highlight-red">사업주는 제외</span>한다 (사업주에게 발생한 소득 등에는 정상 과세).</li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M11 5H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-5"></path><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+        4. 노동조합 설립신고 관할 행정관청 · 보완/반려 기준 및 운영·총회 의결정족수
+    </h2>
+    <ul>
+        <li><strong>설립신고서 제출 관할 행정관청 (★초빈출 구분)</strong>: 노동조합을 설립하고자 하는 자는 <span class="highlight-red">규약</span>(조합원 명부 X)을 첨부하여 다음 관할에 제출하여야 한다.
+            <ul>
+                <li>연합단체인 노동조합 또는 2 이상의 특별시·광역시·도에 걸치는 단위노동조합: <span class="highlight-red">고용노동부장관</span>.</li>
+                <li>2 이상의 시·군·구(자치구)에 걸치는 단위노동조합: <span class="highlight-blue">특별시장·광역시장·도지사 (시·도지사)</span>.</li>
+                <li>그 외의 단일 시·군·구 관할 단위노동조합: <span class="highlight-purple">특별자치시장·특별자치도지사·시장·군수·구청장</span>.</li>
+            </ul>
+        </li>
+        <li><strong>신고증 교부, 보완요구 및 반려 절차</strong>:
+            <ul>
+                <li><strong>신고증 교부 시한</strong>: 하자 없는 경우 접수일부터 <span class="highlight-blue">3일 이내</span>에 교부.</li>
+                <li><strong>보완요구 (20일 이내)</strong>: 규약 미첨부, 설립신고서 기재사항 누락·허위, 임원 선거/규약 절차 위반 시 <span class="highlight-red">20일 이내</span>의 기간을 정하여 보완 요구 ('반려' 사유가 아님).</li>
+                <li><strong>반려 사유</strong>: 결격사유 4가지 해당 시, 보완기간 내에 보완서를 제출하지 아니한 때.</li>
+                <li><strong>성립 효력 발생 시점 (소급효★)</strong>: 설립신고증을 교부받은 때에는 <span class="highlight-red">설립신고서가 접수된 때</span>에 노동조합이 설립된 것으로 본다 (교부받은 때에 설립된 것으로 본다면 오답).</li>
+            </ul>
+        </li>
+        <li><strong>변경신고 및 해산신고 기한 (15일 vs 30일 규칙)</strong>:
+            <ul>
+                <li>설립 신고사항 변경신고 및 단체협약 체결 신고: <span class="highlight-purple">30일 이내</span>.</li>
+                <li>노동조합 해산신고: <span class="highlight-red">15일 이내</span> (해산신고만 15일 규칙).</li>
+            </ul>
+        </li>
+        <li><strong>총회 개최 주기 및 의결정족수 (일반 vs 특별정족수)</strong>:
+            <ul>
+                <li><strong>정기총회</strong>: <span class="highlight-blue">매년 1회 이상</span> 개최하여야 한다 (반기 1회 이상으로 출제 시 오답).</li>
+                <li><strong>일반 의결정족수</strong>: 재적조합원 과반수 출석 + <span class="highlight-purple">출석조합원 과반수 찬성</span> (임원의 선거 등).</li>
+                <li><strong>특별 의결정족수 (★출석 2/3 이상 찬성)</strong>: 재적조합원 과반수 출석 + <span class="highlight-red">출석조합원 3분의 2 이상 찬성</span>.
+                    <ul>
+                        <li>적용 대상: 규약의 제정·변경, 임원의 해임, 노동조합의 합병·분할·해산, 조직형태 변경.</li>
+                    </ul>
+                </li>
+                <li><strong>직접·비밀·무기명 투표 4대 필수사항</strong>: 규약의 제정·변경, 임원의 선거, 임원의 해임.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+            💡 [핵심 정리] 임원의 '선거' vs '해임' 의결정족수 및 투표 특례 비교
+        </div>
+        <ul>
+            <li><strong>임원의 선거</strong>: 재적조합원 과반수 출석 + 출석조합원 <span class="highlight-blue">과반수 찬성</span> (일반정족수). 가반수 찬성자 없는 경우 결선투표 가능.</li>
+            <li><strong>임원의 해임</strong>: 재적조합원 과반수 출석 + 출석조합원 <span class="highlight-red">3분의 2 이상 찬성</span> (특별정족수 적용).</li>
+            <li><strong>투표 방식</strong>: 선거와 해임 모두 조합원의 <span class="highlight-purple">직접·비밀·무기명 투표</span>에 의하여야 한다.</li>
+        </ul>
+    </div>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        5. 차별시정 및 노동조합법 핵심 숫자 및 법정 절차 종합 비교표
+    </h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 22%;">항목</th>
+                <th style="width: 39%;">차별적 처우 시정절차</th>
+                <th style="width: 39%;">노동조합 설립 및 운영</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>신청 / 신고 기한</th>
+                <td class="highlight-red">차별일로부터 6개월 이내 (지노위)</td>
+                <td>설립신고 하자 시 <span class="highlight-blue">20일 이내</span> 보완요구</td>
+            </tr>
+            <tr>
+                <th>불복 / 변경 기한</th>
+                <td>재심 신청 <span class="highlight-purple">10일</span> / 행정소송 <span class="highlight-purple">15일</span></td>
+                <td>변경신고 <span class="highlight-blue">30일</span> / 해산신고 <span class="highlight-red">15일</span></td>
+            </tr>
+            <tr>
+                <th>처리기한 / 효력</th>
+                <td>조정·중재 <span class="highlight-blue">60일 이내</span> (재판상 화해)</td>
+                <td>설립신고증 교부 <span class="highlight-blue">3일 이내</span> (접수 시 소급 성립)</td>
+            </tr>
+            <tr>
+                <th>핵심 배상 / 의결</th>
+                <td class="highlight-red">고의·반복 차별 시 손해액의 3배 이내 배상</td>
+                <td class="highlight-purple">규약 변경·임원 해임 시 출석 2/3 이상 찬성</td>
+            </tr>
+            <tr>
+                <th>입증책임 / 주기</th>
+                <td class="highlight-blue">입증책임 전부 사업주 부담</td>
+                <td class="highlight-green">정기총회 매년 1회 이상 개최</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><line x1="18" y1="2" x2="22" y2="6"></line><path d="M7.5 20.5L19 9l-4-4L3.5 16.5 2 22z"></path></svg>
+        6. 주관식 단답형 및 다단 빈칸 채우기 완벽 대비 (실전 훈련)
+    </h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡)에 들어갈 알맞은 핵심 용어나 법정 숫자를 아래 여유 공백에 직접 기재해 보십시오.</p>
+
+    <ol style="line-height: 2.1;">
+        <li>
+            남녀고용평등법상 차별적 처우를 받은 근로자는 차별적 처우가 있은 날부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )개월 이내에 노동위원회에 시정을 신청할 수 있다.
+        </li>
+        <li>
+            차별적 처우 시정신청 절차 및 방법에 관하여 필요한 사항은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )가 따로 정하여 고시한다.
+        </li>
+        <li>
+            노동위원회의 조정안 제시 또는 중재결정은 신청을 받은 날부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이내에 하여야 하며, 이는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )와 동일한 효력을 갖는다.
+        </li>
+        <li>
+            사업주의 차별적 처우에 명백한 고의가 인정되거나 반복되는 경우 노동위원회는 손해액의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )배를 넘지 아니하는 범위에서 배상을 명할 수 있다.
+        </li>
+        <li>
+            지방노동위원회의 차별시정명령에 불복하는 당사자는 송달받은 날부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이내에 중앙노동위원회에 재심을 신청할 수 있고, 재심판정서를 송달받은 날부터 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이내에 행정소송을 제기할 수 있다.
+        </li>
+        <li>
+            확정된 차별시정명령에 대하여 사업주에게 이행상황 제출을 요구하거나 이행하지 아니한 사업주를 신고받는 행정관청은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이다.
+        </li>
+        <li>
+            남녀고용평등법상 발생한 차별 관련 분쟁에 대한 입증책임은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )가 부담한다.
+        </li>
+        <li>
+            남녀고용평등법 및 노동조합법상 작성·비치해야 하는 관련 문서의 법정 보존기간은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년이다.
+        </li>
+        <li>
+            노동조합법상 근로자란 직업의 종류를 불문하고 임금·급료 기타 이에 준하는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )에 의하여 생활하는 자를 말한다.
+        </li>
+        <li>
+            노동조합 결격사유 중 복리사업 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )만을 목적으로 하거나 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 정치운동을 목적으로 하는 단체는 노동조합으로 보지 아니한다.
+        </li>
+        <li>
+            해고된 자가 노동위원회에 부당노동행위 구제신청을 한 경우 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )의 재심판정이 있을 때까지는 조합원 자격을 유지한다.
+        </li>
+        <li>
+            2 이상의 시·군·구에 걸치는 단위노동조합의 설립신고서는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )에게 제출하여야 한다.
+        </li>
+        <li>
+            노동조합 설립신고 시 첨부해야 하는 서류는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이며, 서류 하자 시 행정관청은 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이내의 기간을 정하여 보완을 요구하여야 한다.
+        </li>
+        <li>
+            노동조합 설립의 효력은 설립신고증을 교부받은 때 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )된 때로 소급하여 발생한다.
+        </li>
+        <li>
+            노동조합의 설립 신고사항 변경신고는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이내, 해산신고는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이내에 행정관청에 신고하여야 한다.
+        </li>
+        <li>
+            노동조합의 정기총회는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 1회 이상 개최하여야 한다.
+        </li>
+        <li>
+            노동조합의 규약 변경 및 임원의 해임은 재적조합원 과반수 출석과 출석조합원 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 이상의 찬성으로 의결한다.
+        </li>
+    </ol>
+
+    <!-- 수험생 정답 확인용 하단 3열 배치 그리드 영역 -->
+    <div style="font-size: 9.5pt; color: #666666; margin-top: 30px; padding: 15px; border-top: 1px dashed #666666; line-height: 1.8;">
+        <strong style="display: block; margin-bottom: 10px; color: #333333;">[제26강 주관식 단답형 정답 리스트]</strong>
+        <div class="answer-grid">
+            <div>1. ㉠ 6</div>
+            <div>2. ㉠ 중앙노동위원회</div>
+            <div>3. ㉠ 60, &nbsp; ㉡ 재판상 화해</div>
+            <div>4. ㉠ 3</div>
+            <div>5. ㉠ 10, &nbsp; ㉡ 15</div>
+            <div>6. ㉠ 고용노동부장관</div>
+            <div>7. ㉠ 사업주</div>
+            <div>8. ㉠ 3</div>
+            <div>9. ㉠ 수입</div>
+            <div>10. ㉠ 만을, &nbsp; ㉡ 주로</div>
+            <div>11. ㉠ 중앙노동위원회</div>
+            <div>12. ㉠ 특별시장·광역시장·도지사(시·도지사)</div>
+            <div>13. ㉠ 규약, &nbsp; ㉡ 20</div>
+            <div>14. ㉠ 접수</div>
+            <div>15. ㉠ 30, &nbsp; ㉡ 15</div>
+            <div>16. ㉠ 매년</div>
+            <div>17. ㉠ 3분의 2(또는 3분의 2 이상)</div>
+        </div>
+    </div>
+
+</body>
+</html>

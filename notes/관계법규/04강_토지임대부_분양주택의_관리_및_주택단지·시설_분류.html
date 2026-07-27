@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 관계법규 - 제4강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.6;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+        }
+        
+        h1 {
+            font-size: 12pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 5px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 8px;
+            padding-left: 5px;
+            border-left: 3px solid #111111;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 6px 8px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        /* 1강 서식 그대로 정밀 타격용 2색 강조색 */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+        
+        /* 토너 절약형 설명 상자 (점선 테두리) */
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 10px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.5;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333333;
+        }
+
+        /* 인쇄 대비 연한 회색 정답 처리 (드래그 및 마우스 호버 시 확인 가능) */
+        .blank-answer {
+            color: #e5e7eb; 
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        
+        .blank-answer:hover {
+            color: #1d4ed8;
+            cursor: pointer;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 5px;
+        }
+
+        /* 인쇄 최적화 설정 */
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+            .blank-answer {
+                color: #e5e7eb !important;
+                border-bottom: 1px dashed #666666;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>제4강. 토지임대부 분양주택의 관리 및 주택단지·시설 분류</h1>
+    
+    <h2>1. 토지임대부 분양주택의 임대료 기준</h2>
+    <ul>
+        <li><strong>임대료의 형태:</strong> 토지임대부 분양주택의 토지 임대료는 <span class="highlight-red">월별 임대료(월임대료)</span>를 원칙으로 한다. (주택임대료와 달리 토지 임대차이므로 목돈 부담을 줄이기 위함)</li>
+        <li><strong>보증금 전환 특례:</strong> 토지소유자와 주택을 분양받은 자가 합의한 경우에는 월임대료를 <span class="highlight-blue">보증금으로 전환하여 납부</span>할 수 있다.</li>
+        <li><strong>보증금 전환 시 이자율 기준:</strong> 월임대료를 보증금으로 전환할 때 적용하는 이자율은 <span class="highlight-blue">3년 만기 정기예금 평균이자율</span> 이상이어야 한다.</li>
+        <li><strong>증액 청구의 제한 기한:</strong> 토지임대료 약정을 체결한 후 <span class="highlight-red">2년</span>이 지나기 전에는 임대료 증액을 청구할 수 없다. (주택법 일반 규정인 1년보다 강력한 규제)</li>
+        <li><strong>증액 한도:</strong> 증액을 청구하는 경우에도 <span class="highlight-red">20분의 1(5%)</span>의 비율 또는 주택임대차보호법상 정액청구 한도 비율을 초과할 수 없다.</li>
+    </ul>
+
+    <h2>2. 토지임대부 분양주택의 재건축 및 강력한 규제</h2>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 20%;">구분 항목</th>
+                <th style="width: 45%;">법적 기준 및 내용</th>
+                <th style="width: 35%;">핵심 출제 포인트 (주관식/객관식)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>재건축 동의율</th>
+                <td>주택 소유자의 <span class="highlight-red">5분의 4</span> 이상의 동의를 받아 재건축할 수 있다.</td>
+                <td><span class="highlight-blue">집합건물법</span> 준용 (정비법 X)</td>
+            </tr>
+            <tr>
+                <th>토지소유자 거부 금지</th>
+                <td>토지소유자는 정당한 사유 없이 주택 소유자들의 재건축 요구를 거부할 수 없다.</td>
+                <td>분양자 보호를 위한 강행 규정</td>
+            </tr>
+            <tr>
+                <th>의무거주 기간</th>
+                <td>주택을 분양받은 자는 최초 입주 가능일부터 <span class="highlight-blue">5년</span> 동안 계속 거주해야 한다.</td>
+                <td>실수요자 중심 유도 (<span class="highlight-red">5년</span> 암기)</td>
+            </tr>
+            <tr>
+                <th>전매제한 기간</th>
+                <td>건설·공급되는 토지임대부 분양주택의 전매제한 기간은 무려 <span class="highlight-red">10년</span>이다.</td>
+                <td>현행법상 가장 강력한 전매제한</td>
+            </tr>
+            <tr>
+                <th>불가피한 양도 (공공매입)</th>
+                <td>전매제한 기간 내에 이사 등 불가피한 사정으로 주택을 양도하려는 경우 <span class="highlight-blue">한국토지주택공사(LH)</span>에 매입을 신청해야 한다.</td>
+                <td>민간 양도 불가, <span class="highlight-red">한국토지주택공사</span> 양도 필수</td>
+            </tr>
+            <tr>
+                <th>공공매입 소유권 취득 특례</th>
+                <td>LH가 매입 대금을 <span class="highlight-blue">지급한 날</span>에 등기 없이도 LH가 해당 주택의 소유권을 취득한 것으로 본다.</td>
+                <td>민법 제186조(등기 필요)에 대한 <span class="highlight-red">강력한 법률 특례</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="explanation">
+        <div class="explanation-title">💡 [수험 족집게] 토지임대부 분양주택의 법령 적용 순서 (체계 정립)</div>
+        <ul>
+            <li>토지임대부 분양주택에 관하여 특별법인 주택법에 규정이 없는 사항은 1순위로 <span class="highlight-red">집합건물법(집합건물의 소유 및 관리에 관한 법률)</span>을 적용하고, 집합건물법에도 없는 가장 최후순위 사안에 한해서만 사법의 일반법인 <span class="highlight-blue">민법</span>을 적용한다.</li>
+            <li>시험 지문에서 "민법을 집합건물법보다 우선 적용한다"고 순서를 바꾸는 함정이 자주 출제되므로 극도로 유의하십시오.</li>
+        </ul>
+    </div>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>3. 주택단지의 분리 기준 (별개의 주택단지 판단)</h2>
+    <ul>
+        <li><strong>원칙:</strong> 주택건설사업계획 승인을 받아 주택과 부대·복리시설을 건설하는 일단의 토지는 하나의 주택단지이다.</li>
+        <li><strong>예외 (각각 별개의 주택단지로 보는 시설 기준):</strong> 다음 시설로 분리된 토지는 <span class="highlight-red">각각 별개의 주택단지</span>로 보며, 이에 따라 관리주체도 각각 독립하여 둘 수 있다.</li>
+    </ul>
+    
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 30%;">분리 시설 종류</th>
+                <th style="width: 40%;">법적 규모 및 기준</th>
+                <th style="width: 30%;">시험 기출 및 암기법</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>철도·고속도로·자동차전용도로</th>
+                <td>규모 제한 없음 (존재 자체로 분리)</td>
+                <td>기간시설 자체의 위험성/단절성</td>
+            </tr>
+            <tr>
+                <th>일반도로</th>
+                <td>폭 <span class="highlight-red">20미터 이상</span>인 도로</td>
+                <td><span class="highlight-blue">일이(12)</span>가 아닌 <span class="highlight-red">이공(20) 일반도로</span></td>
+            </tr>
+            <tr>
+                <th>도시계획예정도로</th>
+                <td>폭 <span class="highlight-red">8미터 이상</span>인 도로</td>
+                <td><span class="highlight-blue">도팔(도8) 도시예정도로</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>4. 공동주택의 공동관리 기준 (공동주택관리법 시행령)</h2>
+    <ul>
+        <li><strong>개념:</strong> 이웃한 주택단지와 관리 비용 절감 및 효율성을 위해 하나의 관리주체가 통합 관리하는 형태이다.</li>
+        <li><strong>세대수 한계 요건:</strong> 공동관리하는 세대수 합계는 원칙적으로 <span class="highlight-blue">1,500세대 이하</span>여야 한다.</li>
+        <li><strong>세대수 초과 예외 특례:</strong> 의무관리대상 단지에 인접한 <span class="highlight-blue">300세대 미만</span>의 소규모 단지를 공동관리하는 경우에는 세대수 합계가 1,500세대를 초과해도 허용된다.</li>
+        <li><strong>지하도·육교 완화 특례:</strong> 단지 사이에 철도, 고속도로, 폭 20m 이상 일반도로 등이 있으면 공동관리가 금지되는 것이 원칙이나, 단지 사이에 <span class="highlight-red">지하도나 육교</span>가 설치되어 통행의 안전성과 편리성이 확보된 경우에는 예외적으로 공동관리가 허용된다.</li>
+        <li><strong>동의 요건 (극도로 중요):</strong> 공동관리를 하고자 할 때는 <span class="highlight-red">단지별 입주자 등 과반수</span>의 서면동의를 받아야 한다. (전체 합산 과반수가 아니며, <span class="highlight-blue">3분의 2 동의는 원천적으로 존재하지 않음</span>에 유의)</li>
+    </ul>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>5. 공구별 분할 건설 (공구의 개념 및 건설 기준)</h2>
+    <ul>
+        <li><strong>공구의 정의:</strong> 하나의 주택단지에서 둘 이상으로 구분되는 일단의 구역으로, <span class="highlight-blue">착공신고 및 사용검사</span>를 별도로 수행할 수 있는 구역을 말한다. (사업계획승인은 단지 전체로 1회만 받음)</li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">구분</th>
+                <th style="width: 50%;">세부 요건 및 수치</th>
+                <th style="width: 25%;">핵심 암기 지문</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>공구 간 경계 조건</th>
+                <td>공구 간에는 폭 <span class="highlight-red">6미터 이상</span>의 너비로 도로, 옹벽, 녹지, 어린이놀이터 등의 시설을 설치하여 경계를 설정해야 한다.</td>
+                <td><span class="highlight-red">6미터 이상</span> 너비</td>
+            </tr>
+            <tr>
+                <th>공구별 세대수</th>
+                <td>각 공구별로 주택건설 세대수는 최소 <span class="highlight-blue">300세대 이상</span>으로 해야 한다.</td>
+                <td>공구별 <span class="highlight-blue">300세대 이상</span></td>
+            </tr>
+            <tr>
+                <th>단지 전체 세대수</th>
+                <td>공구별로 분할 건설하기 위해 주택단지 전체 세대수는 최소 <span class="highlight-blue">600세대 이상</span>이어야 한다.</td>
+                <td>단지 전체 <span class="highlight-blue">600세대 이상</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>6. 공구별 착공 기한 및 사업계획승인 취소 특례</h2>
+    <ul>
+        <li><strong>최초로 공사를 진행하는 공구 (제1공구):</strong> 사업계획승인을 받은 날부터 <span class="highlight-blue">5년 이내</span>에 공사를 시작(착공신고)해야 한다. 미착공 시 사업계획승인을 <span class="highlight-red">취소할 수 있다.</span></li>
+        <li><strong>최초 공구 외의 공구 (제2공구 이후):</strong> 최초 공구의 착공신고일부터 <span class="highlight-red">2년 이내</span>에 공사를 시작해야 한다.</li>
+        <li><strong>취소 규정 배제 특례 (대단히 중요):</strong> 최초 공구 외의 공구(제2공구)가 2년 이내에 착공하지 않은 경우에는 <span class="highlight-red">사업계획승인을 취소할 수 없다.</span> (이미 제1공구가 착공되어 입주예정자가 존재하므로 전체 사업 취소는 원천 불가함)</li>
+    </ul>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>7. 부대시설 vs 복리시설의 정밀 분류 (빈출 100%)</h2>
+    <ul>
+        <li><strong>부대시설(기반·지원시설):</strong> 주택에 딸린 필수 시설 및 설비류 (<span class="highlight-blue font-bold">"사람이 거주하기 위해 반드시 붙어있어야 하는 뼈대 시설"</span>)</li>
+        <li><strong>복리시설(생활·편의시설):</strong> 입주민의 생활 복지와 편의를 위한 시설 (<span class="highlight-red font-bold">"없어도 거주는 가능하지만 삶의 질을 높여주는 복지 시설"</span>)</li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 20%;">시설 구분</th>
+                <th style="width: 50%;">핵심 시설 종류 리스트</th>
+                <th style="width: 30%;">오답 예방 핵심 키포인트</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>부대시설<br>(주택에 딸린 시설)</th>
+                <td>
+                    - 주차장, 관리사무소, 담장, 주택단지 안의 도로<br>
+                    - <span class="highlight-blue">건축설비</span> (승강기, 지능형 홈네트워크 설비 등)<br>
+                    - 소방시설, 방범설비 등<br>
+                    - <span class="highlight-red">보안등, 대문, 조경시설, 우편함</span> 등
+                </td>
+                <td>
+                    <span class="highlight-red">지역난방 공급시설은 제외</span><br>
+                    (간선시설에 가깝거나 독립 시설군임)
+                </td>
+            </tr>
+            <tr>
+                <th>복리시설<br>(입주민 복리시설)</th>
+                <td>
+                    - 어린이놀이터, 경로당, 유치원, 주민운동시설<br>
+                    - 근린생활시설(상가 - 입주자 공유 상가)<br>
+                    - <span class="highlight-blue">주민공동시설, 사회복지관, 도서관</span> 등
+                </td>
+                <td>
+                    단지 내 상가 중 <span class="highlight-red">일반에게 분양되는 복리시설은 관리 대상에서 제외</span>됨
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="explanation">
+        <div class="explanation-title">💡 [윤동섭 암기 공식] 복리시설에서 철저히 배제되는 2종 근린생활시설 ("다·단·한·총·장")</div>
+        <ul>
+            <li>아파트 단지 내 상가(근린생활시설)는 기본적으로 복리시설에 해당하나, 다음 5가지 시설은 주거 환경을 저해하므로 <span class="highlight-red">복리시설 분류에서 원천 제외</span>된다.</li>
+            <li><strong>다:</strong> <span class="highlight-blue">다중생활시설</span> (고시원)</li>
+            <li><strong>단:</strong> <span class="highlight-blue">단란주점</span></li>
+            <li><strong>한:</strong> <span class="highlight-blue">안마시술소</span> (※ 주의: 1종 근린생활시설인 '안마원'은 복리시설 포함이나, 2종인 '안마시술소'는 제외됨)</li>
+            <li><strong>총:</strong> <span class="highlight-blue">총포판매소</span></li>
+            <li><strong>장:</strong> <span class="highlight-blue">장의사</span></li>
+        </ul>
+    </div>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>8. 주관식 단답형 대비 핵심 용어 리스트 (빈칸 채우기)</h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 괄호 안의 연한 영역을 마우스 드래그로 긁거나 인쇄하여 정답을 직접 적어보며 회독하십시오.</p>
+    
+    <ol>
+        <li>토지임대부 분양주택의 토지 임대료는 <span class="blank-answer">( 월임대료 )</span>를 원칙으로 한다.</li>
+        <li>토지임대료 월임대료를 보증금으로 전환하여 납부할 경우 적용하는 이자율 기준은 <span class="blank-answer">( 3년 만기 정기예금 평균이자율 )</span> 이상이어야 한다.</li>
+        <li>토지임대료 약정 체결 후 임대료 증액을 청구하기 위해서는 최소 <span class="blank-answer">( 2 )</span>년이 지나야 한다.</li>
+        <li>토지임대부 분양주택의 주택 소유자들이 재건축을 하고자 할 때 필요한 소유자 동의율은 <span class="blank-answer">( 5분의 4 )</span> 이상이다.</li>
+        <li>토지임대부 분양주택을 분양받은 자는 최초 입주 가능일부터 최소 <span class="blank-answer">( 5 )</span>년 동안은 해당 주택에 계속 거주해야 한다.</li>
+        <li>토지임대부 분양주택의 주택 소유권 전매제한 기간은 최대 <span class="blank-answer">( 10 )</span>년이다.</li>
+        <li>전매제한 기간 내 이사 등 불가피한 사유로 전매하고자 할 때 매입 신청을 해야 하는 전담 공공기관은 <span class="blank-answer">( 한국토지주택공사 )</span>이다.</li>
+        <li>주택단지 분리 기준 중 일반도로의 경우 폭 <span class="blank-answer">( 20 )</span>미터 이상일 때 각각 별개의 주택단지로 본다.</li>
+        <li>주택단지 분리 기준 중 도시계획예정도로의 경우 폭 <span class="blank-answer">( 8 )</span>미터 이상일 때 각각 별개의 주택단지로 본다.</li>
+        <li>공동주택을 공동관리하고자 할 때 필요한 서면동의 요건은 <span class="blank-answer">( 단지별 입주자 등 과반수 )</span>의 서면동의이다.</li>
+        <li>공구별로 분할하여 건설 및 공급하고자 할 때, 각 공구 간 경계에는 최소 폭 <span class="blank-answer">( 6 )</span>미터 이상의 너비로 시설을 설치하여 경계를 설정해야 한다.</li>
+        <li>공구별로 분할 건설하기 위해 주택단지 전체가 확보해야 하는 최소 세대수는 <span class="blank-answer">( 600 )</span>세대 이상이다. (각 공구별 세대수는 최소 <span class="blank-answer">( 300 )</span>세대 이상)</li>
+        <li>공구별로 최초 공사 진행 공구 외의 공구가 최초 착공신고일부터 <span class="blank-answer">( 2 )</span>년 이내에 착공하지 않은 경우, 주택법상 사업계획승인을 취소할 수 없다.</li>
+        <li>주택단지 내 근린생활시설 중 안마원과 달리 복리시설 분류에서 철저히 제외되는 2종 근린생활시설은 <span class="blank-answer">( 안마시술소 )</span>이다.</li>
+    </ol>
+
+</body>
+</html>
