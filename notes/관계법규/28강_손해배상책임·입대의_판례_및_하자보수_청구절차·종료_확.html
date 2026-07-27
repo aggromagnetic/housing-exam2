@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 관계법규 - 제28강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght=400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+            letter-spacing: -0.05em;
+        }
+        
+        h1 {
+            font-size: 13pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        /* 토너 절약 4색 강조 클래스 */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #16803d; 
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #6d28d9; 
+        }
+        
+        /* 얇은 점선 형태의 토너 세이브 설명 상자 */
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        ol {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        /* 주관식 정답 가로 3열 배치 레이아웃 */
+        .answer-container {
+            margin-top: 30px;
+            padding: 15px;
+            border-top: 1px dashed #666666;
+            font-size: 10pt;
+            color: #777777;
+            line-height: 1.8;
+        }
+
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .answer-item {
+            border-bottom: 1px none #eeeeee;
+        }
+
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        제28강. 손해배상책임·입대의 판례 및 하자보수 청구절차·종료 확인·보증금 예치 특례 완벽 분석
+    </h1>
+    
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        1. 사업주체의 손해배상책임 및 입주자대표회의의 손해배상청구권 부인 핵심 판례
+    </h2>
+    <ul>
+        <li><strong>손해배상책임의 법정 의무</strong>: 사업주체는 담보책임기간 내에 공동주택의 하자로 인하여 입은 손해를 배상할 책임을 진다. (하자보수 책임과 손해배상 책임의 이원적 이행)</li>
+        <li><strong>입주자대표회의 손해배상청구권 귀속 법리 (★기출 필수 판례)</strong>:
+            <ul>
+                <li><strong>하자보수청구권</strong>: 입주자대표회의는 공동주택관리법령의 명시적 규정에 의하여 사업주체에게 <span class="highlight-blue">하자보수를 청구할 수 있는 법정 권리</span>를 갖는다.</li>
+                <li><strong>손해배상청구권 부인 (★출제 포인트)</strong>: 입주자대표회의는 법인격 없는 사단에 불과하여 재산권의 최종 주체가 될 수 없다. 따라서 하자에 가름하는 <span class="highlight-red">손해배상청구권은 청구할 수 없으며</span>, 오직 구분소유자(입주자) 개인에게만 원칙적으로 귀속된다.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        2. 전유부분·공용부분별 하자보수 청구 주체 및 지자체장 시정명령권
+    </h2>
+    <ul>
+        <li><strong>전유부분 vs 공용부분 청구 주체 구분</strong>:
+            <ul>
+                <li><strong>전유부분 청구 주체</strong>: 해당 세대의 <span class="highlight-blue">입주자</span> 또는 공공임대주택의 <span class="highlight-blue">임차인</span> (단, 관리주체가 입주자를 대행하여 청구할 수 있음).</li>
+                <li><strong>공용부분 청구 주체</strong>: <span class="highlight-purple">입주자대표회의, 임차인대표회의, 관리주체, 집합건물법상 관리단</span> (개별 입주자는 공용부분에 대해 직접 사업주체에 청구할 수 없으며 입대의등에 요청하여 청구함).</li>
+            </ul>
+        </li>
+        <li><strong>시장·군수·구청장의 이행명령권 신설 (★강제 집행권선)</strong>:
+            <ul>
+                <li>입대의등 또는 임차인등이 청구한 하자보수 요청에 대하여 사업주체가 정당한 사유 없이 이에 응하지 않는 경우, <span class="highlight-red">시장·군수·구청장은 사업주체에게 하자보수 시정명령</span>을 내릴 수 있다.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        3. 하자담보책임 만료 전 사전 통보(30일 전), 독려(20일 게시) 및 이의제기(30일 이내) 절차
+    </h2>
+    <ul>
+        <li><strong>사업주체의 만료 예정일 통보 (30일 전)</strong>: 사업주체는 담보책임기간이 만료되기 <span class="highlight-blue">30일 전까지</span> 그 만료 예정일과 미청구 시 청구권이 소멸한다는 사실을 <span class="highlight-blue">입주자대표회의 또는 임차인대표회의</span>에 서면 통보해야 한다.</li>
+        <li><strong>입대의의 입주자 독려 절차 (개별 통지 + 20일 게시)</strong>:
+            <ul>
+                <li><strong>전유부분</strong>: 입대의등은 만료 통보를 받은 즉시 입주자등에게 <span class="highlight-red">개별 통지</span>하고, 단지 게시판에 <span class="highlight-purple">20일 이상 게시</span>하여 만료 전 하자를 청구하도록 독려하여야 한다.</li>
+                <li><strong>공용부분</strong>: 입대의등이 만료일까지 직접 조사하여 사업주체에게 직접 보수를 청구한다.</li>
+            </ul>
+        </li>
+        <li><strong>사업주체의 조치 및 이의제기 절차 (지체 없이 / 30일 이내)</strong>:
+            <ul>
+                <li><strong>사업주체 조치</strong>: 사업주체는 청구를 받으면 <span class="highlight-blue">지체 없이</span> 보수하거나, 하자가 아니라고 판단되는 경우 그 명확한 이유를 기재하여 서면 통보한다.</li>
+                <li><strong>입주자등의 이의제기</strong>: 사업주체의 보수 결과나 거부 통보에 이의가 있는 경우, 입대의등 또는 입주자는 통보받은 날부터 <span class="highlight-red">30일 이내</span>에 이유를 기재한 서면으로 이의를 제기할 수 있다.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+            💡 [절차 요약] 담보책임 만료 단계별 법정 기한 체계
+        </div>
+        <ul>
+            <li><strong>사업주체의 만료 통보</strong>: 만료 예정일 <span class="highlight-blue">30일 전</span> 서면 통보 (입대의등 대상)</li>
+            <li><strong>입대의의 주민 알림 게시</strong>: <span class="highlight-purple">20일 이상</span> 게시판 게시 + 개별 통지</li>
+            <li><strong>하자보수 이행 처리</strong>: 청구 수령 후 <span class="highlight-green">지체 없이</span> 수행 (일반 청구 시 15일 이내 / 보수계획 상 최대 60일 이내)</li>
+            <li><strong>입주자등의 결과 이의제기</strong>: 사업주체 통보일로부터 <span class="highlight-red">30일 이내</span> 서면 제출</li>
+        </ul>
+    </div>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        4. 담보책임 종료확인서 절차 및 주민 5분의 1 이상 반대 시 의결 금지 특례
+    </h2>
+    <ul>
+        <li><strong>공용부분 종료확인서 작성 사전 동의 절차</strong>: 입대의 회장이 공용부분 담보책임 종료확인서에 서명하기 위해서는 사전에 내용을 입주자에게 <span class="highlight-blue">개별 통지하고 20일 이상 게시</span>한 후 <span class="highlight-purple">입주자대표회의의 의결</span>을 거쳐야 한다.</li>
+        <li><strong>주민 반대권에 의한 의결 차단 특례 (★1/5 법칙)</strong>:
+            <ul>
+                <li>사전 공개 기간 동안 전체 입주자의 <span class="highlight-red">5분의 1 이상</span>이 서면으로 종료확인서 작성에 반대하는 의견을 제출한 경우, 입주자대표회의는 종료확인서 작성에 관한 의결을 할 수 없다. (주민 자치권 보호)</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        5. 하자보수보증금 예치(3%), 면제 대상, 예치 기관 및 임대주택 분양전환 비율 산정 특례
+    </h2>
+    <ul>
+        <li><strong>하자보수보증금 예치 의무자 및 예치 명의</strong>:
+            <ul>
+                <li><strong>의무자</strong>: 사업주체 (건축주 포함).</li>
+                <li><strong>예치 명의자</strong>: 오직 <span class="highlight-blue">사용검사권자(시장·군수·구청장) 명의</span>로 예치한다. (입대의 명의가 아님에 유의)</li>
+                <li><strong>예치 면제 주체 (★시험 출제 포인트)</strong>: <span class="highlight-red">국가, 지방자치단체, 한국토지주택공사(LH), 지방공사</span>는 보증금 예치 의무가 전액 면제된다. (단, 예치는 면제되더라도 법적 하자보수 책임 자체가 면제되는 것은 아님!)</li>
+            </ul>
+        </li>
+        <li><strong>보증금 예치 수단 및 허용 기관</strong>:
+            <ul>
+                <li>현금 예치 또는 주택도시보증공사(HUG), 건설공제조합, 보증보험회사, 은행, 상호저축은행 등의 보증서로 제출한다. (★주의: <span class="highlight-purple">상장증권은 예치 수단에서 제외됨</span>)</li>
+            </ul>
+        </li>
+        <li><strong>보증금 산정 기준 및 임대주택 분양전환 세대비율 적용 특례</strong>:
+            <ul>
+                <li><strong>기본 산정공식 (3% 법칙)</strong>: 
+                    <br><span class="highlight-blue">예치금액 = (총사업비 - 대지조성 전 대지가격) × 3 / 100</span>
+                </li>
+                <li><strong>임대주택 분양전환 시 예치 특례</strong>: 임대주택은 임대 기간 중에는 보증금을 예치하지 않다가, 분양전환을 실시할 때 예치한다. 단, 전체 세대 중 일부 세대만 분양전환되는 경우에는 산출된 보증금 총액에 <span class="highlight-red">분양전환되는 세대의 비율</span>을 곱하여 계산된 금액만을 예치한다.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">구분 사안</th>
+                <th style="width: 38%;">일반 분양 공동주택</th>
+                <th style="width: 37%;">분양전환 임대주택 (임대사업자)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th class="highlight-blue">예치 시점</th>
+                <td>사용검사(승인) 신청 시 예치</td>
+                <td><span class="highlight-blue">분양전환을 승인(신청)하는 시점</span>에 예치</td>
+            </tr>
+            <tr>
+                <th class="highlight-purple">예치 금액 산정식</th>
+                <td>(총사업비 - 대지가격) × <span class="highlight-purple">3%</span></td>
+                <td>(총사업비 - 대지가격) × 3% × <span class="highlight-red">분양전환 세대 비율</span></td>
+            </tr>
+            <tr>
+                <th class="highlight-red">예치 면제 적용</th>
+                <td>국가, 지자체, LH, 지방공사 면제</td>
+                <td>공공주택사업자 중 공공기관 등 면제 동일 적용</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><line x1="18" y1="2" x2="22" y2="6"></line><path d="M7.5 20.5L19 9l-4-4L3.5 16.5 2 22z"></path></svg>
+        6. 주관식 단답형 및 다단 빈칸 채우기 완벽 대비 (실전 훈련)
+    </h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡)에 들어갈 알맞은 핵심 용어나 법정 숫자를 아래 여유 공백에 직접 기재해 보십시오.</p>
+    
+    <ol style="line-height: 2.1;">
+        <li>
+            대법원 판례상 입주자대표회의는 사업주체에 대하여 하자보수청구권은 가지나, 하자에 가름하는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )청구권은 소유자가 아니므로 직접 가지지 못한다.
+        </li>
+        <li>
+            공동주택 전유부분의 하자보수 청구는 해당 세대의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 또는 공공임대주택의 임차인이 직접 수행한다.
+        </li>
+        <li>
+            사업주체가 정당한 사유 없이 하자보수를 이행하지 않는 경우 사업주체에게 시정명령을 내릴 수 있는 행정 주체는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이다.
+        </li>
+        <li>
+            사업주체는 하자담보책임 기간이 만료되기 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 전까지 그 만료 예정일을 입주자대표회의 등에 서면으로 통보하여야 한다.
+        </li>
+        <li>
+            입주자대표회의가 만료 예정을 통보받은 경우 전유부분 입주자에게 개별 통지함과 동시에 게시판에 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이상 게시하여야 한다.
+        </li>
+        <li>
+            사업주체의 하자보수 완료 통보에 대해 입주자등이 이의를 제기하고자 하는 경우 통보받은 날부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이내에 서면으로 이의제기를 하여야 한다.
+        </li>
+        <li>
+            사업주체가 지체 없이 하자보수를 완료한 후 공용부분 담보책임 종료확인서를 작성하기 위해서는 사전에 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )의 의결을 거쳐야 한다.
+        </li>
+        <li>
+            공용부분 담보책임 종료확인서 작성 공고 기간 중 전체 입주자의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 이상이 서면으로 반대하는 경우 입대의는 종료확인서 작성 의결을 할 수 없다.
+        </li>
+        <li>
+            하자보수보증금은 입주자대표회의 명의가 아닌 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 명의로 금융기관 등에 예치하여야 한다.
+        </li>
+        <li>
+            사업주체 중 국가, 지방자치단체, 한국토지주택공사 및 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )는 하자보수보증금 예치 의무가 법률상 면제된다.
+        </li>
+        <li>
+            하자보수보증금 예치 금액을 산정할 때 기준이 되는 요율은 총사업비에서 대지가격을 뺀 금액의 100분의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이다.
+        </li>
+        <li>
+            임대주택을 분양전환하는 임대사업자가 예치해야 하는 하자보수보증금은 산출된 금액에 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 세대 비율을 곱하여 산정한다.
+        </li>
+        <li>
+            하자보수보증금의 예치 유효 수단 중 주식시장에 상장된 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )은 보증금 제출 수단에서 제외된다.
+        </li>
+        <li>
+            하자담보책임기간 만료 사전 통보를 받은 입대의가 공용부분에 대하여 조치해야 하는 방식은 직접 만료일까지 하자보수를 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )하는 것이다.
+        </li>
+        <li>
+            공용부분 하자보수 청구권자에 포함되는 집합건물법상 단체 명칭은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이다.
+        </li>
+        <li>
+            하자보수 보증금 예치 기관에는 은행, 주택도시보증공사 외에 상호저축은행법에 따른 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )도 포함된다.
+        </li>
+    </ol>
+
+    <!-- 수험생 정답 확인용 하단 주르륵 배치 영역 (가로 3열 정렬 방식) -->
+    <div class="answer-container">
+        <strong>[제28강 주관식 단답형 정답 리스트]</strong> (가로 3열 정렬 방식)
+        <div class="answer-grid">
+            <div class="answer-item"><strong>1.</strong> ㉠ 손해배상</div>
+            <div class="answer-item"><strong>2.</strong> ㉠ 입주자</div>
+            <div class="answer-item"><strong>3.</strong> ㉠ 시장·군수·구청장</div>
+            
+            <div class="answer-item"><strong>4.</strong> ㉠ 30(또는 삼십)</div>
+            <div class="answer-item"><strong>5.</strong> ㉠ 20(또는 스무)</div>
+            <div class="answer-item"><strong>6.</strong> ㉠ 30(또는 삼십)</div>
+            
+            <div class="answer-item"><strong>7.</strong> ㉠ 입주자대표회의</div>
+            <div class="answer-item"><strong>8.</strong> ㉠ 5분의 1</div>
+            <div class="answer-item"><strong>9.</strong> ㉠ 시장·군수·구청장(사용검사권자)</div>
+            
+            <div class="answer-item"><strong>10.</strong> ㉠ 지방공사</div>
+            <div class="answer-item"><strong>11.</strong> ㉠ 3(또는 삼)</div>
+            <div class="answer-item"><strong>12.</strong> ㉠ 분양전환되는</div>
+            
+            <div class="answer-item"><strong>13.</strong> ㉠ 상장증권</div>
+            <div class="answer-item"><strong>14.</strong> ㉠ 청구</div>
+            <div class="answer-item"><strong>15.</strong> ㉠ 관리단</div>
+            
+            <div class="answer-item"><strong>16.</strong> ㉠ 상호저축은행</div>
+            <div class="answer-item"></div>
+            <div class="answer-item"></div>
+        </div>
+    </div>
+
+</body>
+</html>

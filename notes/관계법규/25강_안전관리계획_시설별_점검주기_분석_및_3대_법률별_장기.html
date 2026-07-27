@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 관계법규 - 제25강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght=400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+            letter-spacing: -0.05em;
+        }
+        
+        h1 {
+            font-size: 13pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        /* 토너 절약 4색 강조 클래스 */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #16803d; 
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #6d28d9; 
+        }
+        
+        /* 얇은 점선 형태의 토너 세이브 설명 상자 */
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        ol {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        /* 주관식 정답 가로 3열 배치 레이아웃 */
+        .answer-container {
+            margin-top: 30px;
+            padding: 15px;
+            border-top: 1px dashed #666666;
+            font-size: 10pt;
+            color: #777777;
+            line-height: 1.8;
+        }
+
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .answer-item {
+            border-bottom: 1px none #eeeeee;
+        }
+
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        제25강. 안전관리계획 시설별 점검주기 분석 및 3대 법률별 장기수선·특별수선충당금 완전 비교
+    </h1>
+    
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        1. 안전관리계획 대상 시설, 교육 이수의무 및 정기 점검주기
+    </h2>
+    <ul>
+        <li><strong>안전관리 교육 체계</strong>:
+            <ul>
+                <li><strong>교육 대상자</strong>: 경비업무 종사자, 시설물 안전관리자, 안전관리책임자로 지정된 자.</li>
+                <li><strong>교육 주기 및 시간 (★출제 기출)</strong>: <span class="highlight-blue">연 2회 이내</span>에서 시장·군수·구청장이 실시하며, 매회별 <span class="highlight-red">4시간</span> 교육을 이수해야 한다.</li>
+                <li><strong>위탁 운영</strong>: 시·군·구청장은 방범교육은 경찰서장에게, 소방안전교육은 소방서장에게, 시설물 안전교육은 관련 법인·단체에 위임·위탁하여 실시한다.</li>
+            </ul>
+        </li>
+        <li><strong>안전관리계획 수립대상 주요 시설 (★최신 개정)</strong>:
+            <ul>
+                <li>연탄가스 배출기 (<span class="highlight-purple">세대별로 설치된 것은 제외</span>)</li>
+                <li>소방시설 및 <span class="highlight-red">피난방화시설</span> (★기존 소방시설에서 피난방화시설이 법령으로 추가 신설됨)</li>
+                <li>주차장, <span class="highlight-blue">지능형 홈네트워크 설비</span>, 주민운동시설, 주민휴게시설 (최근 신설 대상 시설)</li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">구분 구분</th>
+                <th style="width: 45%;">해당 시설물 범위</th>
+                <th style="width: 30%;">법정 점검 주기</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th class="highlight-blue">일반 안전진단 시설</th>
+                <td>소방시설, 피난방화시설, 어린이놀이터, 주민운동시설, 주민휴게시설 등</td>
+                <td><span class="highlight-blue">매 분기 1회 이상</span></td>
+            </tr>
+            <tr>
+                <th class="highlight-red">지능형 홈네트워크 설비 (★핵심)</th>
+                <td>지능형 홈네트워크 설비 전체 (단지서버, 홈게이트웨이 등)</td>
+                <td><span class="highlight-red">매월 1회 이상</span> (단독 예외 규정)</td>
+            </tr>
+            <tr>
+                <th class="highlight-purple">승강기 설비</th>
+                <td>승강기 안전관리법에 따른 자체점검 수행 시설</td>
+                <td>승강기법에 따름 (<span class="highlight-purple">매월 1회 이상</span>)</td>
+            </tr>
+            <tr>
+                <th class="highlight-green">위생진단 시설</th>
+                <td>어린이놀이터, 저수조, 중앙집중식 급수시설 등</td>
+                <td><span class="highlight-green">연 2회 이상</span></td>
+            </tr>
+            <tr>
+                <th class="highlight-blue">계절성 안전진단</th>
+                <td>석축, 옹벽, 절토사면(범면), 주차장 등</td>
+                <td>해빙기 진단 + 우기 진단 (연 1회 이상)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+            💡 [비교 학습] 공동주택관리법 vs 시설물안전법(시특법) 점검 시기 비교 (★혼동 주의)
+        </div>
+        <ul>
+            <li><strong>어린이놀이터의 이중 지정</strong>: 어린이놀이터는 시설 결함 방지를 위한 <span class="highlight-blue">안전진단(매분기 1회)</span> 대상이면서 동시에 위생 관리를 위한 <span class="highlight-green">위생진단(연 2회 이상)</span> 대상에 모두 해당한다.</li>
+            <li><strong>우기전 안전점검 시기</strong>: 공동주택관리법(우기진단)은 연 1회 실시하나, 시설물안전법(시특법)상의 우기 전 정기안전점검은 <span class="highlight-red">5월 ~ 6월</span>에 실시한다.</li>
+            <li><strong>동절기전 안전점검 시기</strong>: 공동주택관리법상 월동기 점검은 <span class="highlight-purple">9월 ~ 10월</span>에 실시하나, 시설물안전법(시특법)상의 동절기 전 정기안전점검은 <span class="highlight-purple">11월 ~ 12월</span>에 실시한다.</li>
+        </ul>
+    </div>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        2. 3대 법률별 장기수선계획 수립 및 충당금 적립 대상 비교
+    </h2>
+    <ul>
+        <li><strong>용어 체계 정리</strong>:
+            <ul>
+                <li>민간임대주택 및 공공임대주택에서 적립하는 돈의 명칭은 <span class="highlight-red">"특별수선충당금"</span>이다.</li>
+                <li>그러나 충당금 적립의 기준이 되는 상위 계획의 명칭은 3개 법률 모두 예외 없이 <span class="highlight-blue">"장기수선계획"</span>으로 통일되어 있다. (★주관식 작성 시 주의)</li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 22%;">구분</th>
+                <th style="width: 26%;">공동주택관리법 (분양주택)</th>
+                <th style="width: 26%;">민간임대주택특별법 (민간임대)</th>
+                <th style="width: 26%;">공공주택특별법 (공공임대)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th class="highlight-blue">충당금 명칭</th>
+                <td><span class="highlight-blue">장기수선충당금</span></td>
+                <td><span class="highlight-red">특별수선충당금</span></td>
+                <td><span class="highlight-red">특별수선충당금</span></td>
+            </tr>
+            <tr>
+                <th class="highlight-purple">적립금의 상위 계획</th>
+                <td>장기수선계획</td>
+                <td>장기수선계획</td>
+                <td>장기수선계획 (동일)</td>
+            </tr>
+            <tr>
+                <th class="highlight-red">수립·적립 대상 기준 (★핵심)</th>
+                <td>① 300세대 이상<br>② 승강기 설치<br>③ 중앙/지역난방<br>④ 주상복합건축물</td>
+                <td>① 300세대 이상<br>② 승강기 설치 <span class="highlight-purple">(150세대 이상)</span><br>③ 중앙/지역난방 <span class="highlight-purple">(150세대 이상)</span><br>④ 주상복합 <span class="highlight-purple">(150세대 이상)</span></td>
+                <td>① 300세대 이상<br>② 승강기 설치 <span class="highlight-red">(세대수 불문!)</span><br>③ 주상복합건축물<br><span class="highlight-green">(★지역난방 규정 없음!)</span></td>
+            </tr>
+            <tr>
+                <th class="highlight-green">수립 주체</th>
+                <td>사업주체, 건축주, 리모델링주체</td>
+                <td>민간임대사업자</td>
+                <td>공공주택사업자</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        3. 장기수선계획의 조정, 제출·인계 절차 및 관리사무소 비치 의무
+    </h2>
+    <ul>
+        <li><strong>제출 및 인계 절차의 차이점</strong>:
+            <ul>
+                <li><strong>공동주택관리법</strong>: 사업주체 등 수립 -> 사용검사 신청 시 사용검사권자 제출 -> 사용검사권자가 최초 구성되는 <span class="highlight-blue">관리주체</span>에게 인계.</li>
+                <li><strong>임대주택법(민간/공공)</strong>: 임대사업자가 수립 -> 사용검사 신청 시 사용검사권자 제출 -> 자기가 관리주체이므로 인계 절차가 없음. 대신 임대기간 동안 <span class="highlight-red">관리사무소에 의무 비치</span>하여야 함.</li>
+            </ul>
+        </li>
+        <li><strong>장기수선계획 조정 규정의 3대 법률별 비교 (★개정 신설 조문)</strong>:
+            <ul>
+                <li><strong>공동주택관리법</strong>: 매 3년마다 정기 검토·조정 / 3년 경과 전 수시조정 시 <span class="highlight-purple">전체 입주자(소유자) 과반수 서면동의</span>.</li>
+                <li><strong>민간임대주택특별법</strong>: 장기수선계획 조정에 관한 명시적 규정이 법에 아예 없음.</li>
+                <li><strong>공공주택특별법 (★최근 신설!)</strong>: 공공주택사업자가 계획 조정 시 반드시 <span class="highlight-red">임차인대표회의 구성원의 동의</span>를 받아야 함. (단, 임차인대표회의가 구성되지 않은 경우 <span class="highlight-purple">전체 임차인 과반수 동의</span> 필요)</li>
+            </ul>
+        </li>
+        <li><strong>보고 의무 신설</strong>: 임대주택의 시설 보수를 담보하기 위해 시장·군수·구청장은 임대사업자의 특별수선충당금 적립 여부를 시·도지사에게 보고하고, 시·도지사는 이를 종합하여 <span class="highlight-green">국토교통부장관에게 보고</span>하여야 한다.</li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        4. 적립 시기, 과태료, 분양전환 시 인계 의무 및 가상금리 제재
+    </h2>
+    <ul>
+        <li><strong>적립 시기 (공통)</strong>: 해당 공동주택의 사용검사일(또는 사용승인일)부터 <span class="highlight-blue">1년이 경과한 날이 속하는 달부터 매달</span> 적립한다. (다음 달이 아닌 해당 달부터 적립함)</li>
+        <li><strong>납부 의무자 및 과태료 제재 비교 (★개정 사항)</strong>:
+            <ul>
+                <li><strong>공동주택관리법</strong>: 관리주체가 <span class="highlight-blue">소유자</span>로부터 징수·적립함. 미적립 시 과태료 <span class="highlight-red">300만 원</span> (개정되어 300만 원으로 완화됨).</li>
+                <li><strong>임대주택법(민간/공공)</strong>: 임대사업자(소유자)가 직접 적립함. 미적립 또는 미인계 시 과태료 <span class="highlight-red">1,000만 원</span>.</li>
+            </ul>
+        </li>
+        <li><strong>분양전환 시 인계 의무</strong>: 임대주택이 양도되거나 분양전환되는 경우, 임대사업자는 적립된 특별수선충당금을 <span class="highlight-purple">최초로 구성되는 입주자대표회의</span>에게 반드시 인계하여야 한다.</li>
+        <li><strong>민간임대주택 가상금리 부과 제재 (★단독 신설 규정)</strong>:
+            <ul>
+                <li>임대사업자가 특별수선충당금을 적립하지 않아 1,000만 원의 과태료를 부과받고도 부과받은 날부터 <span class="highlight-red">6개월 이상</span> 계속해서 적립하지 아니하는 경우, 국토교통부장관은 주택도시기금 융자금에 대해 연 <span class="highlight-purple">1%포인트</span>의 가상금리를 부과할 수 있다.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        5. 장기수선충당금의 사용, 사용 절차 구분 및 최소 적립기준 고시
+    </h2>
+    <ul>
+        <li><strong>사용 vs 사용 절차의 명확한 구분 (★시험 출제 핵심)</strong>:
+            <ul>
+                <li><strong>사용 (돈의 집행 기준)</strong>: 장기수선충당금은 반드시 <span class="highlight-blue">장기수선계획</span>에 따라 사용하여야 한다.</li>
+                <li><strong>사용 절차 (돈의 집행 과정)</strong>: 관리주체가 장기수선계획에 따라 <span class="highlight-purple">장기수선충당금 사용계획서</span>를 작성하고, <span class="highlight-red">입주자대표회의의 의결</span>을 거쳐 사용한다. (과거 관리규약에서 입대의 의결로 엄격히 개정됨)</li>
+            </ul>
+        </li>
+        <li><strong>최소 적립금액 기준 고시 제도 신설</strong>:
+            <ul>
+                <li>사업주체나 관리주체가 적립금액을 임의로 낮게 설정하는 부작용을 방지하기 위하여, <span class="highlight-blue">국토교통부장관</span>은 주요시설의 계획적인 교체·보수를 위해 필요한 <span class="highlight-red">최소 적립금액의 기준을 정하여 고시</span>할 수 있으며, 장기수선계획 수립 시 이에 맞춰 정하여야 한다.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><line x1="18" y1="2" x2="22" y2="6"></line><path d="M7.5 20.5L19 9l-4-4L3.5 16.5 2 22z"></path></svg>
+        6. 주관식 단답형 및 다단 빈칸 채우기 완벽 대비 (실전 훈련)
+    </h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡)에 들어갈 알맞은 핵심 용어나 법정 숫자를 아래 여유 공백에 직접 기재해 보십시오.</p>
+    
+    <ol style="line-height: 2.1;">
+        <li>
+            시·군·구청장이 실시하는 방범교육 및 안전교육의 횟수 및 시간은 연 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )회 이내, 매회별 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )시간이다.
+        </li>
+        <li>
+            안전관리계획 수립 대상 시설 중 연탄가스 배출기는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )로 설치된 것은 안전관리계획 수립 대상에서 제외한다.
+        </li>
+        <li>
+            안전관리계획 대상 시설 중 소방시설 외에 법령 개정으로 추가 반영된 피난 관련 시설은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )시설이다.
+        </li>
+        <li>
+            안전관리계획 수립 대상 시설 중 지능형 홈네트워크 설비의 정기 안전진단 주기 기준은 매 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )회 이상이다.
+        </li>
+        <li>
+            단지 내 어린이놀이터시설 및 급수시설에 대하여 수행하여야 하는 위생진단의 법정 주기는 연 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )회 이상이다.
+        </li>
+        <li>
+            시설물안전법(시특법)에 따라 우기 전 정기안전점검을 실시해야 하는 법정 지정 월은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )월이다.
+        </li>
+        <li>
+            민간임대주택특별법상 특별수선충당금을 정립해야 하는 승강기가 설치된 민간임대주택의 세대수 기준은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )세대 이상이다.
+        </li>
+        <li>
+            공공주택특별법상 승강기가 설치된 공공임대주택은 세대수가 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )하더라도 장기수선계획을 수립하고 특별수선충당금을 적립하여야 한다.
+        </li>
+        <li>
+            민간임대주택 또는 공공임대주택의 임대사업자가 장기수선계획을 수립한 경우, 이를 인계하는 대신 임대기간 동안 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )에 갖추어 두어야 한다.
+        </li>
+        <li>
+            공공주택특별법상 공공주택사업자가 장기수선계획을 조정하고자 하는 경우, ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 구성원의 동의를 받아야 한다.
+        </li>
+        <li>
+            공동주택관리법상 관리주체가 장기수선충당금을 적립하지 아니한 경우 부과되는 과태료 기준 금액은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )만 원 이하이다.
+        </li>
+        <li>
+            임대사업자가 특별수선충당금을 미적립하여 1,000만 원의 과태료를 받고도 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )개월 이상 적립하지 아니한 경우 연 1%포인트의 가상금리가 부과될 수 있다.
+        </li>
+        <li>
+            분양전환되는 임대주택의 임대사업자는 적립된 특별수선충당금을 최초로 구성되는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )에게 인계하여야 한다.
+        </li>
+        <li>
+            장기수선충당금을 집행할 때 거쳐야 하는 사용 절차는 관리주체가 작성한 사용계획서에 대하여 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )의 의결을 거치는 것이다.
+        </li>
+        <li>
+            공동주택의 사용검사일로부터 장기수선충당금의 최초 적립이 개시되는 시점은 사용검사일부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이 경과한 날이 속하는 달이다.
+        </li>
+        <li>
+            주요시설의 계획적인 교체 및 보수를 위하여 장기수선충당금의 최소 적립금액 기준을 정하여 고시할 수 있는 권한자는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이다.
+        </li>
+    </ol>
+
+    <!-- 수험생 정답 확인용 하단 주르륵 배치 영역 (가로 3열 정렬 방식) -->
+    <div class="answer-container">
+        <strong>[제25강 주관식 단답형 정답 리스트]</strong> (가로 3열 정렬 방식)
+        <div class="answer-grid">
+            <div class="answer-item"><strong>1.</strong> ㉠ 2(또는 두) | ㉡ 4(또는 네)</div>
+            <div class="answer-item"><strong>2.</strong> ㉠ 세대별</div>
+            <div class="answer-item"><strong>3.</strong> ㉠ 피난방화</div>
+            
+            <div class="answer-item"><strong>4.</strong> ㉠ 월 1(또는 한)</div>
+            <div class="answer-item"><strong>5.</strong> ㉠ 2(또는 두)</div>
+            <div class="answer-item"><strong>6.</strong> ㉠ 5월, 6</div>
+            
+            <div class="answer-item"><strong>7.</strong> ㉠ 150(또는 백오십)</div>
+            <div class="answer-item"><strong>8.</strong> ㉠ 불문(또는 몇 세대이든 상관없)</div>
+            <div class="answer-item"><strong>9.</strong> ㉠ 관리사무소</div>
+            
+            <div class="answer-item"><strong>10.</strong> ㉠ 임차인대표회의</div>
+            <div class="answer-item"><strong>11.</strong> ㉠ 300(또는 삼백)</div>
+            <div class="answer-item"><strong>12.</strong> ㉠ 6(또는 여섯)</div>
+            
+            <div class="answer-item"><strong>13.</strong> ㉠ 입주자대표회의</div>
+            <div class="answer-item"><strong>14.</strong> ㉠ 입주자대표회의</div>
+            <div class="answer-item"><strong>15.</strong> ㉠ 1년(또는 일 년)</div>
+            
+            <div class="answer-item"><strong>16.</strong> ㉠ 국토교통부장관</div>
+            <div class="answer-item"></div>
+            <div class="answer-item"></div>
+        </div>
+    </div>
+
+</body>
+</html>

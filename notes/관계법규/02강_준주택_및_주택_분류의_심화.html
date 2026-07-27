@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 관계법규 - 제2강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.6;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+        }
+        
+        h1 {
+            font-size: 12pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 5px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 8px;
+            padding-left: 5px;
+            border-left: 3px solid #111111;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 6px 8px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        /* 프리미엄 블루 및 레드 강조색 (글자색만 정밀 타격하여 토너 절약) */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+        
+        /* 토너 절약형 설명 상자 (점선 테두리) */
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 10px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.5;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333333;
+        }
+
+        /* 인쇄 대비 연한 회색 정답 처리 (드래그 시 확인 가능) */
+        .blank-answer {
+            color: #e5e7eb; 
+            font-weight: bold;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 5px;
+        }
+
+        /* 인쇄 최적화 설정 */
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div style="text-align: center; margin-bottom: 30px;">
+        <span style="font-size: 14pt; font-weight: bold; border-bottom: 1px solid #111111; padding-bottom: 5px;">주택관리사보 2차 공동주택관계법규 단권화 노트</span>
+    </div>
+
+    <h1>제2강. 준주택 및 주택 분류의 심화</h1>
+    
+    <h2>1. 준주택(Semi-Residential Housing)의 의의 및 주택법 규정 배경</h2>
+    <ul>
+        <li><strong>법적 정의:</strong> 주택 외의 건축물과 그 부속토지로서 주거시설로 이용 가능한 시설 등을 말한다.</li>
+        <li><strong>주택법 규정 배경 (출제 핵심):</strong> 본래 주택법상 주택이 아님에도 규정하는 핵심 이유는 <span class="highlight-blue">주택도시기금</span>을 지원하기 위해서다. 본 기금은 원래 주택 건설에만 지원되나, 준주택(예: 오피스텔, 기숙사 등)에도 저리의 기금 혜택을 주어 실질적 주거 공간 확보를 돕는다.</li>
+        <li><strong>준주택 종류 (4종 암기 공식):</strong> <span class="highlight-red">기·다·노·오</span> (기숙사, 다중생활시설, 노인복지주택, 오피스텔)</li>
+    </ul>
+
+    <h2>2. 준주택의 건축법상 용도 및 시설군 체계</h2>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 20%;">준주택 종류</th>
+                <th style="width: 30%;">건축법상 용도 분류</th>
+                <th style="width: 30%;">건축법상 시설군 (9개 시설군)</th>
+                <th style="width: 20%;">용도변경 기준 및 특징</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>기숙사</th>
+                <td><span class="highlight-blue">공동주택</span> (6회 빈출)</td>
+                <td rowspan="2"><span class="highlight-red">주거업무시설군</span> (동일 시설군)</td>
+                <td rowspan="2">기숙사와 오피스텔 상호 간 변경 시, 동일 시설군 변경이므로 허가나 신고가 아닌 <span class="highlight-blue">대장 기재사항 변경신청</span>을 한다.</td>
+            </tr>
+            <tr>
+                <th>오피스텔</th>
+                <td><span class="highlight-blue">업무시설</span> (일반업무시설)</td>
+            </tr>
+            <tr>
+                <th>다중생활시설<br>(구 고시원)</th>
+                <td>바닥면적 500m² 미만: <span class="highlight-blue">제2종 근린생활시설</span><br>바닥면적 500m² 이상: <span class="highlight-red">숙박시설</span></td>
+                <td><span class="highlight-red">영업시설군</span> (규모 불문 동일)</td>
+                <td>상위군(영업시설군)으로 변경 시 <span class="highlight-blue">허가</span>,<br>하위군으로 변경 시 <span class="highlight-red">신고</span> 적용</td>
+            </tr>
+            <tr>
+                <th>노인복지주택</th>
+                <td><span class="highlight-blue">노유자시설</span> (노인복지시설 중 주택)</td>
+                <td><span class="highlight-blue">교육복지시설군</span></td>
+                <td>명칭에 주택이 붙으나 준주택임에 유의</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="explanation">
+        <div class="explanation-title">💡 [체계 해킹] 건축법상 행위 3대장과 용도변경 메커니즘</div>
+        <ul>
+            <li><strong>건축법상 행위 종류:</strong> <span class="highlight-blue">건축, 대수선, 용도변경</span>이 있으며, 모두 건축법 규정을 따라야 한다.</li>
+            <li><strong>건축 및 대수선 절차:</strong> 원칙은 <span class="highlight-blue">허가</span>이며, 예외적으로 경미한 사항에 한해 <span class="highlight-red">신고</span>를 적용한다 (예외 신고 규정이 주로 기출됨).</li>
+            <li><strong>용도변경 허가 vs 신고 공식:</strong> 
+                <ul>
+                    <li>하위 시설군에서 상위 시설군으로 상향 변경: <span class="highlight-blue">허가 대상</span></li>
+                    <li>상위 시설군에서 하위 시설군으로 하향 변경: <span class="highlight-red">신고 대상</span></li>
+                    <li>동일 시설군 내 용도 상호 변경 (예: 기숙사 ↔ 오피스텔): 허가나 신고가 아닌 <span class="highlight-blue">건축물대장 기재사항 변경신청</span> 대상</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>3. 민간임대주택법 및 공공주택법상 준주택 범위 비교</h2>
+    <ul>
+        <li><strong>임대주택 요건의 확장:</strong> 임대주택법상 주택의 개념은 반드시 주택법상 주택이어야 하는 것은 아니며, 예외적으로 일정 요건을 갖춘 준주택을 포함한다.</li>
+    </ul>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 20%;">법령 구분</th>
+                <th style="width: 45%;">등록 가능한 준주택 요건</th>
+                <th style="width: 35%;">핵심 면적 및 실수 기준</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>민간임대주택법<br>(3가지 요건 준용)</th>
+                <td>
+                    1. 주택 외 건축물 중 <span class="highlight-blue">일반기숙사</span>로 리모델링한 건축물<br>
+                    2. 기숙사 중 <span class="highlight-red">임대형기숙사</span><br>
+                    3. 준주택 중 <span class="highlight-blue">오피스텔</span> (바닥난방, 부엌, 화장실 등 완비)
+                </td>
+                <td>
+                    임대형기숙사: 최소 <span class="highlight-red">20실 이상</span> 등록 필요<br>
+                    오피스텔: 전용면적 <span class="highlight-red">120m² 이하</span> (기존 85m²에서 완화 개정 완료)
+                </td>
+            </tr>
+            <tr>
+                <th>공공임대주택법<br>(공공준주택 4종)</th>
+                <td>공공주택사업자가 매입/건설하여 임대하는 <span class="highlight-blue">기숙사, 다중생활시설, 노인복지주택, 오피스텔</span> 전체</td>
+                <td>
+                    용도 불문 전체 전용면적 <span class="highlight-red">85m² 이하</span>일 것 (오피스텔 포함 전체 기준)
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>4. 국민주택(National Housing)과 주거전용면적 산정 방식</h2>
+    <ul>
+        <li><strong>국민주택의 정의:</strong> 국가, 지자체, LH, 지방공사(<span class="highlight-blue">국·지·주·지</span>)가 직접 건설하거나, 국가·지자체 재정 또는 <span class="highlight-red">주택도시기금</span>을 지원받아 건설·개량되는 주택으로서 <span class="highlight-red">국민주택규모 이하</span>인 주택을 말한다.</li>
+        <li><strong>국민주택규모의 한계 수치:</strong>
+            <ul>
+                <li><strong>원칙:</strong> 주거전용면적 1호 또는 1세대당 <span class="highlight-red">85m² 이하</span></li>
+                <li><strong>예외:</strong> <span class="highlight-blue">수도권을 제외한</span> 도시지역이 아닌 읍 또는 면 지역은 1호·1세대당 <span class="highlight-red">100m² 이하</span></li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 20%;">구분</th>
+                <th style="width: 50%;">주거전용면적 정밀 산정 기준</th>
+                <th style="width: 30%;">제외 및 포함 범위 특징</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>단독주택</th>
+                <td>각 층의 <span class="highlight-red">벽의 중심선</span>(중심선 치수)으로 둘러싸인 수평투영면적 기준</td>
+                <td>
+                    - 지하실(거실 사용 부분 <span class="highlight-blue">포함</span>, 그 외 <span class="highlight-red">제외</span>)<br>
+                    - 본 건물과 분리된 창고, 차고, 화장실 면적 <span class="highlight-red">제외</span>
+                </td>
+            </tr>
+            <tr>
+                <th>공동주택</th>
+                <td>외벽의 <span class="highlight-red">내부선</span>(안목 치수)으로 둘러싸인 수평투영면적 기준</td>
+                <td>
+                    복도, 계단, 현관 등 공용면적은 <span class="highlight-blue">원천 제외</span>하며 오직 안목치수만 전용면적으로 산정
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="explanation">
+        <div class="explanation-title">💡 [건축지식 매칭] 건축면적과 바닥면적의 핵심 비교</div>
+        <ul>
+            <li><strong>건축면적:</strong> 건물 <span class="highlight-blue">외벽의 중심선</span>으로 둘러싸인 수평투영면적으로, 한 동의 건물에 오직 <span class="highlight-red">1개</span>만 존재한다.</li>
+            <li><strong>바닥면적:</strong> 각 층의 <span class="highlight-blue">벽, 기둥의 중심선</span>으로 둘러싸인 수평투영면적으로, 층수나 구획별로 <span class="highlight-red">여러 개(수 개)</span> 존재할 수 있다.</li>
+        </ul>
+    </div>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>5. 도시형 생활주택 및 한 건축물 내 중복 건축 제한</h2>
+    <ul>
+        <li><strong>기본 요건:</strong> 도시지역에 건설하는 <span class="highlight-red">300세대 미만</span>의 국민주택규모(<span class="highlight-blue">85m² 이하</span>)에 해당하는 주택이다.</li>
+        <li><strong>아파트형 주택 (구 소형주택) 요건 개정:</strong> 반드시 건축법상 <span class="highlight-blue">아파트</span> 형식이어야 하며, 독립 주거(욕실, 부엌)를 확보하되 <span class="highlight-red">지하층 세대 설치는 원천 금지</span>된다.</li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">원칙 및 용어</th>
+                <th style="width: 50%;">복합건축 제한 및 예외 허용 기준</th>
+                <th style="width: 25%;">핵심 암기 지문</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>대원칙</th>
+                <td>하나의 건축물에는 도시형 생활주택과 <span class="highlight-red">그 밖의 주택</span>을 함께 건축할 수 없으며, 단지형 주택(연립·다세대)과 아파트형 주택도 함께 건축할 수 없다.</td>
+                <td>함께 건축 불가 원칙</td>
+            </tr>
+            <tr>
+                <th>예외 1<br>(면적 특례)</th>
+                <td>아파트형 주택과 주거전용면적이 <span class="highlight-blue">85m²를 초과하는 주택 1세대</span>를 함께 건축하는 경우는 허용한다 (주인세대 거주용).</td>
+                <td>85m² 초과 1세대 가능</td>
+            </tr>
+            <tr>
+                <th>예외 2<br>(지역 특례)</th>
+                <td><span class="highlight-red">준주거지역 또는 상업지역</span>에서는 아파트형 주택과 <span class="highlight-blue">도시형 생활주택 외의 주택</span>(85m² 초과 일반 주택 등)을 함께 건축할 수 있다.</td>
+                <td>
+                    <span class="highlight-red">상업·준주거지역만 가능</span><br>(일반주거지역 적용 X)
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="explanation">
+        <div class="explanation-title">💡 [지문 함정 해킹] '그 밖의 주택' vs '도시형 생활주택 외의 주택'의 실익</div>
+        <ul>
+            <li><strong>'그 밖의 주택':</strong> 도시형 생활주택 요건(300세대 미만, 85m² 이하)을 벗어나는 모든 일반 주택을 의미한다.</li>
+            <li><strong>상업·준주거 특례 제한:</strong> 상업지역이라 하더라도 아파트형 주택과 <span class="highlight-blue">단지형 연립/다세대주택</span>(도시형 생활주택의 일종)을 한 건물에 짓는 것은 <span class="highlight-red">여전히 불가능</span>하다. 즉, 특례 조항의 파트너는 '도시형 생활주택 외의 주택'으로 명시되어 있어 단지형 주택의 혼합 건축을 철저히 차단한다.</li>
+        </ul>
+    </div>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>6. 국토계획법(국계법)상 용도지역 중 도시지역 분류</h2>
+    <ul>
+        <li>도시형 생활주택이 건설되는 공간인 '도시지역'은 국토계획법상 엄밀히 분류되는 용도지역 체계에 근거한다.</li>
+    </ul>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">도시지역 대분류</th>
+                <th style="width: 50%;">세부 분류 체계</th>
+                <th style="width: 25%;">시험 빈출 포인트</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>주거지역</th>
+                <td><span class="highlight-blue">전용주거지역</span>, <span class="highlight-blue">일반주거지역</span>, <span class="highlight-red">준주거지역</span></td>
+                <td>준주거지역 주관식 출제</td>
+            </tr>
+            <tr>
+                <th>상업지역</th>
+                <td><span class="highlight-red">중심상업</span>, <span class="highlight-blue">일반상업</span>, <span class="highlight-blue">근린상업</span>, <span class="highlight-blue">유통상업</span></td>
+                <td>중심상업지역 용어 기출</td>
+            </tr>
+            <tr>
+                <th>공업지역</th>
+                <td>전용공업지역, 일반공업지역, 준공업지역</td>
+                <td>세부 분류 명칭 조율</td>
+            </tr>
+            <tr>
+                <th>녹지지역</th>
+                <td>보존녹지지역, 생산녹지지역, 자연녹지지역</td>
+                <td>용도지역 중 대분류</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>7. 주관식 단답형 대비 핵심 용어 리스트 (빈칸 채우기)</h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 괄호 안의 연한 영역을 마우스 드래그로 긁거나 인쇄하여 정답을 직접 적어보며 회독하십시오.</p>
+    
+    <ol>
+        <li>주택 외의 건축물과 그 부속토지로서 주거시설로 이용 가능한 시설을 주택법령상 <span class="blank-answer">( 준주택 )</span>이라 한다.</li>
+        <li>준주택 중 기숙사는 건축법상 <span class="blank-answer">( 공동주택 )</span> 용도에 속하나, 주택법상 주택 분류에서 제외되고 준주택으로 취급된다.</li>
+        <li>기숙사와 오피스텔은 건축법상 동일한 시설군인 <span class="blank-answer">( 주거업무시설군 )</span>에 속하므로 상호 용도변경 시 대장 기재사항 변경신청을 한다.</li>
+        <li>다중생활시설은 바닥면적 <span class="blank-answer">( 500 )</span>제곱미터 미만인 경우 제2종 근린생활시설에 해당하고, 그 이상인 경우 숙박시설에 해당한다.</li>
+        <li>민간임대주택법상 임대 가능한 오피스텔의 규모는 전용면적 <span class="blank-answer">( 120 )</span>제곱미터 이하이어야 한다.</li>
+        <li>공공준주택으로 등록 가능한 기숙사, 다중생활시설, 오피스텔 등의 전용면적 기준은 규모 불문 <span class="blank-answer">( 85 )</span>제곱미터 이하이어야 한다.</li>
+        <li>국민주택 규모란 1호 또는 1세대당 주거전용면적이 85제곱미터 이하를 말하나, 수도권을 제외한 도시지역이 아닌 읍·면 지역은 <span class="blank-answer">( 100 )</span>제곱미터 이하로 규정한다.</li>
+        <li>단독주택의 주거전용면적 산정 시에는 각 층의 <span class="blank-answer">( 벽의 중심선 )</span>을 기준으로 산정하며, 지하실 및 분리된 창고 면적 등은 제외한다.</li>
+        <li>공동주택의 주거전용면적은 단독주택과 달리 외벽의 <span class="blank-answer">( 내부선 )</span>을 기준으로 안목치수만을 산정한다.</li>
+        <li>도시형 생활주택이란 도시지역에 건설하는 <span class="blank-answer">( 300 )</span>세대 미만의 국민주택규모에 해당하는 주택이다.</li>
+        <li>도시형 생활주택의 한 종류인 아파트형 주택은 쾌적한 주거환경을 위해 <span class="blank-answer">( 지하층 )</span> 세대 설치를 전면 금지한다.</li>
+        <li>상업지역 및 <span class="blank-answer">( 준주거지역 )</span> 내에서는 아파트형 주택과 도시형 생활주택 외의 주택을 예외적으로 함께 건축할 수 있도록 허용한다.</li>
+        <li>국토계획법상 도시지역은 주거지역, 상업지역, <span class="blank-answer">( 공업지역 )</span>, 녹지지역으로 대분류된다.</li>
+    </ol>
+
+</body>
+</html>
