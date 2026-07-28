@@ -78,13 +78,13 @@ function parseHtmlNote(fileObj) {
     // Remove explanation/callout boxes to prevent counting lecture explanation lists as quiz items
     let quizSearchArea = content.replace(/<div[^>]*class=["'][^"']*explanation[^"']*["'][^>]*>[\s\S]*?<\/div>/gi, '');
 
-    // Locate the LAST quiz section heading in the document to isolate true quiz items
+    // Locate true Quiz Section starting from the FIRST quiz heading in the document
     const hMatches = [...quizSearchArea.matchAll(/<h[23][^>]*>([\s\S]*?)<\/h[23]>/gi)];
     let quizStartIndex = -1;
-    for (let i = hMatches.length - 1; i >= 0; i--) {
+    for (let i = 0; i < hMatches.length; i++) {
         const text = cleanText(hMatches[i][1]);
         if (text.match(/주관식|빈칸|단답형|실전\s*훈련|핵심\s*용어|확인\s*문제|실전\s*출제/i)) {
-            quizStartIndex = hMatches[i].index + hMatches[i][0].length;
+            quizStartIndex = hMatches[i].index;
             break;
         }
     }
@@ -109,7 +109,7 @@ function parseHtmlNote(fileObj) {
     if (answerGridMatch) {
         const rawAnsBlock = answerGridMatch[1];
 
-        // 1) Match class="answer-item" specifically if available (e.g. Rel-Law 19-32)
+        // 1) Match class="answer-item" specifically if available
         const itemMatches = [...rawAnsBlock.matchAll(/<div[^>]*class=["'][^"']*answer-item[^"']*["'][^>]*>([\s\S]*?)<\/div>/gi)];
         if (itemMatches.length > 0) {
             itemMatches.forEach(m => {
@@ -125,42 +125,33 @@ function parseHtmlNote(fileObj) {
             });
         }
 
-        // 2) Match standard div elements and inner <br> lines
+        // 2) Match div elements with inner content (e.g. <div><strong>1번 문항</strong><br> ㉠ 직접</div>)
         if (Object.keys(answersMap).length === 0) {
             const divItems = [...rawAnsBlock.matchAll(/<div[^>]*>([\s\S]*?)<\/div>/gi)];
             if (divItems.length > 0) {
                 divItems.forEach(item => {
-                    const itemHtml = item[1];
-                    const lines = itemHtml.split(/<br\s*\/?>|\n/gi);
-                    lines.forEach(line => {
-                        const txt = cleanText(line);
-                        const numMatch = txt.match(/^(\d+)(?:번\s*문항|번|\.)\s*(.*)/);
-                        if (numMatch) {
-                            const qNum = parseInt(numMatch[1], 10);
-                            const ansText = numMatch[2].trim();
-                            if (qNum && ansText) {
-                                answersMap[qNum] = ansText;
-                            }
+                    const txt = cleanText(item[1]);
+                    const numMatch = txt.match(/(\d+)(?:번\s*문항|번|\.)\s*([\s\S]*)/);
+                    if (numMatch) {
+                        const qNum = parseInt(numMatch[1], 10);
+                        const ansText = numMatch[2].trim();
+                        if (qNum && ansText) {
+                            answersMap[qNum] = ansText;
                         }
-                    });
+                    }
                 });
             }
         }
         
-        // 3) Global line-by-line fallback
+        // 3) Universal Global Single-line / Multi-line Pattern Matcher (1. ans1  2. ans2  3. ans3)
         if (Object.keys(answersMap).length === 0) {
-            const rawText = answerGridMatch[1];
-            // Split by br tags or newlines
-            const lines = rawText.split(/<br\s*\/?>|\n/gi);
-            lines.forEach(line => {
-                const txt = cleanText(line);
-                const numMatch = txt.match(/^(\d+)\.\s*(.*)/);
-                if (numMatch) {
-                    const qNum = parseInt(numMatch[1], 10);
-                    const ansContent = numMatch[2].trim();
-                    if (qNum && ansContent) {
-                        answersMap[qNum] = ansContent;
-                    }
+            const cleanAnsBlock = cleanText(rawAnsBlock).replace(/\s+/g, ' ');
+            const globalMatches = [...cleanAnsBlock.matchAll(/(\d+)\.\s*(.*?)(?=(?:\s+\d+\.|$))/g)];
+            globalMatches.forEach(m => {
+                const qNum = parseInt(m[1], 10);
+                const ansContent = m[2].trim().replace(/^[\s,·]+|[\s,·]+$/g, '');
+                if (qNum && ansContent) {
+                    answersMap[qNum] = ansContent;
                 }
             });
         }
@@ -174,8 +165,10 @@ function parseHtmlNote(fileObj) {
 
     allListMatches.forEach(listMatch => {
         const listHtml = listMatch[1];
-        // Ignore if list is inside answerGrid
-        if (answerGridMatch && answerGridMatch[0].includes(listHtml)) return;
+        
+        // Ignore lists that are located inside/after answerGrid
+        const absoluteListIndex = (quizStartIndex !== -1 ? quizStartIndex : 0) + listMatch.index;
+        if (answerGridMatch && absoluteListIndex >= answerGridMatch.index) return;
 
         const liMatches = [...listHtml.matchAll(/<li[^>]*>([\s\S]*?)<\/li>/gi)];
         
