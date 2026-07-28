@@ -354,9 +354,66 @@ function renderQuizQuestion() {
         ${escapeHtml(currentQ.question)}
     `;
 
-    const inputEl = document.getElementById('quiz-answer-input');
-    inputEl.value = userAnswers[quizCurrentIndex] || '';
-    inputEl.focus();
+    // Detect symbols in question & answer
+    const symbols = detectQuizSymbols(currentQ);
+    const container = document.getElementById('quiz-inputs-container');
+    container.innerHTML = '';
+
+    const savedAns = userAnswers[quizCurrentIndex] || '';
+
+    if (symbols.length > 1) {
+        // Multi-blank mode: Create separate input fields for ㉠, ㉡, ㉢
+        document.getElementById('quiz-input-label').innerText = `✍️ 빈칸별 정답 입력 (총 ${symbols.length}개 빈칸)`;
+        
+        const gridEl = document.createElement('div');
+        gridEl.className = 'multi-blank-grid';
+
+        const parsedSavedMap = parseUserAnswersToMap(savedAns);
+
+        symbols.forEach((sym, sIdx) => {
+            const rowEl = document.createElement('div');
+            rowEl.className = 'blank-input-row';
+            rowEl.innerHTML = `
+                <span class="blank-symbol-badge">${sym}</span>
+                <input type="text" class="blank-text-input" data-symbol="${sym}" placeholder="${sym} 빈칸 정답 입력" value="${escapeHtml(parsedSavedMap[sym] || '')}" autocomplete="off">
+            `;
+            gridEl.appendChild(rowEl);
+        });
+
+        container.appendChild(gridEl);
+
+        const inputs = gridEl.querySelectorAll('.blank-text-input');
+        inputs.forEach((inp, idx) => {
+            inp.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    if (idx < inputs.length - 1) {
+                        inputs[idx + 1].focus();
+                    } else {
+                        const box = document.getElementById('quiz-instant-answer-box');
+                        if (box && box.style.display === 'none') {
+                            checkCurrentQuestionAnswer();
+                        } else {
+                            nextQuizQuestion();
+                        }
+                    }
+                }
+            });
+        });
+
+        if (inputs.length > 0) {
+            inputs[0].focus();
+        }
+
+    } else {
+        // Single-blank mode
+        document.getElementById('quiz-input-label').innerText = '✍️ 정답 입력';
+        container.innerHTML = `
+            <input type="text" id="quiz-answer-input" class="quiz-text-input" placeholder="정답을 입력하세요" value="${escapeHtml(typeof savedAns === 'string' ? savedAns : '')}" autocomplete="off" onkeydown="handleQuizEnter(event)">
+        `;
+        const singleInp = document.getElementById('quiz-answer-input');
+        singleInp?.focus();
+    }
 
     // Buttons
     document.getElementById('btn-prev-quiz').style.visibility = quizCurrentIndex === 0 ? 'hidden' : 'visible';
@@ -370,15 +427,74 @@ function renderQuizQuestion() {
     }
 }
 
+function detectQuizSymbols(q) {
+    const text = (q.question || '') + ' ' + (q.answerRaw || '');
+    const found = [...text.matchAll(/[㉠㉡㉢㉣㉤]/g)].map(m => m[0]);
+    return [...new Set(found)];
+}
+
+function parseUserAnswersToMap(ansVal) {
+    if (typeof ansVal === 'object' && ansVal !== null) return ansVal;
+    const map = {};
+    if (typeof ansVal === 'string') {
+        const matches = [...ansVal.matchAll(/([㉠㉡㉢㉣㉤])\s*([^㉠㉡㉢㉣㉤,;]+)/g)];
+        matches.forEach(m => {
+            map[m[1]] = m[2].trim();
+        });
+    }
+    return map;
+}
+
+function getUserInputAnswer() {
+    const currentQ = quizQuestions[quizCurrentIndex];
+    if (!currentQ) return '';
+
+    const symbols = detectQuizSymbols(currentQ);
+    if (symbols.length > 1) {
+        const inputs = document.querySelectorAll('.blank-text-input');
+        const map = {};
+        let combinedParts = [];
+        inputs.forEach(inp => {
+            const sym = inp.getAttribute('data-symbol');
+            const val = inp.value.trim();
+            if (sym) {
+                map[sym] = val;
+                if (val) combinedParts.push(`${sym} ${val}`);
+            }
+        });
+        return combinedParts.join(', ');
+    } else {
+        const inp = document.getElementById('quiz-answer-input');
+        return inp ? inp.value.trim() : '';
+    }
+}
+
+function getUserInputAnswerMap() {
+    const currentQ = quizQuestions[quizCurrentIndex];
+    if (!currentQ) return {};
+
+    const symbols = detectQuizSymbols(currentQ);
+    const map = {};
+    if (symbols.length > 1) {
+        const inputs = document.querySelectorAll('.blank-text-input');
+        inputs.forEach(inp => {
+            const sym = inp.getAttribute('data-symbol');
+            const val = inp.value.trim();
+            if (sym) map[sym] = val;
+        });
+    } else {
+        const inp = document.getElementById('quiz-answer-input');
+        map['default'] = inp ? inp.value.trim() : '';
+    }
+    return map;
+}
+
 function showInstantAnswer() {
     const currentQ = quizQuestions[quizCurrentIndex];
     if (!currentQ) return;
 
-    // Mark as wrong answer in user input
     userAnswers[quizCurrentIndex] = '(모름/정답확인)';
-    document.getElementById('quiz-answer-input').value = '(모름/정답확인)';
 
-    // Increase wrong count in stats immediately
     if (!quizStats[currentQ.id]) {
         quizStats[currentQ.id] = { wrongCount: 0, tryCount: 0 };
     }
@@ -386,7 +502,6 @@ function showInstantAnswer() {
     quizStats[currentQ.id].tryCount += 1;
     saveLocalStats();
 
-    // Show answer box
     const box = document.getElementById('quiz-instant-answer-box');
     const ansTextEl = document.getElementById('quiz-instant-ans-text');
     const linkBtn = document.getElementById('quiz-instant-link-btn');
@@ -400,7 +515,7 @@ function checkCurrentQuestionAnswer() {
     const currentQ = quizQuestions[quizCurrentIndex];
     if (!currentQ) return;
 
-    const inputVal = document.getElementById('quiz-answer-input').value.trim();
+    const inputVal = getUserInputAnswer();
     if (!inputVal) {
         alert('답안을 입력한 후 정답 확인을 눌러주세요. (모를 때는 [💡 모르겠어요] 클릭)');
         return;
@@ -410,7 +525,6 @@ function checkCurrentQuestionAnswer() {
 
     const isCorrect = checkAnswerCorrectness(inputVal, currentQ.answerRaw);
 
-    // Update local stats for weighted sampling immediately
     if (!quizStats[currentQ.id]) {
         quizStats[currentQ.id] = { wrongCount: 0, tryCount: 0 };
     }
@@ -423,7 +537,6 @@ function checkCurrentQuestionAnswer() {
     }
     saveLocalStats();
 
-    // Render Instant Feedback Box
     const box = document.getElementById('quiz-instant-answer-box');
     const headerEl = document.getElementById('quiz-instant-header');
     const ansTextEl = document.getElementById('quiz-instant-ans-text');
@@ -455,8 +568,7 @@ function handleQuizEnter(e) {
 }
 
 function saveCurrentQuizAnswer() {
-    const inputVal = document.getElementById('quiz-answer-input').value.trim();
-    userAnswers[quizCurrentIndex] = inputVal;
+    userAnswers[quizCurrentIndex] = getUserInputAnswer();
 }
 
 function prevQuizQuestion() {
@@ -478,7 +590,7 @@ function nextQuizQuestion() {
 }
 
 // -------------------------------------------------------------
-// Grading & Result Evaluation
+// Grading & Result Evaluation (Smart Fuzzy Matcher)
 // -------------------------------------------------------------
 function finishAndGradeQuiz() {
     let correctCount = 0;
@@ -490,7 +602,6 @@ function finishAndGradeQuiz() {
 
         if (isCorrect) correctCount++;
 
-        // Update local stats for weighted sampling
         if (!quizStats[q.id]) {
             quizStats[q.id] = { wrongCount: 0, tryCount: 0 };
         }
@@ -512,60 +623,107 @@ function finishAndGradeQuiz() {
     renderQuizResult(correctCount, quizQuestions.length, results);
 }
 
+function normalizeAnswerText(text) {
+    if (!text) return '';
+    return text
+        .replace(/[㉠㉡㉢㉣㉤]/g, ' ')
+        .replace(/[,;:\/\\|\(\)\[\]·•]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .toLowerCase();
+}
+
+function stripUnits(token) {
+    if (!token) return '';
+    return token
+        .replace(/(\d+)(일|명|년|개|원|만원|억원|세대|호|%|퍼센트)$/i, '$1')
+        .replace(/(\d+)천만원?/i, '$1000만')
+        .replace(/(\d+)천만/i, '$1000만')
+        .replace(/(\d+)천/i, '$1000')
+        .replace(/,/g, '');
+}
+
 function checkAnswerCorrectness(userAns, realAnsRaw) {
     if (!userAns || !realAnsRaw) return false;
 
-    // Helper: Clean string removing symbol prefixes (㉠, ㉡, ㉢) and redundant spaces
-    const cleanStr = (s) => s.replace(/[㉠㉡㉢㉣㉤|:;\-_]/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase();
-    const stripUnit = (t) => t.replace(/(\d+)(일|명|년|개|원|만원|억원|세대|%|퍼센트)$/, '$1');
+    // 1. Symbol-based multi-blank matching (㉠, ㉡, ㉢)
+    const symbols = [...new Set([...(userAns + ' ' + realAnsRaw).matchAll(/[㉠㉡㉢㉣㉤]/g)].map(m => m[0]))];
+    
+    if (symbols.length > 0) {
+        // Extract real answer for each symbol
+        let allMatched = true;
+        
+        for (const sym of symbols) {
+            // Find real answer segment for this symbol
+            const symRegex = new RegExp(`${sym}\\s*([^㉠㉡㉢㉣㉤,;]+)`, 'i');
+            const realSymMatch = realAnsRaw.match(symRegex);
+            const userSymMatch = userAns.match(symRegex);
 
-    const cleanUser = cleanStr(userAns);
-    const cleanUserNoSpace = cleanUser.replace(/\s+/g, '');
-    const userUserClean = stripUnit(cleanUserNoSpace);
+            const realSymVal = realSymMatch ? realSymMatch[1].trim() : '';
+            const userSymVal = userSymMatch ? userSymMatch[1].trim() : (userAns.trim());
 
-    // Split real answer by alternative choices like "(또는 ...)" or "/" or "|"
-    // e.g. "㉠ 60(또는 육십)" -> ["㉠ 60", "육십"]
-    const rawOptions = realAnsRaw
+            if (realSymVal) {
+                const singleMatched = checkSingleBlankValue(userSymVal, realSymVal);
+                if (!singleMatched) {
+                    allMatched = false;
+                    break;
+                }
+            }
+        }
+
+        if (allMatched) return true;
+    }
+
+    // 2. Global Fuzzy Fallback matching
+    return checkSingleBlankValue(userAns, realAnsRaw);
+}
+
+function checkSingleBlankValue(userVal, realValRaw) {
+    if (!userVal || !realValRaw) return false;
+
+    const options = realValRaw
         .split(/\(또는\s*|\/|\|/)
         .map(s => s.replace(/[()]/g, '').trim())
         .filter(Boolean);
 
-    // Test each alternative option: if user matches ANY option -> CORRECT!
-    for (const option of rawOptions) {
-        const normOpt = cleanStr(option);
-        const normOptNoSpace = normOpt.replace(/\s+/g, '');
-        const normOptClean = stripUnit(normOptNoSpace);
+    const normUser = normalizeAnswerText(userVal);
+    const normUserNoSpace = normUser.replace(/\s+/g, '');
+    const userCleanNum = stripUnits(normUserNoSpace);
 
-        // 1. Direct equality check (with or without units)
+    for (const opt of options) {
+        const normOpt = normalizeAnswerText(opt);
+        const normOptNoSpace = normOpt.replace(/\s+/g, '');
+        const optCleanNum = stripUnits(normOptNoSpace);
+
+        // Direct match
         if (
-            userUserClean === normOptClean ||
-            cleanUserNoSpace === normOptNoSpace ||
-            cleanUser.includes(normOpt) ||
-            normOpt.includes(cleanUser)
+            normUserNoSpace === normOptNoSpace ||
+            userCleanNum === optCleanNum ||
+            normUser.includes(normOpt) ||
+            normOpt.includes(normUser)
         ) {
             return true;
         }
 
-        // 2. Token match for multi-blank (㉠, ㉡)
+        // Token list match
         const realTokens = normOpt
-            .split(/[,,\/\s]+/)
+            .split(/\s+/)
             .filter(Boolean)
-            .map(stripUnit)
+            .map(stripUnits)
             .filter(t => t.length > 0 && t !== '또는' && t !== '등' && t !== '및');
 
-        const userTokens = cleanUser
-            .split(/[,,\/\s]+/)
+        const userTokens = normUser
+            .split(/\s+/)
             .filter(Boolean)
-            .map(stripUnit)
+            .map(stripUnits)
             .filter(t => t.length > 0);
 
         if (realTokens.length > 0) {
             let matchedCount = 0;
             realTokens.forEach(rt => {
-                const rtNoSpace = rt.replace(/\s+/g, '');
                 if (
-                    cleanUserNoSpace.includes(rtNoSpace) ||
-                    userTokens.some(ut => ut.includes(rtNoSpace) || rtNoSpace.includes(ut))
+                    normUserNoSpace.includes(rt) ||
+                    userTokens.some(ut => ut.includes(rt) || rt.includes(ut))
                 ) {
                     matchedCount++;
                 }

@@ -518,15 +518,62 @@ body {
     border: 2px solid var(--border-color);
     border-radius: var(--radius-md);
     padding: 12px 14px;
-    color: #fff;
+    color: #ffffff;
     font-size: 15px;
     outline: none;
-    transition: all 0.2s ease;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .quiz-text-input:focus {
     border-color: var(--accent-blue);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+}
+
+/* Multi-blank Dynamic Inputs */
+.multi-blank-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+.blank-input-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.blank-symbol-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    background: rgba(59, 130, 246, 0.2);
+    color: #60a5fa;
+    font-weight: 700;
+    font-size: 15px;
+    border: 1px solid rgba(59, 130, 246, 0.4);
+    flex-shrink: 0;
+}
+
+.blank-text-input {
+    flex: 1;
+    background: rgba(15, 23, 42, 0.9);
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 10px 14px;
+    color: #ffffff;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.blank-text-input:focus {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
 }
 
 .quiz-actions {
