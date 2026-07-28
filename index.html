@@ -108,9 +108,12 @@
                         질문이 로딩 중입니다...
                     </div>
 
-                    <div class="quiz-input-group">
-                        <label class="quiz-input-label">✍️ 정답 입력 (다단 빈칸인 경우 순서대로 쉼표 또는 공백 구분)</label>
-                        <input type="text" id="quiz-answer-input" class="quiz-text-input" placeholder="정답을 입력하세요 (예: 2천, 30일)" autocomplete="off" onkeydown="handleQuizEnter(event)">
+                    <div class="quiz-input-group" id="quiz-input-group">
+                        <label class="quiz-input-label" id="quiz-input-label">✍️ 정답 입력</label>
+                        <div id="quiz-inputs-container">
+                            <!-- Rendered dynamically for single or multi-blank -->
+                            <input type="text" id="quiz-answer-input" class="quiz-text-input" placeholder="정답을 입력하세요" autocomplete="off" onkeydown="handleQuizEnter(event)">
+                        </div>
                     </div>
 
                     <!-- Instant Answer & Explanation Box (Initially Hidden) -->
