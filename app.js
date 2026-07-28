@@ -681,11 +681,25 @@ function checkAnswerCorrectness(userAns, realAnsRaw) {
 function checkSingleBlankValue(userVal, realValRaw) {
     if (!userVal || !realValRaw) return false;
 
-    const options = realValRaw
-        .split(/\(또는\s*|\/|\|/)
-        .map(s => s.replace(/[()]/g, '').trim())
-        .filter(Boolean);
+    // Expand parenthesized options:
+    // e.g. "입주자(소유자)" -> ["입주자(소유자)", "입주자", "소유자"]
+    // e.g. "수용권자(또는 사업주체)" -> ["수용권자(또는 사업주체)", "수용권자", "사업주체"]
+    const optionsSet = new Set();
+    
+    // Split by Slash or OR keywords
+    const primarySplits = realValRaw.split(/\(또는\s*|\/|\|/).filter(Boolean);
+    primarySplits.forEach(str => {
+        optionsSet.add(str.trim());
+        const parenMatch = str.match(/^([^(]+)\(([^)]+)\)/);
+        if (parenMatch) {
+            const outside = parenMatch[1].trim();
+            const inside = parenMatch[2].replace(/^또는\s*/, '').trim();
+            if (outside) optionsSet.add(outside);
+            if (inside) optionsSet.add(inside);
+        }
+    });
 
+    const options = Array.from(optionsSet);
     const normUser = normalizeAnswerText(userVal);
     const normUserNoSpace = normUser.replace(/\s+/g, '');
     const userCleanNum = stripUnits(normUserNoSpace);
