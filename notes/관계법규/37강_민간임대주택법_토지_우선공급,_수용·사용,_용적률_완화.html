@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 관계법규 - 제37강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+            letter-spacing: -0.05em;
+        }
+        
+        h1 {
+            font-size: 12pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        /* 토너 절약 4색 강조 클래스 */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #16803d; 
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #6d28d9; 
+        }
+        
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        ol {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        /* 정답 리스트 3열 격자 레이아웃 */
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px 15px;
+        }
+
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        제37강. 민간임대주택법: 토지 우선공급, 수용·사용, 용적률 완화, 3대 지구 및 임대조건 완벽 정리
+    </h1>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        1. 토지의 우선공급 및 건설 의무 (민간임대주택법 vs 주택법 비교)
+    </h2>
+    <ul>
+        <li><strong>토지의 우선공급 특례 취지</strong>: 임대사업자의 부지 확보를 원활히 지원하기 위하여 국가·지방자치단체·공공기관 등이 조성한 토지를 민간임대주택 건설용으로 우선 공급하는 특례를 규정함.</li>
+        <li><strong>우선공급 대상 및 비율 비교</strong>:
+            <ul>
+                <li><span class="highlight-blue">주택법</span>: 국가·지자체 소유 토지를 국민주택규모 주택을 <span class="highlight-blue">100분의 50 이상</span> 건설하거나 조합주택을 건설하려는 사업주체에게 우선 매수·임대 가능.</li>
+                <li><span class="highlight-purple">민간임대주택법</span>: 조성한 토지의 <span class="highlight-purple">100분의 1 이상</span> 범위에서 대통령령으로 정하는 비율(<span class="highlight-purple">100분의 3 이상</span>)을 민간임대주택 건설용으로 우선 공급 가능 (별도의 국민주택규모 비율 제한 없음).</li>
+            </ul>
+        </li>
+        <li><strong>공급받은 자의 착공 의무 및 위반 시 조치 (★출제 핵심 포인트)</strong>:
+            <ul>
+                <li><span class="highlight-red">공급받은 자의 의무</span>: 토지를 공급받은 날부터 <span class="highlight-red">2년 이내</span>(4년 이하의 범위에서 대통령령으로 정하는 기간인 2년)에 민간임대주택 건설사업에 착공하여야 함.</li>
+                <li><span class="highlight-red">미착공 시 제재 효력 비교 (법률 용어 정밀 구분 필수)</span>:
+                    <ul>
+                        <li><span class="highlight-blue">주택법</span>: 환매하거나 임대차계약을 <span class="highlight-blue">취소</span>할 수 있음.</li>
+                        <li><span class="highlight-purple">민간임대주택법</span>: 환매하거나 임대차계약을 <span class="highlight-purple">해제 또는 해지</span>할 수 있음 (법률행위 전반을 취소하는 주택법과 달리, 계약에 한정되는 '해제·해지' 용어 사용).</li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li><strong>환매특약 등기 및 독려 절차</strong>:
+            <ul>
+                <li>공급자는 공급계약 체결 시 '2년 이내 미착공 시 환매 또는 해제·해지' 특약 조건을 붙여 공급하고, 환매특약 등기를 병행하여야 함.</li>
+                <li>공급자는 공급일부터 <span class="highlight-green">1년 6개월</span>(2년 만료 6개월 전)이 지난 날까지 착공 통지를 받지 못한 경우, 공급받은 자에게 <span class="highlight-green">착공을 촉구</span>하여야 함.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 20%;">구분</th>
+                <th style="width: 40%;">주택법 (국공유지 등 우선매수)</th>
+                <th style="width: 40%;">민간임대주택법 (토지 등 우선공급)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>우선공급 요건</th>
+                <td>국민주택규모 <span class="highlight-blue">100분의 50 이상</span> 건설 또는 주택조합 건설</td>
+                <td>임대사업자가 민간임대주택 건설 (조성 토지의 <span class="highlight-purple">3% 이상</span>)</td>
+            </tr>
+            <tr>
+                <th>착공 의무 기간</th>
+                <td>공급받은 날부터 <span class="highlight-red">2년 이내</span></td>
+                <td>공급받은 날부터 <span class="highlight-red">2년 이내</span></td>
+            </tr>
+            <tr>
+                <th>미착공 시 법적 제재</th>
+                <td>환매 또는 임대차계약 <span class="highlight-blue">취소</span></td>
+                <td>환매 또는 임대차계약 <span class="highlight-purple">해제 또는 해지</span></td>
+            </tr>
+            <tr>
+                <th>착공 촉구 절차</th>
+                <td>별도 규정 없음</td>
+                <td><span class="highlight-green">1년 6개월</span> 경과 시 착공 촉구 규정 명시</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        2. 토지 등의 수용 및 사용 특례 (민간 임대사업자의 강제 수용권)
+    </h2>
+    <ul>
+        <li><strong>수용권 행사 주체 비교</strong>:
+            <ul>
+                <li><span class="highlight-blue">주택법</span>: 국가·지방자치단체·한국토지주택공사·지방공사 등 <span class="highlight-blue">공공사업주체</span>만 국민주택 건설사업 시 수용권 행사 가능.</li>
+                <li><span class="highlight-purple">민간임대주택법</span>: 민간인인 <span class="highlight-purple">임대사업자에게도 조건부 수용·사용권 인정</span> (파격적 특례).</li>
+            </ul>
+        </li>
+        <li><strong>일반 임대사업자의 수용 요건 3가지 (★전수 암기)</strong>:
+            <ul>
+                <li>① 주택 전용면적: 세대당 주거전용면적이 <span class="highlight-red">85제곱미터 이하</span>일 것.</li>
+                <li>② 건설 규모: <span class="highlight-red">100호 또는 100세대 이상</span>의 민간임대주택을 건설할 것.</li>
+                <li>③ 토지 확보 비율: 대상 토지 면적의 <span class="highlight-red">100분의 80(80%) 이상</span>을 매입(소유권 확보)하였을 것. (잔여 <span class="highlight-purple">20% 범위 내</span>에서 수용 가능).</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg>
+        3. 공공지원민간임대주택 용적률 완화 및 공익 기여 규정
+    </h2>
+    <ul>
+        <li><strong>적용 대상</strong>: <span class="highlight-blue">30호 또는 30세대 이상</span>의 공공지원민간임대주택 건설사업.</li>
+        <li><strong>용적률 완화 시 공익 기여 의무 요건</strong>:
+            <ul>
+                <li>완화된 용적률에서 기존 용적률을 뺀 용적률의 <span class="highlight-red">100분의 50 이하</span> 범위에서 임대주택을 건설하여 주거지원대상자에게 <span class="highlight-red">20년 이상</span> 임대(공급)하게 할 수 있음. (★기본 임대의무기간 10년 규정의 대표적 특례).</li>
+                <li>완화된 용적률에서 기존 용적률을 뺀 용적률의 <span class="highlight-purple">100분의 100 이하</span> 범위에서 주거지원대상자용 임대주택을 건설하거나 <span class="highlight-purple">복합지원시설</span>을 설치하도록 요구 가능.</li>
+            </ul>
+        </li>
+        <li><strong>건축 규제 완화 특례</strong>:
+            <ul>
+                <li>공공지원민간임대주택의 건폐율 및 용적률은 조례로 정한 상한까지 완화 적용 가능.</li>
+                <li>연립주택 또는 다세대주택을 공공지원민간임대주택으로 건설 시 건축위원회의 심의를 거쳐 주택으로 쓰는 층수를 <span class="highlight-green">5개 층까지</span> 건축 가능 (원래 주택으로 쓰는 층수 4개 층 이하 제한 완화).</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+        4. 주거 관련 3대 지구 완벽 비교 (공공지원촉진지구 vs 공공주택지구 vs 도심복합지구)
+    </h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 18%;">구분</th>
+                <th style="width: 27%;">공공지원민간임대주택<br>공급촉진지구 (민간법)</th>
+                <th style="width: 27%;">공공주택지구<br>(공공주택 특별법)</th>
+                <th style="width: 28%;">도심 공공주택 복합지구<br>(공공주택 특별법)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>지정권자</th>
+                <td><span class="highlight-blue">시·도지사</span> (원칙)<br>국토교통부장관 (예외)</td>
+                <td><span class="highlight-purple">국토교통부장관</span> (전담)</td>
+                <td><span class="highlight-blue">시·도지사</span> 또는 국토교통부장관<br>(시한부 법률 규정)</td>
+            </tr>
+            <tr>
+                <th>주택 건설<br>최저 비율</th>
+                <td class="highlight-red">전체 주택호수의<br>100분의 50 이상</td>
+                <td>전체 주택호수의<br><span class="highlight-red">100분의 50 이상</span><br>(공공임대 35%↑ + 공공분양 30%↓)</td>
+                <td>전체 주택호수의<br><span class="highlight-red">100분의 80 이상</span><br>(공공임대 10%↑ + 공공분양 70%↑)</td>
+            </tr>
+            <tr>
+                <th>지정 면적 요건</th>
+                <td>· 도시지역: <span class="highlight-green">5천㎡ 이상</span><br>· 인접·함께: <span class="highlight-green">2만㎡ 이상</span><br>· 기타: <span class="highlight-green">10만㎡ 이상</span></td>
+                <td>법령에 따른 지구지정 절차 준용</td>
+                <td>도심 내 역세권, 중공업지역, 저층주거지 대상 지정</td>
+            </tr>
+            <tr>
+                <th>시행자 요건 및 수용 특례</th>
+                <td>민간임대사업자: 토지 면적 <span class="highlight-blue">50% 이상 소유</span><br>수용 특례: 토지 면적 <span class="highlight-red">3분의 2 이상 소유</span> + 소유자 <span class="highlight-red">2분의 1 이상 동의</span> 시 나머지 수용 가능</td>
+                <td>공공주택사업자 전형적 수행<br>(무조건 수용권 가능)</td>
+                <td>공공주택 + 복합시설(업무·상업·산업) 복합 조성</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+            💡 [지구별 주택 건설 비율 세부 수칙 - 주관식 출제 1순위]
+        </div>
+        <ul>
+            <li><strong>공공주택지구 세부 비율</strong>: 공공주택 합계 <span class="highlight-red">50% 이상</span> 필수. 그중 <span class="highlight-blue">공공임대주택은 35% 이상</span>, <span class="highlight-purple">공공분양주택은 30% 이하</span>로 구성. (예: 공공임대 40% + 공공분양 20% = 60% → 가능 / 공공임대 40% + 공공분양 40% = 80% → 공공분양 30% 초과로 불가!).</li>
+            <li><strong>도심 공공주택 복합지구 세부 비율</strong>: 공공주택 합계 <span class="highlight-red">80% 이상</span> 필수. 그중 <span class="highlight-blue">공공임대주택은 10% 이상</span>(주거·상업·공업지역 등은 15% 이상), 공공분양주택은 60% 이상(지분적립형·이익공유형 분양주택 10% 이상 포함).</li>
+            <li><strong>지구조성사업 완료 시 검사 명칭</strong>: 주택건설 완공 시 받는 '사용승인(건축법)'이나 '사용검사(주택법)'와 달리, 촉진지구·공공주택지구 등 지구조성사업 완료 시 승인권자로부터 받는 검사는 <span class="highlight-red">'준공검사'</span>임.</li>
+        </ul>
+    </div>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        5. 민간임대주택의 공급, 임대료 및 임대조건 규제
+    </h2>
+    <ul>
+        <li><strong>임차인 자격 및 선정 방법</strong>:
+            <ul>
+                <li><span class="highlight-blue">공공지원 민간임대주택</span>: <span class="highlight-blue">국토교통부령</span>으로 정하는 기준 준수 (무주택 세대구성원/무주택 세대주 자격, 주거지원필요계층 우선공급).</li>
+                <li><span class="highlight-purple">장기일반 / 단기 민간임대주택</span>: <span class="highlight-purple">임대사업자가 정하는 기준</span>에 따라 자율 공급.</li>
+            </ul>
+        </li>
+        <li><strong>최초 임대료 및 표준임대료 산정</strong>:
+            <ul>
+                <li><span class="highlight-blue">공공지원 민간임대주택</span>: 최초 임대료는 국토교통부령으로 정하는 기준에 따라 <span class="highlight-blue">임대사업자가 정하는 표준임대료 이하</span> 금액으로 결정 (임대사업자가 직접 산정하되 법정 시세 산정 방식 엄격 준수).</li>
+                <li><span class="highlight-purple">장기일반 / 단기 민간임대주택</span>: 최초 임대료를 <span class="highlight-purple">임대사업자가 자율</span>로 결정.</li>
+                <li><span class="highlight-red">종전 임대차계약 적용 특례 (악용 방지★)</span>: 임대사업자로 등록할 당시 이미 체결되어 존속 중인 임대차계약(종전임대차계약)이 있는 경우, 등록 후 최초 임대료는 <span class="highlight-red">종전 임대차계약에 따른 임대료</span>를 최초 임대료로 봄.</li>
+            </ul>
+        </li>
+        <li><strong>임대료 증액 제한 및 재증액 기한 (★초빈출 주관식)</strong>:
+            <ul>
+                <li>인상률 상한: 약정한 임대료의 <span class="highlight-red">100분의 5(5%)</span> 범위를 초과하여 증액할 수 없음.</li>
+                <li>재증액 제한 기한: 임대차계약 체결 또는 임대료 증액이 있은 후 <span class="highlight-red">1년 이내</span>에는 증액할 수 없음.</li>
+                <li><span class="highlight-green">공공주택 특별법상 보증금 분할납부 특례</span>: 공공임대주택의 임대보증금 증액 시 부담 완화를 위해 <span class="highlight-green">1년 이내, 3회 이내</span>로 분할납부 허용 (가산 이자는 1년 만기 정기예금 평균이자율 적용).</li>
+            </ul>
+        </li>
+    </ul>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>주관식 단답형 및 빈칸 채우기 실전 훈련</h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡)에 들어갈 알맞은 핵심 용어나 법정 숫자를 아래 여유 공백에 직접 기재해 보십시오.</p>
+
+    <ol class="quiz-list" style="line-height: 2.1;">
+        <li>
+            주택법상 국공유지 우선매수자가 2년 이내 미착공 시 임대차계약을 ( ㉠ )할 수 있으나, 민간임대주택법상 토지 우선공급 후 미착공 시에는 임대차계약을 ( ㉡ )할 수 있다.
+        </li>
+        <li>
+            국가·지방자치단체 등은 조성한 토지의 100분의 1 이상 범위에서 대통령령으로 정하는 비율인 100분의 ( ㉠ ) 이상을 민간임대주택 건설을 위한 임대사업자에게 우선 공급할 수 있다.
+        </li>
+        <li>
+            민간임대주택법상 토지 등을 우선 공급받은 임대사업자는 공급받은 날부터 ( ㉠ )년 이내에 민간임대주택 건설사업에 착공하여야 한다.
+        </li>
+        <li>
+            토지를 우선 공급한 자는 공급일부터 ( ㉠ )년 ( ㉡ )개월이 지난 날까지 착공 통지를 받지 못한 경우 공급받은 자에게 착공을 촉구하여야 한다.
+        </li>
+        <li>
+            민간 임대사업자가 민간임대주택 건설을 위해 토지 수용권을 행사하려면 대상 토지 면적의 100분의 ( ㉠ ) 이상을 매입하여야 한다.
+        </li>
+        <li>
+            임대사업자가 토지 수용권을 행사하기 위해서는 주거전용면적이 ( ㉠ )㎡ 이하인 민간임대주택을 ( ㉡ )호 또는 ( ㉡ )세대 이상 건설하여야 한다.
+        </li>
+        <li>
+            공공지원민간임대주택 건설 시 용적률 완화를 받은 임대사업자는 완화된 용적률에서 기존 용적률을 뺀 용적률의 100분의 50 이하 범위에서 주거지원대상자에게 ( ㉠ )년 이상 임대하게 할 수 있다.
+        </li>
+        <li>
+            연립주택 또는 다세대주택을 공공지원민간임대주택으로 건설하려는 경우 건축위원회의 심의를 거쳐 주택으로 쓰는 층수를 ( ㉠ )개 층까지 건축할 수 있다.
+        </li>
+        <li>
+            공공지원민간임대주택 공급촉진지구 지정 시 지구 전체 주택호수의 100분의 ( ㉠ ) 이상을 공공지원민간임대주택으로 건설·공급하여야 한다.
+        </li>
+        <li>
+            공공지원민간임대주택 공급촉진지구를 지정하기 위한 지정 면적 요건은 도시지역의 경우 ( ㉠ )㎡ 이상이어야 한다.
+        </li>
+        <li>
+            도시지역과 인접하거나 도시지역이 함께 포함된 공공지원민간임대주택 공급촉진지구 지정 면적은 ( ㉠ )만㎡ 이상이어야 한다.
+        </li>
+        <li>
+            공공주택지구 지정 시 전체 주택호수 중 공공임대주택은 100분의 ( ㉠ ) 이상, 공공분양주택은 100분의 ( ㉡ ) 이하이어야 한다.
+        </li>
+        <li>
+            공공지원민간임대주택 공급촉진지구에서 민간 임대사업자가 사업시행자로 지정받으려면 대상 토지 면적의 100분의 ( ㉠ ) 이상을 소유하여야 한다.
+        </li>
+        <li>
+            공급촉진지구의 시행자가 토지 수용권을 행사하려면 토지 면적의 ( ㉠ ) 이상을 소유하고, 토지소유자 총수의 ( ㉡ ) 이상에 해당하는 자의 동의를 받아야 한다.
+        </li>
+        <li>
+            공공지원민간임대주택 공급촉진지구 조성사업이 완료된 경우 사업시행자가 받게 되는 검사의 공식 명칭은 ( ㉠ )이다.
+        </li>
+        <li>
+            공공지원민간임대주택의 최초 임대료는 국토교통부령으로 정하는 기준에 따라 ( ㉠ )가 정하는 표준임대료 이하로 정하여야 한다.
+        </li>
+        <li>
+            민간임대주택 등록 당시 존속 중인 임대차계약이 있는 경우, 등록 후 최초 임대료는 ( ㉠ )에 따른 임대료를 적용한다.
+        </li>
+        <li>
+            민간임대주택의 임대료 인상 청구는 약정한 임대료의 100분의 ( ㉠ ) 범위를 초과할 수 없으며, 임대차계약 체결 또는 증액 후 ( ㉡ )년 이내에는 재증액할 수 없다.
+        </li>
+        <li>
+            공공주택 특별법상 임대보증금의 증액분에 대하여 임차인이 분할납부하는 경우 ( ㉠ )년 이내에 ( ㉡ )회 이내로 분할하여 납부할 수 있다.
+        </li>
+    </ol>
+
+    <!-- 수험생 정답 확인용 하단 3열 배치 그리드 영역 -->
+    <div style="font-size: 9.5pt; color: #666666; margin-top: 30px; padding: 15px; border-top: 1px dashed #666666; line-height: 1.8;">
+        <strong style="display: block; margin-bottom: 10px; color: #333333;">[제37강 주관식 단답형 정답 리스트]</strong>
+        <div class="answer-grid">
+            <div><strong>1.</strong> ㉠ 취소, &nbsp; ㉡ 해제 또는 해지</div>
+            <div><strong>2.</strong> ㉠ 3</div>
+            <div><strong>3.</strong> ㉠ 2</div>
+            <div><strong>4.</strong> ㉠ 1, &nbsp; ㉡ 6</div>
+            <div><strong>5.</strong> ㉠ 80</div>
+            <div><strong>6.</strong> ㉠ 85, &nbsp; ㉡ 100</div>
+            <div><strong>7.</strong> ㉠ 20</div>
+            <div><strong>8.</strong> ㉠ 5</div>
+            <div><strong>9.</strong> ㉠ 50</div>
+            <div><strong>10.</strong> ㉠ 5천(또는 5,000)</div>
+            <div><strong>11.</strong> ㉠ 2</div>
+            <div><strong>12.</strong> ㉠ 35, &nbsp; ㉡ 30</div>
+            <div><strong>13.</strong> ㉠ 50</div>
+            <div><strong>14.</strong> ㉠ 3분의 2, &nbsp; ㉡ 2분의 1</div>
+            <div><strong>15.</strong> ㉠ 준공검사</div>
+            <div><strong>16.</strong> ㉠ 임대사업자</div>
+            <div><strong>17.</strong> ㉠ 종전 임대차계약</div>
+            <div><strong>18.</strong> ㉠ 5, &nbsp; ㉡ 1</div>
+            <div><strong>19.</strong> ㉠ 1, &nbsp; ㉡ 3</div>
+        </div>
+    </div>
+
+</body>
+</html>
