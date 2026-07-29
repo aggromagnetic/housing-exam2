@@ -196,13 +196,13 @@ function parseHtmlNote(fileObj) {
                 }
             });
 
-            // Standardize all parentheses in the question text to ( ㉠ ), ( ㉡ ), etc.
+            // Standardize ONLY true blank parentheses (e.g. (&nbsp;&nbsp;) or ( ㉠ )) while preserving body terms like (DC), (DB), (IRP)
             let blankCount = 0;
             let standardizedHtml = rawLiHtml.replace(/<span\s+class="blank-answer"[^>]*>[\s\S]*?<\/span>/gi, () => {
                 const sym = symbols[blankCount] || '㉠';
                 blankCount++;
                 return `( ${sym} )`;
-            }).replace(/\(\s*[^)]*\s*\)/g, () => {
+            }).replace(/\(\s*(?:&nbsp;|\s)*[㉠㉡㉢㉣㉤]?\s*(?:&nbsp;|\s)*\)/gi, () => {
                 const sym = symbols[blankCount] || '㉠';
                 blankCount++;
                 return `( ${sym} )`;

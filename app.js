@@ -428,8 +428,8 @@ function renderQuizQuestion() {
 }
 
 function detectQuizSymbols(q) {
-    const text = (q.question || '') + ' ' + (q.answerRaw || '');
-    const found = [...text.matchAll(/[㉠㉡㉢㉣㉤]/g)].map(m => m[0]);
+    const questionText = q.question || '';
+    const found = [...questionText.matchAll(/[㉠㉡㉢㉣㉤]/g)].map(m => m[0]);
     return [...new Set(found)];
 }
 
