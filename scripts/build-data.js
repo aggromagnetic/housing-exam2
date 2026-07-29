@@ -191,18 +191,23 @@ function parseHtmlNote(fileObj) {
             parenMatches.forEach(pm => {
                 const innerTxt = cleanText(pm[1]);
                 const cleanAns = innerTxt.replace(/^[㉠㉡㉢㉣㉤]\s*/, '').trim();
-                if (cleanAns.length > 0 && !cleanAns.match(/^[㉠㉡㉢㉣㉤\s]*$/)) {
+                if (cleanAns.length > 0 && !cleanAns.match(/^[㉠㉡㉢㉣㉤\s]*$/) && !/^(?:가|나|다|라|마|이|은|는|을|를|과|와|으로|로)$/i.test(cleanAns)) {
                     inlineAnswers.push(cleanAns);
                 }
             });
 
-            // Standardize ONLY true blank parentheses (e.g. (&nbsp;&nbsp;) or ( ㉠ )) while preserving body terms like (DC), (DB), (IRP)
+            // Standardize ONLY true blank parentheses while preserving Korean particle parentheses like (가), (나), (이), (은), (는)
             let blankCount = 0;
             let standardizedHtml = rawLiHtml.replace(/<span\s+class="blank-answer"[^>]*>[\s\S]*?<\/span>/gi, () => {
                 const sym = symbols[blankCount] || '㉠';
                 blankCount++;
                 return `( ${sym} )`;
-            }).replace(/\(\s*(?:&nbsp;|\s)*[㉠㉡㉢㉣㉤]?\s*(?:&nbsp;|\s)*\)/gi, () => {
+            }).replace(/\(\s*(?:&nbsp;|\s)*[㉠㉡㉢㉣㉤가나다라마]?\s*(?:&nbsp;|\s)*\)/gi, (m) => {
+                const rawInside = m.replace(/[()]/g, '').replace(/&nbsp;/gi, '').replace(/\s+/g, '');
+                // If it is a particle choice like (가), (나), (이), (은), (는), (을), (를), (와), (과) without spaces, do NOT turn into blank!
+                if (/^(?:가|나|다|라|마|이|은|는|을|를|과|와|으로|로)$/i.test(rawInside)) {
+                    return m;
+                }
                 const sym = symbols[blankCount] || '㉠';
                 blankCount++;
                 return `( ${sym} )`;

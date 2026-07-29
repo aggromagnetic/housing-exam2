@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const filePath = '/Volumes/Temp/Work/home_test_2/notes/관리실무/21강_근로기준법상_통상임금_및_임금지급_원칙,_휴업수당,_근.html';
+const filePath = '/Volumes/Temp/Work/home_test_2/notes/관리실무/29강_산업재해보상보험법상_관장·용어정의·보험급여_종류_및_급.html';
 const content = fs.readFileSync(filePath, 'utf-8');
 
 function cleanText(html) {
@@ -8,6 +8,7 @@ function cleanText(html) {
 }
 
 let answerGridMatch = content.match(/<div[^>]*class=["'][^"']*answer-(?:container|grid)[^"']*["'][^>]*>([\s\S]*?)(?:<\/body>|$)/i);
+console.log('answerGridMatch:', answerGridMatch ? answerGridMatch[1].slice(0, 300) : 'null');
 
 const answersMap = {};
 if (answerGridMatch) {
@@ -16,7 +17,7 @@ if (answerGridMatch) {
     
     divItems.forEach(item => {
         const txt = cleanText(item[1]);
-        const numMatch = txt.match(/(\d+)(?:번\s*문항|번|\.)\s*([\s\S]*)/);
+        const numMatch = txt.match(/^(\d+)(?:번\s*문항|번|\.)\s*(.*)/);
         if (numMatch) {
             const qNum = parseInt(numMatch[1], 10);
             const ansText = numMatch[2].trim();
