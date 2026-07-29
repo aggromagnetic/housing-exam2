@@ -668,6 +668,9 @@ function checkAnswerCorrectness(userAns, realAnsRaw) {
                     allMatched = false;
                     break;
                 }
+            } else if (symbols.length > 1) {
+                allMatched = false;
+                break;
             }
         }
 
