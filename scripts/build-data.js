@@ -158,7 +158,10 @@ function parseHtmlNote(fileObj) {
     }
 
     // Collect ALL <li> items from <ol> or <ul> inside the true quiz scope area
-    const allListMatches = [...quizScopeHtml.matchAll(/<(?:ol|ul)[^>]*>([\s\S]*?)<\/(?:ol|ul)>/gi)];
+    let allListMatches = [...quizScopeHtml.matchAll(/<(?:ol|ul)[^>]*class=["'][^"']*quiz-list[^"']*["'][^>]*>([\s\S]*?)<\/(?:ol|ul)>/gi)];
+    if (allListMatches.length === 0) {
+        allListMatches = [...quizScopeHtml.matchAll(/<ol[^>]*>([\s\S]*?)<\/ol>/gi)];
+    }
     
     let quizIndex = 0;
     const symbols = ['㉠', '㉡', '㉢', '㉣', '㉤'];
