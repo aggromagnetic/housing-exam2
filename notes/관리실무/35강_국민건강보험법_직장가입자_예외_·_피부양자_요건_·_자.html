@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 공동주택관리실무 - 제35강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+            letter-spacing: -0.05em;
+        }
+        
+        h1 {
+            font-size: 13pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        /* 토너 절약 4색 강조 클래스 */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #16803d; 
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #6d28d9; 
+        }
+        
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        ol.quiz-list {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+            line-height: 2.1;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        /* 정답 리스트 3열 격자 레이아웃 규격 준수 */
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px 15px;
+        }
+
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        제35강. 국민건강보험법 직장가입자 예외 · 피부양자 요건 · 자격 변동 시기 · 보험료 부과 및 권리구제 종합 정리
+    </h1>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        1. 국민건강보험 직장가입자 제외 대상 (★단골 출제 빈출 유형 완벽 분석)
+    </h2>
+    <ul>
+        <li><strong>직장가입자의 개념</strong>: 모든 사업장의 근로자 및 사용자, 공무원, 교직원은 직장가입자가 되는 것이 원칙이다.</li>
+        <li><strong>직장가입자에서 제외되는 대상자 (★시험 출제 핵심 포인트)</strong>:
+            <ul>
+                <li><strong>일용근로자</strong>: 고용기간이 <span class="highlight-red">1개월 미만</span>인 일용근로자 ('3개월 미만'으로 출제 시 오답. 단, 고용기간이 1개월 이상이면 직장가입자에 포함됨!).</li>
+                <li><strong>군인 및 사관생도</strong>: 「병역법」에 따른 현역병, 전환복무된 사람, 군 간부후보생.</li>
+                <li><strong>무보수 선거공무원</strong>: 선거에 의해 취임하는 공무원으로서 매월 보수 등을 받지 아니하는 자.</li>
+                <li><strong>단시간근로자 및 시간제공무원</strong>: 비상근 근로자 또는 1개월 동안의 소정근로시간이 <span class="highlight-blue">60시간 미만</span>인 단시간근로자 ('미만' 조건 유의).</li>
+                <li><strong>소재지 불분명 사업장</strong>: 사업장의 소재지가 일정하지 아니한 사업장의 근로자 및 사용자.</li>
+                <li><strong>근로자가 없는 사업장의 사업주</strong>: 근로자가 없거나 60시간 미만 단시간근로자만 고용하고 있는 사업장의 사업주.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        2. 직장가입자의 피부양자 요건 및 범위 (★인정 대상 vs 제외 대상 함정)
+    </h2>
+    <ul>
+        <li><strong>피부양자의 개념 및 원칙</strong>: 직장가입자에게 주로 생계를 의존하는 사람으로서 소득 및 재산이 보건복지부령으로 정하는 기준 이하인 자.</li>
+        <li><strong>피부양자가 될 수 있는 유족·친족의 범위 (★인정 대상)</strong>:
+            <ul>
+                <li><strong>배우자</strong>: 직장가입자의 배우자 (당연 인정).</li>
+                <li><strong>직계존속</strong>: 직장가입자의 직계존속 및 <span class="highlight-blue">배우자의 직계존속</span> (시부모, 장인·장모, 조부모, 외조부모 등 모두 포함).</li>
+                <li><strong>직계비속 및 그 배우자</strong>: 직장가입자의 직계비속(자녀, 손자녀) 및 <span class="highlight-purple">그 배우자</span> (사위, 며느리 포함).</li>
+                <li><strong>형제·자매</strong>: 직장가입자의 형제·자매 (단, 연령 및 소득·재산 요건 충족 필수).</li>
+            </ul>
+        </li>
+        <li><strong>★ 피부양자가 될 수 없는 대상자 (단골 정답 지문)</strong>:
+            <ul>
+                <li><span class="highlight-red">형제·자매의 배우자</span> (매형, 형수, 제수, 제부 등)는 피부양자가 될 수 **없다**.</li>
+                <li><span class="highlight-red">형제·자매의 직계비속</span> (조카 등)은 피부양자가 될 수 **없다** (형제자매의 직계존속은 가입자의 직계존속이므로 가능하지만 비속은 불가!).</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4 4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+        3. 자격 취득 · 상실 · 변동 시기 및 신고 기한 (★국민 자격 '다음 날' vs 타제도 '그 날')
+    </h2>
+    <ul>
+        <li><strong>자격 취득 시기 (★원칙: 그 날)</strong>:
+            <ul>
+                <li>국내에 거주하게 된 날, 직장가입자의 피부양자 자격을 잃은 날, 의료급여 수급권자 대상에서 제외된 날 <span class="highlight-blue">그 날</span> 자격을 취득한다.</li>
+            </ul>
+        </li>
+        <li><strong>자격 상실 시기 (★대한민국 자격 상실: 다음 날 vs 타 법령 적용: 그 날)</strong>:
+            <ul>
+                <li><strong>다음 날 상실 (국적/거주/사망)</strong>: 사망한 날의 <span class="highlight-red">다음 날</span>, 국적을 상실한 날의 <span class="highlight-red">다음 날</span>, 국내에 거주하지 아니하게 된 날의 <span class="highlight-red">다음 날</span>.</li>
+                <li><strong>그 날 상실 (피부양자/의료급여 전환)</strong>: 직장가입자의 피부양자가 된 <span class="highlight-purple">그 날</span>, 의료급여 수급권자가 된 <span class="highlight-purple">그 날</span>, 유공자 등 의료보호 대상자 적용 배제 신청을 한 <span class="highlight-purple">그 날</span>.</li>
+            </ul>
+        </li>
+        <li><strong>자격 변동 시기 (★일할 수 없는 날: 다음 날 vs 일반 변동: 그 날)</strong>:
+            <ul>
+                <li><strong>원칙 (그 날)</strong>: 적용대상 사업장의 사용자/근로자가 된 날, 공무원·교직원으로 임용된 날, 다른 사업장으로 이직·전입한 날 <span class="highlight-blue">그 날</span> 변동된다.</li>
+                <li><strong>특례 (다음 날)</strong>: 직장가입자인 근로자 등의 <span class="highlight-red">승계/상실(퇴직 등)로 근로관계가 끝난 날의 다음 날</span>, 적용대상 사업장의 <span class="highlight-red">휴업·폐업 등 사유가 발생한 날의 다음 날</span> 변동된다 (일할 수 없게 된 사유 발생 시 '다음 날').</li>
+            </ul>
+        </li>
+        <li><strong>자격 취득·상실 및 변동 신고 기한 (★사유 발생일부터 14일 이내)</strong>:
+            <ul>
+                <li>사용자는 자격 취득·상실 또는 변동 사유가 발생한 날부터 <span class="highlight-red">14일 이내</span>에 국민건강보험공단(보험자)에 신고하여야 한다 (고용보험·국민연금의 '다음 달 15일'과 명확히 구분 필수!).</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><line x1="11" y1="5" x2="6" y2="5"></line><path d="M11 5H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-5"></path><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+        4. 급여 종류 · 급여 제한(중과실 사고 제외) & 정지 · 보험료 산정 및 부과·납부
+    </h2>
+    <ul>
+        <li><strong>급여의 종류 및 부가급여</strong>:
+            <ul>
+                <li><strong>요양급여</strong>: 현물급여 원칙 (진찰, 약제, 수술, 입원 등).</li>
+                <li><strong>부가급여</strong>: 요양급여 외에 <span class="highlight-purple">임신·출산 진료비, 장제비, 상병수당</span> 등을 지급할 수 있다 (임신·출산 진료비는 요양급여 본문 범위가 아님에 유의!).</li>
+            </ul>
+        </li>
+        <li><strong>보험급여의 제한 vs 정지 사유 (★중대한 과실로 인한 사고 정답 패턴)</strong>:
+            <ul>
+                <li><strong>급여 제한</strong>: 고의 또는 중대한 과실로 인한 범죄행위에 원인이 있거나 <span class="highlight-red">고의로 사고</span>를 일으킨 경우 급여를 지급하지 아니한다.</li>
+                <li><strong>핵심 출제 함정</strong>: <span class="highlight-blue">중대한 과실로 인한 사고</span>는 급여 제한 사유에 해당하지 **않는다** (고의 사고만 제한됨).</li>
+                <li><strong>급여 정지</strong>: <span class="highlight-purple">국외 체류 기간</span>, <span class="highlight-purple">현역병 복무 기간</span>, <span class="highlight-purple">교도소 등 수용 시설 수용 기간</span> 중에는 급여가 정지된다.</li>
+            </ul>
+        </li>
+        <li><strong>보험료 부과·산정 및 부담·납부 의무자 (★보수월액 vs 소득월액)</strong>:
+            <ul>
+                <li><strong>보수월액보험료</strong>: 직장가입자의 보수월액을 기준으로 산정. 사용자와 근로자가 각각 <span class="highlight-red">100분의 50(50%)</span>씩 부담하며, <span class="highlight-red">사용자</span>가 납부할 의무를 진다.</li>
+                <li><strong>휴직자 보수 산정 특례</strong>: 휴직 등의 사유로 보수의 전부 또는 일부가 지급되지 아니하는 경우 해당 사유가 발생한 <span class="highlight-purple">전달의 보수</span>를 기준으로 산정한다 ('다음 달'로 출제 시 오답).</li>
+                <li><strong>보수 제외 항목</strong>: <span class="highlight-red">퇴직금</span>, 현상금, 번역료, 비과세 근로소득 등은 보수 범위에서 <span class="highlight-red">제외</span>된다.</li>
+                <li><strong>소득월액보험료</strong>: 보수 외 소득이 연간 <span class="highlight-blue">2,000만 원</span>을 초과하는 경우 부과. <span class="highlight-purple">직장가입자 본인이 전액(100%)</span> 부담하고 납부한다.</li>
+                <li><strong>법정 보험료율</strong>: 1,000분의 <span class="highlight-red">80(8%)</span> 범위에서 대통령령으로 정함 (현행 시행령상 1만 분의 <span class="highlight-blue">719</span> = 7.19%).</li>
+            </ul>
+        </li>
+        <li><strong>보험료 면제 vs 경감 및 고액 체납자 명단 공개</strong>:
+            <ul>
+                <li><strong>보험료 면제</strong>: 국외 체류(단, <span class="highlight-red">국내에 거주하는 피부양자가 없을 때만</span> 면제. 피부양자가 국내 거주 시 면제 안 됨!), 현역병 복무, 교도소 수용 기간.</li>
+                <li><strong>보험료 경감</strong>: 섬·벽지·농어촌 거주자, 65세 이상, 휴직자 등.</li>
+                <li><strong>납부 기한</strong>: 매월 보험료는 <span class="highlight-blue">다음 달 10일까지</span> 납부한다 (소득월액보험료는 분기별 납부 가능).</li>
+                <li><strong>고액·상습 체납자 명단 공개</strong>: 체납 기간 <span class="highlight-red">1년 경과</span>, 체납액 <span class="highlight-red">1,000만 원 이상</span>인 자 (국민연금 2,000만 원, 산재·고용 5,000만 원과 구분!).</li>
+            </ul>
+        </li>
+        <li><strong>이의신청 · 심판청구 및 소멸시효</strong>:
+            <ul>
+                <li><strong>이의신청</strong>: 공단 또는 심사평가원의 처분에 이의가 있는 자는 <span class="highlight-blue">국민건강보험공단</span> 또는 <span class="highlight-blue">건강보험심사평가원</span>에 제기한다 (처분이 있음을 안 날 90일, 있은 날 180일).</li>
+                <li><strong>심판청구</strong>: 이의신청 결정에 불복하는 자는 <span class="highlight-red">건강보험분쟁조정위원회</span>에 심판청구를 제기한다 (통지받은 날 90일, 있은 날 180일).</li>
+                <li><strong>행정소송</strong>: 이의신청이나 심판청구를 거치지 아니하고도 <span class="highlight-purple">직접 행정소송을 제기할 수 있다</span>.</li>
+                <li><strong>소멸시효</strong>: 건강보험법상 보험료 징수권 및 급여를 받을 권리의 소멸시효는 <span class="highlight-red">3년</span>이다.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+            💡 [핵심 비교] 4대 사회보험 신고기한 · 명단공개 기준 및 권리구제 기관 한눈에 잡기
+        </div>
+        <ul>
+            <li><strong>자격 신고 기한</strong>: 건강보험(<span class="highlight-red">사유 발생 14일 이내</span>) vs 고용보험/국민연금(<span class="highlight-blue">다음 달 15일까지</span>).</li>
+            <li><strong>고액 체납 명단 공개 체납액</strong>: 건강보험(<span class="highlight-red">1,000만 원 이상</span>) vs 국민연금(<span class="highlight-purple">2,000만 원 이상</span>) vs 산재/고용보험(<span class="highlight-blue">5,000만 원 이상</span>) [체납 기간은 모두 1년 경과 동일].</li>
+            <li><strong>보수월액 vs 소득월액 납부자</strong>: 보수월액보험료 = <span class="highlight-blue">사용자</span> 납부 (반반 부담) / 소득월액보험료 = <span class="highlight-red">직장가입자 본인</span> 납부 (전액 부담).</li>
+            <li><strong>국외 체류 시 보험료 면제 조건</strong>: 국내 거주하는 피부양자가 <span class="highlight-red">없어야 함</span> (피부양자가 국내 거주 시 면제 불가).</li>
+        </ul>
+    </div>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        5. 국민건강보험법 주요 자격·보험료·권리구제 절차 종합 비교표
+    </h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 22%;">구분</th>
+                <th style="width: 39%;">자격 및 피부양자 규정</th>
+                <th style="width: 39%;">보험료 및 권리구제 규정</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>직장가입자 제외</th>
+                <td class="highlight-red">1개월 미만 일용근로자, 현역병,<br>60시간 미만 단시간근로자, 무보수 공무원</td>
+                <td class="highlight-blue">관장: 보건복지부장관<br>보험자: 국민건강보험공단</td>
+            </tr>
+            <tr>
+                <th>피부양자 범위</th>
+                <td class="highlight-blue">배우자, 직계존속(배우자 측 포함), 직계비속<br>제외: 형제자매의 배우자 및 직계비속</td>
+                <td class="highlight-purple">보수월액: 사업주·근로자 각 50% (사용자 납부)<br>소득월액: 가입자 전액 부담 및 납부</td>
+            </tr>
+            <tr>
+                <th>상실 / 변동 시기</th>
+                <td class="highlight-purple">사망·국적상실·국외이주: 다음 날<br>퇴직·휴업·폐업 등 근로종료: 다음 날</td>
+                <td class="highlight-red">보험료율: 1,000분의 80 한도 (현행 7.19%)<br>휴직시 보수: 사유 발생 전달 기준</td>
+            </tr>
+            <tr>
+                <th>신고 기한 / 공개</th>
+                <td class="highlight-red">사유 발생일부터 14일 이내 신고</td>
+                <td class="highlight-blue">체납자 명단공개: 1년 경과, 1,000만 원 이상<br>국외체류 면제: 국내 피부양자 없을 때</td>
+            </tr>
+            <tr>
+                <th>권리구제 / 시효</th>
+                <td class="highlight-green">이의신청: 건보공단 또는 심평원<br>심판청구: 건강보험분쟁조정위원회</td>
+                <td class="highlight-purple">행정소송: 직접 제기 가능<br>소멸시효: 징수권 및 수급권 모두 3년</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>주관식 단답형 및 빈칸 채우기 실전 훈련</h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡, ㉢)에 들어갈 알맞은 핵심 용어나 법정 숫자를 아래 여유 공백에 직접 기재해 보십시오.</p>
+
+    <ol class="quiz-list">
+        <li>
+            국민건강보험법상 고용기간이 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )개월 미만인 일용근로자는 직장가입자에서 제외된다.
+        </li>
+        <li>
+            국민건강보험법상 1개월 동안의 소정근로시간이 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )시간 미만인 단시간근로자는 직장가입자에서 제외된다.
+        </li>
+        <li>
+            국민건강보험 직장가입자의 피부양자 범위에서 형제·자매의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 및 직계비속은 제외된다.
+        </li>
+        <li>
+            국민건강보험 가입자가 사망한 경우 사망한 날의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 자격을 상실하고, 국적을 상실한 경우 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 자격을 상실한다.
+        </li>
+        <li>
+            국민건강보험 직장가입자가 피부양자가 된 경우에는 그 된 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 자격을 상실한다.
+        </li>
+        <li>
+            국민건강보험 직장가입자의 근로관계가 끝난 경우 근로관계가 끝난 날의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 자격이 변동된다.
+        </li>
+        <li>
+            국민건강보험 가입자 자격 취득·상실 및 변동 신고는 사유가 발생한 날부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이내에 하여야 한다.
+        </li>
+        <li>
+            국민건강보험법상 중대한 과실로 인한 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )은(는) 보험급여 제한 사유에 해당하지 아니한다.
+        </li>
+        <li>
+            국민건강보험 직장가입자의 보수월액보험료는 직장가입자와 사용자가 각각 100분의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )을(를) 부담하고, 납부 의무는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이(가) 진다.
+        </li>
+        <li>
+            국민건강보험 보수월액 산정 시 휴직 등의 사유로 보수의 전부 또는 일부가 지급되지 아니하는 경우 해당 사유가 발생한 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )의 보수를 기준으로 산정한다.
+        </li>
+        <li>
+            국민건강보험 보수 산정 시 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )금은 보수 범위에서 제외된다.
+        </li>
+        <li>
+            국민건강보험 직장가입자의 보수 외 소득이 연간 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )만 원을 초과하는 경우 소득월액보험료가 부과되며, 이를 납부할 의무자는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이다.
+        </li>
+        <li>
+            국민건강보험법상 직장가입자의 보험료율은 1,000분의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 범위에서 대통령령으로 정한다.
+        </li>
+        <li>
+            국외 체류 중인 직장가입자의 보험료가 면제되려면 국내에 거주하는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이(가) 없어야 한다.
+        </li>
+        <li>
+            국민건강보험료의 납부 기한은 매월 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )달 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일까지이다.
+        </li>
+        <li>
+            국민건강보험공단은 납부기한의 다음 날부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년이 지난 보험료 및 체납액이 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )만 원 이상인 경우 체납자의 인적사항을 공개할 수 있다.
+        </li>
+        <li>
+            국민건강보험공단의 처분에 이의가 있는 자는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )에 이의신청을 할 수 있고, 이의신청 결정에 불복하는 자는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )위원회에 심판청구를 할 수 있다.
+        </li>
+        <li>
+            국민건강보험법상 연금보험료 징수권 및 급여를 받을 권리의 소멸시효는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년이다.
+        </li>
+    </ol>
+
+    <!-- 수험생 정답 확인용 하단 3열 배치 그리드 영역 -->
+    <div style="font-size: 9.5pt; color: #666666; margin-top: 30px; padding: 15px; border-top: 1px dashed #666666; line-height: 1.8;">
+        <strong style="display: block; margin-bottom: 10px; color: #333333;">[제35강 주관식 단답형 정답 리스트]</strong>
+        <div class="answer-grid">
+            <div><strong>1.</strong> ㉠ 1</div>
+            <div><strong>2.</strong> ㉠ 60</div>
+            <div><strong>3.</strong> ㉠ 배우자</div>
+            <div><strong>4.</strong> ㉠ 다음 날, &nbsp; ㉡ 다음 날</div>
+            <div><strong>5.</strong> ㉠ 날에</div>
+            <div><strong>6.</strong> ㉠ 다음 날</div>
+            <div><strong>7.</strong> ㉠ 14</div>
+            <div><strong>8.</strong> ㉠ 사고</div>
+            <div><strong>9.</strong> ㉠ 50, &nbsp; ㉡ 사용자</div>
+            <div><strong>10.</strong> ㉠ 전달</div>
+            <div><strong>11.</strong> ㉠ 퇴직</div>
+            <div><strong>12.</strong> ㉠ 2,000, &nbsp; ㉡ 직장가입자</div>
+            <div><strong>13.</strong> ㉠ 80</div>
+            <div><strong>14.</strong> ㉠ 피부양자</div>
+            <div><strong>15.</strong> ㉠ 다음, &nbsp; ㉡ 10</div>
+            <div><strong>16.</strong> ㉠ 1, &nbsp; ㉡ 1,000</div>
+            <div><strong>17.</strong> ㉠ 국민건강보험공단, &nbsp; ㉡ 건강보험분쟁조정</div>
+            <div><strong>18.</strong> ㉠ 3</div>
+        </div>
+    </div>
+
+</body>
+</html>

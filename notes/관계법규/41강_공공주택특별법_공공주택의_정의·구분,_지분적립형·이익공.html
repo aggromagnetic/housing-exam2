@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 관계법규 - 제41강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+            letter-spacing: -0.05em;
+        }
+        
+        h1 {
+            font-size: 12pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        /* 토너 절약 4색 시각 강조 클래스 */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #16803d; 
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #6d28d9; 
+        }
+        
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        ol {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        /* 정답 리스트 3열 격자 레이아웃 */
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px 15px;
+        }
+
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        제41강. 공공주택특별법: 공공주택의 정의·구분, 지분적립형·이익공유형 분양주택, 현물보상 및 특례 규정 종합 정리
+    </h1>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        1. 공공주택의 정의, 재원, 공급 방식 및 필수 규모 요건
+    </h2>
+    <ul>
+        <li><strong>공공주택의 핵심 정의 및 사업주체</strong>:
+            <ul>
+                <li>사업 주체: <span class="highlight-blue">공공주택사업자</span>(국가, 지방자치단체, 한국토지주택공사(LH), 지방공사, 공공이 100분의 50을 초과하여 출자한 법인, 공공이 출자한 부동산투자회사 등).</li>
+                <li>재원 조달: <span class="highlight-blue">국가 또는 지방자치단체의 재정</span>이나 <span class="highlight-blue">주택도시기금</span>을 지원받아 건설, 매입 또는 임차하여 공급하는 주택.</li>
+            </ul>
+        </li>
+        <li><strong>공공주택의 2가지 구분 (공공임대주택 vs 공공분양주택)</strong>:
+            <ul>
+                <li><span class="highlight-purple">공공임대주택</span>: 임대 또는 임대 후 <span class="highlight-purple">분양전환</span>을 목적으로 공급하는 주택 (건설임대, 매입임대, 기존주택 전세임대 등 임차임대).</li>
+                <li><span class="highlight-red">공공분양주택 (★필수 법정 규모 요건)</span>: 분양을 목적으로 공급하는 주택으로서 <span class="highlight-red">반드시 국민주택규모 이하</span>이어야 함.
+                    <br><em>※ 시험 출제 포인트: 국민주택규모를 초과하는 주택(예: 주거전용면적 150㎡)은 분양 목적으로 공급하더라도 절대 공공분양주택이 될 수 없음!</em>
+                </li>
+            </ul>
+        </li>
+        <li><strong>'분양전환'의 법정 용어 정의 (★주관식 단답형 빈출)</strong>:
+            <ul>
+                <li>공공임대주택을 <span class="highlight-blue">공공주택사업자가 아닌 자</span>(대표적으로 해당 임대주택의 임차인)에게 매각하는 것을 말함.</li>
+                <li><em>공공주택사업자 간(예: LH가 서울특별시에 양도)에 양도하는 것은 분양전환에 해당하지 않음.</em></li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        2. 신설 특수 공공분양주택 ① - 지분적립형 분양주택 정밀 분석
+    </h2>
+    <ul>
+        <li><strong>의의 및 소유권 공유기간 (★숫자 및 주관식 단답형 최우선)</strong>:
+            <ul>
+                <li>개념: 공공주택사업자가 건설·매입한 공공분양주택(국민주택규모 이하)을 공급받은 자가 주택 소유권을 공유하면서 자신의 소유 지분을 점진적으로 적립하여 취득하는 주택.</li>
+                <li>법률령 공유기간: <span class="highlight-red">20년 이상 30년 이하</span>의 범위에서 대통령령으로 정함.</li>
+                <li>대통령령 세부 규정: 공유기간은 <span class="highlight-red">20년 또는 30년</span> 중 공공주택사업자가 정함 (23년, 25년 등 중간 기간 지정 불가!). 사업자가 정하되 공급받은 자가 선택하게 할 수 있음.</li>
+            </ul>
+        </li>
+        <li><strong>회차별 지분 적립 비율 및 취득기준가격 (★주관식 핵심)</strong>:
+            <ul>
+                <li>지분 적립 비율: 1회당 적게는 <span class="highlight-blue">100분의 10(10%) 이상</span>, 많게는 <span class="highlight-blue">100분의 25(25%) 이하</span> 범위에서 공공주택사업자가 정함 (매년 적립하는 방식은 불가).</li>
+                <li><span class="highlight-purple">취득기준가격 (★주관식 단답형 산정 기준)</span>: 회차별로 취득하는 지분 가격은 <span class="highlight-purple">주택공급가격에 이에 대한 이자를 합산한 금액</span>으로 산정함 (이 취득기준가격에 적립 지분 비율을 곱함).</li>
+            </ul>
+        </li>
+        <li><strong>지분 사용 대가 (★수수료·관리비 오답 유발)</strong>:
+            <ul>
+                <li>공공주택사업자는 소유권을 공유하는 동안 사업자가 소유한 지분에 대하여 공급받은 자에게 <span class="highlight-red">임대료</span>를 받을 수 있음 ('수수료'나 '관리비'로 표기 시 오답). 임대료는 예치받거나 매월 지급 방식으로 전환 가능.</li>
+            </ul>
+        </li>
+        <li><strong>전매제한, 전매 절차 및 매매 차액 배분</strong>:
+            <ul>
+                <li>전매제한 기간: 최대 <span class="highlight-blue">10년</span> (공유기간인 20~30년보다 짧음).</li>
+                <li>전매제한 경과 후 소유권 미완성 상태 전매 절차: 공공주택사업자와 <span class="highlight-purple">매매 가격 등을 협의</span>하고 <span class="highlight-purple">공공주택사업자의 동의</span>를 받아 <span class="highlight-purple">소유 지분 전부(사업자 지분 포함)를 함께 전매</span>해야 함 (배우자 증여는 제외).</li>
+                <li>매매 차액 배분: 매매 가격이 취득 가격보다 높은 경우 그 차액을 <span class="highlight-green">전매 시점의 소유지분 비율</span>에 따라 배분함.</li>
+            </ul>
+        </li>
+        <li><strong>거주의무, 이사 시 매입 신청, 부기등기 절차</strong>:
+            <ul>
+                <li>거주의무 기간: 최초 입주 가능일부터 <span class="highlight-red">5년</span> 이내의 범위에서 계속 거주하여야 함.</li>
+                <li>거주 이전 필요 시: 정당한 사유 없이 거주를 이전하려는 경우 공공주택사업자에게 <span class="highlight-blue">매입을 신청</span>하여야 하며 사업자는 특별한 사유가 없으면 매입해야 함.</li>
+                <li>의견 제출 및 절차 기한: 거주의무자에게 의견 제출 기한을 <span class="highlight-green">14일 이상</span> 주어야 하며, 거주의무 이행 확인 시 확인서 접수일부터 <span class="highlight-green">14일 이내</span>에 거주사실확인서를 발급하여 부기등기를 말소함.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg>
+        3. 신설 특수 공공분양주택 ② - 이익공유형 분양주택 정밀 분석
+    </h2>
+    <ul>
+        <li><strong>의의 및 처분손익 공유 (★명칭 함정 주의)</strong>:
+            <ul>
+                <li>개념: 공공분양주택(국민주택규모 이하)으로서 주택을 처분하려는 경우 <span class="highlight-blue">공공주택사업자가 환매</span>하되, 처분 <span class="highlight-red">손익(이익 및 손실 포함)</span>을 공공주택사업자와 공유하는 것을 조건으로 분양하는 주택.</li>
+                <li>명칭은 '이익공유형'이나 법조문상 실제 공유 대상은 처분 이익뿐만 아니라 <span class="highlight-red">처분 손익</span> 전체임.</li>
+            </ul>
+        </li>
+        <li><strong>전매제한 및 거주의무 적용 특례 (★최고 빈출 출제 포인트)</strong>:
+            <ul>
+                <li><span class="highlight-red">전매제한 규정 미적용</span>: 주택법 제64조에 따른 <span class="highlight-red">전매제한 규정을 적용하지 아니함</span> (사유: 어차피 처분 시 공공주택사업자에게만 환매하므로 일반 전매제한이 불필요함).</li>
+                <li><span class="highlight-blue">거주의무 기간</span>: 최초 입주 가능일부터 <span class="highlight-blue">5년</span> 동안 계속 거주하여야 함.</li>
+            </ul>
+        </li>
+        <li><strong>부기등기 및 재공급 규정</strong>:
+            <ul>
+                <li>부기등기: 소유권 보존등기와 동시에 공공주택사업자가 환매하는 주택임을 부기등기하여 제3자의 선의의 피해를 방지함.</li>
+                <li>재공급 시 적용: 사업자가 환매 후 재공급하는 경우에도 반드시 <span class="highlight-purple">이익공유형 분양주택으로 재공급</span>하여야 하며, 잔여 거주의무기간을 준수해야 함.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 20%;">구분</th>
+                <th style="width: 40%;">지분적립형 분양주택</th>
+                <th style="width: 40%;">이익공유형 분양주택</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>공통 필수 요건</th>
+                <td colspan="2"><span class="highlight-red">반드시 국민주택규모 이하</span>의 공공분양주택일 것</td>
+            </tr>
+            <tr>
+                <th>소유권 구조</th>
+                <td>사업자와 <span class="highlight-blue">소유권 공유</span> (20년 또는 30년)</td>
+                <td>수분양자 단독 소유 (단, 사업자 환매 조건)</td>
+            </tr>
+            <tr>
+                <th>처분 / 전매 방식</th>
+                <td>전매제한 경과 후 <span class="highlight-purple">사업자 동의 받아 지분 전부 전매</span></td>
+                <td>처분 시 <span class="highlight-purple">공공주택사업자에게 환매 신청</span></td>
+            </tr>
+            <tr>
+                <th>차액 / 손익 공유</th>
+                <td>매매 차액을 <span class="highlight-green">전매 시점 소유지분 비율</span>로 배분</td>
+                <td>처분 <span class="highlight-red">손익(이익 및 손실)</span>을 사업자와 공유</td>
+            </tr>
+            <tr>
+                <th>전매제한 규정</th>
+                <td>적용함 (<span class="highlight-blue">최대 10년</span>)</td>
+                <td><span class="highlight-red">적용하지 아니함</span> (주택법 제64조 미적용)</td>
+            </tr>
+            <tr>
+                <th>거주의무 기간</th>
+                <td><span class="highlight-red">5년</span> 이내의 범위 (대통령령 5년)</td>
+                <td><span class="highlight-red">5년</span> 동안 계속 거주</td>
+            </tr>
+            <tr>
+                <th>사용 대가 / 지분</th>
+                <td>사업자 지분에 대해 <span class="highlight-purple">임대료</span> 지급</td>
+                <td>지분 사용 임대료 개념 없음</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        4. 공공주택 관련 5대 사업 종류 및 현물보상(★신설) 제도
+    </h2>
+    <ul>
+        <li><strong>법정 공공주택 관련 5대 사업 (★기출 항목)</strong>:
+            <ol>
+                <li><span class="highlight-blue">공공주택지구조성사업</span></li>
+                <li><span class="highlight-blue">공공주택건설사업</span></li>
+                <li><span class="highlight-blue">공공주택매입사업</span></li>
+                <li><span class="highlight-blue">공공주택임차사업</span></li>
+                <li><span class="highlight-blue">공공주택관리사업</span></li>
+            </ol>
+        </li>
+        <li><strong>현물보상 제도 (★신설 출제 1순위 포인트)</strong>:
+            <ul>
+                <li>개념: 도심 공공주택 복합지구 또는 공공주택지구에서 토지·건물 소유자에게 사업 시행으로 조성되는 <span class="highlight-red">토지나 건설되는 건축물(공공주택 등)로 보상</span>하는 제도.</li>
+                <li>취지: 단순 금전 보상 대신 새로 건설되는 신축 공공주택이나 토지(물건)로 직접 보상하여 원주민 재정착을 도모함.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg>
+        5. 주거종합계획, 재정·기금 우선 지원, 용지 우선공급 및 법 준용 비교
+    </h2>
+    <ul>
+        <li><strong>공공주택 공급관리계획 수립 주기</strong>:
+            <ul>
+                <li>국토교통부장관 등은 10년 단위 주거종합계획과 연계하여 <span class="highlight-red">5년마다</span> 공공주택 공급관리계획을 수립하여야 함 (유형별·지역별 입주 수요량 조사 반영).</li>
+            </ul>
+        </li>
+        <li><strong>예산 반영 및 기금 배정 (★기출 빈출 함정)</strong>:
+            <ul>
+                <li>예산 반영: 국가 및 지자체는 <span class="highlight-blue">매년</span> 공공주택 건설·매입·임차 자금을 <span class="highlight-red">세출예산</span>에 반영하도록 노력하여야 함 ('세입예산'으로 표기 시 오답!).</li>
+                <li>기금 배정: 국토교통부장관은 공공주택 건설·매입·임차 등에 <span class="highlight-purple">주택도시기금</span>을 우선적으로 배정하여야 함.</li>
+            </ul>
+        </li>
+        <li><strong>용지의 가장 우선적 공급 대상</strong>:
+            <ul>
+                <li>개발사업을 하거나 임대주택 용지를 공급할 때 가장 우선적으로 고려·공급해야 하는 주택은 <span class="highlight-green">공공임대주택</span>임 (민간임대주택 및 공공분양주택보다 최우선권 부여).</li>
+            </ul>
+        </li>
+        <li><strong>다른 법률과의 관계 및 준용 규정 비교 (★최다 오답 유발 정밀 비교)</strong>:
+            <ul>
+                <li><span class="highlight-blue">민간임대주택특별법</span>: 민간임대주택의 건설·공급·관리에 관하여 미규정 시 <span class="highlight-blue">주택법, 건축법, 공동주택관리법, 주택임대차보호법</span>을 준용함.</li>
+                <li><span class="highlight-red">공공주택특별법</span>: 공공주택의 건설·공급·관리에 관하여 미규정 시 <span class="highlight-red">주택법, 건축법, 주택임대차보호법</span> 등을 준용함 (<span class="highlight-red">★공동주택관리법 준용 규정이 없음!</span>).</li>
+            </ul>
+        </li>
+    </ul>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+            💡 [수험 핵심 팁] 제41강 공공주택특별법 고난도 핵심 및 숫자 암기 완전 정복
+        </div>
+        <ul>
+            <li><strong>공공분양주택 규모</strong>: 공공분양주택(지분적립형, 이익공유형 포함)은 <span class="highlight-red">반드시 국민주택규모 이하</span>이어야 함.</li>
+            <li><strong>지분적립형 적립 수치</strong>: 공유기간은 <span class="highlight-red">20년 또는 30년</span>, 적립 비율은 <span class="highlight-blue">100분의 10 이상 100분의 25 이하</span>, 회차별 취득가격은 <span class="highlight-purple">주택공급가격 + 이자</span>.</li>
+            <li><strong>지분 사용 대가</strong>: 수수료나 관리비가 아닌 <span class="highlight-red">임대료</span>를 지급함.</li>
+            <li><strong>이익공유형 전매제한</strong>: 환매 조건이므로 <span class="highlight-red">전매제한 규정(주택법 제64조)을 적용하지 않음</span>. 공유 대상은 처분 <span class="highlight-red">손익</span>임.</li>
+            <li><strong>법 준용 차이</strong>: 민간임대주택법과 달리 공공주택특별법에는 <span class="highlight-red">공동주택관리법 준용 규정이 없음</span>.</li>
+        </ul>
+    </div>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>주관식 단답형 및 빈칸 채우기 실전 훈련</h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡)에 들어갈 알맞은 핵심 용어나 법정 숫자를 아래 여유 공백에 직접 기재해 보십시오.</p>
+
+    <ol class="quiz-list" style="line-height: 2.1;">
+        <li>
+            공공분양주택이란 공공주택사업자가 분양을 목적으로 공급하는 주택으로서 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 이하인 주택을 말한다.
+        </li>
+        <li>
+            공공임대주택을 공공주택사업자가 아닌 자에게 매각하는 것을 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )라 한다.
+        </li>
+        <li>
+            지분적립형 분양주택의 소유권 공유기간은 법률상 20년 이상 30년 이하의 범위에서 대통령령으로 정하되, 대통령령에서는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년 또는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년 중 공공주택사업자가 정하도록 하고 있다.
+        </li>
+        <li>
+            지분적립형 분양주택의 회차별 지분 적립 비율은 적게는 100분의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 이상, 많게는 100분의 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 이하의 범위에서 정한다.
+        </li>
+        <li>
+            지분적립형 분양주택에서 회차별로 취득하는 지분 가격은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )와 이에 대한 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )를 합산한 금액인 취득기준가격에 지분 비율을 곱하여 산정한다.
+        </li>
+        <li>
+            공공주택사업자는 지분적립형 분양주택 수분양자와 소유권을 공유하는 동안 사업자가 소유한 지분에 대하여 수분양자에게 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )를 받을 수 있다.
+        </li>
+        <li>
+            지분적립형 분양주택의 전매제한 기간은 최대 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년이며, 거주의무 기간은 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년 이내의 범위에서 정한다.
+        </li>
+        <li>
+            지분적립형 분양주택 전매 시 매매 가격이 취득 가격보다 높은 경우 그 차액은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 시점의 소유지분 비율에 따라 나누어야 한다.
+        </li>
+        <li>
+            지분적립형 분양주택 거주의무자가 거주 이전 시 매입을 신청하면 공공주택사업자는 의견 제출 기한을 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이상 주어야 한다.
+        </li>
+        <li>
+            국토교통부장관 등은 거주의무 이행이 확인되면 접수일부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이내에 거주사실확인서를 발급하여야 한다.
+        </li>
+        <li>
+            이익공유형 분양주택이란 주택을 처분하려는 경우 공공주택사업자가 환매하되, 처분 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )을 공유하는 것을 조건으로 분양하는 주택이다.
+        </li>
+        <li>
+            이익공유형 분양주택에는 주택법 제64조에 따른 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 규정을 적용하지 아니한다.
+        </li>
+        <li>
+            이익공유형 분양주택을 공급받은 자는 최초 입주 가능일부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년 동안 계속 거주하여야 한다.
+        </li>
+        <li>
+            도심 공공주택 복합지구 등에서 토지나 건축물로 보상하는 제도를 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )보상이라 한다.
+        </li>
+        <li>
+            국토교통부장관 등은 10년 단위 주거종합계획과 연계하여 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년마다 공공주택 공급관리계획을 수립하여야 한다.
+        </li>
+        <li>
+            국가나 지방자치단체는 매년 공공주택 건설·매입·임차 자금을 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )예산에 반영하도록 노력하여야 한다.
+        </li>
+        <li>
+            국토교통부장관은 공공주택 건설·매입·임차 등에 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )을 우선적으로 배정하여야 한다.
+        </li>
+        <li>
+            개발사업 시행 시 임대주택 용지를 공급할 때 가장 우선적으로 고려·공급해야 하는 주택은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )주택이다.
+        </li>
+        <li>
+            공공주택특별법에 규정되지 않은 사항에 대해서는 주택법, 건축법, 주택임대차보호법을 준용하며, 민간임대주택법과 달리 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )법 준용 규정은 없다.
+        </li>
+    </ol>
+
+    <!-- 수험생 정답 확인용 하단 3열 배치 그리드 영역 -->
+    <div style="font-size: 9.5pt; color: #666666; margin-top: 30px; padding: 15px; border-top: 1px dashed #666666; line-height: 1.8;">
+        <strong style="display: block; margin-bottom: 10px; color: #333333;">[제41강 주관식 단답형 정답 리스트]</strong>
+        <div class="answer-grid">
+            <div><strong>1.</strong> ㉠ 국민주택규모</div>
+            <div><strong>2.</strong> ㉠ 분양전환</div>
+            <div><strong>3.</strong> ㉠ 20, &nbsp; ㉡ 30</div>
+            <div><strong>4.</strong> ㉠ 10, &nbsp; ㉡ 25</div>
+            <div><strong>5.</strong> ㉠ 주택공급가격, &nbsp; ㉡ 이자</div>
+            <div><strong>6.</strong> ㉠ 임대료</div>
+            <div><strong>7.</strong> ㉠ 10, &nbsp; ㉡ 5</div>
+            <div><strong>8.</strong> ㉠ 전매</div>
+            <div><strong>9.</strong> ㉠ 14</div>
+            <div><strong>10.</strong> ㉠ 14</div>
+            <div><strong>11.</strong> ㉠ 손익</div>
+            <div><strong>12.</strong> ㉠ 전매제한</div>
+            <div><strong>13.</strong> ㉠ 5</div>
+            <div><strong>14.</strong> ㉠ 현물</div>
+            <div><strong>15.</strong> ㉠ 5</div>
+            <div><strong>16.</strong> ㉠ 세출</div>
+            <div><strong>17.</strong> ㉠ 주택도시기금</div>
+            <div><strong>18.</strong> ㉠ 공공임대</div>
+            <div><strong>19.</strong> ㉠ 공동주택관리</div>
+        </div>
+    </div>
+
+</body>
+</html>
