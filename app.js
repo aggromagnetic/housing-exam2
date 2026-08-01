@@ -793,10 +793,10 @@ function renderQuizResult(correctCount, totalCount, results) {
 }
 
 // -------------------------------------------------------------
-// Global Search
+// Global Search (Enhanced Smart Multi-Token Search Engine)
 // -------------------------------------------------------------
 function handleGlobalSearch(e) {
-    const query = e.target.value.trim().toLowerCase();
+    const query = e.target.value.trim();
     if (!query) {
         if (currentView === 'search') switchView('viewer');
         return;
@@ -807,62 +807,166 @@ function handleGlobalSearch(e) {
     }
 }
 
-function performSearch(query) {
+function normalizeForSearch(str) {
+    if (!str) return '';
+    return str.toLowerCase().replace(/[\s\cdot·,.\(\)\[\]\-_:;]/g, '');
+}
+
+function highlightSearchTerms(text, tokens) {
+    if (!text || !tokens || tokens.length === 0) return escapeHtml(text);
+    let escapedText = escapeHtml(text);
+    tokens.forEach(t => {
+        if (!t) return;
+        const escToken = escapeHtml(t);
+        const regex = new RegExp(`(${escToken.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+        escapedText = escapedText.replace(regex, '<mark class="search-highlight">$1</mark>');
+    });
+    return escapedText;
+}
+
+function performSearch(rawQuery) {
+    const trimmed = rawQuery.trim().toLowerCase();
+    if (!trimmed) return;
+
+    // Split query by whitespace into search tokens (e.g. "주택 수용" -> ["주택", "수용"])
+    const tokens = trimmed.split(/\s+/).filter(Boolean);
+    const normalizedTokens = tokens.map(t => normalizeForSearch(t));
+
     const matchedLectures = [];
 
     studyData.lectures.forEach(lec => {
         let matchScore = 0;
         const matches = [];
+        const matchedTokensSet = new Set();
 
-        if (lec.title.toLowerCase().includes(query)) {
-            matchScore += 5;
-            matches.push(`제목 매칭: ${lec.title}`);
+        const lecTitleNorm = normalizeForSearch(lec.title);
+        const lecFileNorm = normalizeForSearch(lec.fileName);
+
+        // Check Lecture Title
+        let titleTokensHit = 0;
+        normalizedTokens.forEach((normT, idx) => {
+            if (lecTitleNorm.includes(normT) || lecFileNorm.includes(normT)) {
+                titleTokensHit++;
+                matchedTokensSet.add(tokens[idx]);
+            }
+        });
+        if (titleTokensHit === normalizedTokens.length) {
+            matchScore += 100 + (titleTokensHit * 10);
+            matches.push({ type: 'title', text: `강의 제목: ${lec.title}` });
+        } else if (titleTokensHit > 0) {
+            matchScore += titleTokensHit * 15;
+            matches.push({ type: 'title', text: `강의 제목(부분): ${lec.title}` });
         }
 
+        // Check SubHeadings (Sub-sections)
         lec.subHeadings.forEach(sh => {
-            if (sh.toLowerCase().includes(query)) {
-                matchScore += 3;
-                matches.push(`소단원: ${sh}`);
+            const shNorm = normalizeForSearch(sh);
+            let shHit = 0;
+            normalizedTokens.forEach((normT, idx) => {
+                if (shNorm.includes(normT)) {
+                    shHit++;
+                    matchedTokensSet.add(tokens[idx]);
+                }
+            });
+            if (shHit === normalizedTokens.length) {
+                matchScore += 50 + (shHit * 5);
+                matches.push({ type: 'sub', text: `소단원 목차: ${sh}` });
+            } else if (shHit > 0) {
+                matchScore += shHit * 8;
+                matches.push({ type: 'sub', text: `소단원 목차: ${sh}` });
             }
         });
 
+        // Check Related Quizzes
         const relatedQuizzes = studyData.quizzes.filter(q => q.noteFileName === lec.fileName);
+        let quizMatchesCount = 0;
         relatedQuizzes.forEach(q => {
-            if (q.question.toLowerCase().includes(query) || q.answerRaw.toLowerCase().includes(query)) {
-                matchScore += 2;
-                matches.push(`퀴즈 문제: ${q.question}`);
+            const qNorm = normalizeForSearch(q.question + ' ' + q.answerRaw);
+            let qHit = 0;
+            normalizedTokens.forEach((normT, idx) => {
+                if (qNorm.includes(normT)) {
+                    qHit++;
+                    matchedTokensSet.add(tokens[idx]);
+                }
+            });
+            if (qHit === normalizedTokens.length) {
+                matchScore += 30;
+                if (quizMatchesCount < 3) {
+                    matches.push({ type: 'quiz', text: `퀴즈 ${q.num}번: ${q.question}` });
+                    quizMatchesCount++;
+                }
+            } else if (qHit > 0) {
+                matchScore += qHit * 3;
+                if (quizMatchesCount < 2) {
+                    matches.push({ type: 'quiz', text: `퀴즈 ${q.num}번: ${q.question}` });
+                    quizMatchesCount++;
+                }
             }
         });
 
-        if (matchScore > 0) {
-            matchedLectures.push({ lec, matches });
+        // Lecture passes if ALL search tokens are matched somewhere in the lecture
+        const allTokensMatched = tokens.every(t => matchedTokensSet.has(t));
+        if (allTokensMatched && matchScore > 0) {
+            matchedLectures.push({ lec, matchScore, matches, matchedTokens: Array.from(matchedTokensSet) });
         }
     });
 
-    renderSearchResults(query, matchedLectures);
+    // Sort matched lectures by matchScore descending
+    matchedLectures.sort((a, b) => b.matchScore - a.matchScore);
+
+    renderSearchResults(rawQuery, tokens, matchedLectures);
     switchView('search');
 }
 
-function renderSearchResults(query, results) {
+function renderSearchResults(rawQuery, tokens, results) {
     const container = document.getElementById('search-results-container');
-    container.innerHTML = `<div style="color: var(--text-muted); margin-bottom: 16px;">'<strong>${escapeHtml(query)}</strong>' 검색 결과 (총 ${results.length}건)</div>`;
+    container.innerHTML = `
+        <div style="color: var(--text-muted); margin-bottom: 16px; font-size: 14px;">
+            🔍 '<strong>${escapeHtml(rawQuery)}</strong>' 검색 결과 (총 <strong>${results.length}</strong>건의 강좌 매칭)
+        </div>
+    `;
 
     if (results.length === 0) {
-        container.innerHTML += `<div style="padding: 40px; text-align: center; color: var(--text-dim);">검색된 강의 노트가 없습니다. 다른 키워드로 검색해 보세요.</div>`;
+        container.innerHTML += `
+            <div style="padding: 50px 20px; text-align: center; color: var(--text-dim); background: var(--bg-card); border-radius: 12px; border: 1px dashed var(--border-color);">
+                <div style="font-size: 32px; margin-bottom: 12px;">🔍</div>
+                <div style="font-weight: bold; font-size: 16px; margin-bottom: 6px; color: var(--text-main);">검색된 강의 노트가 없습니다.</div>
+                <div style="font-size: 13px;">입력하신 단어들(${tokens.map(t => `'${escapeHtml(t)}'`).join(', ')})을 모두 포함하는 강의가 없습니다. 다른 단어나 더 짧은 키워드로 검색해 보세요.</div>
+            </div>
+        `;
         return;
     }
 
     results.forEach(({ lec, matches }) => {
         const itemEl = document.createElement('div');
         itemEl.className = 'result-item';
-        itemEl.style.cursor = 'pointer';
+        itemEl.style.cssText = 'cursor: pointer; transition: all 0.2s ease; margin-bottom: 12px;';
         itemEl.onclick = () => selectLecture(lec.fileName);
 
+        // Deduplicate matches text for clean display
+        const uniqueMatches = [];
+        const seen = new Set();
+        matches.forEach(m => {
+            if (!seen.has(m.text)) {
+                seen.add(m.text);
+                uniqueMatches.push(m);
+            }
+        });
+
         itemEl.innerHTML = `
-            <div class="result-q-num">[${escapeHtml(lec.subject)}] ${escapeHtml(lec.fileName)}</div>
-            <div class="result-q-title" style="color: #60a5fa;">${escapeHtml(lec.title)}</div>
-            <div style="font-size: 13px; color: var(--text-muted); display: flex; flex-direction: column; gap: 4px;">
-                ${matches.map(m => `<div>• ${escapeHtml(m)}</div>`).join('')}
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
+                <span class="result-q-num" style="font-weight: bold; font-size: 12px; padding: 2px 8px; border-radius: 4px; background: rgba(59, 130, 246, 0.1); color: var(--accent-blue);">[${escapeHtml(lec.subject)}] ${escapeHtml(lec.fileName)}</span>
+                <span style="font-size: 11px; color: var(--text-dim);">${lec.quizCount}개 퀴즈</span>
+            </div>
+            <div class="result-q-title" style="color: #3b82f6; font-size: 16px; font-weight: bold; margin-bottom: 8px;">
+                ${highlightSearchTerms(lec.title, tokens)}
+            </div>
+            <div style="font-size: 13px; color: var(--text-muted); display: flex; flex-direction: column; gap: 4px; border-top: 1px solid var(--border-color); padding-top: 8px;">
+                ${uniqueMatches.slice(0, 4).map(m => `
+                    <div style="line-height: 1.5; color: var(--text-main); font-size: 12.5px;">
+                        • ${highlightSearchTerms(m.text, tokens)}
+                    </div>
+                `).join('')}
             </div>
         `;
         container.appendChild(itemEl);

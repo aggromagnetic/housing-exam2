@@ -699,6 +699,21 @@ body {
     border-radius: var(--radius-md);
     padding: 16px;
     margin-bottom: 12px;
+    transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.result-item:hover {
+    border-color: var(--accent-blue);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.search-highlight {
+    background-color: rgba(251, 191, 36, 0.25);
+    color: #fbbf24;
+    border-radius: 3px;
+    padding: 1px 4px;
+    font-weight: 700;
 }
 
 .result-item.correct {
