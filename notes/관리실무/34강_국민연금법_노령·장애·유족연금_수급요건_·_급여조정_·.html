@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 공동주택관리실무 - 제34강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+            letter-spacing: -0.05em;
+        }
+        
+        h1 {
+            font-size: 13pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        /* 토너 절약 4색 강조 클래스 */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #16803d; 
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #6d28d9; 
+        }
+        
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        ol.quiz-list {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+            line-height: 2.1;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        /* 정답 리스트 3열 격자 레이아웃 규격 준수 */
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px 15px;
+        }
+
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        제34강. 국민연금법 노령·장애·유족연금 수급요건 · 급여조정 · 소멸시효 및 국민건강보험법 총칙 종합 정리
+    </h1>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        1. 노령연금 · 조기노령연금 수급요건 및 장애연금 요건·등급 변경/소멸
+    </h2>
+    <ul>
+        <li><strong>노령연금 법정 기본 수급요건 (★3가지 법정 수치 / 숫자 합계 125)</strong>:
+            <ul>
+                <li><strong>가입기간 및 연령</strong>: 가입기간이 <span class="highlight-red">10년 이상</span>인 가입자(였던 자)로서 <span class="highlight-blue">60세</span>(출생연도별 상향 조정 특례 존재)가 된 때 평생 동안 지급한다.</li>
+                <li><strong>특수직종 근로자 특례</strong>: 광산 근로자 등 특수직종 근로자는 <span class="highlight-purple">55세</span>부터 지급받을 수 있다.</li>
+                <li><strong>주관식 빈칸 및 숫자 합계 대비</strong>: 순서대로 10년, 60세, 55세이며, 3가지 숫자의 합계는 <span class="highlight-red">125</span>이다.</li>
+                <li><strong>10년 미만 시</strong>: 60세 도달 시 노령연금을 받지 못하고 <span class="highlight-blue">반환일시금</span>을 지급받게 되며, 임의계속가입을 신청하여 10년을 채운 후 연금을 받을 수 있다.</li>
+            </ul>
+        </li>
+        <li><strong>조기노령연금 수급요건 (★소득 없는 업무 / 숫자 합계 125)</strong>:
+            <ul>
+                <li><strong>수급 요건</strong>: 가입기간이 <span class="highlight-red">10년 이상</span>이고 <span class="highlight-blue">55세 이상</span>인 자가 <span class="highlight-purple">소득이 있는 업무에 종사하지 아니하는 경우</span> 본인의 신청에 따라 60세가 되기 전에 받을 수 있다.</li>
+                <li><strong>주관식 빈칸 및 숫자 합계 대비</strong>: 순서대로 10년, 55세, 60세이며, 숫자 합계는 노령연금과 동일하게 <span class="highlight-red">125</span>이다.</li>
+            </ul>
+        </li>
+        <li><strong>장애연금 수급 요건 (★초진일 기준 3가지 납부 요건)</strong>:
+            <ul>
+                <li><strong>초진일 연령</strong>: 질병 또는 부상의 초진일 당시 18세 이상이고 노령연금 지급연령 미만이어야 한다.</li>
+                <li><strong>납부 요건 (다음 중 어느 하나 충족)</strong>:
+                    <ol>
+                        <li>초진일 당시 연금보험료를 낸 기간이 가입대상기간의 <span class="highlight-red">3분의 2 이상</span>일 것.</li>
+                        <li>초진일부터 소급하여 <span class="highlight-blue">5년 전부터 초진일까지</span>의 기간 중 연금보험료를 낸 기간이 <span class="highlight-purple">3년 이상</span>일 것 (체납기간 3년 이상 시 제외).</li>
+                        <li>초진일 당시 전체 가입기간이 <span class="highlight-red">10년 이상</span>일 것.</li>
+                    </ol>
+                </li>
+            </ul>
+        </li>
+        <li><strong>장애등급 심사 후 결정 처리 (★변경 vs 소멸 구분)</strong>:
+            <ul>
+                <li><strong>장애연금액의 변경</strong>: 장애 상태를 심사하여 장애 등급이 전과 다르게 된 경우 그 등급에 따라 장애연금액을 <span class="highlight-blue">변경</span>한다 ('소멸한다'로 출제 시 오답).</li>
+                <li><strong>수급권의 소멸</strong>: 심사 결과 장애 등급에 해당하지 아니하게 된 경우 장애연금 수급권은 <span class="highlight-red">소멸</span>한다 ('변경한다'로 출제 시 오답).</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        2. 유족연금 수급요건 · 유족의 범위(자녀 25세/손자녀 19세) · 수급권 소멸(파양) vs 정지(입양)
+    </h2>
+    <ul>
+        <li><strong>유족연금 지급 대상 사망사유 (★4가지 사망 요건)</strong>:
+            <ul>
+                <li>노령연금 수급권자가 사망한 경우.</li>
+                <li>가입기간이 <span class="highlight-red">10년 이상</span>인 가입자(였던 자)가 사망한 경우.</li>
+                <li>연금보험료를 낸 기간이 가입대상기간의 <span class="highlight-blue">3분의 2 이상</span>이거나, 사망일 전 <span class="highlight-purple">5년 전부터 사망일까지</span> 중 <span class="highlight-purple">3년 이상</span> 낸 가입자가 사망한 경우.</li>
+                <li>장애등급 <span class="highlight-red">2급 이상</span>인 장애연금 수급권자가 사망한 경우 (3급·4급 수급자 사망 시 유족연금 미지급).</li>
+            </ul>
+        </li>
+        <li><strong>유족의 범위 및 나이·장애 조건 (★자녀 25세 미만 vs 손자녀 19세 미만 출제 포인트)</strong>:
+            <ul>
+                <li><strong>배우자</strong>: 나이 제한 없음.</li>
+                <li><strong>자녀</strong>: <span class="highlight-red">25세 미만</span>이거나 장애등급 2급 이상인 자 (산재보험의 20세 미만과 구별 필수!).</li>
+                <li><strong>부모</strong>: <span class="highlight-blue">60세 이상</span>이거나 장애등급 2급 이상인 자 (배우자의 부모 포함).</li>
+                <li><strong>손자녀</strong>: <span class="highlight-purple">19세 미만</span>이거나 장애등급 2급 이상인 자.</li>
+                <li><strong>조부모</strong>: <span class="highlight-green">60세 이상</span>이거나 장애등급 2급 이상인 자.</li>
+            </ul>
+        </li>
+        <li><strong>유족연금 수급권 소멸사유 vs 정지사유 (★파양 vs 입양 함정 완벽 대비)</strong>:
+            <ul>
+                <li><strong>수급권 소멸사유</strong>: 수급권자의 사망, 배우자의 재혼, 자녀·손자녀의 <span class="highlight-red">파양</span>(친족관계 소멸), 자녀가 <span class="highlight-red">25세</span>에 달한 때, 손자녀가 <span class="highlight-red">19세</span>에 달한 때.</li>
+                <li><strong>수급권 정지사유</strong>: 자녀나 손자녀가 <span class="highlight-blue">다른 사람에게 입양</span>된 경우에는 수급권이 <span class="highlight-blue">정지</span>된다 (파양 시 수급권이 복구될 수 있으므로 소멸이 아님!).</li>
+                <li><strong>시험출제 오답패턴</strong>: '자녀가 타인에게 입양된 경우 유족연금 수급권은 소멸한다'는 지문은 **오답(X)**임.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4 4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+        3. 급여의 중복조정(산재 1/2 지급) · 지급제한 특례(고의사망 필수 부지급) & 소멸시효(3년/5년/10년)
+    </h2>
+    <ul>
+        <li><strong>산재보험과의 중복조정 (★동일 사유 2분의 1 지급)</strong>:
+            <ul>
+                <li>국민연금 장애연금 또는 유족연금 수급권자가 <span class="highlight-purple">동일한 사유</span>로 「산업재해보상보험법」에 따른 장해급여·유족급여 등을 받게 되는 경우, 국민연금 장애연금액이나 유족연금액의 <span class="highlight-red">2분의 1(50%)</span>을 지급한다 ('전액 지급하지 아니한다'로 출제 시 오답).</li>
+            </ul>
+        </li>
+        <li><strong>고의·중과실에 따른 지급제한 및 지급정지 (★할 수 있다 vs 하여야 한다)</strong>:
+            <ul>
+                <li><strong>임의적 지급제한</strong>: 고의나 중과실로 장애를 입거나 유양지시에 따르지 아니한 경우 급여의 전부 또는 일부를 지급하지 <span class="highlight-blue">아니할 수 있다</span> (임의 규정).</li>
+                <li><strong>필수적 지급제한 (고의 사망)</strong>: 가입자, 수급권자 또는 선순위 수급권자를 <span class="highlight-red">고의로 사망하게 한 유족</span>에게는 유족연금 등을 지급하지 <span class="highlight-red">아니하여야 한다</span> (필수 규정 - 살인 행위에 대한 제재).</li>
+            </ul>
+        </li>
+        <li><strong>국민연금법상 소멸시효 구분 (★3년 / 5년 / 10년 3단계 완벽 암기)</strong>:
+            <ul>
+                <li><strong>3년</strong>: 공단이 연금보험료 및 징수금을 징수하거나 환수할 권리 (원칙).</li>
+                <li><strong>5년</strong>: 수급권자(근로자)가 급여를 받을 권리, 과오납금을 반환받을 권리, 공단이 부당이득 <span class="highlight-purple">환수금을 환수할 권리</span> (개정사항 적용).</li>
+                <li><strong>10년</strong>: 수급권자가 <span class="highlight-red">반환일시금</span>을 청구하여 받을 권리.</li>
+            </ul>
+        </li>
+        <li><strong>심사청구 및 재심사청구 제기 기한 (★안 날 90일 / 있은 날 180일 / 통지받은 날 90일)</strong>:
+            <ul>
+                <li><strong>심사청구</strong>: 처분이 있음을 <span class="highlight-blue">안 날부터 90일</span>, 처분이 <span class="highlight-purple">있은 날부터 180일</span> 이내에 공단에 제기한다.</li>
+                <li><strong>재심사청구 특례</strong>: 심사청구에 대한 결정서를 <span class="highlight-red">통지받은 날부터 90일</span> 이내에 재심사위원회에 제기한다 (안 날부터 90일이 아님에 유의!).</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><line x1="11" y1="5" x2="6" y2="5"></line><path d="M11 5H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-5"></path><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+        4. 국민건강보험법 총칙 · 관장자 · 보험자 및 가입자 구분과 제외 대상
+    </h2>
+    <ul>
+        <li><strong>주무관청 및 보험자 (★보건복지부장관 / 건강보험공단 부과·징수 일원화)</strong>:
+            <ul>
+                <li><strong>관장자</strong>: 국민건강보험사업은 <span class="highlight-red">보건복지부장관</span>이 관장한다 (고용노동부장관 X).</li>
+                <li><strong>보험자</strong>: 건강보험의 보험자는 <span class="highlight-blue">국민건강보험공단</span>이다. 공단이 보험료의 부과와 징수를 모두 직접 수행한다.</li>
+            </ul>
+        </li>
+        <li><strong>건강보험 적용 제외 대상자 (★타 법령 의료보호자)</strong>:
+            <ul>
+                <li>국내에 거주하는 국민 중 다음에 해당하는 자는 건강보험 가입자 및 피부양자에서 <span class="highlight-purple">제외</span>된다:
+                    <ul>
+                        <li>「의료급여법」에 따라 <span class="highlight-red">의료급여를 받는 사람</span> (의료급여 수급권자).</li>
+                        <li>「독립유공자예우에 관한 법률」 및 「국가유공자 등 예우 및 지원에 관한 법률」에 따른 <span class="highlight-blue">의료보호 대상자</span> (단, 본인의 신청에 따라 적용받을 수 있음).</li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li><strong>가입자의 구분 (직장가입자 vs 지역가입자)</strong>:
+            <ul>
+                <li><strong>직장가입자</strong>: 사업장의 근로자 및 사용자, 공무원, 교직원.</li>
+                <li><strong>지역가입자</strong>: 직장가입자와 그 피부양자를 제외한 자.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+            💡 [핵심 비교] 국민연금법 수치 수급조건 및 소멸시효 완벽 한눈에 잡기
+        </div>
+        <ul>
+            <li><strong>노령연금 vs 조기노령연금 숫자합</strong>: 노령(10년, 60세, 55세) = <span class="highlight-red">125</span> / 조기노령(10년, 55세, 60세) = <span class="highlight-red">125</span>.</li>
+            <li><strong>유족 나이 핵심 비교</strong>: 자녀(<span class="highlight-red">25세 미만</span>) vs 손자녀(<span class="highlight-purple">19세 미만</span>) vs 부모/조부모(<span class="highlight-blue">60세 이상</span>). [산재보험은 자녀·손자녀 모두 20세 미만임!].</li>
+            <li><strong>입양 vs 파양</strong>: 입양 = 수급권 <span class="highlight-blue">정지</span> / 파양 = 친족관계 종료로 수급권 <span class="highlight-red">소멸</span>.</li>
+            <li><strong>산재 중복 지급</strong>: 동일 사유 산재 급여 수령 시 연금액의 <span class="highlight-green">2분의 1(50%)</span> 지급.</li>
+            <li><strong>소멸시효 3종</strong>: 공단 징수권(<span class="highlight-blue">3년</span>) / 급여 수급권 및 환수권(<span class="highlight-purple">5년</span>) / 반환일시금(<span class="highlight-red">10년</span>).</li>
+        </ul>
+    </div>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        5. 국민연금 주요 연금 급여 조건 및 국민건강보험 총칙 비교표
+    </h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 22%;">구분</th>
+                <th style="width: 39%;">국민연금법 (급여 및 조정)</th>
+                <th style="width: 39%;">국민건강보험법 (총칙 및 가입자)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>주무관청 / 담당기관</th>
+                <td class="highlight-blue">관장: 보건복지부장관<br>위탁: 국민연금공단 (징수: 건보공단)</td>
+                <td class="highlight-red">관장: 보건복지부장관<br>보험자: 국민건강보험공단 (부과·징수 일원화)</td>
+            </tr>
+            <tr>
+                <th>급여 / 가입자 종류</th>
+                <td class="highlight-purple">급여 4종: 노령, 장애, 유족, 반환일시금<br>노령: 10년 이상, 60세 (조기: 10년, 55세)</td>
+                <td class="highlight-blue">가입자: 직장가입자 / 지역가입자<br>제외: 의료급여 수급자, 유공자 등 의료보호자</td>
+            </tr>
+            <tr>
+                <th>수급 조건 / 범위</th>
+                <td class="highlight-red">유족범위: 자녀 25세 미만, 손자녀 19세 미만<br>부모/조부모 60세 이상, 장애 2급 포함</td>
+                <td class="highlight-purple">직장가입자: 근로자, 사용자, 공무원, 교직원<br>피부양자: 직장가입자에 의존하는 자</td>
+            </tr>
+            <tr>
+                <th>급여 조정 / 제한</th>
+                <td class="highlight-green">산재 중복 시: 연금액 2분의 1 지급<br>고의 사망: 지급하지 아니한다(필수)</td>
+                <td class="highlight-blue">국외 체류, 현역병 복무, 교도소 수감 시<br>급여의 정지 규정 적용</td>
+            </tr>
+            <tr>
+                <th>소멸시효 / 불복절차</th>
+                <td class="highlight-red">징수권: 3년 / 수급권·환수권: 5년 / 반환일시금: 10년<br>재심사청구: 통지받은 날부터 90일</td>
+                <td class="highlight-purple">이의신청: 안 날 90일 / 있은 날 180일<br>심판청구: 처분통지 받은 날부터 90일</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>주관식 단답형 및 빈칸 채우기 실전 훈련</h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡, ㉢)에 들어갈 알맞은 핵심 용어나 법정 숫자를 아래 여유 공백에 직접 기재해 보십시오.</p>
+
+    <ol class="quiz-list">
+        <li>
+            국민연금법상 노령연금 수급권을 취득하려면 가입기간이 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년 이상이고 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )세가 되어야 하며, 특수직종 근로자는 ( ㉢&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )세부터 지급받을 수 있다.
+        </li>
+        <li>
+            국민연금 법정 기본 노령연금의 가입기간, 기본 연령, 특수직종 근로자 연령 세 숫자의 합계는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이다.
+        </li>
+        <li>
+            조기노령연금은 가입기간이 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년 이상이고 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )세 이상인 자가 소득이 있는 업무에 종사하지 아니하는 경우 ( ㉢&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )세가 되기 전에 신청할 수 있다.
+        </li>
+        <li>
+            장애연금 수급을 위한 납부 요건 중 하나로, 초진일 당시 연금보험료를 낸 기간이 가입대상기간의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 이상이어야 한다.
+        </li>
+        <li>
+            장애연금 수급 요건 중 초진일 전 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년 전부터 초진일까지의 기간 중 연금보험료를 낸 기간이 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년 이상이어야 한다.
+        </li>
+        <li>
+            공단이 장애연금 수급자의 장애 상태를 심사한 결과 장애 등급이 전과 다르게 된 경우에는 장애연금액을 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )하고, 장애 등급에 해당하지 아니하게 된 경우에는 수급권이 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )한다.
+        </li>
+        <li>
+            국민연금법상 유족연금 지급 대상이 되는 장애연금 수급권자는 장애 등급 제( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )급 이상이어야 한다.
+        </li>
+        <li>
+            국민연금 유족연금 수급 대상 자녀는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )세 미만이어야 하고, 손자녀는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )세 미만이어야 한다.
+        </li>
+        <li>
+            국민연금 유족연금 수급 대상 부모 및 조부모의 나이 기준은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )세 이상이다.
+        </li>
+        <li>
+            유족연금 수급권자인 자녀나 손자녀가 파양된 경우에는 수급권이 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )하고, 다른 사람에게 입양된 경우에는 수급권이 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )된다.
+        </li>
+        <li>
+            동일한 사유로 산업재해보상보험법상 장해급여를 받게 되는 경우 국민연금 장애연금액의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )을(를) 지급한다.
+        </li>
+        <li>
+            수급권자가 가입자 또는 선순위 수급권자를 고의로 사망하게 한 경우 유족연금을 지급하지 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ).
+        </li>
+        <li>
+            국민연금법상 연금보험료 및 징수금을 징수할 공단의 권리 소멸시효는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년이다.
+        </li>
+        <li>
+            국민연금법상 수급권자가 급여를 받을 권리 및 공단이 부당이득 환수금을 환수할 권리의 소멸시효는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년이다.
+        </li>
+        <li>
+            국민연금법상 반환일시금을 청구하여 지급받을 권리의 소멸시효는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년이다.
+        </li>
+        <li>
+            국민연금 재심사청구는 심사청구에 대한 결정서를 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 날부터 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이내에 제기하여야 한다.
+        </li>
+        <li>
+            국민건강보험사업은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )장관이 관장하며, 보험자는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )공단이다.
+        </li>
+        <li>
+            「의료급여법」에 따라 의료급여를 받는 사람은 국민건강보험 가입자 및 피부양자에서 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )된다.
+        </li>
+    </ol>
+
+    <!-- 수험생 정답 확인용 하단 3열 배치 그리드 영역 -->
+    <div style="font-size: 9.5pt; color: #666666; margin-top: 30px; padding: 15px; border-top: 1px dashed #666666; line-height: 1.8;">
+        <strong style="display: block; margin-bottom: 10px; color: #333333;">[제34강 주관식 단답형 정답 리스트]</strong>
+        <div class="answer-grid">
+            <div><strong>1.</strong> ㉠ 10, &nbsp; ㉡ 60, &nbsp; ㉢ 55</div>
+            <div><strong>2.</strong> ㉠ 125</div>
+            <div><strong>3.</strong> ㉠ 10, &nbsp; ㉡ 55, &nbsp; ㉢ 60</div>
+            <div><strong>4.</strong> ㉠ 3분의 2</div>
+            <div><strong>5.</strong> ㉠ 5, &nbsp; ㉡ 3</div>
+            <div><strong>6.</strong> ㉠ 변경, &nbsp; ㉡ 소멸</div>
+            <div><strong>7.</strong> ㉠ 2</div>
+            <div><strong>8.</strong> ㉠ 25, &nbsp; ㉡ 19</div>
+            <div><strong>9.</strong> ㉠ 60</div>
+            <div><strong>10.</strong> ㉠ 소멸, &nbsp; ㉡ 정지</div>
+            <div><strong>11.</strong> ㉠ 2분의 1</div>
+            <div><strong>12.</strong> ㉠ 아니하여야 한다</div>
+            <div><strong>13.</strong> ㉠ 3</div>
+            <div><strong>14.</strong> ㉠ 5</div>
+            <div><strong>15.</strong> ㉠ 10</div>
+            <div><strong>16.</strong> ㉠ 통지받은, &nbsp; ㉡ 90</div>
+            <div><strong>17.</strong> ㉠ 보건복지부, &nbsp; ㉡ 국민건강보험</div>
+            <div><strong>18.</strong> ㉠ 제외</div>
+        </div>
+    </div>
+
+</body>
+</html>
