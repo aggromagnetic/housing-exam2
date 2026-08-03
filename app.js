@@ -10,6 +10,10 @@ let currentSubjectFilter = '관계법규';
 let currentLecture = null;
 let clozeMaskEnabled = false;
 
+// Quiz Mode State
+let currentQuizMode = 'all'; // 'all' (전범위) or 'unit' (단원별)
+let currentQuizUnitTitle = '';
+
 // Quiz State
 let quizQuestions = [];
 let quizCurrentIndex = 0;
@@ -113,12 +117,42 @@ function saveLocalStats() {
 
 async function fetchStudyData() {
     try {
-        const resp = await fetch('data/study_data.json');
+        const resp = await fetch('data/study_data.json?v=' + Date.now());
         studyData = await resp.json();
-        console.log('Loaded study data:', studyData);
+        console.log('Loaded study data via fetch:', studyData);
     } catch (err) {
-        console.error('Failed to load study_data.json', err);
+        console.warn('fetch study_data.json failed, checking window.STUDY_DATA fallback:', err);
+        if (window.STUDY_DATA) {
+            studyData = window.STUDY_DATA;
+        }
     }
+    populateQuizUnitDropdown();
+}
+
+function populateQuizUnitDropdown() {
+    const selectEl = document.getElementById('quiz-unit-select');
+    if (!selectEl) return;
+
+    selectEl.innerHTML = `<option value="all">🎯 전 범위 오답가중치 20제 (실전 모드)</option>`;
+
+    const subjects = ['관계법규', '관리실무', '관계법규(문제)', '관리실무(문제)'];
+    subjects.forEach(subj => {
+        const subLectures = studyData.lectures.filter(l => l.subject === subj);
+        if (subLectures.length === 0) return;
+
+        const groupEl = document.createElement('optgroup');
+        groupEl.label = `📘 ${subj}`;
+
+        subLectures.forEach(lec => {
+            const opt = document.createElement('option');
+            opt.value = lec.fileName;
+            const qCountStr = lec.quizCount > 0 ? `${lec.quizCount}문제` : '모의고사';
+            opt.innerText = `[${lec.subject}] ${lec.title} (${qCountStr})`;
+            groupEl.appendChild(opt);
+        });
+
+        selectEl.appendChild(groupEl);
+    });
 }
 
 // -------------------------------------------------------------
@@ -167,10 +201,14 @@ function renderLectureList() {
                 `</div>`;
         }
 
+        const quizBtnHtml = lec.quizCount > 0 
+            ? `<button class="btn-unit-quiz-mini" title="${escapeHtml(lec.title)} 전체 퀴즈 풀기" onclick="event.stopPropagation(); startUnitQuizForLecture('${escapeHtml(lec.fileName)}')">🎯 ${lec.quizCount}문제</button>`
+            : `<span class="quiz-cnt-badge zero">📝 모의고사</span>`;
+
         itemEl.innerHTML = `
             <div class="lecture-meta">
                 <span class="subject-badge ${badgeClass}">${escapeHtml(lec.subject)}</span>
-                <span class="quiz-cnt-badge">📝 ${lec.quizCount}문제</span>
+                ${quizBtnHtml}
             </div>
             <div class="lecture-title">${escapeHtml(lec.title)}</div>
             ${subHeadingsHtml}
@@ -180,17 +218,40 @@ function renderLectureList() {
 }
 
 function selectLecture(fileNameOrPath, anchorId = null) {
-    const lec = studyData.lectures.find(l => l.fileName === fileNameOrPath || l.relativePath === fileNameOrPath);
+    if (!fileNameOrPath) return;
+    const targetNorm = fileNameOrPath.normalize('NFC');
+    const lec = studyData.lectures.find(l => 
+        (l.fileName && l.fileName.normalize('NFC') === targetNorm) || 
+        (l.relativePath && l.relativePath.normalize('NFC') === targetNorm)
+    );
     if (!lec) return;
 
     currentLecture = lec;
     renderLectureList();
 
-    // Update Note Header Info
+    // Update Note Header Info & Unit Quiz Button
     document.getElementById('current-note-title').innerText = lec.title;
     const badgeEl = document.getElementById('current-note-badge');
     badgeEl.innerText = lec.subject;
     badgeEl.className = `subject-badge ${lec.subject === '관계법규' ? 'rel' : (lec.subject === '관리실무' ? 'prac' : 'etc')}`;
+
+    const unitQuizBtn = document.getElementById('btn-start-unit-quiz');
+    if (unitQuizBtn) {
+        unitQuizBtn.style.display = 'inline-flex';
+        if (lec.quizCount > 0) {
+            unitQuizBtn.innerHTML = `🎯 이 단원 퀴즈 풀기 (${lec.quizCount}문제)`;
+            unitQuizBtn.title = "현재 단원의 모든 문제를 집중하여 풀어봅니다.";
+            unitQuizBtn.className = 'btn-lecture-quiz';
+        } else if (lec.subject.includes('(문제)')) {
+            unitQuizBtn.innerHTML = `📝 모의고사 응시 (뷰어)`;
+            unitQuizBtn.title = "본 단원은 통합 실전 모의고사로 뷰어 화면에서 응시합니다.";
+            unitQuizBtn.className = 'btn-lecture-quiz mode-test';
+        } else {
+            unitQuizBtn.innerHTML = `🎯 이 단원 퀴즈 (${lec.quizCount}문제)`;
+            unitQuizBtn.title = "이 단원에는 추출된 퀴즈 문항이 없습니다.";
+            unitQuizBtn.className = 'btn-lecture-quiz empty';
+        }
+    }
 
     // Load iframe with relativePath
     const iframe = document.getElementById('note-frame');
@@ -284,7 +345,7 @@ function resumeQuizMode() {
 }
 
 // -------------------------------------------------------------
-// Weighted Random Quiz Engine
+// Weighted Random & Unit Quiz Engine
 // -------------------------------------------------------------
 function startQuizMode() {
     if (!studyData.quizzes || studyData.quizzes.length === 0) {
@@ -292,16 +353,17 @@ function startQuizMode() {
         return;
     }
 
+    currentQuizMode = 'all';
+    currentQuizUnitTitle = '';
+
+    const selectEl = document.getElementById('quiz-unit-select');
+    if (selectEl) selectEl.value = 'all';
+
     // 1. Calculate Weights for each quiz (Cap at 5.0x max)
-    // wrongCount 0 -> 1.0 (1/N)
-    // wrongCount 1 -> 2.0 (2/N)
-    // wrongCount 2 -> 3.0 (3/N)
-    // wrongCount 3 -> 4.0 (4/N)
-    // wrongCount >= 4 -> 5.0 (5/N max cap)
     const quizPool = studyData.quizzes.map(q => {
         const stat = quizStats[q.id] || { wrongCount: 0, tryCount: 0 };
         const rawWeight = 1.0 + (stat.wrongCount * 1.0);
-        const cappedWeight = Math.min(5.0, rawWeight); // Cap at 5배 max
+        const cappedWeight = Math.min(5.0, rawWeight);
         return { quiz: q, weight: cappedWeight };
     });
 
@@ -313,6 +375,74 @@ function startQuizMode() {
 
     renderQuizQuestion();
     switchView('quiz');
+}
+
+function startUnitQuizForLecture(fileNameOrPath) {
+    if (!studyData || !studyData.lectures || !fileNameOrPath) return;
+
+    const targetNorm = fileNameOrPath.normalize('NFC');
+    const lec = studyData.lectures.find(l => 
+        (l.fileName && l.fileName.normalize('NFC') === targetNorm) || 
+        (l.relativePath && l.relativePath.normalize('NFC') === targetNorm)
+    );
+
+    if (!lec) {
+        alert('선택한 단원(강의 노트)을 찾을 수 없습니다.');
+        return;
+    }
+
+    // Filter quizzes matching this lecture with NFC normalization
+    const relNorm = (lec.relativePath || '').normalize('NFC');
+    const fileNorm = (lec.fileName || '').normalize('NFC');
+    const titleNorm = (lec.title || '').normalize('NFC');
+
+    const quizzes = studyData.quizzes.filter(q => {
+        const qFileNorm = (q.noteFileName || '').normalize('NFC');
+        const qTitleNorm = (q.lectureTitle || '').normalize('NFC');
+        return qFileNorm === relNorm || qFileNorm === fileNorm || qTitleNorm === titleNorm;
+    });
+
+    if (!quizzes || quizzes.length === 0) {
+        if (lec.subject.includes('(문제)')) {
+            alert(`[${lec.title}]\n\n본 단원은 웹 기반 통합 실전 모의고사 모듈입니다.\n[강의 노트 뷰어] 화면에서 바로 풀어보실 수 있습니다.`);
+            selectLecture(lec.fileName);
+        } else {
+            alert(`[${lec.title}]\n\n해당 단원에는 추출된 퀴즈 문항이 없습니다.`);
+        }
+        return;
+    }
+
+    currentQuizMode = 'unit';
+    currentQuizUnitTitle = lec.title;
+    quizQuestions = [...quizzes];
+    quizCurrentIndex = 0;
+    userAnswers = new Array(quizQuestions.length).fill('');
+
+    const selectEl = document.getElementById('quiz-unit-select');
+    if (selectEl) selectEl.value = lec.fileName;
+
+    renderQuizQuestion();
+    switchView('quiz');
+}
+
+function startUnitQuizForCurrentLecture() {
+    if (!currentLecture) {
+        alert('먼저 단원(강의 노트)을 선택해 주세요.');
+        return;
+    }
+    if (currentLecture.quizCount === 0 && currentLecture.subject.includes('(문제)')) {
+        selectLecture(currentLecture.fileName);
+        return;
+    }
+    startUnitQuizForLecture(currentLecture.fileName);
+}
+
+function onQuizUnitSelectChange(val) {
+    if (val === 'all') {
+        startQuizMode();
+    } else {
+        startUnitQuizForLecture(val);
+    }
 }
 
 function weightedSampleWithoutReplacement(pool, k) {
@@ -338,6 +468,18 @@ function weightedSampleWithoutReplacement(pool, k) {
 function renderQuizQuestion() {
     const currentQ = quizQuestions[quizCurrentIndex];
     if (!currentQ) return;
+
+    // Update Quiz Mode Badge & Header
+    const modeBadge = document.getElementById('quiz-mode-badge');
+    if (modeBadge) {
+        if (currentQuizMode === 'unit') {
+            modeBadge.innerHTML = `📘 <strong style="color: #fbbf24;">[단원 집중 복습]</strong> ${escapeHtml(currentQuizUnitTitle)} (총 ${quizQuestions.length}문제)`;
+            modeBadge.className = 'quiz-mode-badge unit';
+        } else {
+            modeBadge.innerHTML = `🎯 <strong style="color: #60a5fa;">[오답 가중치 실전 퀴즈]</strong> (20문제 출제)`;
+            modeBadge.className = 'quiz-mode-badge';
+        }
+    }
 
     // Reset instant answer box
     document.getElementById('quiz-instant-answer-box').style.display = 'none';

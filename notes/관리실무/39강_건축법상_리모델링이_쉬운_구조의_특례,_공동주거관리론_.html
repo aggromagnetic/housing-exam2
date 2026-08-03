@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 공동주택 관리실무 및 관계법규 - 제39강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+            letter-spacing: -0.05em;
+        }
+        
+        h1 {
+            font-size: 12pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        /* 토너 절약 4색 시각 강조 클래스 */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #16803d; 
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #6d28d9; 
+        }
+        
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        ol {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        /* 정답 리스트 3열 격자 레이아웃 */
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px 15px;
+        }
+
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        제39강. 건축법상 리모델링이 쉬운 구조의 특례, 공동주거관리론 및 관리비 계정분류(법정비목·구분징수·사용료등)
+    </h1>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        1. 건축법상 리모델링이 쉬운 구조 공동주택의 건축기준 완화 특례
+    </h2>
+    <ul>
+        <li><strong>목적 및 완화 적용 대상 기준 (★주관식·객관식 단골 수치)</strong>:
+            <ul>
+                <li>개념: 리모델링이 쉬운 구조의 공동주택 건축을 촉진하기 위하여 대통령령으로 정하는 구조 기준을 충족하여 건축허가를 신청하는 경우 건축기준을 완화 적용함 (건축법 제65조의2).</li>
+                <li>완화 범위: <span class="highlight-blue">용적률</span>, <span class="highlight-blue">건축물의 높이 제한</span>, <span class="highlight-blue">일조 등의 확보를 위한 높이 제한</span> 규정을 <span class="highlight-red">100분의 120</span>(120%) 범위에서 완화하여 적용할 수 있음.</li>
+            </ul>
+        </li>
+        <li><strong>대통령령으로 정하는 '리모델링이 쉬운 구조'의 3대 필수 기준 (★건축법 시행령 제6조의5)</strong>:
+            <ol>
+                <li><span class="highlight-purple">세대 간 가변성</span>: 각 세대는 인접한 세대와 수직 또는 수평 방향으로 <span class="highlight-purple">통합하거나 분할할 수 있을 것</span>.</li>
+                <li><span class="highlight-purple">재료의 분리성</span>: 구조체에서 건축설비, 내부 마감재료 및 외부 마감재료를 <span class="highlight-purple">분리할 수 있을 것</span>.</li>
+                <li><span class="highlight-purple">구획의 가변성</span>: 개별 세대 안에서 구획된 실(室)의 <span class="highlight-purple">크기, 개수 또는 위치 등을 변경할 수 있을 것</span>.</li>
+            </ol>
+            <em>※ 출제 함정: '쉽게 분리할 수 없을 것', '임의 고정 벽체로 고정할 것' 등의 문구가 포함되면 오답임.</em>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg>
+        2. 공동주거관리론 - 분쟁해결 원칙, 바람직한 리더십 및 입주민 참여
+    </h2>
+    <ul>
+        <li><strong>입주민·동대표·관리주체 간 분쟁 해결의 기본 원칙</strong>:
+            <ul>
+                <li>최우선 해결 수단: <span class="highlight-red">상호 합의</span>에 의한 자율 해결이 최우선임.</li>
+                <li>최후의 해결 수단: 분쟁조정위원회 신청 및 소송 등 <span class="highlight-blue">법적 절차</span>는 반드시 <span class="highlight-red">최후의 수단</span>이어야 함 (법적 절차를 최우선 해결 수단으로 본다는 지문은 X).</li>
+            </ul>
+        </li>
+        <li><strong>관리사무소장의 바람직한 리더십 및 의사결정</strong>:
+            <ul>
+                <li>바람직한 리더십: 직원들에게 동기부여, 명확한 비전 제시, 의견 청취 및 경청, 자율권 부여 및 참여 권장.</li>
+                <li>비바람직한 리더십: 고압적 자세 유지, 세부적인 권한 위임 거부, 과도한 간섭 및 통제.</li>
+            </ul>
+        </li>
+        <li><strong>입주자등의 관리참여 기능과 역기능</strong>:
+            <ul>
+                <li>관리참여는 투명성을 제고하나, 모든 소소한 의사결정에 지나치게 개입할 경우 <span class="highlight-purple">운영상의 효율성(비효율성 증대)이 저하</span>될 수 있음.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        3. 공동주택 관리비 등의 회계 계정 분류 체계 (공동주택관리법 제23조)
+    </h2>
+    <ul>
+        <li><strong>관리비 체계의 4대 분류 체계 (공동주택관리법 시행령 제23조)</strong>:
+            <ol>
+                <li><span class="highlight-blue">법정 관리비 (10개 비목)</span>: 공동주택 유지관리를 위해 관리주체가 집행하고 부과하는 순수 관리 비용.</li>
+                <li><span class="highlight-red">구분징수 항목 (2개)</span>: 소유자가 부담하거나 별도 부과 목적이 명확하여 관리비와 <span class="highlight-red">구분하여 징수</span>하는 항목.</li>
+                <li><span class="highlight-purple">사용료 등 (10개 항목)</span>: 입주자등이 직접 사용·소비하여 발생한 비용을 관리주체가 <span class="highlight-purple">납부대행</span>하는 항목.</li>
+                <li><span class="highlight-green">이용료 등</span>: 주민공동시설, 인양기(승강기 이삿짐 사용) 등 공용시설물의 이용자에게 별도로 부과하는 항목.</li>
+            </ol>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 22%;">구분</th>
+                <th style="width: 48%;">세부 세목 및 구성 내용</th>
+                <th style="width: 30%;">부담 주체 및 특징</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>법정 관리비<br>(10개 비목)</th>
+                <td>① 일반관리비 ② 청소비 ③ 경비비 ④ 소독비 ⑤ 승강기유지비 ⑥ 지능형 홈네트워크 설비 유지비 ⑦ 난방비 ⑧ 급탕비 ⑨ 수선유지비 ⑩ 위탁관리수수료</td>
+                <td><span class="highlight-blue">입주자등</span> 부담<br>(※ 민간임대주택은 위탁관리수수료 제외한 9개 항목)</td>
+            </tr>
+            <tr>
+                <th>구분징수 항목<br>(2개 항목)</th>
+                <td>① <span class="highlight-red">장기수선충당금</span><br>② <span class="highlight-red">안전진단 실시비용</span> (공동주택관리법 시행령 제40조제2항 단서 규정)</td>
+                <td><span class="highlight-red">소유자</span> 부담 원칙<br>(※ 관리비 항목과 섞어 출제 시 정답)</td>
+            </tr>
+            <tr>
+                <th>사용료 등<br>(10개 항목)</th>
+                <td>① 전기료 ② 수도료 ③ 가스사용료 ④ <span class="highlight-purple">지역난방 방식</span>의 난방비·급탕비 ⑤ 정화조오물수수료 ⑥ 생활폐기물수수료 ⑦ <span class="highlight-purple">건물 전체 대상 보험료</span> ⑧ 입주자대표회의 운영경비 ⑨ 선거관리위원회 운영경비 ⑩ 텔레비전방송수신료</td>
+                <td>입주자등 발생 비용을<br>관리주체가 <span class="highlight-purple">납부대행</span></td>
+            </tr>
+            <tr>
+                <th>이용료 등<br>(별도 부과)</th>
+                <td>주민공동시설 이용료, 인양기 사용료 등 공용시설물 이용료</td>
+                <td>실제 <span class="highlight-green">사용자/이용자</span> 부담</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        4. 주요 비목별 세부 구성내역 및 핵심 출제 포인트
+    </h2>
+    <ul>
+        <li><strong>일반관리비 7대 세부 구성항목 (★세부 분류 혼동 주의)</strong>:
+            <ol>
+                <li><span class="highlight-blue">인건비</span>: 급여, 제수당, 상여금, 퇴직금, 산재보험료, 고용보험료, 국민연금, 국민건강보험료, 식대 등 복리후생비.
+                    <br><em>※ 4대 보험료 부과 기준: 사업주(사용자) 부담금만 일반관리비로 부과하며, 근로자 개인 부담금은 임금 지급 시 원천징수 대상이므로 관리비 부과 대상이 아님. (산재보험료만 100% 사업주 부담).</em>
+                </li>
+                <li><span class="highlight-blue">제사무비</span>: 일반사무용품비, 도서인쇄비, 교통통신비 등 관리사무에 직접 드는 비용.</li>
+                <li><span class="highlight-blue">제세공과금</span>: 관리기구가 사용한 전기료, 통신료, 우편료 및 관리기구에 부과되는 세금 등.
+                    <br><em>※ 관리기구(사무소)가 사용한 전기료는 일반관리비이나, 승강기 및 공용시설 전기료는 '사용료 등(공동사용전기료)'에 해당함.</em>
+                </li>
+                <li><span class="highlight-blue">피복비</span>: 관리사무소 직원의 피복비 (인건비에 미포함).</li>
+                <li><span class="highlight-blue">교육훈련비</span>: 관리사무소장 및 직원의 법정교육비 (입주자대표회의 운영교육비는 입대의 운영경비에서 별도 지출).</li>
+                <li><span class="highlight-blue">차량유지비</span>: 관리사무소 명의 차량의 연료비, 수리비, 보험료 (수선유지비가 아닌 일반관리비임★).</li>
+                <li><span class="highlight-blue">그 밖의 부대비용</span>: 관리용품구입비, <span class="highlight-purple">회계감사비</span>, 그 밖의 관리업무에 드는 비용.
+                    <br><em>※ 회계감사비: 공동주택관리법상 일반관리비(그 밖의 부대비용)에 포함 / 민간임대주택 특별법상 관리비 비목에 미포함(임차인 또는 임차인대표회의가 부담).</em>
+                </li>
+            </ol>
+        </li>
+        <li><strong>수선유지비의 세부 범위 (★장기수선충당금 및 타 비목과의 구분)</strong>:
+            <ul>
+                <li><span class="highlight-red">장기수선계획에서 제외되는</span> 수선비, 보수용역비, 부속품 구입비 (장기수선계획에 포함된 시설 수선 시 수선유지비를 집행하면 과태료 대상!).</li>
+                <li><span class="highlight-red">냉방·난방시설의 청소비</span>: 청소비가 아닌 <span class="highlight-red">수선유지비</span>로 명시하여 부과 (공동주택관리법 시행령 제23조제1항제9호).</li>
+                <li><span class="highlight-red">소화기 충약비</span>: 일반관리비가 아닌 <span class="highlight-red">수선유지비</span>로 부과.</li>
+                <li><span class="highlight-red">건축물 안전점검비용</span> 및 재난 예방 비용: 안전진단 실시비용(구분징수)과 구분하여 <span class="highlight-red">수선유지비</span>로 부과.</li>
+            </ul>
+        </li>
+        <li><strong>난방비 및 급탕비의 난방방식별 구분</strong>:
+            <ul>
+                <li><span class="highlight-blue">중앙난방 방식</span>: 법정 10대 <span class="highlight-blue">관리비</span> 항목에 포함 (난방유류대, 급탕유류대 등).</li>
+                <li><span class="highlight-purple">지역난방 방식</span>: 관리비가 아닌 <span class="highlight-purple">사용료 등</span>(납부대행) 항목에 포함.</li>
+                <li>개별난방 방식: 세대 개별 가스·전기 사용료로 처리되므로 단지 관리비 비목에 없음.</li>
+            </ul>
+        </li>
+        <li><strong>승강기유지비 vs 승강기 전기료 구분</strong>:
+            <ul>
+                <li>승강기유지비: 승강기 자체점검, 용역비, 자재비 (법정 관리비).</li>
+                <li>승강기 운행 전기료: 승강기유지비가 아니라 <span class="highlight-red">사용료 등(공동으로 사용하는 시설의 전기료)</span>으로 구분 부과.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+            💡 [수험 핵심 팁] 제39강 회계 계정분류 및 건축법 특례 단골 오답 완전 정복
+        </div>
+        <ul>
+            <li><strong>리모델링 쉬운 구조 건축기준 완화 비율</strong>: 용적률, 높이제한 등 <span class="highlight-red">100분의 120</span> 범위 내 완화.</li>
+            <li><strong>관리비 항목이 아닌 것 찾기 단골 정답</strong>: <span class="highlight-red">장기수선충당금</span>, <span class="highlight-red">안전진단 실시비용</span> (이 2개는 구분징수 항목임).</li>
+            <li><strong>일반관리비 vs 수선유지비 함정</strong>: 차량유지비, 회계감사비, 피복비, 교육훈련비는 <span class="highlight-blue">일반관리비</span>이며, 냉난방시설 청소비, 소화기 충약비, 안전점검비는 <span class="highlight-red">수선유지비</span>임.</li>
+            <li><strong>지역난방 난방비 위치</strong>: 법정 관리비가 아니라 <span class="highlight-purple">사용료 등</span> 항목임.</li>
+            <li><strong>임대주택 관리비 특례</strong>: 민간임대주택법상 관리비 비목에는 <span class="highlight-green">위탁관리수수료</span>가 미포함됨.</li>
+        </ul>
+    </div>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>주관식 단답형 및 빈칸 채우기 실전 훈련</h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡)에 들어갈 알맞은 핵심 용어나 법정 숫자를 아래 여유 공백에 직접 기재해 보십시오.</p>
+
+    <ol class="quiz-list" style="line-height: 2.1;">
+        <li>
+            리모델링이 쉬운 구조의 공동주택은 용적률 및 높이 제한 규정을 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 범위에서 완화 적용할 수 있다.
+        </li>
+        <li>
+            리모델링이 쉬운 구조란 각 세대가 인접 세대와 수직 또는 수평 방향으로 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )하거나 분할할 수 있어야 한다.
+        </li>
+        <li>
+            공동주택 단지 내 입주민 간 분쟁 해결의 최우선 수단은 상호 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이며, 법적 절차는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 수단이어야 한다.
+        </li>
+        <li>
+            공동주택 관리비 비목 중 관리주체가 부과하는 순수 법정 관리비는 총 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )가지 비목으로 구성된다.
+        </li>
+        <li>
+            장기수선충당금과 안전진단 실시비용은 관리비와 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )하여 징수하여야 한다.
+        </li>
+        <li>
+            장기수선충당금은 공동주택의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )가 부담하는 비용이다.
+        </li>
+        <li>
+            관리사무소 명의 차량의 수리비 및 연료비 등 차량유지비는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )비 비목에 속한다.
+        </li>
+        <li>
+            관리사무소 직원의 피복비 및 교육훈련비는 일반관리비 항목 중 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )비에 포함되지 아니한다.
+        </li>
+        <li>
+            공동주택관리법상 회계감사비는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )비 비목에 속하나, 민간임대주택특별법상 관리비 비목에는 포함되지 아니한다.
+        </li>
+        <li>
+            냉방·난방시설 청소비 및 소화기 충약비는 관리비 비목 중 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )비에 해당한다.
+        </li>
+        <li>
+            장기수선계획 수립 대상 시설을 수선할 때는 수선유지비가 아닌 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )을 사용하여야 한다.
+        </li>
+        <li>
+            중앙난방 방식의 난방비는 법정 관리비에 속하나, ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 난방 방식의 난방비 및 급탕비는 사용료 등 항목에 해당한다.
+        </li>
+        <li>
+            승강기 운행에 드는 전기료는 승강기유지비가 아니라 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 등 항목으로 구분 부과한다.
+        </li>
+        <li>
+            건물 전체를 대상으로 하는 화재보험료는 관리비가 아니라 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 등 항목에 해당한다.
+        </li>
+        <li>
+            입주자대표회의 운영경비 및 선거관리위원회 운영경비는 관리비가 아니라 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 등 항목에 해당한다.
+        </li>
+        <li>
+            주민공동시설 이용료 및 인양기 사용료는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 등으로 특정 이용자에게 별도 부과할 수 있다.
+        </li>
+        <li>
+            민간임대주택에 관한 특별법 시행규칙상 관리비 비목에는 공동주택관리법과 달리 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )수수료가 포함되지 아니한다.
+        </li>
+        <li>
+            4대 사회보험료 중 관리비(인건비)로 부과하는 금액은 사업주 부담금에 한하며, ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 부담금은 임금 산정 시 원천징수 대상이다.
+        </li>
+    </ol>
+
+    <!-- 수험생 정답 확인용 하단 3열 배치 그리드 영역 -->
+    <div style="font-size: 9.5pt; color: #666666; margin-top: 30px; padding: 15px; border-top: 1px dashed #666666; line-height: 1.8;">
+        <strong style="display: block; margin-bottom: 10px; color: #333333;">[제39강 주관식 단답형 정답 리스트]</strong>
+        <div class="answer-grid">
+            <div><strong>1.</strong> ㉠ 100분의 120</div>
+            <div><strong>2.</strong> ㉠ 통합</div>
+            <div><strong>3.</strong> ㉠ 합의, &nbsp; ㉡ 최후의</div>
+            <div><strong>4.</strong> ㉠ 10</div>
+            <div><strong>5.</strong> ㉠ 구분</div>
+            <div><strong>6.</strong> ㉠ 소유자</div>
+            <div><strong>7.</strong> ㉠ 일반관리</div>
+            <div><strong>8.</strong> ㉠ 인건</div>
+            <div><strong>9.</strong> ㉠ 일반관리</div>
+            <div><strong>10.</strong> ㉠ 수선유지</div>
+            <div><strong>11.</strong> ㉠ 장기수선충당금</div>
+            <div><strong>12.</strong> ㉠ 지역</div>
+            <div><strong>13.</strong> ㉠ 사용료</div>
+            <div><strong>14.</strong> ㉠ 사용료</div>
+            <div><strong>15.</strong> ㉠ 사용료</div>
+            <div><strong>16.</strong> ㉠ 이용료</div>
+            <div><strong>17.</strong> ㉠ 위탁관리</div>
+            <div><strong>18.</strong> ㉠ 근로자</div>
+        </div>
+    </div>
+
+</body>
+</html>
