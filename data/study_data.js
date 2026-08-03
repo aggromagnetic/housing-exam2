@@ -1,4 +1,4 @@
-{
+window.STUDY_DATA = {
   "updatedAt": "2026-08-03T10:36:54.753Z",
   "totalLectures": 100,
   "totalQuizzes": 1321,
@@ -16062,4 +16062,4 @@
       "anchorId": "quiz-18"
     }
   ]
-}
+};

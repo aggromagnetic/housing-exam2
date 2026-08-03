@@ -49,9 +49,9 @@ function parseHtmlNote(fileObj) {
         subject = '관계법규(문제)';
     } else if (relPathNorm.includes('단원별문제/관리실무')) {
         subject = '관리실무(문제)';
-    } else if (relPathNorm.startsWith('관계법규') || fileObj.fileName.includes('관계법규')) {
+    } else if (relPathNorm.startsWith('관계법규/') || relPathNorm.startsWith('관계법규')) {
         subject = '관계법규';
-    } else if (relPathNorm.startsWith('관리실무') || fileObj.fileName.includes('관리실무')) {
+    } else if (relPathNorm.startsWith('관리실무/') || relPathNorm.startsWith('관리실무')) {
         subject = '관리실무';
     } else if (relPathNorm.includes('단원별문제')) {
         subject = '단원별문제';
@@ -62,11 +62,26 @@ function parseHtmlNote(fileObj) {
     const rawTitle = titleMatch ? titleMatch[1].trim() : fileObj.fileName;
 
     const h1Match = content.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i);
-    const h1Text = h1Match ? cleanText(h1Match[1]) : rawTitle;
+    let h1Text = h1Match ? cleanText(h1Match[1]) : rawTitle;
 
     // Extract lecture number
+    let lectureNum = 0;
     const lectureMatch = h1Text.match(/제\s*(\d+)\s*강|\[\s*(\d+)\s*강\s*\]|^(\d+)\s*강/);
-    const lectureNum = lectureMatch ? parseInt(lectureMatch[1] || lectureMatch[2] || lectureMatch[3], 10) : 0;
+    if (lectureMatch) {
+        lectureNum = parseInt(lectureMatch[1] || lectureMatch[2] || lectureMatch[3], 10);
+    } else {
+        const fileNumMatch = fileObj.fileName.match(/^(\d+)단원|^(\d+)강|^(\d+)/);
+        if (fileNumMatch) {
+            lectureNum = parseInt(fileNumMatch[1] || fileNumMatch[2] || fileNumMatch[3], 10);
+        }
+    }
+
+    // Format clear titles for unit problem sets if needed
+    if (subject.includes('(문제)')) {
+        if (!h1Text.includes('단원') && lectureNum > 0) {
+            h1Text = `[${lectureNum}단원] ${h1Text}`;
+        }
+    }
 
     // Subheadings (h2)
     const h2Matches = [...content.matchAll(/<h2[^>]*>([\s\S]*?)<\/h2>/gi)];
@@ -274,15 +289,22 @@ function main() {
         try {
             const result = parseHtmlNote(fileObj);
             lectures.push({
-                relativePath: result.relativePath,
-                fileName: result.fileName,
-                subject: result.subject,
+                relativePath: result.relativePath.normalize('NFC'),
+                fileName: result.fileName.normalize('NFC'),
+                subject: result.subject.normalize('NFC'),
                 lectureNum: result.lectureNum,
-                title: result.title,
-                subHeadings: result.subHeadings,
+                title: result.title.normalize('NFC'),
+                subHeadings: result.subHeadings.map(sh => sh.normalize('NFC')),
                 quizCount: result.quizCount
             });
-            allQuizzes = allQuizzes.concat(result.quizzes);
+            const normQuizzes = result.quizzes.map(q => ({
+                ...q,
+                id: q.id.normalize('NFC'),
+                noteFileName: q.noteFileName.normalize('NFC'),
+                lectureTitle: q.lectureTitle.normalize('NFC'),
+                subject: q.subject.normalize('NFC')
+            }));
+            allQuizzes = allQuizzes.concat(normQuizzes);
         } catch (err) {
             console.error(`Error parsing ${fileObj.relativePath}:`, err);
         }
@@ -301,9 +323,11 @@ function main() {
         quizzes: allQuizzes
     };
 
+    const JS_OUTPUT_FILE = path.join(__dirname, '..', 'data', 'study_data.js');
     fs.mkdirSync(path.dirname(OUTPUT_FILE), { recursive: true });
     fs.writeFileSync(OUTPUT_FILE, JSON.stringify(outputData, null, 2), 'utf-8');
-    console.log(`Successfully generated ${OUTPUT_FILE} with ${lectures.length} lectures and ${allQuizzes.length} quizzes.`);
+    fs.writeFileSync(JS_OUTPUT_FILE, `window.STUDY_DATA = ${JSON.stringify(outputData, null, 2)};`, 'utf-8');
+    console.log(`Successfully generated ${OUTPUT_FILE} and ${JS_OUTPUT_FILE} with ${lectures.length} lectures and ${allQuizzes.length} quizzes.`);
 }
 
 main();
