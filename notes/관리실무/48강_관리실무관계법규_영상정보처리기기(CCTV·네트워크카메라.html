@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 - 제48강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+            letter-spacing: -0.05em;
+        }
+        
+        h1 {
+            font-size: 12pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        /* 시각 강조 클래스 */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #16803d; 
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #6d28d9; 
+        }
+        
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        ol.quiz-list {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+            line-height: 2.1;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        /* 정답 리스트 3열 격자 레이아웃 */
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px 15px;
+        }
+
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        제48강. 관리실무/관계법규: 영상정보처리기기(CCTV·네트워크카메라) 설치·관리·개인정보보호, 복리시설(유치원·주민공동시설·상가) 기준, 성능등급 표시·친환경주택, 건축설비 원칙 및 유체 기본물리량(밀도·비체적·비중량·물 팽창)
+    </h1>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        1. 영상정보처리기기(CCTV 및 네트워크 카메라) 설치·기술 규격 및 관리·열람 기준
+    </h2>
+    <ul>
+        <li><strong>영상정보처리기기의 법적 종류 및 개념 구별</strong>:
+            <ul>
+                <li><span class="highlight-blue">폐쇄회로 텔레비전(CCTV)</span>: 폐쇄망으로 연결되며, 녹화 서버가 단지 내부에 존재하는 영상설비.</li>
+                <li><span class="highlight-purple">네트워크 카메라</span>: 인터넷망으로 연결되며, 데이터 서버가 단지 외부에 존재하는 영상설비 (단, 서버 및 저장장치는 반드시 <span class="highlight-red">국내</span>에 위치해야 함).</li>
+            </ul>
+        </li>
+        <li><strong>설치 의무 대상 및 법정 설치 장소 (★주차장과 구분 필수)</strong>:
+            <ul>
+                <li><span class="highlight-red">설치 의무 대상</span>: 「공동주택관리법」 제2조제1항제2호 가목부터 나목까지의 규정에 따른 <span class="highlight-red">의무관리대상 공동주택</span>.</li>
+                <li><span class="highlight-blue">주택건설기준상 설치 장소</span>: <span class="highlight-blue">승강기</span>, <span class="highlight-blue">어린이놀이터</span>, <span class="highlight-blue">각 동의 출입구</span>. (※ 자주식 지하주차장은 「주차장법」에 따라 주차대수 30대 초과 시 설치).</li>
+            </ul>
+        </li>
+        <li><strong>영상정보처리기기 기술 규격 (★130만 화소 및 4인치)</strong>:
+            <ul>
+                <li><span class="highlight-red">카메라 해상도</span>: 전체 또는 주요 부분이 조망되고 잘 식별되도록 최소 <span class="highlight-red">130만 화소 이상</span>일 것.</li>
+                <li><span class="highlight-purple">모니터 분할 크기</span>: 다채널 모니터 화면 분할 시 1채널 감시화면의 대각선방향 크기는 최소 <span class="highlight-purple">4인치 이상</span>일 것 (채널별 확대 감시 및 재생·크기조절 기능 필수).</li>
+            </ul>
+        </li>
+        <li><strong>관리주체의 운영·보관 및 안전관리 기준 (★30일 보관 및 안전관리자)</strong>:
+            <ul>
+                <li><span class="highlight-blue">장기수선계획 반영</span>: 영상정보처리기기를 설치·보수 또는 교체하는 경우에는 반드시 <span class="highlight-blue">장기수선계획에 반영</span>해야 함.</li>
+                <li><span class="highlight-red">자료 보관 기한</span>: 촬영된 자료는 컴퓨터보안시스템을 설치하여 <span class="highlight-red">30일 이상</span> 보관할 것.</li>
+                <li><span class="highlight-purple">수리 및 관리자</span>: 고장 난 경우에는 <span class="highlight-purple">지체 없이 수리</span>하고, 영상정보처리기기의 <span class="highlight-red">안전관리자</span>를 지정하여 관리할 것.</li>
+            </ul>
+        </li>
+        <li><strong>촬영 자료의 열람 및 제3자 제공 제한 (★입대의 요청 시 제공 불가 함정!)</strong>:
+            <ul>
+                <li>관리주체는 보안 및 방범 목적 외의 용도로 활용하거나 타인에게 열람·제공해서는 아니 됨.</li>
+                <li><span class="highlight-blue">열람·제공 가능 예외 사유</span>:
+                    <ol>
+                        <li><span class="highlight-red">정보주체</span>에게 열람 또는 제공하는 경우.</li>
+                        <li><span class="highlight-red">정보주체의 동의</span>가 있는 경우.</li>
+                        <li>범죄의 수사와 공소의 제기 및 유지에 필요한 경우.</li>
+                        <li>범죄에 대한 재판업무수행을 위하여 필요한 경우.</li>
+                        <li>다른 법률에 특별한 규정이 있는 경우.</li>
+                    </ol>
+                </li>
+                <li><span class="highlight-red">출제 단골 오답 함정</span>: <span class="highlight-red">입주자대표회의(또는 회장)의 요청</span>이나 동별 대표자의 사적 요청은 열람·제공 허용 사유에 해당하지 않음! (제공 시 개인정보 보호법 위반으로 형사처벌 대상).</li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">구분</th>
+                <th style="width: 45%;">법정 기준 및 기술 규격</th>
+                <th style="width: 30%;">수험 암기 및 함정 방지 포인트</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th><span class="highlight-blue">설치 대상 및 장소</span></th>
+                <td>의무관리대상 공동주택<br>(승강기, 어린이놀이터, 각 동 출입구)</td>
+                <td>지하주차장은 주차장법(30대 초과) 적용</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-red">카메라 해상도</span></th>
+                <td>최소 <span class="highlight-red">130만 화소 이상</span></td>
+                <td>기존 41만 화소에서 개정된 핵심 주관식 수치</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-purple">화면 규격 및 서버</span></th>
+                <td>1채널 대각선 <span class="highlight-purple">4인치 이상</span><br>네트워크 카메라 서버는 <span class="highlight-purple">국내</span> 위치</td>
+                <td>국외 서버 설치 불가 (정보 유출 방지)</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-green">보관 및 관리자</span></th>
+                <td>촬영 자료 <span class="highlight-red">30일 이상</span> 보관<br>고장 시 <span class="highlight-blue">지체 없이</span> 수리 / <span class="highlight-green">안전관리자</span> 지정</td>
+                <td>K-apt 보관기준 및 공동주택관리법 시행규칙 일치</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        2. 복리시설(유치원, 주민공동시설, 근린생활시설) 설치기준 및 필수 포함 시설
+    </h2>
+    <ul>
+        <li><strong>유치원 설치 대지 확보 기준 (주택건설기준 등에 관한 규정 제52조)</strong>:
+            <ul>
+                <li><span class="highlight-red">2,000세대 이상</span>의 주택을 건설하는 주택단지에는 유치원을 설치할 수 있는 대지를 확보하여 공급해야 함.</li>
+                <li><span class="highlight-purple">설치 예외 사유</span>: 단지로부터 통행거리 <span class="highlight-purple">300미터 이내</span>에 유치원이 있거나, 통행거리 <span class="highlight-blue">200미터 이내</span>에 초등학교(교육환경보호구역 내 시설)가 있는 경우 등.</li>
+            </ul>
+        </li>
+        <li><strong>주민공동시설 설치 면적 산정 공식 (제55조의2제1항)</strong>:
+            <ul>
+                <li>대상: <span class="highlight-blue">100세대 이상</span>의 주택을 건설하는 주택단지.</li>
+                <li><span class="highlight-purple">100세대 이상 1,000세대 미만</span>: <span class="highlight-purple">세대당 2.5제곱미터</span>를 더한 면적.</li>
+                <li><span class="highlight-red">1,000세대 이상</span>: <span class="highlight-red">500제곱미터 + 세대당 2제곱미터</span>를 더한 면적.</li>
+            </ul>
+        </li>
+        <li><strong>세대수별 주민공동시설 필수 포함 시설 (★출제 빈도 최고)</strong>:
+            <ul>
+                <li><span class="highlight-blue">150세대 이상</span>: <span class="highlight-blue">경로당, 어린이놀이터</span>.</li>
+                <li><span class="highlight-purple">300세대 이상</span>: 경로당, 어린이놀이터 + <span class="highlight-purple">어린이집</span>.</li>
+                <li><span class="highlight-red">500세대 이상</span>: 경로당, 어린이놀이터, 어린이집 + <span class="highlight-red">주민운동시설, 작은도서관, 다함께돌봄센터</span>.</li>
+            </ul>
+        </li>
+        <li><strong>근린생활시설(상가) 공터 확보</strong>: 단지 내 근린생활시설 면적의 합계가 <span class="highlight-blue">1,000제곱미터</span>를 넘는 경우에는 물품 하역 등을 위한 공터를 확보해야 함.</li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">주택단지 세대수</th>
+                <th style="width: 45%;">필수적으로 포함되어야 하는 주민공동시설</th>
+                <th style="width: 30%;">암기 핵심 포인트</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th><span class="highlight-blue">150세대 이상</span></th>
+                <td><span class="highlight-blue">경로당, 어린이놀이터</span></td>
+                <td>가장 기본 필수 2가지 시설</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-purple">300세대 이상</span></th>
+                <td>경로당, 어린이놀이터 + <span class="highlight-purple">어린이집</span></td>
+                <td>300세대부터 어린이집 추가</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-red">500세대 이상</span></th>
+                <td>경로당, 어린이놀이터, 어린이집 + <span class="highlight-red">주민운동시설, 작은도서관, 다함께돌봄센터</span></td>
+                <td>6가지 완비 (다함께돌봄센터 포함 체크!)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        3. 공동주택 성능등급 표시 및 바닥충격음 차단구조 성능등급 인정 유효기간
+    </h2>
+    <ul>
+        <li><strong>공동주택 성능등급 표시 의무 (주택법 제39조)</strong>:
+            <ul>
+                <li><span class="highlight-red">500세대 이상</span>의 공동주택을 공급할 때에는 주택의 성능 및 품질을 알 수 있도록 <span class="highlight-red">입주자 모집공고</span>에 성능등급을 표시하여야 함.</li>
+            </ul>
+        </li>
+        <li><strong>공동주택 성능등급의 5가지 표시 분야</strong>:
+            <ol>
+                <li><span class="highlight-blue">소음 관련 등급</span>: 경량충격음, 중량충격음, 화장실 소음, 경계 소음 등.</li>
+                <li><span class="highlight-purple">구조 관련 등급</span>: 리모델링 등에 대비한 가변성 및 수리 용이성 등.</li>
+                <li><span class="highlight-green">환경 관련 등급</span>: 조경, 일조확보율, 실내공기질, 에너지절약 등.</li>
+                <li><span class="highlight-red">생활환경 관련 등급</span>: 커뮤니티시설, 사회적 약자 배려, 홈네트워크, 방범안전 등.</li>
+                <li><span class="highlight-blue">화재·소방 관련 등급</span>: 피난안전, 소방 관련 등급 등.</li>
+            </ol>
+        </li>
+        <li><strong>바닥충격음 차단구조 인정 유효기간 (주택건설기준 등에 관한 규정 제60조의3)</strong>:
+            <ul>
+                <li>성능등급 인정의 기본 유효기간: 받은 날부터 <span class="highlight-red">5년</span>.</li>
+                <li>유효기간 연장 한도: 유효기간이 끝나기 전에 연장할 수 있으며, 연장될 때마다 <span class="highlight-purple">3년을 초과할 수 없음</span>.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4 4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg>
+        4. 에너지절약형 친환경주택 및 건강친화형 주택 건설기준
+    </h2>
+    <ul>
+        <li><strong>에너지절약형 친환경주택 5대 기술 요소 (주택건설기준 등에 관한 규정 제64조)</strong>:
+            <ul>
+                <li><span class="highlight-red">저에너지 건물 조성기술</span>: 고단열, 고기능 외피구조, 기밀설계, 일조확보 및 친환경자재 사용 등 (※ <span class="highlight-red">고에너지 건물 조성기술로 출제 시 함정 오답!</span>).</li>
+                <li><span class="highlight-blue">에너지 고효율 설비기술</span>: 고효율 열원설비, 제어설비 및 고효율 환기설비 등.</li>
+                <li><span class="highlight-purple">신·재생에너지 이용기술</span>: 태양열, 태양광, 지열 및 풍력 등.</li>
+                <li><span class="highlight-green">외부환경 조성기술</span>: 자연지반의 보존, 생태면적률의 확보 및 빗물의 순환 등.</li>
+                <li><span class="highlight-blue">건물에너지 정보화 기술</span>: 자동제어장치 및 지능형 전력망 등.</li>
+            </ul>
+        </li>
+        <li><strong>건강친화형 주택 건설기준</strong>: 오염물질이 적게 방출되는 건축자재를 사용하고 환기 성능 등을 확보하여 새집증후군 문제를 개선함으로써 거주자에게 쾌적한 실내환경을 제공하는 주택 (<span class="highlight-red">500세대 이상</span> 건설 시 의무 적용).</li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+        5. 건축설비 설치 원칙 및 유체 물리학 기본 지표(밀도·비체적·비중량·물 팽창)
+    </h2>
+    <ul>
+        <li><strong>건축설비 설치 기본 원칙 (건축법 시행령 제87조)</strong>:
+            <ul>
+                <li>건축설비는 건축물의 안전, 방화, 위생, 에너지 및 <span class="highlight-red">정보통신</span>의 합리적 이용에 지장이 없도록 설치하여야 함.</li>
+                <li>배관피트 및 덕트의 단면적과 <span class="highlight-blue">수선구</span>의 크기는 유지관리가 쉽게 설치할 것.</li>
+                <li><span class="highlight-purple">기술적 기준 지정 소관 부처</span>: 건축설비 설치 기술적 기준은 <span class="highlight-purple">국토교통부령</span>으로 정하되, 에너지 이용 합리화 관련 기준은 <span class="highlight-red">기후에너지환경부장관</span>과 협의하여 정함.</li>
+            </ul>
+        </li>
+        <li><strong>유체 물리학 3대 기본 지표 및 단위 대조 (★시험 빈출 정밀 정리)</strong>:
+            <ul>
+                <li><span class="highlight-red">밀도(Density, ρ)</span>: <span class="highlight-red">단위 체적(부피)당 질량</span>. 단위는 <span class="highlight-red">kg/m³</span>. (※ 물질 고유의 빽빽한 정도).</li>
+                <li><span class="highlight-blue">비체적(Specific Volume, v)</span>: <span class="highlight-blue">단위 질량당 체적(부피)</span>. 단위는 <span class="highlight-blue">m³/kg</span>. (※ 밀도와 완전한 역수 관계: v = 1 / ρ).</li>
+                <li><span class="highlight-purple">비중량(Specific Weight, γ)</span>: <span class="highlight-purple">단위 체적당 중량(무게)</span>. 단위는 <span class="highlight-purple">N/m³</span>. (※ 중력가속도 g가 반영되어 장소에 따라 변함).</li>
+            </ul>
+        </li>
+        <li><strong>물의 온도 변화에 따른 물리적 특성 및 팽창 메커니즘 (★계산 및 OX 단골)</strong>:
+            <ul>
+                <li><span class="highlight-red">순수한 물의 밀도 최대 온도</span>: 물은 <span class="highlight-red">4℃</span>에서 밀도가 가장 크고(<span class="highlight-red">1g/cm³ = 1,000kg/m³</span>), 비체적은 최소가 됨.</li>
+                <li><span class="highlight-blue">물 동결 시 부피 팽창</span>: 0℃ 물이 얼음으로 얼 때 부피가 약 <span class="highlight-blue">9% 팽창</span>함 (배관 동파 원인).</li>
+                <li><span class="highlight-purple">가열 시 부피 팽창</span>: 물을 4℃에서 100℃까지 가열하면 부피가 약 <span class="highlight-purple">4.3% 팽창</span>함 (급탕·난방 팽창탱크 용량 산정 근거).</li>
+                <li><span class="highlight-green">수증기 변환 팽창</span>: 100℃ 물이 100℃ 수증기로 기화할 때 부피가 약 <span class="highlight-green">1,700배</span> 팽창함.</li>
+                <li><span class="highlight-red">팽창량(V_e) 산정 공식</span>: 밀도 역수(비체적) 차이를 이용함 &rarr; <span class="highlight-red">V_e = V × (1 / ρ_2 - 1 / ρ_1)</span> (단, ρ_1은 가열 전 밀도, ρ_2는 가열 후 밀도).</li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 20%;">물리 지표명</th>
+                <th style="width: 25%;">정의 (개념)</th>
+                <th style="width: 25%;">단위 (기호)</th>
+                <th style="width: 30%;">상호 관계 및 특성</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th><span class="highlight-red">밀도 (ρ)</span></th>
+                <td>단위 체적당 질량</td>
+                <td><span class="highlight-red">kg/m³</span></td>
+                <td>비체적과 <span class="highlight-red">역수 관계</span> (4℃에서 최대)</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-blue">비체적 (v)</span></th>
+                <td>단위 질량당 체적(부피)</td>
+                <td><span class="highlight-blue">m³/kg</span></td>
+                <td>밀도의 역수 (<span class="highlight-blue">v = 1 / ρ</span>) (4℃에서 최소)</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-purple">비중량 (γ)</span></th>
+                <td>단위 체적당 중량(무게)</td>
+                <td><span class="highlight-purple">N/m³</span></td>
+                <td>질량 × 중력가속도 (중력에 따라 변함)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+            💡 [수험 핵심 팁] 제48강 실전 출제 포인트 & 함정 방지 체크
+        </div>
+        <ul>
+            <li><strong>영상정보처리기기 수치 및 관리자</strong>: 카메라 해상도 <span class="highlight-red">130만 화소 이상</span>, 모니터 1채널 <span class="highlight-purple">4인치 이상</span>, 보관기간 <span class="highlight-red">30일 이상</span>, 고장 시 <span class="highlight-blue">지체 없이</span> 수리, 지정 관리자는 <span class="highlight-green">안전관리자</span>!</li>
+            <li><strong>CCTV 열람 제공 함정</strong>: <span class="highlight-red">입주자대표회의 회장이나 동대표가 요청하더라도 함부로 열람·제공할 수 없음</span> (정보주체 본인, 정보주체 동의, 수사·재판 등의 경우에만 가능).</li>
+            <li><strong>주민공동시설 세대수별 필수 시설</strong>: <span class="highlight-blue">150세대</span>(경로당, 어린이놀이터) / <span class="highlight-purple">300세대</span>(+어린이집) / <span class="highlight-red">500세대</span>(+주민운동시설, 작은도서관, 다함께돌봄센터).</li>
+            <li><strong>성능등급 및 바닥충격음 유효기간</strong>: 성능등급 표시는 <span class="highlight-red">500세대 이상</span> 단지 <span class="highlight-red">입주자 모집공고</span>에 표시! 바닥충격음 인정 유효기간은 <span class="highlight-blue">5년</span> (연장 시 <span class="highlight-purple">3년</span> 초과 불가).</li>
+            <li><strong>친환경주택 기술 요소 함정</strong>: 5대 기술 중 하나는 <span class="highlight-red">저에너지 건물 조성기술</span>임 (고에너지 건물 조성기술 X!).</li>
+            <li><strong>밀도 vs 비체적 용어 표기 함정</strong>: <span class="highlight-red">단위 체적당 질량 = 밀도</span> / <span class="highlight-blue">단위 질량당 체적 = 비체적</span> (서로 단어를 바꿔치기하는 지문 주의!). 물은 <span class="highlight-purple">4℃</span>에서 밀도 최대, 비체적 최소!</li>
+        </ul>
+    </div>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>주관식 단답형 및 빈칸 채우기 실전 훈련</h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡)에 들어갈 알맞은 핵심 용어나 법정 수치, 단위를 아래 빈칸에 직접 작성해 보십시오.</p>
+
+    <ol class="quiz-list">
+        <li>
+            공동주택단지에 설치하는 영상정보처리기기 카메라는 전체 또는 주요 부분이 조망되고 잘 식별될 수 있도록 해상도가 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )만 화소 이상이어야 하고, 다채널 모니터 화면 분할 시 1채널 감시화면의 크기는 대각선 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )인치 이상이어야 한다.
+        </li>
+        <li>
+            영상정보처리기기 중 네트워크 카메라를 설치하는 경우 서버 및 저장장치 등은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )에 위치하여야 한다.
+        </li>
+        <li>
+            공동주택단지에 영상정보처리기기를 설치하거나 보수 또는 교체하려는 경우에는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )에 반영하여야 한다.
+        </li>
+        <li>
+            영상정보처리기기의 촬영 자료는 컴퓨터보안시스템을 설치하여 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이상 보관하여야 한다.
+        </li>
+        <li>
+            영상정보처리기기가 고장 난 경우에는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 수리해야 하고, 영상정보처리기기의 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )를 지정하여 관리해야 한다.
+        </li>
+        <li>
+            관리주체는 영상정보처리기기 촬영 자료를 보안 및 방범 목적 외로 활용할 수 없으나, ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )에게 열람 또는 제공하거나 범죄 수사 및 공소 제기·유지에 필요한 경우에는 열람·제공할 수 있다.
+        </li>
+        <li>
+            주택단지의 총 세대수가 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )세대 이상인 경우 유치원을 설치할 수 있는 대지를 확보하거나 유치원을 건축하여 공급하여야 한다.
+        </li>
+        <li>
+            주민공동시설을 설치할 때 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )세대 이상은 경로당과 어린이놀이터를 포함해야 하고, ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )세대 이상은 경로당, 어린이놀이터 및 어린이집을 포함하여야 한다.
+        </li>
+        <li>
+            500세대 이상인 주택단지의 주민공동시설 필수 포함 시설에는 경로당, 어린이놀이터, 어린이집 외에 주민운동시설, 작은도서관 및 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )가 포함되어야 한다.
+        </li>
+        <li>
+            사업주체가 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )세대 이상의 공동주택을 공급할 때에는 주택의 성능 및 품질을 입주자가 알 수 있도록 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )에 공동주택성능등급을 표시하여야 한다.
+        </li>
+        <li>
+            공동주택 성능등급의 표시 분야에는 소음 관련 등급, 구조 관련 등급, 환경 관련 등급, ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 관련 등급 및 화재·소방 관련 등급이 있다.
+        </li>
+        <li>
+            공동주택 바닥충격음 차단구조 성능등급 인정의 유효기간은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년으로 하며, 연장할 때마다 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년을 초과할 수 없다.
+        </li>
+        <li>
+            에너지절약형 친환경주택의 5대 기술 요소에는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 건물 조성기술, 에너지 고효율 설비기술, 신·재생에너지 이용기술, 외부환경 조성기술 및 건물에너지 정보화 기술이 있다.
+        </li>
+        <li>
+            건축설비는 건축물의 안전, 방화, 위생, 에너지 및 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )의 합리적 이용에 지장이 없도록 설치하여야 한다.
+        </li>
+        <li>
+            건축물에 설치하는 급수·배수·난방·환기 등 건축설비의 기술적 기준은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )으로 정하되, 에너지 이용 합리화 관련 기술적 기준은 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )장관과 협의하여 정한다.
+        </li>
+        <li>
+            단위 체적당 질량을 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )라 하고, 단위 질량당 체적을 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )라 하며, 이 둘은 서로 ( ㉢&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 관계에 있다.
+        </li>
+        <li>
+            단위 체적당 중량(무게)을 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )라 하며, 중력 가속도가 반영되는 물리량이다.
+        </li>
+        <li>
+            순수한 물은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )℃에서 밀도가 가장 최대가 되고, 비체적은 최소가 된다.
+        </li>
+        <li>
+            순수한 물이 0℃에서 얼음으로 될 때 부피는 약 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )퍼센트 팽창한다.
+        </li>
+        <li>
+            물을 4℃에서 100℃까지 가열하면 부피가 약 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )퍼센트 팽창한다.
+        </li>
+    </ol>
+
+    <!-- 수험생 정답 확인용 하단 3열 배치 그리드 영역 -->
+    <div style="font-size: 9.5pt; color: #666666; margin-top: 30px; padding: 15px; border-top: 1px dashed #666666; line-height: 1.8;">
+        <strong style="display: block; margin-bottom: 10px; color: #333333;">[제48강 주관식 단답형 정답 리스트]</strong>
+        <div class="answer-grid">
+            <div><strong>1.</strong> ㉠ 130, &nbsp; ㉡ 4</div>
+            <div><strong>2.</strong> ㉠ 국내</div>
+            <div><strong>3.</strong> ㉠ 장기수선계획</div>
+            <div><strong>4.</strong> ㉠ 30</div>
+            <div><strong>5.</strong> ㉠ 지체 없이, &nbsp; ㉡ 안전관리자</div>
+            <div><strong>6.</strong> ㉠ 정보주체</div>
+            <div><strong>7.</strong> ㉠ 2,000</div>
+            <div><strong>8.</strong> ㉠ 150, &nbsp; ㉡ 300</div>
+            <div><strong>9.</strong> ㉠ 다함께돌봄센터</div>
+            <div><strong>10.</strong> ㉠ 500, &nbsp; ㉡ 입주자 모집공고</div>
+            <div><strong>11.</strong> ㉠ 생활환경</div>
+            <div><strong>12.</strong> ㉠ 5, &nbsp; ㉡ 3</div>
+            <div><strong>13.</strong> ㉠ 저에너지</div>
+            <div><strong>14.</strong> ㉠ 정보통신</div>
+            <div><strong>15.</strong> ㉠ 국토교통부령, &nbsp; ㉡ 기후에너지환경부</div>
+            <div><strong>16.</strong> ㉠ 밀도, &nbsp; ㉡ 비체적, &nbsp; ㉢ 역수</div>
+            <div><strong>17.</strong> ㉠ 비중량</div>
+            <div><strong>18.</strong> ㉠ 4</div>
+            <div><strong>19.</strong> ㉠ 9</div>
+            <div><strong>20.</strong> ㉠ 4.3</div>
+        </div>
+    </div>
+
+</body>
+</html>

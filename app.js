@@ -126,7 +126,28 @@ async function fetchStudyData() {
             studyData = window.STUDY_DATA;
         }
     }
+    updateFilterChipCounts();
     populateQuizUnitDropdown();
+}
+
+function updateFilterChipCounts() {
+    if (!studyData || !studyData.lectures) return;
+    const relCount = studyData.lectures.filter(l => l.subject === '관계법규').length;
+    const pracCount = studyData.lectures.filter(l => l.subject === '관리실무').length;
+    const relTestCount = studyData.lectures.filter(l => l.subject === '관계법규(문제)').length;
+    const pracTestCount = studyData.lectures.filter(l => l.subject === '관리실무(문제)').length;
+
+    const chipRel = document.getElementById('chip-rel');
+    if (chipRel) chipRel.innerText = `관계법규 (${relCount})`;
+
+    const chipPrac = document.getElementById('chip-prac');
+    if (chipPrac) chipPrac.innerText = `관리실무 (${pracCount})`;
+
+    const chipRelTest = document.getElementById('chip-rel-test');
+    if (chipRelTest) chipRelTest.innerText = `법규문 (${relTestCount})`;
+
+    const chipPracTest = document.getElementById('chip-prac-test');
+    if (chipPracTest) chipPracTest.innerText = `실무문 (${pracTestCount})`;
 }
 
 function populateQuizUnitDropdown() {
