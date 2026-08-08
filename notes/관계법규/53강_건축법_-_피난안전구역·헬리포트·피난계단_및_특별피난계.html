@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 관계법규 - 제53강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght=400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+            letter-spacing: -0.05em;
+        }
+        
+        h1 {
+            font-size: 13pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #16803d;
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #6d28d9;
+        }
+        
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        ol {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        .quiz-list li {
+            margin-bottom: 8px;
+        }
+
+        .answer-container {
+            margin-top: 30px;
+            padding: 15px;
+            border-top: 1px dashed #666666;
+            font-size: 10pt;
+            color: #777777;
+            line-height: 1.8;
+        }
+
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .answer-grid div {
+            border-bottom: 1px none #eeeeee;
+        }
+
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+        제53강. 건축법 - 피난안전구역·헬리포트·피난계단 및 특별피난계단·옥외피난계단·방화구획 및 대지 안의 공지 완전분석
+    </h1>
+    
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        1. 피난안전구역 및 헬리포트·옥상 대피공간 설치 기준 (건축법 영 제34조, 제40조)
+    </h2>
+    <ul>
+        <li><strong>초고층 및 준초고층 건축물 피난안전구역 설치 기준 (★빈출 핵심수치)</strong>:
+            <ul>
+                <li><strong>초고층 건축물 (50층 이상 또는 높이 200m 이상)</strong>: 지상층으로부터 <span class="highlight-red">최대 30개 층마다 1개소 이상</span> 피난안전구역 설치. (★최소 30개 층이 아닌 '최대' 30개 층 기준!)</li>
+                <li><strong>준초고층 건축물 (30층~49층 또는 높이 120m~200m 미만)</strong>: 해당 건축물 전체 층수의 <span class="highlight-blue">2분의 1에 해당하는 층을 기준</span>으로 <span class="highlight-purple">상하 5개 층 이내</span>에 1개소 이상 피난안전구역 설치.</li>
+            </ul>
+        </li>
+        <li><strong>피난안전구역 면적 산정 인센티브 (★용적률 산정 특례)</strong>:
+            <ul>
+                <li>초고층 및 준초고층 건축물에 설치하는 피난안전구역의 면적은 <span class="highlight-red">용적률을 산정할 때 연면적에서 제외</span>함.</li>
+            </ul>
+        </li>
+        <li><strong>헬리포트 및 옥상 대피공간 설치 대상 및 구획 (★11층 이상 & 1만㎡ 이상)</strong>:
+            <ul>
+                <li><strong>설치 대상</strong>: 층수가 <span class="highlight-blue">11층 이상인 건축물</span>로서 <span class="highlight-blue">11층 이상인 층의 바닥면적 합계가 1만 제곱미터 이상</span>인 건축물.</li>
+                <li><strong>지붕 형태별 설치 의무</strong>:
+                    <ol>
+                        <li><span class="highlight-purple">평지붕</span>인 경우: 옥상에 <span class="highlight-red">헬리포트</span>를 설치하거나 헬리콥터를 통하여 인명 등을 구조할 수 있는 공간 확보.</li>
+                        <li><span class="highlight-purple">경사지붕</span>인 경우: 경사지붕 아래에 <span class="highlight-red">대피공간</span>을 의무 설치.</li>
+                    </ol>
+                </li>
+                <li><strong>용적률 인센티브</strong>: 경사지붕 아래 설치하는 대피공간 면적도 <span class="highlight-green">용적률 산정 시 연면적에서 제외</span>됨. (★단, 평지붕 헬리포트 바닥은 별도의 공간 면적 상쇄 개념이 없으므로 인센티브 대상이 아님)</li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">구분</th>
+                <th style="width: 45%;">설치 위치 및 수량 기준</th>
+                <th style="width: 30%;">용적률 산정 혜택</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th class="highlight-blue">초고층 건축물 (50층 이상)</th>
+                <td>지상층으로부터 <span class="highlight-red">최대 30개 층마다 1개소 이상</span></td>
+                <td><span class="highlight-purple">연면적에서 제외</span></td>
+            </tr>
+            <tr>
+                <th class="highlight-blue">준초고층 건축물 (30~49층)</th>
+                <td>전체 층수 <span class="highlight-blue">1/2 층 기준 상하 5개 층 이내 1개소 이상</span></td>
+                <td><span class="highlight-purple">연면적에서 제외</span></td>
+            </tr>
+            <tr>
+                <th class="highlight-purple">헬리포트/대피공간 (11층+1만m²)</th>
+                <td>평지붕: <span class="highlight-red">헬리포트</span> / 경사지붕: <span class="highlight-red">경사지붕 아래 대피공간</span></td>
+                <td>경사지붕 대피공간만 <span class="highlight-green">연면적 제외</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        2. 피난계단·특별피난계단 및 옥외피난계단 설치 기준 (건축법 영 제35조, 제36조)
+    </h2>
+    <ul>
+        <li><strong>피난계단 및 특별피난계단 설치 대상 (★기초 수치 구분)</strong>:
+            <ul>
+                <li><strong>일반 피난계단/특별피난계단 대상</strong>: 층수가 <span class="highlight-blue">5층 이상인 층</span> 또는 <span class="highlight-blue">지하 2층 이하인 층</span>에 설치하는 직통계단.</li>
+                <li><strong>특별피난계단 강제 대상 (★공동주택 16층 특례)</strong>: 층수가 <span class="highlight-red">11층 이상</span>(<span class="highlight-red">공동주택은 16층 이상</span>)인 층 또는 <span class="highlight-purple">지하 3층 이하인 층</span>에 설치하는 직통계단은 반드시 <span class="highlight-red">특별피난계단</span>으로 설치하여야 함.</li>
+            </ul>
+        </li>
+        <li><strong>옥외피난계단 설치 대상 (★공연장 vs 집회장 수치 구분)</strong>:
+            <ul>
+                <li><strong>대상 층</strong>: <span class="highlight-purple">3층 이상인 층</span>을 피난 위험 용도로 사용하는 경우.</li>
+                <li><strong>용도 및 면적 기준</strong>:
+                    <ol>
+                        <li>문화 및 집회시설 중 <span class="highlight-red">공연장</span>: 그 층의 해당 용도 바닥면적 합계 <span class="highlight-red">300제곱미터 이상</span>.</li>
+                        <li>문화 및 집회시설 중 <span class="highlight-blue">집회장</span>: 그 층의 해당 용도 바닥면적 합계 <span class="highlight-blue">1,000제곱미터 이상</span>.</li>
+                    </ol>
+                </li>
+            </ul>
+        </li>
+    </ul>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+            💡 [비교 분석] 공연장 vs 집회장의 옥외피난계단 설치면적 차이 이유
+        </div>
+        <ul>
+            <li><strong>공연장 (300m² 이상)</strong>: 어두운 암전 상태에서 문을 닫고 관람하므로 화재 시 대피 위험성이 매우 높아 상대적으로 작은 면적(300m²)부터 옥외피난계단 설치를 강제함.</li>
+            <li><strong>집회장 (1,000m² 이상)</strong>: 조명이 켜진 상태에서 자유롭게 소통·집회하는 공간이므로 대피 위험도가 낮아 1,000m² 이상일 때만 설치함.</li>
+        </ul>
+    </div>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        3. 난간·옥상광장·방화구획·요양병원 피난시설·차면시설 및 추락방지
+    </h2>
+    <ul>
+        <li><strong>난간 설치 높이</strong>: 옥상광장 또는 노대등(발코니 등) 주위에는 높이 <span class="highlight-red">1.2미터 이상</span>의 난간을 의무 설치.</li>
+        <li><strong>옥상광장 설치 대상</strong>: <span class="highlight-blue">5층 이상인 층</span>이 공연장, 종교집회장, 판매시설, 위락시설(주점영업) 등의 용도로 쓰이는 경우 옥상에 피난용 광장 설치.</li>
+        <li><strong>방화구획 기준</strong>: 연면적 <span class="highlight-purple">1,000제곱미터</span>를 넘는 건축물은 화재 확산 방지를 위해 내화구조의 바닥·벽 및 방화문으로 <span class="highlight-purple">방화구획</span>을 설치 (구획 바닥면적 1,000m² 미만).</li>
+        <li><strong>요양병원 등 피난시설 3가지 대안 중 선택 (★신설 강화)</strong>:
+            <ul>
+                <li>거동이 불편한 환자가 많은 요양병원, 정신병원 등은 각 층마다 ① <span class="highlight-red">방화구획된 대피공간</span>, ② <span class="highlight-blue">노대등</span>, ③ 지상으로 연결되는 <span class="highlight-green">경사로</span> 중 하나 이상을 반드시 설치하여야 함.</li>
+            </ul>
+        </li>
+        <li><strong>차면시설 및 오피스텔 추락방지 안전시설</strong>:
+            <ul>
+                <li><strong>차면시설</strong>: 인접 대지경계선으로부터 직선거리 <span class="highlight-purple">2미터 이내</span>에 이웃 주택의 내부가 보이는 창문 등을 설치하는 경우 차면시설을 설치하여야 함.</li>
+                <li><strong>오피스텔 추락방지</strong>: 오피스텔의 거실 바닥으로부터 높이 <span class="highlight-red">1.2미터 이하</span> 부분에 창문을 설치하는 경우 추락 방지를 위한 안전시설을 설치하여야 함.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M11 5H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-5"></path><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+        4. 관람실 출구·방화벽·목조건축물·방화지구 및 범죄예방 건축기준
+    </h2>
+    <ul>
+        <li><strong>관람실 및 바깥쪽 출구 설치 규정</strong>:
+            <ul>
+                <li>공연장, 관람장 등(바닥면적 <span class="highlight-blue">300제곱미터 이상</span> 등)은 관람실/집회실로부터 직접 출구를 설치하여야 하며, 출입문은 안으로 열리지 아니하고 <span class="highlight-red">바깥쪽으로 열리는 구조</span>이어야 함.</li>
+            </ul>
+        </li>
+        <li><strong>방화벽 및 목조건축물의 방화 제한</strong>:
+            <ul>
+                <li><strong>방화벽</strong>: 연면적 <span class="highlight-blue">1,000제곱미터 이상</span>인 건축물은 방화벽으로 구획하되, 구획된 각 바닥면적의 합계는 <span class="highlight-purple">1,000제곱미터 미만</span>이어야 함.</li>
+                <li><strong>목조건축물 방화</strong>: 연면적 <span class="highlight-blue">1,000제곱미터 이상</span>인 목조건축물은 외벽 및 처마 밑을 <span class="highlight-red">방화구조 또는 불연재료</span>로 하여야 함.</li>
+            </ul>
+        </li>
+        <li><strong>방화지구 안의 건축물 및 공작물 제한</strong>:
+            <ul>
+                <li>건축물의 주요구조부 및 외벽: <span class="highlight-red">내화구조</span>.</li>
+                <li>지붕, 방화문, 공작물(높이 <span class="highlight-purple">3미터 이상</span> 공작물 등): <span class="highlight-blue">불연재료</span>.</li>
+            </ul>
+        </li>
+        <li><strong>범죄예방 건축기준 고시 의무 대상 (★아연다다 공식 + 기타)</strong>:
+            <ol>
+                <li><span class="highlight-red">아파트, 연립주택, 다세대주택, 다가구주택 (아연다다)</span></li>
+                <li>제1종 근린생활시설 중 <span class="highlight-blue">일용품 소매점(편의점)</span></li>
+                <li>제2종 근린생활시설 중 <span class="highlight-purple">다중생활시설(고시원)</span></li>
+                <li>문화 및 집회시설(동·식물원 제외), 교육연구시설, 노유자시설, 수련시설, 업무시설 중 <span class="highlight-green">오피스텔</span></li>
+            </ol>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        5. 지하층 거실 설치 제한 및 대지 안의 공지 기준 (건축법 제58조, 영 별표 2)
+    </h2>
+    <ul>
+        <li><strong>지하층 거실 설치 제한</strong>: 단독주택, 공동주택 등의 지하층에는 상습 침수 위험 및 주거 환경 위해 방지를 위해 거실을 설치하는 것이 적합하지 아니함.</li>
+        <li><strong>대지 안의 공지 설치 원칙 (★6미터 이내 범위 조례)</strong>:
+            <ul>
+                <li>건축물을 건축하는 경우 통풍, 관망, 소음 방지 및 피난을 위해 <span class="highlight-blue">건축선 및 인접 대지경계선으로부터 6미터 이내</span>의 범위에서 조례로 정하는 거리 이상을 띄워야 함.</li>
+            </ul>
+        </li>
+        <li><strong>건축선으로부터 띄워야 하는 거리 기준 (아연다 공식)</strong>:
+            <ul>
+                <li>아파트: <span class="highlight-red">2미터 이상 6미터 이하</span></li>
+                <li>연립주택: <span class="highlight-blue">2미터 이상 5미터 이하</span></li>
+                <li>다세대주택: <span class="highlight-purple">1미터 이상 4미터 이하</span></li>
+            </ul>
+        </li>
+        <li><strong>인접 대지경계선으로부터 띄워야 하는 거리 기준 (아연다 공식 및 전용주거)</strong>:
+            <ul>
+                <li>아파트: <span class="highlight-red">2미터 이상 6미터 이하</span></li>
+                <li>연립주택: <span class="highlight-blue">1.5미터 이상 5미터 이하</span></li>
+                <li>다세대주택: <span class="highlight-purple">0.5미터 이상 4미터 이하</span></li>
+                <li><strong>지역 특례</strong>: <span class="highlight-green">전용주거지역</span>은 건축선 기준은 없으나 쾌적한 주거환경 유지를 위해 <span class="highlight-green">인접 대지경계선으로부터 띄우기 규정이 필수로 적용</span>됨.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">주택 구분</th>
+                <th style="width: 37.5%;">건축선으로부터 띄우는 거리</th>
+                <th style="width: 37.5%;">인접 대지경계선으로부터 띄우는 거리</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th class="highlight-blue">아파트</th>
+                <td><span class="highlight-red">2m 이상 ~ 6m 이하</span></td>
+                <td><span class="highlight-red">2m 이상 ~ 6m 이하</span></td>
+            </tr>
+            <tr>
+                <th class="highlight-purple">연립주택</th>
+                <td><span class="highlight-blue">2m 이상 ~ 5m 이하</span></td>
+                <td><span class="highlight-blue">1.5m 이상 ~ 5m 이하</span></td>
+            </tr>
+            <tr>
+                <th class="highlight-green">다세대주택</th>
+                <td><span class="highlight-purple">1m 이상 ~ 4m 이하</span></td>
+                <td><span class="highlight-purple">0.5m 이상 ~ 4m 이하</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>주관식 단답형 및 빈칸 채우기 실전 훈련</h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡, ㉢)에 들어갈 알맞은 핵심 용어나 법정 숫자를 작성해 보십시오.</p>
+    
+    <ol class="quiz-list" style="line-height: 2.1;">
+        <li>
+            초고층 건축물에는 피난층 또는 직통계단과 직접 연결되는 피난안전구역을 지상층으로부터 최대 ( ㉠ )개 층마다 1개소 이상 설치하여야 한다.
+        </li>
+        <li>
+            준초고층 건축물의 피난안전구역은 해당 건축물 전체 층수의 ( ㉠ )에 해당하는 층을 기준으로 상하 ( ㉡ )개 층 이내에 1개소 이상 설치하여야 한다.
+        </li>
+        <li>
+            초고층 및 준초고층 건축물에 설치하는 피난안전구역 면적은 용적률 산정 시 ( ㉠ )에서 제외한다.
+        </li>
+        <li>
+            층수가 ( ㉠ )층 이상인 건축물로서 11층 이상인 층의 바닥면적 합계가 ( ㉡ )만 제곱미터 이상인 경우 옥상에 헬리포트 또는 대피공간을 확보하여야 한다.
+        </li>
+        <li>
+            11층 이상이고 바닥면적 합계 1만m² 이상인 건축물의 지붕이 경사지붕인 경우, 경사지붕 아래에 설치하는 대피공간 면적은 용적률 산정 시 ( ㉠ )에서 제외된다.
+        </li>
+        <li>
+            건축물의 ( ㉠ )층 이상인 층 또는 지하 ( ㉡ )층 이하인 층에 설치하는 직통계단은 피난계단 또는 특별피난계단으로 설치하여야 한다.
+        </li>
+        <li>
+            건축물의 층수가 11층 이상(공동주택은 ㉠층 이상) 또는 지하 ( ㉡ )층 이하인 층의 직통계단은 특별피난계단으로 설치하여야 한다.
+        </li>
+        <li>
+            3층 이상인 층을 문화 및 집회시설 중 공연장 용도로 쓸 때 그 바닥면적 합계가 ( ㉠ )제곱미터 이상이면 옥외피난계단을 설치하여야 하고, 집회장 용도일 때는 ( ㉡ )제곱미터 이상이어야 한다.
+        </li>
+        <li>
+            옥상광장 또는 노대등 주위에는 높이 ( ㉠ )미터 이상의 난간을 설치하여야 한다.
+        </li>
+        <li>
+            인접 대지경계선으로부터 직선거리 ( ㉠ )미터 이내에 이웃 주택의 내부가 보이는 창문을 설치하는 경우 차면시설을 설치하여야 한다.
+        </li>
+        <li>
+            오피스텔 거실 바닥으로부터 높이 ( ㉠ )미터 이하 부분에 창문을 설치하는 경우 추락 방지를 위한 안전시설을 설치하여야 한다.
+        </li>
+        <li>
+            연면적 ( ㉠ )제곱미터 이상인 목조건축물은 외벽 및 처마 밑을 방화구조 또는 불연재료로 하여야 한다.
+        </li>
+        <li>
+            국토교통부장관이 고시하는 범죄예방 건축기준에 따라 건축해야 하는 주택에는 아파트, 연립주택, 다세대주택 및 ( ㉠ )주택이 포함된다.
+        </li>
+        <li>
+            대지 안의 공지는 건축선 및 인접 대지경계선으로부터 ( ㉠ )미터 이내의 범위에서 조례로 정하는 거리 이상을 띄워야 한다.
+        </li>
+        <li>
+            대지 안의 공지 기준상 건축선으로부터 아파트는 ( ㉠ )미터 이상 ( ㉡ )미터 이하의 거리를 띄워야 한다.
+        </li>
+        <li>
+            대지 안의 공지 기준상 인접대지경계선으로부터 연립주택은 ( ㉠ )미터 이상 5미터 이하, 다세대주택은 ( ㉡ )미터 이상 4미터 이하를 띄워야 한다.
+        </li>
+        <li>
+            쾌적한 주거환경 조성을 위해 건축선 기준과 별개로 인접 대지경계선으로부터의 띄우기 규정이 필수로 적용되는 주거지역은 ( ㉠ )주거지역이다.
+        </li>
+    </ol>
+
+    <div class="answer-container">
+        <strong>[제53강 주관식 단답형 정답 리스트]</strong>
+        <div class="answer-grid">
+            <div><strong>1.</strong> ㉠ 30</div>
+            <div><strong>2.</strong> ㉠ 2분의 1 | ㉡ 5</div>
+            <div><strong>3.</strong> ㉠ 연면적</div>
+            
+            <div><strong>4.</strong> ㉠ 11 | ㉡ 1</div>
+            <div><strong>5.</strong> ㉠ 연면적</div>
+            <div><strong>6.</strong> ㉠ 5 | ㉡ 2</div>
+            
+            <div><strong>7.</strong> ㉠ 16 | ㉡ 3</div>
+            <div><strong>8.</strong> ㉠ 300 | ㉡ 1,000(또는 1천)</div>
+            <div><strong>9.</strong> ㉠ 1.2</div>
+            
+            <div><strong>10.</strong> ㉠ 2</div>
+            <div><strong>11.</strong> ㉠ 1.2</div>
+            <div><strong>12.</strong> ㉠ 1,000(또는 1천)</div>
+            
+            <div><strong>13.</strong> ㉠ 다가구</div>
+            <div><strong>14.</strong> ㉠ 6</div>
+            <div><strong>15.</strong> ㉠ 2 | ㉡ 6</div>
+            
+            <div><strong>16.</strong> ㉠ 1.5 | ㉡ 0.5</div>
+            <div><strong>17.</strong> ㉠ 전용</div>
+            <div></div>
+        </div>
+    </div>
+
+</body>
+</html>

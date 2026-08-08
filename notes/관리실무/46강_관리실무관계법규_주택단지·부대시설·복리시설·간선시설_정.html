@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 - 제46강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+            letter-spacing: -0.05em;
+        }
+        
+        h1 {
+            font-size: 12pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        /* 토너 절약 4색 시각 강조 클래스 */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #16803d; 
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #6d28d9; 
+        }
+        
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        ol.quiz-list {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+            line-height: 2.1;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        /* 정답 리스트 3열 격자 레이아웃 */
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px 15px;
+        }
+
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        제46강. 관리실무/관계법규: 주택단지·부대시설·복리시설·간선시설 정의, 건축법상 구조·재료 및 방화문 구분, 주택건설기준(반자높이·경계벽·바닥슬래브·계단·난간), 발코니 및 대피공간·피난구 기준
+    </h1>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        1. 주택단지의 정의 및 별개 주택단지 분리 기준 (★법정 도로 폭 단골 출제)
+    </h2>
+    <ul>
+        <li><strong>주택단지의 정의 (주택법 제2조제12호)</strong>:
+            <ul>
+                <li>주택건설사업계획 또는 대지조성사업계획의 승인을 받아 주택과 그 <span class="highlight-blue">부대시설 및 복리시설</span>을 건설하거나 대지를 조성하는 데 사용되는 <span class="highlight-red">일단(一團)의 토지</span>.</li>
+            </ul>
+        </li>
+        <li><strong>별개의 주택단지로 보는 법정 분리 기준 (★주관식 수치 필수 암기)</strong>:
+            <ul>
+                <li>철도, 고속도로, 자동차전용도로.</li>
+                <li>폭 <span class="highlight-red">20미터 이상</span>인 <span class="highlight-red">일반도로</span>. (※ 폭 8미터 미만의 일반도로로 분리된 경우 하나의 주택단지로 봄).</li>
+                <li>폭 <span class="highlight-blue">8미터 이상</span>인 <span class="highlight-blue">도시계획예정도로</span>.</li>
+                <li>보행자 및 자동차 통행이 가능한 폭 <span class="highlight-purple">8미터 이상</span>인 <span class="highlight-purple">국지도</span>(국지도로 등, 주택법 시행규칙 제2조). (※ 4미터로 출제 시 함정 오답!).</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        2. 부대시설, 복리시설, 기간시설, 간선시설 비교 정밀 정리
+    </h2>
+    <ul>
+        <li><strong>부대시설 (필수적 주속 설비 및 시설)</strong>: 주택에 딸린 시설 또는 설비. 주차장, 관리사무소, 담장, 주택단지 안의 도로, 건축설비, 보안등, 자전거보관소, 경비실, 공중화장실, 안내표지판, 대피시설, 정화조 등. (※ 중앙난방 방식의 난방설비 포함).</li>
+        <li><strong>복리시설 (입주자등의 생활복리 시설)</strong>: 입주자등의 생활복리를 위한 공동시설. 어린이놀이터, 근린생활시설(상가), 유치원, 주민운동시설, 경로당, 다함께돌봄센터 등.</li>
+        <li><strong>기간시설 (기반 기본시설)</strong>: 도로, 상하수도, 전기시설, 가스시설, 통신시설, 지역난방시설.</li>
+        <li><strong>간선시설 (연결 시설)</strong>: 주택단지 안의 기간시설을 단지 밖의 같은 종류 기간시설에 연결하는 시설.
+            <ul>
+                <li><span class="highlight-red">단지 안 포함 예외 (가·통·지)</span>: <span class="highlight-red">가스시설, 통신시설, 지역난방시설</span>의 경우에는 주택단지 안의 기간시설을 <span class="highlight-red">포함</span>함.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 20%;">구분</th>
+                <th style="width: 40%;">대표 해당 시설 종류</th>
+                <th style="width: 40%;">수험 구별 암기 핵심 팁</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th><span class="highlight-blue">부대시설</span></th>
+                <td>주차장, 관리사무소, 담장, 단지 안 도로, 건축설비, 보안등, 자전거보관소, 경비실, 공중화장실, 안내표지판, 대피시설, 정화조 등</td>
+                <td><span class="highlight-blue">없으면 거주 및 관리가 불가능한 필수 주택 부속 시설/설비</span></td>
+            </tr>
+            <tr>
+                <th><span class="highlight-purple">복리시설</span></th>
+                <td>어린이놀이터, 근린생활시설(상가), 유치원, 주민운동시설, 경로당, 다함께돌봄센터 등</td>
+                <td><span class="highlight-purple">입주자등의 생활 편의 및 복리 증진을 위한 공동 이용시설</span></td>
+            </tr>
+            <tr>
+                <th><span class="highlight-red">간선시설</span></th>
+                <td>단지 안 기간시설과 단지 밖 기간시설을 연결하는 시설 (도로, 상하수도, 전기, 가스, 통신, 지역난방)</td>
+                <td><span class="highlight-red">단지 안 기간시설 포함 3가지(가·통·지)</span>:<br>가스시설, 통신시설, 지역난방시설</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        3. 건축법상 구조·재료 용어정의 및 방화문의 3가지 법정 구분
+    </h2>
+    <ul>
+        <li><strong>구조 및 재료 용어정의 (★선택지 오답 스킬)</strong>:
+            <ul>
+                <li><span class="highlight-blue">내화구조</span>: 화재에 <span class="highlight-blue">견딜 수 있는</span> 성능을 가진 구조. (※ 관리실무 설비 파트에서는 법령 표기 시 내화구조가 기본 기준임).</li>
+                <li><span class="highlight-purple">방화구조</span>: 화염의 <span class="highlight-purple">확산을 막을 수 있는</span> 성능을 가진 구조.</li>
+                <li><span class="highlight-red">불연재료</span>: 불에 <span class="highlight-red">타지 아니하는</span> 성능을 가진 재료.</li>
+                <li><span class="highlight-green">난연재료</span>: 불에 <span class="highlight-green">잘 타지 아니하는</span> 성능을 가진 재료.</li>
+                <li><span class="highlight-blue">내수재료</span>: 인조석, 콘크리트 등 내수성을 가진 재료.</li>
+            </ul>
+        </li>
+        <li><strong>방화문의 구분 (건축법 시행령 제64조)</strong>:
+            <ul>
+                <li>기존 갑종·을종 용어가 폐지되고 성능 중심의 <span class="highlight-red">60분+ 방화문</span>, <span class="highlight-blue">60분 방화문</span>, <span class="highlight-purple">30분 방화문</span>으로 구분됨.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 20%;">방화문 구분</th>
+                <th style="width: 40%;">연기 및 불꽃 차단 시간 (차염성/차연성)</th>
+                <th style="width: 40%;">열 차단 시간 (차열성)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th><span class="highlight-red">60분+ 방화문</span></th>
+                <td><span class="highlight-red">60분 이상</span> 차단</td>
+                <td><span class="highlight-red">30분 이상</span> 차단 (★열 차단 요건 필수 포함!)</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-blue">60분 방화문</span></th>
+                <td><span class="highlight-blue">60분 이상</span> 차단</td>
+                <td>별도 열 차단 성능 요구 없음</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-purple">30분 방화문</span></th>
+                <td><span class="highlight-purple">30분 이상 60분 미만</span> 차단</td>
+                <td>별도 열 차단 성능 요구 없음</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4 4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg>
+        4. 주택건설기준 등의 규정 (주택의 구조 및 설비 세부 기준)
+    </h2>
+    <ul>
+        <li><strong>반자높이 및 층높이</strong>:
+            <ul>
+                <li><span class="highlight-blue">반자높이</span>: 거실 및 침실의 반자높이는 <span class="highlight-blue">2.2미터 이상</span>으로 함.</li>
+                <li><span class="highlight-purple">층높이</span>: <span class="highlight-purple">2.4미터 이상</span>으로 하며, 각각 <span class="highlight-red">5센티미터</span>를 단위로 한 것을 기준척도로 함.</li>
+            </ul>
+        </li>
+        <li><strong>세대 간의 경계벽 두께 (★구조별 두께 암기)</strong>:
+            <ul>
+                <li><span class="highlight-red">철근콘크리트조 / 철골·철근콘크리트조</span>: <span class="highlight-red">15센티미터 이상</span>.</li>
+                <li><span class="highlight-blue">무근콘크리트조 / 콘크리트블록조 / 벽돌조 / 석조</span>: <span class="highlight-blue">20센티미터 이상</span>.</li>
+                <li><span class="highlight-purple">조립식주택부재인 콘크리트판</span>: <span class="highlight-purple">12센티미터 이상</span>.</li>
+            </ul>
+        </li>
+        <li><strong>세대 내 층간바닥 구조 (슬래브 두께 및 바닥충격음)</strong>:
+            <ul>
+                <li><span class="highlight-red">콘크리트 슬래브 두께</span>: 원칙 <span class="highlight-red">210밀리미터 이상</span> (단, <span class="highlight-blue">라멘구조</span>는 <span class="highlight-blue">150밀리미터 이상</span>).</li>
+                <li><span class="highlight-purple">바닥충격음 차단성능</span>: 경량충격음 및 중량충격음 모두 <span class="highlight-purple">49데시벨 이하</span>일 것.</li>
+            </ul>
+        </li>
+        <li><strong>결로방지 성능 의무 세대수</strong>: <span class="highlight-red">500세대 이상</span>의 공동주택.</li>
+        <li><strong>계단 및 계단참 설치 치수 기준</strong>:
+            <ul>
+                <li><span class="highlight-blue">공동사용 계단</span>: 유효폭 <span class="highlight-blue">120센티미터 이상</span>(성인 어깨 60cm×2인 기준), 단높이 <span class="highlight-blue">18센티미터 이하</span>, 단너비 <span class="highlight-blue">26센티미터 이상</span>.</li>
+                <li><span class="highlight-purple">옥외계단</span>: 유효폭 <span class="highlight-purple">90센티미터 이상</span>, 단높이 <span class="highlight-purple">20센티미터 이하</span>, 단너비 <span class="highlight-purple">24센티미터 이상</span>.</li>
+                <li><span class="highlight-red">계단참 기준</span>: 높이 <span class="highlight-red">2미터</span>를 넘는 계단에는 높이 <span class="highlight-red">2미터</span> 이내마다 계단참 설치 (너비 <span class="highlight-red">120센티미터 이상</span>). 단, 기계실/물탱크실은 <span class="highlight-green">3미터 이내마다</span>, 1층 출입구 계단은 <span class="highlight-purple">2.5미터 이내마다</span> 설치 가능.</li>
+            </ul>
+        </li>
+        <li><strong>동 출입구, 복도 및 난간 설치 기준</strong>:
+            <ul>
+                <li><span class="highlight-blue">동 출입구 안전유리</span>: <span class="highlight-blue">45킬로그램</span>의 추가 <span class="highlight-blue">75센티미터</span> 높이에서 낙하하는 충격량에 관통되지 아니하는 유리. 각 동 출입구에 전자출입시스템 및 각 동 옥상 출입문에는 <span class="highlight-red">비상문 자동개폐장치</span> 설치.</li>
+                <li><span class="highlight-purple">중복도 개구부</span>: 중복도에는 채광 및 통풍을 위해 <span class="highlight-purple">40미터 이내마다</span> 1개소 이상 외기에 면하는 개구부 설치.</li>
+                <li><span class="highlight-red">난간 치수</span>: 높이는 바닥 마감면에서 <span class="highlight-red">120센티미터 이상</span> (내부계단 등 위험이 적은 장소는 <span class="highlight-blue">90센티미터 이상</span>). 간살 간격은 안목치수 <span class="highlight-red">10센티미터 이하</span>.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+        5. 발코니 정의 및 대피공간·하향식 피난구 핵심 기준
+    </h2>
+    <ul>
+        <li><strong>발코니의 용어 정의 (건축법 시행령 제2조제14호)</strong>:
+            <ul>
+                <li>건축물의 내부와 외부를 연결하는 <span class="highlight-red">완충공간</span>으로서 전망이나 휴식 등의 목적으로 건축물 <span class="highlight-blue">외벽에 접하여 부가적으로 설치되는 공간</span>.</li>
+            </ul>
+        </li>
+        <li><strong>대피공간 설치 대상 및 요건 (건축법 시행령 제46조제4항)</strong>:
+            <ul>
+                <li><span class="highlight-purple">설치 대상</span>: 아파트로서 <span class="highlight-red">4층 이상인 층</span>의 각 세대가 2개 이상의 직통계단을 사용할 수 없는 경우 (※ 복도형은 양쪽 계단 사용 가능하므로 제외, 계단실형 아파트가 주요 설치 대상).</li>
+                <li><span class="highlight-blue">대피공간 구조 요건</span>:
+                    <ul>
+                        <li>바깥의 공기와 접할 것 (외기 접촉). 실내의 다른 부분과 방화구획으로 구획될 것.</li>
+                        <li><span class="highlight-red">바닥면적</span>: 인접 세대와 공동 설치 시 <span class="highlight-red">3제곱미터 이상</span>, 각 세대별 설치 시 <span class="highlight-red">2제곱미터 이상</span>.</li>
+                        <li><span class="highlight-purple">출입문 성능</span>: 반드시 <span class="highlight-purple">60분+ 방화문</span>으로 설치할 것.</li>
+                    </ul>
+                </li>
+                <li><span class="highlight-green">대피공간 미설치 예외 사유</span>: 인접 세대와의 경계벽이 파괴하기 쉬운 경량구조인 경우, 경계벽에 피난구를 설치한 경우, 발코니 바닥에 하향식 피난구 또는 승강식 피난기를 설치한 경우 등.</li>
+            </ul>
+        </li>
+        <li><strong>하향식 피난구의 세부 기술 기준 (건축물 피난·방화구조 규칙)</strong>:
+            <ul>
+                <li>피난구 덮개: 1시간 이상 비열차단/차염 성능. 유효 개구부 규격은 <span class="highlight-red">직경 60센티미터 이상</span>(성인 어깨너비 기준).</li>
+                <li>위치 이격: 상층과 하층의 피난구 수평거리는 <span class="highlight-blue">15센티미터 이상</span> 떨어질 것 (직통 하강 금지).</li>
+                <li>사다리 내림 길이는 아래층 바닥면에서 <span class="highlight-purple">50센티미터 이하</span>까지 내려올 것. 아래층에서는 위층 덮개를 열 수 없는 구조일 것. 개방 시 경보음 작동 및 예비전원 조명설비 설치.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+            💡 [수험 핵심 팁] 제46강 실전 출제 포인트 & 함정 방지 체크
+        </div>
+        <ul>
+            <li><strong>주택단지 분리 도로 수치 함정</strong>: 일반도로는 <span class="highlight-red">20미터 이상</span> / 도시계획예정도로 및 국지도는 <span class="highlight-blue">8미터 이상</span> (숫자 서로 바꿔치기 주의!).</li>
+            <li><strong>부대시설 vs 복리시설 구별</strong>: 관리사무소·주차장·담장·도로·정화조·경비실·공중화장실 = <span class="highlight-blue">부대시설</span> / 경로당·어린이놀이터·유치원·상가 = <span class="highlight-purple">복리시설</span>.</li>
+            <li><strong>간선시설 단지 안 포함 3가지</strong>: <span class="highlight-red">가스시설, 통신시설, 지역난방시설</span> (가·통·지).</li>
+            <li><strong>경계벽 및 바닥 두께 수치</strong>: 철근콘크리트 경계벽 <span class="highlight-red">15cm</span>, 조적/벽돌 <span class="highlight-blue">20cm</span> / 바닥 슬래브 일반 <span class="highlight-red">210mm</span>, 라멘 <span class="highlight-blue">150mm</span>.</li>
+            <li><strong>대피공간 수치 및 방화문</strong>: 아파트 <span class="highlight-purple">4층 이상</span> 대상, 공동 <span class="highlight-red">3m² 이상</span>, 세대별 <span class="highlight-red">2m² 이상</span>, 출입문은 반드시 <span class="highlight-purple">60분+ 방화문</span>!</li>
+            <li><strong>하향식 피난구 수치</strong>: 개구부 직경 <span class="highlight-red">60cm 이상</span>, 상하층 수평이격 <span class="highlight-blue">15cm 이상</span>, 사다리 바닥 <span class="highlight-purple">50cm 이하</span>.</li>
+        </ul>
+    </div>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>주관식 단답형 및 빈칸 채우기 실전 훈련</h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡)에 들어갈 알맞은 핵심 용어나 법정 수치, 단위를 아래 빈칸에 직접 작성해 보십시오.</p>
+
+    <ol class="quiz-list">
+        <li>
+            주택단지를 분리하는 도로 중 일반도로는 폭 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이상, 도시계획예정도로는 폭 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이상인 경우 각각 별개의 주택단지로 본다.
+        </li>
+        <li>
+            보행자 및 자동차의 통행이 가능한 국지도로로서 폭 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이상인 도로로 분리된 토지는 각각 별개의 주택단지로 본다.
+        </li>
+        <li>
+            주택에 딸린 주차장, 관리사무소, 담장, 주택단지 안의 도로, 보안등, 경비실 등은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )에 해당한다.
+        </li>
+        <li>
+            주택단지 입주자등의 생활복리를 위한 어린이놀이터, 근린생활시설, 유치원, 주민운동시설, 경로당 등은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )에 해당한다.
+        </li>
+        <li>
+            도로, 상하수도, 전기, 가스, 통신, 지역난방시설 등 주택단지 안의 기간시설을 단지 밖의 같은 종류 기간시설에 연결시키는 시설을 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이라 한다.
+        </li>
+        <li>
+            간선시설 중 가스시설, 통신시설 및 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )시설의 경우에는 주택단지 안의 기간시설을 포함한다.
+        </li>
+        <li>
+            건축법령상 화재에 견딜 수 있는 성능을 가진 구조를 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )구조라 하고, 화염의 확산을 막을 수 있는 성능을 가진 구조를 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )구조라 한다.
+        </li>
+        <li>
+            불에 타지 아니하는 성능을 가진 재료를 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )재료라 하고, 불에 잘 타지 아니하는 성능을 가진 재료를 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )재료라 한다.
+        </li>
+        <li>
+            연기 및 불꽃을 차단할 수 있는 시간이 60분 이상이고, 열을 차단할 수 있는 시간이 30분 이상인 방화문을 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 방화문이라 한다.
+        </li>
+        <li>
+            거실 및 침실의 반자높이는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이상으로 하고, 층높이는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이상으로 해야 한다.
+        </li>
+        <li>
+            세대 간 경계벽의 두께는 철근콘크리트조의 경우 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )센티미터 이상, 벽돌조나 석조의 경우 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )센티미터 이상, 조립식 콘크리트판의 경우 ( ㉢&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )센티미터 이상이어야 한다.
+        </li>
+        <li>
+            공동주택 세대 내 층간바닥의 콘크리트 슬래브 두께는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )밀리미터 이상으로 하되, 라멘구조인 경우에는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )밀리미터 이상으로 해야 한다.
+        </li>
+        <li>
+            벽체의 접합부위 등에 국토교통부장관이 정하여 고시하는 결로방지 성능을 갖추어야 하는 공동주택은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )세대 이상이다.
+        </li>
+        <li>
+            공동으로 사용하는 계단의 유효폭은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )센티미터 이상, 단높이는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )센티미터 이하, 단너비는 ( ㉢&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )센티미터 이상이어야 한다.
+        </li>
+        <li>
+            주택단지 안 각 동 출입문에 사용하는 유리는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )킬로그램의 추가 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )센티미터 높이에서 낙하하는 충격량에 관통되지 아니하는 안전유이어야 한다.
+        </li>
+        <li>
+            중복도형 공동주택의 중복도에는 채광 및 통풍이 원활하도록 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이내마다 1개소 이상 외기에 면하는 개구부를 설치해야 한다.
+        </li>
+        <li>
+            난간의 높이는 바닥 마감면으로부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )센티미터 이상이어야 하고, 난간 간살의 간격은 안목치수 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )센티미터 이하이어야 한다.
+        </li>
+        <li>
+            건축물의 내부와 외부를 연결하는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )공간으로서 전망이나 휴식 등의 목적으로 건축물 외벽에 접하여 부가적으로 설치되는 공간을 발코니라 한다.
+        </li>
+        <li>
+            공동주택 중 아파트로서 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )층 이상인 층의 각 세대가 2개 이상의 직통계단을 사용할 수 없는 경우 발코니에 대피공간을 설치해야 한다.
+        </li>
+        <li>
+            대피공간의 바닥면적은 인접 세대와 공동으로 설치하는 경우 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )제곱미터 이상, 각 세대별로 설치하는 경우 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )제곱미터 이상이어야 하고, 출입문은 ( ㉢&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 방화문이어야 한다.
+        </li>
+    </ol>
+
+    <!-- 수험생 정답 확인용 하단 3열 배치 그리드 영역 -->
+    <div style="font-size: 9.5pt; color: #666666; margin-top: 30px; padding: 15px; border-top: 1px dashed #666666; line-height: 1.8;">
+        <strong style="display: block; margin-bottom: 10px; color: #333333;">[제46강 주관식 단답형 정답 리스트]</strong>
+        <div class="answer-grid">
+            <div><strong>1.</strong> ㉠ 20, &nbsp; ㉡ 8</div>
+            <div><strong>2.</strong> ㉠ 8</div>
+            <div><strong>3.</strong> ㉠ 부대시설</div>
+            <div><strong>4.</strong> ㉠ 복리시설</div>
+            <div><strong>5.</strong> ㉠ 간선시설</div>
+            <div><strong>6.</strong> ㉠ 지역난방</div>
+            <div><strong>7.</strong> ㉠ 내화, &nbsp; ㉡ 방화</div>
+            <div><strong>8.</strong> ㉠ 불연, &nbsp; ㉡ 난연</div>
+            <div><strong>9.</strong> ㉠ 60분+</div>
+            <div><strong>10.</strong> ㉠ 2.2, &nbsp; ㉡ 2.4</div>
+            <div><strong>11.</strong> ㉠ 15, &nbsp; ㉡ 20, &nbsp; ㉢ 12</div>
+            <div><strong>12.</strong> ㉠ 210, &nbsp; ㉡ 150</div>
+            <div><strong>13.</strong> ㉠ 500</div>
+            <div><strong>14.</strong> ㉠ 120, &nbsp; ㉡ 18, &nbsp; ㉢ 26</div>
+            <div><strong>15.</strong> ㉠ 45, &nbsp; ㉡ 75</div>
+            <div><strong>16.</strong> ㉠ 40</div>
+            <div><strong>17.</strong> ㉠ 120, &nbsp; ㉡ 10</div>
+            <div><strong>18.</strong> ㉠ 완충</div>
+            <div><strong>19.</strong> ㉠ 4</div>
+            <div><strong>20.</strong> ㉠ 3, &nbsp; ㉡ 2, &nbsp; ㉢ 60분+</div>
+        </div>
+    </div>
+
+</body>
+</html>
