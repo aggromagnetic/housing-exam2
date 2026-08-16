@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 - 제51강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+            letter-spacing: -0.05em;
+        }
+        
+        h1 {
+            font-size: 12pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        /* 토너 절약 4색 시각 강조 클래스 */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #16803d; 
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #6d28d9; 
+        }
+        
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        ol.quiz-list {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+            line-height: 2.1;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        /* 정답 리스트 3열 격자 레이아웃 */
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px 15px;
+        }
+
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        제51강. 시설관리/관계법규: 초고층 건축물 급수존잉(Water Supply Zoning), 급수 오염 원인 및 방지대책(크로스 커넥션), 급수관 관경 결정 방법, 급수 배관 구배 및 특수 밸브, 수격작용(Water Hammering) 원인과 대책
+    </h1>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        1. 초고층 건축물 급수존잉(Zoning)의 목적, 허용 최고수압 및 주요 방식 비교
+    </h2>
+    <ul>
+        <li><strong>단일계통(비존잉)의 문제점 및 존잉의 근본 목적 (★단골 출제 함정)</strong>:
+            <ul>
+                <li><span class="highlight-blue">단일계통 구조</span>: 구획(Zoning)을 하지 않은 급수 방식으로, 어떤 급수방식(고가수조, 부스터, 수도직결 등)이든 <span class="highlight-red">저층부(최하층)의 수압이 가장 크고, 고층부(최고층)의 수압이 가장 약함</span>.</li>
+                <li><span class="highlight-red">급수존잉의 주된 목적</span>: <span class="highlight-red">저층부(최하층)의 과도한 수압을 감압(줄임)</span>하여 수격작용 방지, 배관 및 위생기구 파손 방지, 소음 및 소모 감소를 달성함. (<span class="highlight-red">고층부 수압을 줄이는 목적이라고 출제 시 100% 오답!</span>)</li>
+                <li><span class="highlight-purple">중간수조 설치 목적</span>: 급수존잉 목적과 동일하게 <span class="highlight-purple">저층부 수압을 감소</span>시키기 위함.</li>
+            </ul>
+        </li>
+        <li><strong>주택의 법정 허용 최고 수압 및 감압밸브 설치 기준</strong>:
+            <ul>
+                <li><span class="highlight-red">주택(아파트) 허용 최고 수압</span>: <span class="highlight-red">0.4 MPa (400 kPa)</span>를 초과하지 않아야 함. (0.4 MPa 초과 시 감압밸브 설치 필수).</li>
+                <li><span class="highlight-blue">존잉 높이 구획 기준</span>: 보통 수두 <span class="highlight-blue">30m ~ 40m 마다</span> 하나의 존(Zone)으로 존잉을 실시함.</li>
+                <li><span class="highlight-purple">감압밸브 부착 목적 함정 방지</span>: "급수압이 0.4 MPa을 초과하는 계층에 감압밸브를 부착하는 목적은 수질오염 방지이다" &rarr; <span class="highlight-red">오답! (수압 감소 및 존잉 목적임)</span>.</li>
+            </ul>
+        </li>
+        <li><strong>대표적인 급수존잉 방식 종류 및 출제 구분</strong>:
+            <ul>
+                <li><span class="highlight-blue">중간수조 방식</span>: 층별식(각 층별 저수조 독립 급수) 및 중계식(단계별 펌핑 급수).</li>
+                <li><span class="highlight-purple">감압밸브 방식</span>: 감압밸브를 이용하여 저층부 수압을 적정 압력으로 감압.</li>
+                <li><span class="highlight-green">부스터 펌프(펌프 직수) 존잉 방식</span>: 저층부 전용 펌프와 고층부 전용 펌프를 분리 설치하여 감압.</li>
+                <li><span class="highlight-red">출제 단골 오답 함정</span>: <span class="highlight-red">안전밸브 방식</span>은 과압 방지용 안전장치일 뿐, 급수존잉 방식이 아니므로 존잉 방식 분류에 해당하지 않음!</li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">급수존잉 구분</th>
+                <th style="width: 45%;">핵심 개념 및 특징</th>
+                <th style="width: 30%;">수험 출제 포인트</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th><span class="highlight-red">단일계통 (비존잉)</span></th>
+                <td>존잉 미실시 계통으로 <span class="highlight-red">저층부 수압 최대</span>, 고층부 수압 최소</td>
+                <td>저층부 수압 감압 필요성 발생 원인</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-blue">존잉 목적</span></th>
+                <td><span class="highlight-red">저층부(최하층) 수압 감압</span> &rarr; 수격작용 및 기구 손상 방지</td>
+                <td>고층부 수압 감압 목적 지문은 오답</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-purple">법정 최고 수압</span></th>
+                <td>주택 화장실 급수 기준 <span class="highlight-red">0.4 MPa 이하</span> (존잉 높이 30~40m)</td>
+                <td>0.4 MPa 초과 시 감압밸브 필수 설치</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-green">존잉 방식 구분</span></th>
+                <td>중간수조 방식, 감압밸브 방식, 부스터 펌프 분리 방식 등</td>
+                <td><span class="highlight-red">안전밸브 방식</span>은 존잉 방식이 아님</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        2. 급수 오염 원인 5가지 및 완벽 방지대책 (★크로스 커넥션 집중 분석)
+    </h2>
+    <ul>
+        <li><strong>급수 오염의 5대 주요 원인 (※ 수격작용은 오염 원인이 아님!)</strong>:
+            <ol>
+                <li><span class="highlight-blue">정체수 발생</span>: 물이 오랫동안 고여 있으면 소독 성분인 <span class="highlight-red">잔류염소가 감소</span>하여 세균 및 오염 진행.</li>
+                <li><span class="highlight-purple">저수조 유해물질 침입</span>: 맨홀이나 오버플로관을 통해 미생물·벌레·이물질 침입.</li>
+                <li><span class="highlight-green">조류(Algae) 증식</span>: 저수조로 햇빛이 투과되어 이끼 및 미생물 증식.</li>
+                <li><span class="highlight-red">배수의 급수 역류</span>: 일시적 음압(부압) 발생으로 오수·배수가 급수관으로 역류.</li>
+                <li><span class="highlight-red">크로스 커넥션 (Cross Connection)</span>: 급수관과 타 목적 배관의 직접 연결(오접합).</li>
+            </ol>
+        </li>
+        <li><strong>유형별 급수 오염 방지대책 정밀 정리</strong>:
+            <ul>
+                <li><span class="highlight-blue">정체수 오염 방지</span>: 저수조 용량을 적정화하고, 유입구와 유출구의 거리를 가급적 <span class="highlight-red">멀게(길게) 배치</span>함. (잔류염소 증가로 오염이 발생한다거나, 유입구-유출구 거리를 짧게 배정 시 오답!).</li>
+                <li><span class="highlight-purple">저수조 및 배관 방지</span>: 맨홀 및 오버플로관(월류관)에 <span class="highlight-purple">방충망(세목스크린)</span> 설치. 오버플로관 배수는 오염 역류 방지를 위해 반드시 <span class="highlight-red">간접배수</span> 적용!</li>
+                <li><span class="highlight-green">조류 증식 방지</span>: 햇빛을 차단할 수 있는 <span class="highlight-green">차광성 재료</span>로 저수조 제작 (투광성 재료 사용 시 100% 오답!).</li>
+                <li><span class="highlight-red">배수 역류 방지 및 진공파괴기</span>:
+                    <ul>
+                        <li>역류 발생 원인은 <span class="highlight-red">역사이폰 작용(Back Siphonage)</span>임 (자기사이폰 작용이 아님!).</li>
+                        <li>토수공간(Air Gap) 확보, 역류방지밸브(체크밸브), <span class="highlight-red">진공파괴기(Vacuum Breaker)</span> 설치.</li>
+                        <li><span class="highlight-purple">플러시밸브식(세정밸브식) 대변기</span>: 대변기 세정 시 순간 부압 발생으로 배수가 역류할 수 있으므로 <span class="highlight-red">진공파괴기 필수 설치</span>! (세정탱크식은 볼탭이 차단하므로 진공파괴기 미설치).</li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li><strong>크로스 커넥션(Cross Connection) 정의 및 엄격 금지 원칙 (★주관식 단골)</strong>:
+            <ul>
+                <li><span class="highlight-red">정의</span>: 음용수(급수) 배관과 음용수 외의 다른 목적(소방, 잡배수, 중수 등) 배관이 직접 연결(오접합)되어 음용수가 오염되는 현상.</li>
+                <li><span class="highlight-red">금지 원칙</span>: <span class="highlight-red">어떠한 목적(공사비 절감, 공간 절약 등)으로든 음용수 배관은 다른 목적 배관과 직접 연결(크로스 커넥션)해서는 아니 됨</span>!</li>
+                <li><span class="highlight-blue">방지대책</span>: 오접합 방지를 위해 배관 계통별로 <span class="highlight-blue">배관 도색(색상)을 다르게</span> 시공함.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        3. 급수관 관경 결정 4가지 방법 및 기구급수부하단위(FU) 기준
+    </h2>
+    <ul>
+        <li><strong>급수관 관경 산정 4가지 주요 방법</strong>:
+            <ol>
+                <li><span class="highlight-blue">기구 연결관의 관경 결정</span>: 위생기구별 법정 최소 관경 규격 적용.</li>
+                <li><span class="highlight-purple">관균등표(관경동등표)에 의한 방법</span>: 소규모 급수관 및 수평지관의 관경 결정에 적용.</li>
+                <li><span class="highlight-red">마찰손실선도법 (유량선도법)</span>: 수평주관, 입상관 등 대규모 급수관의 관경 결정에 적용.</li>
+                <li><span class="highlight-green">기구급수부하단위(FU) 및 동시사용률 적용 계산법</span>: 동시사용 수량을 고려하여 관경 결정.</li>
+            </ol>
+        </li>
+        <li><strong>주요 위생기구별 급수 연결관 최소 관경 수치</strong>:
+            <ul>
+                <li><span class="highlight-red">플러시밸브식(세정밸브식) 대변기</span>: 최소 <span class="highlight-red">25밀리미터 이상</span> (순간 세정수가 크게 필요함).</li>
+                <li><span class="highlight-blue">세정탱크식 대변기 및 일반 세면기</span>: 최소 <span class="highlight-blue">10 ~ 15밀리미터 이상</span>.</li>
+            </ul>
+        </li>
+        <li><strong>기구급수부하단위(Fixure Unit, FU) 정의 및 기준 기구 (★필수 암기 수치)</strong>:
+            <ul>
+                <li><span class="highlight-red">기준 기구 및 수량</span>: <span class="highlight-red">세면기</span>의 1분당 급수량인 <span class="highlight-red">30리터/분 (30 L/min)</span>을 <span class="highlight-red">1 FU (1단위)</span> 기준으로 설정하여 상대적 부하 환산. (※ 배수부하단위 기준 28.5 L/min과 구별 필수!).</li>
+                <li><span class="highlight-purple">부하단위 비교</span>: <span class="highlight-purple">공중용 위생기구 > 개인용 위생기구</span>.</li>
+                <li><span class="highlight-blue">최대 vs 최소 기구</span>: 부하단위가 가장 큰 기구 = <span class="highlight-red">플러시밸브식 대변기</span> / 가장 작은 기구 = <span class="highlight-blue">세면기</span>.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">관경 결정 산정 방식</th>
+                <th style="width: 45%;">적용 배관 및 핵심 특성</th>
+                <th style="width: 30%;">시험 출제 포인트</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th><span class="highlight-blue">관균등표 방식</span></th>
+                <td>소규모 급수관 및 <span class="highlight-blue">수평지관</span> 적용</td>
+                <td>대규모 급수관 적용 시 오답 지문</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-red">마찰손실선도법</span></th>
+                <td>대규모 급수관 (<span class="highlight-red">수평주관, 입상관</span> 등) 적용</td>
+                <td>유량선도법과 동일 용어</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-purple">기구급수부하단위(FU)</span></th>
+                <td><span class="highlight-red">세면기 1분당 30L/min = 1 FU</span> 기준</td>
+                <td>소변기/대변기 기준 지문 오답</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-green">기구 관경 규격</span></th>
+                <td>플러시밸브 대변기 = <span class="highlight-red">25mm 이상</span><br>세정탱크 대변기/세면기 = <span class="highlight-blue">10~15mm 이상</span></td>
+                <td>플러시밸브 관경이 가장 큼 (25mm)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4 4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg>
+        4. 급수 배관 구배(기울기) 수치 및 주요 특수 밸브(공기빼기·배니·지수·체크)
+    </h2>
+    <ul>
+        <li><strong>급수 배관 구배(기울기) 원칙 및 수치 (★1/250 및 상향 구배)</strong>:
+            <ul>
+                <li><span class="highlight-red">원칙적 기울기</span>: 급수 배관은 수리 및 물 빼기가 용이하도록 <span class="highlight-red">상향 기울기(상향 구배)</span>로 배관함.</li>
+                <li><span class="highlight-blue">표준 기울기 수치</span>: 급수관의 모든 표준 기울기는 <span class="highlight-blue">250분의 1 (1/250)</span>을 표준으로 함.</li>
+                <li><span class="highlight-purple">하향 급수방식 세부 구배</span>: 수평주관은 선하향 구배, 각 층 수평지관은 선상향 구배 적용. (옥상수조 연결 수평관만 하향 구배).</li>
+            </ul>
+        </li>
+        <li><strong>배관 내 주요 특수 밸브의 역할 및 설치 위치 (★기능 구별 단골)</strong>:
+            <ul>
+                <li><span class="highlight-blue">공기빼기밸브 (에어 빼기 밸브)</span>: 굴곡배관(기역자 등) 상부에 설치하여 공기 정체로 인한 통수 장애 방지. (<span class="highlight-red">공기실/에어챔버는 수격작용 방지용으로 공기빼기밸브와 전혀 다름!</span>).</li>
+                <li><span class="highlight-purple">배니밸브 (드레인밸브 / 찌꺼기밸브)</span>: 배관 말단부나 저수조 하부에 설치하여 슬러지, 찌꺼기 및 불순물 배출.</li>
+                <li><span class="highlight-green">테스트밸브 (퇴수밸브 / 탈수밸브)</span>: 수평 고임부 배관의 물을 완전히 빼내기 위해 설치.</li>
+                <li><span class="highlight-red">지수밸브 (지수전)</span>: 세대 수도계량기 전면 또는 위생기구 하부에 설치하여 국부적 단수 및 수량·수압 조절.</li>
+                <li><span class="highlight-blue">수직배관 체크밸브 및 수격방지기</span>:
+                    <ul>
+                        <li>수직 급수배관 계통에는 펌프 정지 시 역에너지 분산을 위해 <span class="highlight-purple">20m ~ 30m 마다 체크밸브</span> 설치.</li>
+                        <li>체크밸브의 <span class="highlight-red">상단 측</span>에는 수격작용 방지를 위한 <span class="highlight-red">워터해머 흡수기(공기실)</span>를 필수 설치!</li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+        5. 수격작용(Water Hammering) 발생 원인, 우려 위치 및 방지대책 정밀 정리
+    </h2>
+    <ul>
+        <li><strong>수격작용(Water Hammering, 물망치 현상) 정의 및 비례 관계</strong>:
+            <ul>
+                <li>급수 배관 내 흐르던 유속이 급정지할 때 관 내에 발생하는 급격한 압력 상승으로 충격음과 진동이 발생하는 현상.</li>
+                <li><span class="highlight-red">압력 상승과의 비례·반비례 관계</span>: 압력 상승은 유속(V)에 <span class="highlight-red">정비례</span>하고, 관경(D)에 <span class="highlight-purple">반비례</span>함.</li>
+            </ul>
+        </li>
+        <li><strong>수격작용 발생 주요 원인 (★시험 출제 유인)</strong>:
+            <ol>
+                <li>배관 내 <span class="highlight-red">상용 수압이 높을 때</span> (낮을 때가 아님!).</li>
+                <li>배관 내 <span class="highlight-blue">유속이 빠를 때</span> (느릴 때가 아님!).</li>
+                <li>배관의 <span class="highlight-purple">관경이 작을 때</span> (크릴 때가 아님!).</li>
+                <li>수전 및 밸브를 <span class="highlight-red">급히 닫을 때</span> (급폐성 수전 사용 시).</li>
+                <li>굴곡배관(곡관) 및 꺾임 부분이 많을 때.</li>
+                <li>배관의 양정이 높을 때 / 감압밸브를 미설치하여 저층부 수압이 과도할 때.</li>
+            </ol>
+        </li>
+        <li><strong>수격작용 발생 우려 위치 및 방지대책 (★실전 출제 단골)</strong>:
+            <ul>
+                <li><span class="highlight-red">발생 우려 위치</span>: 급폐성 수도꼭지 부근, 물탱크 볼탭 급정지 부근, 펌프 토출측 <span class="highlight-red">체크밸브 상단</span> (하단이 아님!), 전자밸브 및 모터밸브 부근. (<span class="highlight-blue">완폐성 수도꼭지나 체크밸브 하단은 수격작용 우려 장소가 아님!</span>).</li>
+                <li><span class="highlight-green">수격작용 방지 대책</span>:
+                    <ul>
+                        <li>배관 관경을 크게 하고, 유속을 <span class="highlight-green">느리게(낮게) 유속 제어</span>.</li>
+                        <li>밸브 및 수도꼭지를 <span class="highlight-blue">천천히 닫음</span> (완폐성 수전 사용).</li>
+                        <li>수전 및 밸브 근처에 <span class="highlight-red">공기실(에어챔버 / 수격방지기)</span> 설치.</li>
+                        <li>저층부 배관에 <span class="highlight-purple">감압밸브</span>를 설치하여 수압 적정 유지.</li>
+                        <li>굴곡 배관을 지양하고 <span class="highlight-blue">직선 배관으로 설계</span>.</li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+    </ul>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+            💡 [수험 핵심 팁] 제51강 실전 출제 포인트 & 함정 방지 체크
+        </div>
+        <ul>
+            <li><strong>급수존잉 수치 및 목적</strong>: 급수존잉의 목적 = <span class="highlight-red">저층부 수압 감압</span> (고층부 감압 X). 주택 허용 최고수압 = <span class="highlight-red">0.4 MPa</span>, 존잉 높이 = <span class="highlight-blue">30~40m</span>. <span class="highlight-purple">안전밸브 방식</span>은 존잉 방식이 아님!</li>
+            <li><strong>오염 방지 수치 및 용어</strong>: 정체수 방지 = 유입구-유출구 거리 <span class="highlight-red">멀게</span> 배치, 잔류염소 <span class="highlight-blue">감소</span> 방지. 조류 방지 = <span class="highlight-green">차광성 재료</span>. 오버플로관 = <span class="highlight-purple">간접배수</span>. 역류 = <span class="highlight-red">역사이폰 작용</span>, 플러시밸브식 대변기에는 <span class="highlight-red">진공파괴기(버큠브레이커)</span> 필수!</li>
+            <li><strong>크로스 커넥션 금지</strong>: 음용수 배관과 타 목적 배관의 직접 연결은 <span class="highlight-red">어떠한 목적으로든 절대 금지</span>! 대책 = 배관 <span class="highlight-blue">도색 구분</span>.</li>
+            <li><strong>관경 산정 및 FU 기준</strong>: 대규모 배관 = <span class="highlight-red">마찰손실선도법</span>, 소규모 배관 = <span class="highlight-blue">관균등표</span>. 기구부하단위 기준 = <span class="highlight-purple">세면기 1분당 30L/min = 1 FU</span>. 플러시밸브 대변기 = <span class="highlight-red">25mm 이상</span>.</li>
+            <li><strong>구배 및 특수 밸브</strong>: 급수관 표준 구배 = <span class="highlight-red">1/250 상향 구배</span>. 공기 정체 = <span class="highlight-blue">공기빼기밸브</span>, 오물 배출 = <span class="highlight-purple">배니밸브</span>, 국부 단수 = <span class="highlight-green">지수밸브</span>, 체크밸브 <span class="highlight-red">상단</span>에 수격방지기 설치!</li>
+            <li><strong>수격작용 비례 수치</strong>: 발생 원인 = 상용 수압 <span class="highlight-red">높을 때</span>, 유속 <span class="highlight-blue">빠를 때</span>(유속에 비례), 관경 <span class="highlight-purple">작을 때</span>(관경에 반비례), <span class="highlight-red">급폐성 수전</span>. 우려 위치 = 체크밸브 <span class="highlight-red">상단</span>. 대책 = <span class="highlight-green">공기실(에어챔버)</span> 및 감압밸브 설치.</li>
+        </ul>
+    </div>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>주관식 단답형 및 빈칸 채우기 실전 훈련</h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡, ㉢)에 들어갈 알맞은 핵심 용어나 법정 수치, 단위를 아래 빈칸에 직접 작성해 보십시오.</p>
+
+    <ol class="quiz-list">
+        <li>
+            초고층 건축물 급수계통에서 존잉을 하지 않은 단일계통은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )부의 수압이 가장 크고, ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )부의 수압이 가장 약하다.
+        </li>
+        <li>
+            급수존잉 및 중간수조를 설치하는 가장 주된 목적은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )부의 수압을 감압(줄임)하여 관이나 기구의 손상 및 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )현상을 방지하기 위함이다.
+        </li>
+        <li>
+            급수존잉 방식 중 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )밸브 방식은 존재하지만, ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )밸브 방식은 과압 방지용 안전장치일 뿐 급수존잉 방식에 해당하지 않는다.
+        </li>
+        <li>
+            아파트 등 주택의 화장실 급수 계통에서 법정 허용 최고 수압은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )MPa이며, 이를 초과하는 계층에는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )밸브를 설치해야 한다.
+        </li>
+        <li>
+            급수오염의 원인 중 하나인 정체수는 물속의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이(가) 감소하여 오염이 진행되며, 이를 방지하기 위해 저수조 유입구와 유출구의 거리를 가급적 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )게 해야 한다.
+        </li>
+        <li>
+            저수조 내 이끼나 미생물이 번식하는 조류 증식을 방지하기 위해 저수조는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )성 재료로 제작해야 하고, 월류관(원류관)은 오염 역류 방지를 위해 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )배수 방식으로 연결해야 한다.
+        </li>
+        <li>
+            배수의 급수 역류 현상은 주로 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )사이폰 작용에 의해 발생하며, 세정밸브식(플러시밸브식) 대변기에는 배수 역류 방지를 위해 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )을(를) 필수적으로 설치해야 한다.
+        </li>
+        <li>
+            음용수 급수배관이 음용수 외의 다른 목적 배관과 직접 연결되어 오염되는 현상을 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )(이)라 하며, 이를 방지하기 위해 배관 계통별로 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )을(를) 다르게 해야 한다.
+        </li>
+        <li>
+            급수관 관경 결정 방법 중 수평주관이나 입상관 등 대규모 급수관에는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )선도법(유량선도법)을 적용하고, 수평지관 등 소규모 급수관에는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )표를 적용한다.
+        </li>
+        <li>
+            기구급수부하단위(FU)는 1분당 급수량 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )리터를 1단위로 지정하며, 그 기준이 되는 대표적 위생기구는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이다.
+        </li>
+        <li>
+            위생기구 중 기구급수부하단위가 가장 큰 기구는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )식 대변기이고, 해당 기구의 급수 연결관 관경은 최소 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )밀리미터 이상이어야 한다.
+        </li>
+        <li>
+            개인용과 공중용 위생기구의 급수부하단위를 비교하면 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )용의 부하단위가 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )용보다 크다.
+        </li>
+        <li>
+            급수 배관의 구배(기울기)는 원칙적으로 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 기울기로 설치하며, 모든 급수 배관의 표준 기울기는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 분의 1로 한다.
+        </li>
+        <li>
+            굴곡 배관 등 공기가 정체되기 쉬운 상부에는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )밸브를 설치하고, 배관 말단이나 하부 침전물 배출을 위해서는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )밸브(드레인밸브)를 설치한다.
+        </li>
+        <li>
+            수평 고임부의 물을 빼주기 위해 설치하는 밸브를 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )라 하고, 국부적 단수 및 수량·수압 조절을 위해 설치하는 밸브를 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )밸브라 한다.
+        </li>
+        <li>
+            수직 급수배관 계통에는 유동 정지 시 역에너지 분산을 위해 20~30미터마다 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )밸브를 설치하고, 이 밸브의 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )단 측에는 수격방지기(공기실)를 설치한다.
+        </li>
+        <li>
+            급수 배관 내 유속이 급정지될 때 압력 상승으로 소음과 진동이 발생하는 현상을 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )(이)라 하며, 발생 압력 상승은 유속에 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )하고 관경에 ( ㉢&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )한다.
+        </li>
+        <li>
+            수격작용은 배관 내 상용 수압이 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )을 때, 유속이 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )을 때, 밸브를 ( ㉢&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )히 닫을 때 주로 발생한다.
+        </li>
+        <li>
+            수격작용이 발생할 우려가 있는 위치는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )성 수도꼭지 부근, 물탱크 볼탭 정지 시, 펌프 토출측 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )밸브 상단 등이다.
+        </li>
+        <li>
+            수격작용을 방지하기 위한 대책으로는 관경을 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )게 하고, 유속을 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )게 하며, 밸브 근처에 ( ㉢&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )(에어챔버)을 설치하는 것이다.
+        </li>
+    </ol>
+
+    <!-- 수험생 정답 확인용 하단 3열 배치 그리드 영역 -->
+    <div style="font-size: 9.5pt; color: #666666; margin-top: 30px; padding: 15px; border-top: 1px dashed #666666; line-height: 1.8;">
+        <strong style="display: block; margin-bottom: 10px; color: #333333;">[제51강 주관식 단답형 정답 리스트]</strong>
+        <div class="answer-grid">
+            <div><strong>1.</strong> ㉠ 저층, &nbsp; ㉡ 고층</div>
+            <div><strong>2.</strong> ㉠ 저층, &nbsp; ㉡ 수격작용(워터해머링)</div>
+            <div><strong>3.</strong> ㉠ 감압, &nbsp; ㉡ 안전</div>
+            <div><strong>4.</strong> ㉠ 0.4, &nbsp; ㉡ 감압</div>
+            <div><strong>5.</strong> ㉠ 잔류염소, &nbsp; ㉡ 멀(길)</div>
+            <div><strong>6.</strong> ㉠ 차광, &nbsp; ㉡ 간접</div>
+            <div><strong>7.</strong> ㉠ 역, &nbsp; ㉡ 진공파괴기(버큠브레이커)</div>
+            <div><strong>8.</strong> ㉠ 크로스 커넥션, &nbsp; ㉡ 도색(색상)</div>
+            <div><strong>9.</strong> ㉠ 마찰손실, &nbsp; ㉡ 관균등</div>
+            <div><strong>10.</strong> ㉠ 30, &nbsp; ㉡ 세면기</div>
+            <div><strong>11.</strong> ㉠ 세정밸브(플러시밸브), &nbsp; ㉡ 25</div>
+            <div><strong>12.</strong> ㉠ 공중, &nbsp; ㉡ 개인</div>
+            <div><strong>13.</strong> ㉠ 상향, &nbsp; ㉡ 250</div>
+            <div><strong>14.</strong> ㉠ 공기빼기, &nbsp; ㉡ 배니</div>
+            <div><strong>15.</strong> ㉠ 테스트밸브, &nbsp; ㉡ 지수</div>
+            <div><strong>16.</strong> ㉠ 체크, &nbsp; ㉡ 상</div>
+            <div><strong>17.</strong> ㉠ 수격작용(워터해머링), &nbsp; ㉡ 비례, &nbsp; ㉢ 반비례</div>
+            <div><strong>18.</strong> ㉠ 높, &nbsp; ㉡ 빠를(높), &nbsp; ㉢ 급</div>
+            <div><strong>19.</strong> ㉠ 급폐, &nbsp; ㉡ 체크</div>
+            <div><strong>20.</strong> ㉠ 크, &nbsp; ㉡ 느리(작), &nbsp; ㉢ 공기실</div>
+        </div>
+    </div>
+
+</body>
+</html>
