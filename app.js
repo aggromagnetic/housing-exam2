@@ -9,6 +9,7 @@ let currentView = 'viewer';
 let currentSubjectFilter = '관계법규';
 let currentLecture = null;
 let clozeMaskEnabled = false;
+let currentNoteTheme = localStorage.getItem('housing_exam_note_theme') || 'paper';
 
 // Quiz Mode State
 let currentQuizMode = 'all'; // 'all' (전범위) or 'unit' (단원별)
@@ -23,6 +24,7 @@ let quizStats = {}; // LocalStorage synced: { quizId: { wrongCount, tryCount, we
 document.addEventListener('DOMContentLoaded', async () => {
     loadLocalStats();
     initSidebarState();
+    setNoteTheme(currentNoteTheme);
     await fetchStudyData();
     renderLectureList();
     
@@ -283,6 +285,7 @@ function selectLecture(fileNameOrPath, anchorId = null) {
     iframe.src = targetUrl;
 
     iframe.onload = () => {
+        applyThemeToIframe();
         if (clozeMaskEnabled) {
             applyClozeMaskToIframe();
         }
@@ -296,13 +299,153 @@ function selectLecture(fileNameOrPath, anchorId = null) {
 }
 
 // -------------------------------------------------------------
+// Note Theme Switcher (기본 / 웜 페이퍼 / 소프트 다크)
+// -------------------------------------------------------------
+function setNoteTheme(theme) {
+    currentNoteTheme = theme;
+    try {
+        localStorage.setItem('housing_exam_note_theme', theme);
+    } catch (e) {}
+
+    // Update UI chips
+    document.querySelectorAll('.theme-chip').forEach(el => el.classList.remove('active'));
+    const activeChip = document.getElementById(`btn-theme-${theme}`);
+    if (activeChip) activeChip.classList.add('active');
+
+    applyThemeToIframe();
+    if (clozeMaskEnabled) {
+        applyClozeMaskToIframe();
+    }
+}
+
+function applyThemeToIframe() {
+    const iframe = document.getElementById('note-frame');
+    if (!iframe) return;
+
+    try {
+        const doc = iframe.contentDocument || iframe.contentWindow.document;
+        if (!doc || !doc.head) return;
+
+        let styleEl = doc.getElementById('note-theme-style');
+        if (currentNoteTheme === 'light') {
+            if (styleEl) styleEl.remove();
+            return;
+        }
+
+        if (!styleEl) {
+            styleEl = doc.createElement('style');
+            styleEl.id = 'note-theme-style';
+            doc.head.appendChild(styleEl);
+        }
+
+        if (currentNoteTheme === 'paper') {
+            styleEl.innerHTML = `
+                html, body {
+                    background-color: #f7f4ea !important;
+                    color: #2c2825 !important;
+                }
+                h1, h2, h3, .explanation-title {
+                    color: #1c1917 !important;
+                    border-color: #44403c !important;
+                }
+                table {
+                    background-color: #fdfbf7 !important;
+                    color: #2c2825 !important;
+                }
+                th {
+                    background-color: #ece5d3 !important;
+                    color: #1c1917 !important;
+                    border-color: #78716c !important;
+                }
+                td {
+                    border-color: #a8a29e !important;
+                }
+                .explanation, .quiz-box, .callout, div[style*="background"] {
+                    background-color: #faf7ee !important;
+                    border-color: #a8a29e !important;
+                    color: #2c2825 !important;
+                }
+                .highlight-blue {
+                    color: #1d4ed8 !important;
+                    font-weight: bold !important;
+                }
+                .highlight-red {
+                    color: #b91c1c !important;
+                    font-weight: bold !important;
+                }
+                .highlight-green {
+                    color: #15803d !important;
+                    font-weight: bold !important;
+                }
+                .highlight-purple {
+                    color: #7e22ce !important;
+                    font-weight: bold !important;
+                }
+                .blank-answer {
+                    color: #d6d3c8 !important;
+                }
+            `;
+        } else if (currentNoteTheme === 'dark') {
+            styleEl.innerHTML = `
+                html, body {
+                    background-color: #0f172a !important;
+                    color: #e2e8f0 !important;
+                }
+                h1, h2, h3, .explanation-title {
+                    color: #f8fafc !important;
+                    border-color: #475569 !important;
+                }
+                table {
+                    background-color: #1e293b !important;
+                    color: #e2e8f0 !important;
+                }
+                th {
+                    background-color: #334155 !important;
+                    color: #f8fafc !important;
+                    border-color: #475569 !important;
+                }
+                td {
+                    border-color: #334155 !important;
+                }
+                .explanation, .quiz-box, .callout, div[style*="background"] {
+                    background-color: #1e293b !important;
+                    border-color: #475569 !important;
+                    color: #e2e8f0 !important;
+                }
+                .highlight-blue {
+                    color: #60a5fa !important;
+                    font-weight: bold !important;
+                }
+                .highlight-red {
+                    color: #f87171 !important;
+                    font-weight: bold !important;
+                }
+                .highlight-green {
+                    color: #4ade80 !important;
+                    font-weight: bold !important;
+                }
+                .highlight-purple {
+                    color: #c084fc !important;
+                    font-weight: bold !important;
+                }
+                .blank-answer {
+                    color: #334155 !important;
+                }
+            `;
+        }
+    } catch (e) {
+        console.warn('Iframe theme style error', e);
+    }
+}
+
+// -------------------------------------------------------------
 // Cloze Mask (암기장 모드)
 // -------------------------------------------------------------
 function toggleClozeMask() {
     clozeMaskEnabled = !clozeMaskEnabled;
     const btn = document.getElementById('btn-mask-toggle');
     btn.classList.toggle('active', clozeMaskEnabled);
-    btn.innerText = clozeMaskEnabled ? '🔓 숨김 해제 (원문 보기)' : '🔒 숫자/조문 가리기 (암기장 모드)';
+    btn.innerText = clozeMaskEnabled ? '🔓 숨김 해제 (원문 보기)' : '🔒 숫자/조문 가리기';
 
     applyClozeMaskToIframe();
 }
@@ -311,30 +454,46 @@ function applyClozeMaskToIframe() {
     const iframe = document.getElementById('note-frame');
     try {
         const doc = iframe.contentDocument || iframe.contentWindow.document;
-        if (!doc) return;
+        if (!doc || !doc.head) return;
 
         let styleEl = doc.getElementById('cloze-mask-style');
         if (clozeMaskEnabled) {
             if (!styleEl) {
                 styleEl = doc.createElement('style');
                 styleEl.id = 'cloze-mask-style';
-                styleEl.innerHTML = `
-                    .highlight-red, .highlight-blue, .highlight-purple, .highlight-green {
-                        background-color: #111827 !important;
-                        color: #111827 !important;
-                        user-select: none !important;
-                        border-radius: 4px !important;
-                        padding: 0 4px !important;
-                        cursor: pointer !important;
-                        transition: all 0.2s !important;
-                    }
-                    .highlight-red:hover, .highlight-blue:hover, .highlight-purple:hover, .highlight-green:hover {
-                        background-color: #fef08a !important;
-                        color: #000000 !important;
-                    }
-                `;
                 doc.head.appendChild(styleEl);
             }
+
+            let maskBg = '#111827';
+            let maskColor = '#111827';
+            let maskBorder = 'none';
+
+            if (currentNoteTheme === 'paper') {
+                maskBg = '#443c33';
+                maskColor = '#443c33';
+            } else if (currentNoteTheme === 'dark') {
+                maskBg = '#020617';
+                maskColor = '#020617';
+                maskBorder = '1px solid #3b82f6';
+            }
+
+            styleEl.innerHTML = `
+                .highlight-red, .highlight-blue, .highlight-purple, .highlight-green {
+                    background-color: ${maskBg} !important;
+                    color: ${maskColor} !important;
+                    user-select: none !important;
+                    border-radius: 4px !important;
+                    padding: 0 4px !important;
+                    cursor: pointer !important;
+                    border: ${maskBorder} !important;
+                    transition: all 0.2s !important;
+                }
+                .highlight-red:hover, .highlight-blue:hover, .highlight-purple:hover, .highlight-green:hover {
+                    background-color: #fef08a !important;
+                    color: #000000 !important;
+                    border: none !important;
+                }
+            `;
         } else {
             if (styleEl) styleEl.remove();
         }
