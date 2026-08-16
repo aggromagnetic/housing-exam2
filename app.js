@@ -968,7 +968,7 @@ function normalizeAnswerText(text) {
 function stripUnits(token) {
     if (!token) return '';
     return token
-        .replace(/(\d+)(일|명|년|개|원|만원|억원|세대|호|%|퍼센트)$/i, '$1')
+        .replace(/(\d+)(일|명|년|개월|월|주|개|원|만원|억원|세대|호|%|퍼센트|m|미터|km|cm|mm|m2|㎡|평|층|회|배|시간|분|초|kg|톤|l|리터|도|lux|룩스|v|볼트|w|와트|kw|a|암페어|db|데시벨)$/i, '$1')
         .replace(/(\d+)천만원?/i, '$1000만')
         .replace(/(\d+)천만/i, '$1000만')
         .replace(/(\d+)천/i, '$1000')
