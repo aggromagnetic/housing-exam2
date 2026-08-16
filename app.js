@@ -945,11 +945,21 @@ function finishAndGradeQuiz() {
     renderQuizResult(correctCount, quizQuestions.length, results);
 }
 
+function normalizeFractionAndUnits(text) {
+    if (!text) return '';
+    let s = text.trim();
+    // Normalize Korean fractions: '150분의 1', '150분의1', '150 분의 1' -> '1/150'
+    s = s.replace(/(\d+)\s*분\s*의\s*(\d+)/g, '$2/$1');
+    // Normalize spaces around slash in fractions
+    s = s.replace(/(\d+)\s*\/\s*(\d+)/g, '$1/$2');
+    return s;
+}
+
 function normalizeAnswerText(text) {
     if (!text) return '';
     return text
         .replace(/[㉠㉡㉢㉣㉤]/g, ' ')
-        .replace(/[,;:\/\\|\(\)\[\]·•]/g, ' ')
+        .replace(/[,;:|\\()\[\]·•]/g, ' ')
         .replace(/\s+/g, ' ')
         .trim()
         .toLowerCase();
@@ -965,6 +975,10 @@ function stripUnits(token) {
         .replace(/,/g, '');
 }
 
+function isNumericOrFraction(val) {
+    return /^[\d\/\.\%]+$/.test(val.replace(/\s+/g, ''));
+}
+
 function checkAnswerCorrectness(userAns, realAnsRaw) {
     if (!userAns || !realAnsRaw) return false;
 
@@ -972,17 +986,15 @@ function checkAnswerCorrectness(userAns, realAnsRaw) {
     const symbols = [...new Set([...(userAns + ' ' + realAnsRaw).matchAll(/[㉠㉡㉢㉣㉤]/g)].map(m => m[0]))];
     
     if (symbols.length > 0) {
-        // Extract real answer for each symbol
         let allMatched = true;
         
         for (const sym of symbols) {
-            // Find real answer segment for this symbol
             const symRegex = new RegExp(`${sym}\\s*([^㉠㉡㉢㉣㉤,;]+)`, 'i');
             const realSymMatch = realAnsRaw.match(symRegex);
             const userSymMatch = userAns.match(symRegex);
 
             const realSymVal = realSymMatch ? realSymMatch[1].trim() : '';
-            const userSymVal = userSymMatch ? userSymMatch[1].trim() : (userAns.trim());
+            const userSymVal = userSymMatch ? userSymMatch[1].trim() : '';
 
             if (realSymVal) {
                 const singleMatched = checkSingleBlankValue(userSymVal, realSymVal);
@@ -999,23 +1011,27 @@ function checkAnswerCorrectness(userAns, realAnsRaw) {
         if (allMatched) return true;
     }
 
-    // 2. Global Fuzzy Fallback matching
+    // 2. Global Fallback matching
     return checkSingleBlankValue(userAns, realAnsRaw);
 }
 
 function checkSingleBlankValue(userVal, realValRaw) {
     if (!userVal || !realValRaw) return false;
 
-    // Expand parenthesized options:
-    // e.g. "입주자(소유자)" -> ["입주자(소유자)", "입주자", "소유자"]
-    // e.g. "수용권자(또는 사업주체)" -> ["수용권자(또는 사업주체)", "수용권자", "사업주체"]
+    // 1. Normalize fractions in both userVal and realValRaw first
+    const normUserVal = normalizeFractionAndUnits(userVal);
+    let normRealValRaw = normalizeFractionAndUnits(realValRaw);
+
+    // 2. Protect fractions (e.g. '1/150' -> '__FRAC_1_150__')
+    normRealValRaw = normRealValRaw.replace(/(\d+)\/(\d+)/g, '__FRAC_$1_$2__');
+
     const optionsSet = new Set();
+    const primarySplits = normRealValRaw.split(/\(또는\s*|또는\s*|\/|\|/).filter(Boolean);
     
-    // Split by Slash or OR keywords
-    const primarySplits = realValRaw.split(/\(또는\s*|\/|\|/).filter(Boolean);
     primarySplits.forEach(str => {
-        optionsSet.add(str.trim());
-        const parenMatch = str.match(/^([^(]+)\(([^)]+)\)/);
+        let cleanStr = str.replace(/__FRAC_(\d+)_(\d+)__/g, '$1/$2').trim();
+        if (cleanStr) optionsSet.add(cleanStr);
+        const parenMatch = cleanStr.match(/^([^(]+)\(([^)]+)\)/);
         if (parenMatch) {
             const outside = parenMatch[1].trim();
             const inside = parenMatch[2].replace(/^또는\s*/, '').trim();
@@ -1025,49 +1041,27 @@ function checkSingleBlankValue(userVal, realValRaw) {
     });
 
     const options = Array.from(optionsSet);
-    const normUser = normalizeAnswerText(userVal);
-    const normUserNoSpace = normUser.replace(/\s+/g, '');
-    const userCleanNum = stripUnits(normUserNoSpace);
+    const userClean = normalizeAnswerText(normUserVal).replace(/\s+/g, '');
+    const userCleanNoUnits = stripUnits(userClean);
 
     for (const opt of options) {
-        const normOpt = normalizeAnswerText(opt);
-        const normOptNoSpace = normOpt.replace(/\s+/g, '');
-        const optCleanNum = stripUnits(normOptNoSpace);
+        const optNorm = normalizeFractionAndUnits(opt);
+        const optClean = normalizeAnswerText(optNorm).replace(/\s+/g, '');
+        const optCleanNoUnits = stripUnits(optClean);
 
-        // Direct match
-        if (
-            normUserNoSpace === normOptNoSpace ||
-            userCleanNum === optCleanNum ||
-            normUser.includes(normOpt) ||
-            normOpt.includes(normUser)
-        ) {
+        // Exact match check
+        if (userClean === optClean || userCleanNoUnits === optCleanNoUnits) {
             return true;
         }
 
-        // Token list match
-        const realTokens = normOpt
-            .split(/\s+/)
-            .filter(Boolean)
-            .map(stripUnits)
-            .filter(t => t.length > 0 && t !== '또는' && t !== '등' && t !== '및');
+        // If numeric or fraction, NEVER do fuzzy substring inclusion
+        if (isNumericOrFraction(userCleanNoUnits) || isNumericOrFraction(optCleanNoUnits)) {
+            continue;
+        }
 
-        const userTokens = normUser
-            .split(/\s+/)
-            .filter(Boolean)
-            .map(stripUnits)
-            .filter(t => t.length > 0);
-
-        if (realTokens.length > 0) {
-            let matchedCount = 0;
-            realTokens.forEach(rt => {
-                if (
-                    normUserNoSpace.includes(rt) ||
-                    userTokens.some(ut => ut.includes(rt) || rt.includes(ut))
-                ) {
-                    matchedCount++;
-                }
-            });
-            if (matchedCount >= realTokens.length) {
+        // Text fuzzy match (only for non-numeric words >= 2 chars)
+        if (optClean.length >= 2 && userClean.length >= 2) {
+            if (userClean.includes(optClean) || optClean.includes(userClean)) {
                 return true;
             }
         }
