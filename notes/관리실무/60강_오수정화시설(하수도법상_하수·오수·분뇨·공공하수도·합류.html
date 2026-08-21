@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 - 제60강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+            letter-spacing: -0.05em;
+        }
+        
+        h1 {
+            font-size: 12pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        /* 토너 절약 4색 시각 강조 클래스 */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #16803d; 
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #6d28d9; 
+        }
+        
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        ol.quiz-list {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+            line-height: 2.1;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        /* 정답 리스트 3열 격자 레이아웃 */
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px 15px;
+        }
+
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        제60강. 오수정화시설(하수도법상 하수·오수·분뇨·공공하수도·합류식/분류식 용어정의), 개인하수처리시설(오수처리시설·정화조), 수질오염지표(BOD·COD·DO·SS·SV) 및 개별난방설비 법정 설치기준
+    </h1>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        1. 하수도법상 핵심 용어 정밀 정의 (하수·오수·분뇨·공공하수도·합류식·분류식) 및 출제 함정
+    </h2>
+    <ul>
+        <li><strong>하수 (下水)의 법정 정의 (★출제 빈도 높음)</strong>:
+            <ul>
+                <li>사람의 생활이나 경제활동으로 인하여 액체성 또는 고체성의 물질이 섞이어 오염된 물(<span class="highlight-blue">오수</span>)과 건물·도로 그 밖의 시설물의 부지로부터 하수도로 유입되는 <span class="highlight-blue">빗물 및 지하수</span>를 말함.</li>
+                <li><span class="highlight-red">필수 제외 대상 (★출제 핵심)</span>: <span class="highlight-red">농작물의 경작으로 인한 것은 제외</span>함! (※ "농작물 경작으로 인한 물도 포함한다"고 출제 시 <span class="highlight-red">100% 오답!</span>).</li>
+            </ul>
+        </li>
+        <li><strong>오수 (汚水) vs 분뇨 (糞尿) 개념 정밀 비교 (★단골 함정)</strong>:
+            <ul>
+                <li><span class="highlight-blue">오수</span>: 사람의 생활이나 경제활동으로 물질이 섞여 오염된 물 전체.</li>
+                <li><span class="highlight-purple">분뇨</span>: <span class="highlight-purple">수거식 화장실</span>에서 수거되는 액체성 또는 고체성의 오염물질 및 <span class="highlight-purple">개인하수처리시설의 청소과정에서 발생하는 찌꺼기를 포함</span>함.
+                    <br>&rarr; <span class="highlight-red">출제 함정 1</span>: '수거식 화장실'을 '수세식 화장실'이나 '공중 화장실'로 교체 시 <span class="highlight-red">오답!</span>
+                    <br>&rarr; <span class="highlight-red">출제 함정 2</span>: '개인하수처리시설 청소과정 발생 찌꺼기를 제외한다'고 교체 시 <span class="highlight-red">오답!</span> (찌꺼기 반드시 포함됨).</li>
+            </ul>
+        </li>
+        <li><strong>하수도 (下水道)의 구성 7가지 및 비대상 시설 (★객관식 단골)</strong>:
+            <ul>
+                <li>하수도 = 하수관로, 공공하수처리시설, 간이공공하수처리시설, 하수저류시설, 분뇨처리시설, 배수설비, 개인하수처리시설 및 부속 공작물.</li>
+                <li><span class="highlight-red">하수도 시설에 해당하지 않는 것 (★함정 정답)</span>: <span class="highlight-red">정수시설</span>(수도법상 먹는물 공급시설) 및 <span class="highlight-red">중수도</span>(물 재이용 시설)는 하수도 시설이 <span class="highlight-red">아님!</span></li>
+            </ul>
+        </li>
+        <li><strong>공공하수도 vs 개인하수도</strong>:
+            <ul>
+                <li><span class="highlight-blue">공공하수도</span>: <span class="highlight-blue">지방자치단체가 설치 또는 관리</span>하는 하수도. (<span class="highlight-red">개인하수도는 공공하수도에서 제외</span>됨!).</li>
+                <li><span class="highlight-purple">개인하수도</span>: 건물·시설물 소유자/설치자가 하수를 유출·처리하기 위해 설치하는 배수설비, 개인하수처리시설(아파트 정화조 등) 및 부대시설.</li>
+            </ul>
+        </li>
+        <li><strong>합류식 하수관로 vs 분류식 하수관로 (★주관식 단답형 단골)</strong>:
+            <ul>
+                <li><span class="highlight-red">합류식 하수관로</span>: 오수와 하수도로 유입되는 <span class="highlight-red">빗물·지하수가 함께 흐르도록</span> 하기 위한 하수관로. (★ 건물 내에 반드시 <span class="highlight-red">정화조 설치가 필요</span>함!).</li>
+                <li><span class="highlight-blue">분류식 하수관로</span>: 오수와 하수도로 유입되는 <span class="highlight-blue">빗물·지하수가 각각 구분되어 흐르도록</span> 하기 위한 하수관로. (★ 분류식 구역 내에서는 건물 내 <span class="highlight-blue">정화조 설치가 불필요/제외</span>됨!).</li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 20%;">법정 용어</th>
+                <th style="width: 45%;">법률상 정밀 정의 및 핵심 범위</th>
+                <th style="width: 35%;">수험 핵심 출제 포인트 및 함정</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th><span class="highlight-blue">하수</span></th>
+                <td>오수 + 건물·도로에서 유입되는 빗물·지하수</td>
+                <td><span class="highlight-red">농작물 경작으로 인한 것 제외</span></td>
+            </tr>
+            <tr>
+                <th><span class="highlight-purple">분뇨</span></th>
+                <td><span class="highlight-purple">수거식 화장실</span> 수거물 + 청소 찌꺼기</td>
+                <td>수세식 X, <span class="highlight-purple">청소 찌꺼기 포함</span> (제외 X)</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-red">합류식 하수관로</span></th>
+                <td>오수와 빗물·지하수가 <span class="highlight-red">함께 흐르는</span> 관로</td>
+                <td>건물 내 <span class="highlight-red">정화조 필수 설치</span></td>
+            </tr>
+            <tr>
+                <th><span class="highlight-blue">분류식 하수관로</span></th>
+                <td>오수와 빗물·지하수가 <span class="highlight-blue">각각 구분되어</span> 흐르는 관로</td>
+                <td>건물 내 <span class="highlight-blue">정화조 설치 불필요 (제외)</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        2. 개인하수처리시설(오수처리시설·정화조), 수질검사 주기 및 수질오염지표(BOD·COD·DO·SS·SV)
+    </h2>
+    <ul>
+        <li><strong>개인하수처리시설의 구분 기준 (하수처리구역 밖 기준) (★수치 주관식)</strong>:
+            <ul>
+                <li><span class="highlight-red">오수처리시설</span>: 1일 오수 발생량이 <span class="highlight-red">2세제곱미터(2m³)를 초과</span>하는 건물 등에 설치.</li>
+                <li><span class="highlight-blue">정화조</span>: 1일 오수 발생량이 <span class="highlight-blue">2세제곱미터(2m³) 이하</span>인 건물 등(수세식 변기 오수 처리)에 설치.</li>
+                <li><span class="highlight-purple">자가측정 기록 보관</span>: 방류수 수질 자가측정 결과 기록은 <span class="highlight-purple">3년간 보관</span>하여야 함.</li>
+            </ul>
+        </li>
+        <li><strong>방류수 수질 자가측정 주기 (★수치 비교)</strong>:
+            <ul>
+                <li><span class="highlight-red">6개월마다 1회 이상</span>: 1일 처리용량 200m³ 이상 오수처리시설 / 처리대상인원 2천인 이상 정화조.</li>
+                <li><span class="highlight-blue">1년마다 1회 이상</span>: 1일 처리용량 50m³ 이상 200m³ 미만 오수처리시설 / 처리대상인원 1천인 이상 2천인 미만 정화조.</li>
+            </ul>
+        </li>
+        <li><strong>수질오염 지표 6대 핵심 용어 정밀 비교 (★매해 출제)</strong>:
+            <ul>
+                <li><span class="highlight-blue">BOD (생물화학적 산소요구량, Biochemical Oxygen Demand)</span>:
+                    <br>&rarr; 오수 중의 유기물질을 <span class="highlight-blue">미생물(호기성 미생물)이 분해·안정화</span>할 때 소비되는 산소의 양.
+                    <br>&rarr; 단위: <span class="highlight-blue">ppm (100만분의 1)</span> 또는 mg/L.
+                    <br>&rarr; <span class="highlight-red">해석</span>: <span class="highlight-red">BOD 수치가 클수록 오염도가 높다</span>(수질이 나쁘다)는 것을 의미함.</li>
+                <li><span class="highlight-purple">COD (화학적 산소요구량, Chemical Oxygen Demand)</span>:
+                    <br>&rarr; 수중의 오염물질을 <span class="highlight-purple">화학적 산화제</span>로 산화·분해시킬 때 소비되는 산소의 양 (공장폐수 등 측정).
+                    <br>&rarr; 동일 오수에서 미생물이 분해하지 못하는 물질까지 분해하므로 <span class="highlight-purple">COD 수치가 BOD 수치보다 크게 나타남</span> (COD &gt; BOD).
+                    <br>&rarr; <span class="highlight-red">해석</span>: <span class="highlight-red">COD 수치가 클수록 오염도가 높음</span>.</li>
+                <li><span class="highlight-green">DO (용존산소량, Dissolved Oxygen) (★가장 중요 반대 특성)</span>:
+                    <br>&rarr; 물 속에 녹아 있는 <span class="highlight-green">분자 상태의 산소량</span>.
+                    <br>&rarr; <span class="highlight-red">해석 (★시험 함정 최다)</span>: <span class="highlight-red">DO 수치가 클수록(높을수록) 수질 정화능력이 우수하고 깨끗한 물</span>임! (※ "DO 수치가 작을수록 자정작용이 우수하다"고 출제 시 <span class="highlight-red">100% 오답!</span>). 오염도가 높을수록 DO 수치는 낮아짐.</li>
+                <li><span class="highlight-blue">SS (부유물질, Suspended Solids)</span>:
+                    <br>&rarr; 물 속에 입자 상태로 서스펜션(현탁)되어 있는 <span class="highlight-blue">부유 물질/불용성 물질의 농도</span> (입경 2mm 이하).
+                    <br>&rarr; <span class="highlight-blue">탁도(혼탁한 정도)의 기준물질</span>이 됨. SS 수치가 클수록 탁도가 크고 물이 혼탁함.</li>
+                <li><span class="highlight-purple">스컴 (Scum)</span>: 하수 처리 과정 중 수면에 떠오르는 유지분이나 고형 오물 찌꺼기 집합체.</li>
+                <li><span class="highlight-green">SV (침전 오니량 / 슬러지 용량)</span>: 시료 오수를 30분간 정지 침전시켰을 때 가라앉는 침전 오니의 용량 비율(%).</li>
+            </ul>
+        </li>
+        <li><strong>★ BOD 제거율 공식 및 오수 정화능력 평가 (★주관식 계산 및 식 찾기)</strong>:
+            <br>&rarr; <span class="highlight-red">BOD 제거율(%) = [ (유입수 BOD - 유출수 BOD) / 유입수 BOD ] × 100 (%)</span>
+            <br>&rarr; <span class="highlight-purple">핵심 유의사항</span>: 분모는 반드시 <span class="highlight-purple">유입수 BOD</span>임! (유출수 BOD로 나누면 오답!).
+            <br>&rarr; <span class="highlight-green">해석</span>: <span class="highlight-green">BOD 제거율 수치가 클수록 정화조의 정화 처리 성능이 우수</span>함.</li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 20%;">수질오염 지표</th>
+                <th style="width: 40%;">분해 및 측정 메커니즘</th>
+                <th style="width: 40%;">수치 상승 시 의미 및 수험 핵심</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th><span class="highlight-blue">BOD</span> (생물화학적)</th>
+                <td><span class="highlight-blue">미생물</span>에 의한 유기물 분해 소비 산소량</td>
+                <td>수치 클수록 <span class="highlight-red">오염도 높음</span> (수질 나쁨)</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-purple">COD</span> (화학적)</th>
+                <td><span class="highlight-purple">화학적 산화제</span>에 의한 분해 소비 산소량</td>
+                <td>동일 오수에서 <span class="highlight-purple">COD &gt; BOD</span> (COD가 더 큼)</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-green">DO</span> (용존산소량)</th>
+                <td>물 속에 녹아 있는 <span class="highlight-green">분자 상태 산소량</span></td>
+                <td>수치 클수록 <span class="highlight-red">정화능력 우수 / 깨끗함</span></td>
+            </tr>
+            <tr>
+                <th><span class="highlight-blue">SS</span> (부유물질)</th>
+                <td>물 속에 떠 있는 <span class="highlight-blue">부유/불용성 물질 농도</span></td>
+                <td><span class="highlight-blue">탁도의 기준물질</span> (클수록 물이 혼탁함)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        3. 개별난방설비 법정 설치기준 (건축물의 설비기준 등에 관한 규칙 제13조) (★최다 출제)
+    </h2>
+    <ul>
+        <li><strong>적용 대상</strong>: 공동주택 및 오피스텔의 난방설비를 개별난방방식으로 하는 경우.</li>
+        <li><strong>개별난방설비 법정 기준 6가지 (★객관식 및 주관식 단골 1순위)</strong>:
+            <ol>
+                <li><span class="highlight-blue">보일러 설치 위치 및 경계벽 구획</span>:
+                    <br>&rarr; 보일러는 <span class="highlight-blue">거실 외의 곳에 설치</span>해야 함.
+                    <br>&rarr; 보일러를 설치하는 곳과 거실 사이의 경계벽은 <span class="highlight-red">출입구를 제외하고는 내화구조의 벽으로 구획</span>하여야 함.
+                    <br>&rarr; <span class="highlight-purple">출제 함정</span>: 내화구조를 '방화구조'로 출제하거나, '출입구를 포함하여 내화구조로 구획한다'고 출제 시 <span class="highlight-red">100% 오답!</span> (출입구는 제외!).</li>
+                <li><span class="highlight-red">환기창 및 공기흡입구·배기구 수치 규정 (★가장 중요)</span>:
+                    <br>&rarr; 보일러실 윗부분에는 그 면적이 <span class="highlight-red">0.5제곱미터(0.5m²) 이상인 환기창</span>을 설치할 것.
+                    <br>&rarr; 보일러실의 윗부분과 아랫부분에는 각각 <span class="highlight-red">지름 10센티미터(10cm) 이상의 공기흡입구 및 배기구</span>를 <span class="highlight-red">항상 열려있는 상태</span>로 바깥공기에 접하도록 설치할 것.
+                    <br>&rarr; <span class="highlight-purple">수험 필수 예외 조항</span>: <span class="highlight-purple">전기보일러의 경우에는 환기창, 공기흡입구 및 배기구를 설치하지 아니함!</span> (전기보일러는 연소 가스가 없기 때문).</li>
+                <li><span class="highlight-purple">거실 출입문 구조</span>: 보일러실과 거실 사이의 출입구는 그 출입구가 닫힌 경우에는 보일러가스가 거실에 들어갈 수 없는 구조로 할 것.</li>
+                <li><span class="highlight-green">기름보일러 기름저장소 위치</span>: 기름보일러를 설치하는 경우에는 <span class="highlight-green">기름저장소를 보일러실 외의 다른 곳에 설치</span>할 것. (보일러실 내부에 설치 시 오답!).</li>
+                <li><span class="highlight-blue">보일러 연도(굴뚝) 구조</span>: 보일러의 연도는 <span class="highlight-blue">내화구조로서 공동연도로 설치</span>할 것. (개별연도 X, 방화구조 X).</li>
+                <li><span class="highlight-red">오피스텔 특례 규정 (★지문 교체 단골)</span>: <span class="highlight-red">오피스텔의 경우에는 난방구획을 방화구획으로 구획</span>할 것.
+                    <br>&rarr; <span class="highlight-purple">핵심 시험 함정</span>: '난방구획을 방화구획으로 구획한다'는 규정은 <span class="highlight-red">오피스텔에만 적용</span>되며, <span class="highlight-red">공동주택에는 적용되지 아니함!</span></li>
+            </ol>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">개별난방 구성 요소</th>
+                <th style="width: 45%;">법정 설치 기준 및 수치</th>
+                <th style="width: 30%;">수험 필수 핵심 유의사항</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>보일러실 경계벽</th>
+                <td><span class="highlight-blue">거실 외 설치</span>, <span class="highlight-red">내화구조 벽으로 구획</span></td>
+                <td><span class="highlight-red">출입구 제외</span> (방화구조 X)</td>
+            </tr>
+            <tr>
+                <th>환기창 면적</th>
+                <td>보일러실 윗부분에 <span class="highlight-red">0.5m² 이상</span> 설치</td>
+                <td>바깥공기와 직접 면할 것</td>
+            </tr>
+            <tr>
+                <th>공기흡입구·배기구</th>
+                <td>위·아래 각각 <span class="highlight-red">지름 10cm 이상</span> (항상 개방)</td>
+                <td><span class="highlight-purple">전기보일러는 설치 제외</span></td>
+            </tr>
+            <tr>
+                <th>기름저장소 & 연도</th>
+                <td>기름저장소 = <span class="highlight-green">보일러실 외 다른 곳</span> / 연도 = <span class="highlight-blue">공동연도</span></td>
+                <td>연도는 <span class="highlight-blue">내화구조</span>로 설치</td>
+            </tr>
+            <tr>
+                <th>오피스텔 특례</th>
+                <td>난방구획을 <span class="highlight-red">방화구획으로 구획</span></td>
+                <td><span class="highlight-red">오피스텔 전용</span> (공동주택 적용 X)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+            💡 [수험 핵심 팁] 제60강 실전 출제 포인트 & 함정 방지 최종 체크
+        </div>
+        <ul>
+            <li><strong>하수도법 용어 핵심</strong>: 하수 = 오수 + 빗물·지하수 (<span class="highlight-red">농작물 경작 제외</span>). 분뇨 = <span class="highlight-purple">수거식 화장실</span> 수거물 + <span class="highlight-purple">개인하수처리 청소 찌꺼기 포함</span>. 하수도 시설 제외 = <span class="highlight-red">정수시설, 중수도</span>. 관로 = <span class="highlight-red">합류식(정화조 필수)</span> vs <span class="highlight-blue">분류식(정화조 미설치)</span>.</li>
+            <li><strong>개인하수 기준 & 자가측정</strong>: 오수처리시설 = <span class="highlight-red">1일 2m³ 초과</span> / 정화조 = <span class="highlight-blue">1일 2m³ 이하</span>. 자가측정 기록 보관 = <span class="highlight-purple">3년</span>. 200m³/2천인 이상 = <span class="highlight-red">6개월마다 1회 이상</span> / 50m³~200m³/1천인~2천인 = <span class="highlight-blue">1년마다 1회 이상</span>.</li>
+            <li><strong>수질지표 핵심 성질</strong>: BOD = <span class="highlight-blue">미생물 분해</span> (클수록 오염도 높음). COD = <span class="highlight-purple">화학적 산화</span> (<span class="highlight-purple">COD &gt; BOD</span>). DO = <span class="highlight-green">녹아있는 산소</span> (<span class="highlight-red">클수록 깨끗함/정화능력 우수</span>). SS = <span class="highlight-blue">부유물질/탁도 기준</span>. BOD 제거율 = <span class="highlight-red">[ (유입 - 유출) / 유입 ] × 100</span> (분모 유입!).</li>
+            <li><strong>개별난방 설치기준 5대 수치</strong>: 경계벽 = <span class="highlight-blue">출입구 제외 내화구조</span>. 환기창 = <span class="highlight-red">0.5m² 이상</span>. 공기흡입/배기구 = <span class="highlight-red">지름 10cm 이상 항상 개방</span> (<span class="highlight-purple">전기보일러 제외</span>). 기름저장소 = <span class="highlight-green">보일러실 외 다른 곳</span>. 연도 = <span class="highlight-blue">내화구조 공동연도</span>. 난방구획 방화구획 = <span class="highlight-red">오피스텔만 해당</span>.</li>
+        </ul>
+    </div>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>주관식 단답형 및 빈칸 채우기 실전 훈련</h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡, ㉢)에 들어갈 알맞은 핵심 용어나 법정 수치, 단위를 아래 빈칸에 직접 작성해 보십시오.</p>
+
+    <ol class="quiz-list">
+        <li>
+            하수도법상 '하수'란 오수와 하수도로 유입되는 빗물·지하수를 말하며, ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )의 경작으로 인한 것은 제외한다.
+        </li>
+        <li>
+            하수도법상 '분뇨'란 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )식 화장실에서 수거되는 오염물질과 개인하수처리시설 청소과정에서 발생하는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )(을)를 포함한다.
+        </li>
+        <li>
+            오수와 하수도로 유입되는 빗물·지하수가 함께 흐르도록 설치된 하수관로를 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )식 하수관로라 하고, 각각 구분되어 흐르도록 설치된 하수관로를 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )식 하수관로라 한다.
+        </li>
+        <li>
+            건물 내에 오수만을 이송하는 분류식 하수관로가 설치된 구역은 건물 내 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )(을)를 설치할 필요가 없다.
+        </li>
+        <li>
+            하수처리구역 밖에서 1일 오수 발생량이 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )세제곱미터를 초과하는 건물에는 오수처리시설을, 그 이하인 건물에는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )(을)를 설치하여야 한다.
+        </li>
+        <li>
+            개인하수처리시설의 방류수 수질 자가측정 결과 기록은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년간 보관하여야 한다.
+        </li>
+        <li>
+            1일 처리용량 200m³ 이상인 오수처리시설 및 처리대상인원 2천인 이상인 정화조의 방류수 수질 자가측정 주기는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )개월마다 1회 이상이다.
+        </li>
+        <li>
+            오수 중의 유기물질을 호기성 미생물이 분해·안정화할 때 소비되는 산소의 양을 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )(이라) 하고, 단위는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )(100만분의 1)으로 나타낸다.
+        </li>
+        <li>
+            수중의 오염물질을 화학적 산화제로 산화·분해시킬 때 필요한 산소량을 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )(이라) 하며, 동일 오수에서 그 수치는 BOD 수치보다 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )다.
+        </li>
+        <li>
+            물 속에 녹아 있는 분자 상태의 산소량을 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )(이라) 하며, 이 수치가 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )수록 수질 정화능력이 우수하고 깨끗한 물이다.
+        </li>
+        <li>
+            물 속에 현탁되어 있는 입자 상태의 부유물질 농도를 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )(이라) 하며, 이는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )의 기준물질이 된다.
+        </li>
+        <li>
+            하수 처리 과정 중 수면에 떠오르는 유지분이나 고형 오물 찌꺼기 집합체를 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )(이라) 하고, 30분간 가라앉는 침전 오니의 용량 비율을 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )(이라) 한다.
+        </li>
+        <li>
+            BOD 제거율(%) 계산식의 분모는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )수 BOD이고, 제거율 수치가 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )수록 정화조의 성능이 우수하다.
+        </li>
+        <li>
+            공동주택 개별난방설비 설치 기준상 보일러는 거실 외의 곳에 설치하고, 거실과의 경계벽은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )을(를) 제외하고는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )구조의 벽으로 구획하여야 한다.
+        </li>
+        <li>
+            개별난방 보일러실 윗부분에는 면적 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )제곱미터 이상의 환기창을 설치하여야 한다.
+        </li>
+        <li>
+            개별난방 보일러실 위·아래에는 각각 지름 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )센티미터 이상의 공기흡입구 및 배기구를 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 상태로 바깥공기에 접하게 설치하여야 한다.
+        </li>
+        <li>
+            개별난방 설치기준 중 보일러실 환기창, 공기흡입구 및 배기구 설치 의무 규정이 적용되지 않는 보일러는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )보일러이다.
+        </li>
+        <li>
+            기름보일러를 설치하는 경우 기름저장소는 보일러실 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )의 다른 곳에 설치하여야 한다.
+        </li>
+        <li>
+            개별난방 보일러의 연도는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )구조로서 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )연도로 설치하여야 한다.
+        </li>
+        <li>
+            개별난방설비 설치기준 중 '난방구획을 방화구획으로 구획하여야 한다'는 규정은 공동주택이 아니라 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )에 적용되는 특례 규정이다.
+        </li>
+    </ol>
+
+    <div style="font-size: 9.5pt; color: #666666; margin-top: 30px; padding: 15px; border-top: 1px dashed #666666; line-height: 1.8;">
+        <strong style="display: block; margin-bottom: 10px; color: #333333;">[제60강 주관식 단답형 정답 리스트]</strong>
+        <div class="answer-grid">
+            <div><strong>1.</strong> ㉠ 농작물</div>
+            <div><strong>2.</strong> ㉠ 수거, ㉡ 찌꺼기</div>
+            <div><strong>3.</strong> ㉠ 합류, ㉡ 분류</div>
+            <div><strong>4.</strong> ㉠ 정화조</div>
+            <div><strong>5.</strong> ㉠ 2, ㉡ 정화조</div>
+            <div><strong>6.</strong> ㉠ 3</div>
+            <div><strong>7.</strong> ㉠ 6</div>
+            <div><strong>8.</strong> ㉠ BOD(생물화학적 산소요구량), ㉡ ppm</div>
+            <div><strong>9.</strong> ㉠ COD(화학적 산소요구량), ㉡ 크(높)</div>
+            <div><strong>10.</strong> ㉠ DO(용존산소량), ㉡ 크(높)</div>
+            <div><strong>11.</strong> ㉠ SS(부유물질), ㉡ 탁도</div>
+            <div><strong>12.</strong> ㉠ 스컴(Scum), ㉡ SV</div>
+            <div><strong>13.</strong> ㉠ 유입, ㉡ 크</div>
+            <div><strong>14.</strong> ㉠ 출입구, ㉡ 내화</div>
+            <div><strong>15.</strong> ㉠ 0.5</div>
+            <div><strong>16.</strong> ㉠ 10, ㉡ 항상 열려있는</div>
+            <div><strong>17.</strong> ㉠ 전기</div>
+            <div><strong>18.</strong> ㉠ 외</div>
+            <div><strong>19.</strong> ㉠ 내화, ㉡ 공동</div>
+            <div><strong>20.</strong> ㉠ 오피스텔</div>
+        </div>
+    </div>
+
+</body>
+</html>

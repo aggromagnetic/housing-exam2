@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 관계법규 - 제52강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght=400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+            letter-spacing: -0.05em;
+        }
+        
+        h1 {
+            font-size: 13pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #16803d;
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #6d28d9;
+        }
+        
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        ol {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        .quiz-list li {
+            margin-bottom: 8px;
+        }
+
+        .answer-container {
+            margin-top: 30px;
+            padding: 15px;
+            border-top: 1px dashed #666666;
+            font-size: 10pt;
+            color: #777777;
+            line-height: 1.8;
+        }
+
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .answer-grid div {
+            border-bottom: 1px none #eeeeee;
+        }
+
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+        제52강. 건축법 - 공개공지·대지 안전 및 옹벽·조경·구조안전확인 및 내진설계·소방관진입 및 대피공간 완전분석
+    </h1>
+    
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        1. 공개 공지 등의 확보 (건축법 제43조, 영 제27조의2 - 5회 이상 빈출)
+    </h2>
+    <ul>
+        <li><strong>대상 지역 (★일준상준 공식 - 최다 출제)</strong>:
+            <ol>
+                <li><span class="highlight-blue">일반주거지역, 준주거지역</span></li>
+                <li><span class="highlight-blue">상업지역</span> (중심·일반·근린·유통상업지역 전체)</li>
+                <li><span class="highlight-blue">준공업지역</span></li>
+                <li>특별자치시장·특별자치도지사 또는 시장·군수·구청장이 도시화 가능성이 크거나 노후 산업단지 정비가 필요하다고 인정하여 지정·공고하는 지역</li>
+            </ol>
+        </li>
+        <li><strong>대상 건축물 (연면적 합계 5,000제곱미터 이상)</strong>:
+            <ul>
+                <li>문화 및 집회시설, 종교시설, 판매시설(농수산물유통시설은 제외), 운수시설(여객용), 업무시설, 숙박시설, 다중이용 건축물 등</li>
+            </ul>
+        </li>
+        <li><strong>설치 공간 및 면적 기준</strong>:
+            <ul>
+                <li><strong>구조</strong>: 필로티의 구조로 설치 가능.</li>
+                <li><strong>확보 면적</strong>: <span class="highlight-red">대지면적의 100분의 10 이하</span>의 범위에서 조례로 정함.</li>
+                <li><strong>대체/포함 인정</strong>: 조경 면적으로 확보한 부분을 공개공지등의 면적으로 산정 가능, 매장유산 현지보전 조치 면적도 공개공지등의 면적에 포함 가능.</li>
+            </ul>
+        </li>
+        <li><strong>건축기준 완화 혜택 (★용적률 및 높이제한 1.2배 이하 완화, 건폐율 완화 없음!)</strong>:
+            <ul>
+                <li>공개공지등을 설치하는 경우 해당 지역에 적용하는 <span class="highlight-purple">용적률</span> 및 <span class="highlight-purple">건축물의 높이 제한</span>을 <span class="highlight-red">1.2배 이하</span>의 범위에서 완화 적용. (<span class="highlight-red">★주의: 건폐율 완화 규정은 건축법령 본문에 없음!</span>)</li>
+            </ul>
+        </li>
+        <li><strong>시설 기준 및 활용 한도</strong>:
+            <ul>
+                <li><strong>편의시설</strong>: 일반이 이용할 수 있도록 긴의자, 조경시설 등을 설치.</li>
+                <li><strong>주민활용 한도</strong>: 연간 <span class="highlight-blue">60일 이내</span>의 범위에서 건축조례로 정하는 바에 따라 주민들을 위한 문화행사를 열거나 판촉활동을 할 수 있음.</li>
+                <li><strong>금지 행위 3가지</strong>: ① 점유 영업 행위 금지, ② 울타리·담장 설치 및 출입구 폐쇄 등 출입 차단 행위 금지, ③ 편의시설 훼손 금지.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 20%;">구분</th>
+                <th style="width: 40%;">설치 면적 및 구조 기준</th>
+                <th style="width: 40%;">건축기준 완화 및 활용</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th class="highlight-blue">공개 공지 등</th>
+                <td><span class="highlight-blue">대지면적의 100분의 10 이하</span><br>(필로티 구조 가능, 조경·매장유산 면적 인정)</td>
+                <td><span class="highlight-red">용적률 및 높이제한 1.2배 이하 완화</span><br>(건폐율 완화 제외! 연간 60일 이내 문화행사 가능)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        2. 대지의 안전 및 옹벽 설치·공작물 축조신고 비교 (건축법 제40조, 영 제3조)
+    </h2>
+    <ul>
+        <li><strong>대지의 안전 원칙</strong>:
+            <ul>
+                <li>대지는 인접한 <span class="highlight-blue">도로면보다 낮아서는 아니 됨</span> (단, 배수에 지장이 없거나 방습 필요가 없는 경우 제외).</li>
+                <li>습한 토지, 물이 고이기 쉬운 토지, 쓰레기 매립지는 성토(흙돋우기)나 지반 개량 등 필요한 조치를 해야 함.</li>
+            </ul>
+        </li>
+        <li><strong>옹벽 설치 의무 기준 (★수치 및 법문 표현 명확화)</strong>:
+            <ul>
+                <li>성토 또는 절토 부분의 경사도가 <span class="highlight-purple">1 대 1.5 이상</span>으로서 높이가 <span class="highlight-red">1미터 이상</span>인 부분에는 옹벽을 설치하여야 함.</li>
+                <li><strong>콘크리트구조 강제 기준</strong>: 옹벽의 높이가 <span class="highlight-red">2미터 이상</span>인 경우에는 반드시 <span class="highlight-blue">콘크리트구조</span>로 하여야 함.</li>
+            </ul>
+        </li>
+        <li><strong>옹벽 콘크리트구조 vs 공작물 축조신고 대상 극적 비교 (★핵심 함정)</strong>:
+            <ul>
+                <li>콘크리트구조 강제: 높이 <span class="highlight-red">2미터 이상</span>(2미터 포함)인 옹벽은 콘크리트구조여야 함.</li>
+                <li>공작물 축조신고 대상: 높이 <span class="highlight-purple">2미터를 넘는</span> 옹벽·담장은 지자체장에게 축조신고를 해야 함. (<span class="highlight-red">★높이 정확히 2미터인 옹벽은 콘크리트로 지어야 하지만, 공작물 축조신고 대상은 아님!</span>)</li>
+                <li><strong>튀어나옴 금지 원칙</strong>: 옹벽의 외벽면에는 지지나 배수를 위한 시설 외의 구조물이 밖으로 튀어나오지 아니하게 해야 함.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        3. 대지의 조경 및 옥상조경 산정 특례 (건축법 제42조, 영 제27조)
+    </h2>
+    <ul>
+        <li><strong>조경 의무 대상 (★주관식 기출)</strong>:
+            <ul>
+                <li>면적이 <span class="highlight-red">200제곱미터 이상인 대지</span>에 건축을 하는 건축주는 조경이나 그 밖에 필요한 조치를 하여야 함 (<span class="highlight-red">★바닥면적이나 연면적 200m²가 아니며, 대지면적 기준임!</span>).</li>
+            </ul>
+        </li>
+        <li><strong>조경 의무 면제 대상 (★암기 필수)</strong>:
+            <ol>
+                <li><span class="highlight-blue">녹지지역</span>에 건축하는 건축물 (자연 환경 보전)</li>
+                <li>면적 <span class="highlight-purple">5,000제곱미터 미만인 대지</span>에 건축하는 공장</li>
+                <li><span class="highlight-purple">연면적 합계 1,500제곱미터 미만</span>인 공장</li>
+                <li>산업단지의 공장</li>
+                <li>대지에 염분이 함유되어 있는 경우</li>
+                <li>축사, 가설건축물</li>
+                <li>자연환경보전지역, 농림지역, 관리지역 등 비도시지역 (<span class="highlight-red">★단, 지구단위계획구역으로 지정된 지역은 비도시지역이라도 반드시 조경하여야 함!</span>)</li>
+            </ol>
+        </li>
+        <li><strong>옥상조경의 대지 조경 면적 산정 비율 (★계산 문제 및 특례)</strong>:
+            <ul>
+                <li>옥상 부분에 조경을 한 경우 옥상 조경 면적의 <span class="highlight-blue">3분의 2</span>에 해당하는 면적을 대지의 조경 면적으로 인정함.</li>
+                <li><strong>상한선 제약</strong>: 인정받는 옥상 조경 면적은 대지 조경 의무면적의 <span class="highlight-red">100분의 50</span>을 초과할 수 없음.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+            💡 [실전 산정 예시] 대지면적 200m², 의무 조경비율 10%(20m²)인 경우
+        </div>
+        <ul>
+            <li>의무 조경면적 = 200m² × 10% = 20m². 인정 상한선(100분의 50) = 10m².</li>
+            <li>옥상에 15m²를 조경한 경우: 15m² × 2/3 = 10m² 인정 (상한선 10m²에 도달하므로 인정). 지상에 나머지 10m²를 조경하면 법정 20m² 완비!</li>
+        </ul>
+    </div>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M11 5H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-5"></path><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+        4. 건축구조기술사 협력 대상 및 구조안전확인·내진설계 및 내진능력 공개
+    </h2>
+    <ul>
+        <li><strong>설계자의 건축구조기술사 협력 의무 대상</strong>:
+            <ul>
+                <li>층수가 <span class="highlight-blue">6층 이상</span>인 건축물</li>
+                <li>특수구조 건축물, 다중이용 건축물, 준다중이용 건축물</li>
+                <li><span class="highlight-purple">3층 이상인 필로티 형식</span> 건축물</li>
+                <li>수직증축형 리모델링 (주택법 연계)</li>
+            </ul>
+        </li>
+        <li><strong>구조안전확인 서류 제출 (★주관식 단답형 빈출)</strong>:
+            <ul>
+                <li><strong>확인 주체</strong>: 건축허가 대상 건축물을 건축하거나 대수선하는 경우 <span class="highlight-red">설계자</span>가 구조안전을 확인하여야 함.</li>
+                <li><strong>제출 주체 및 시기</strong>: <span class="highlight-blue">건축주</span>는 해당 건축물의 설계자로부터 구조안전 확인서류를 받아 <span class="highlight-red">착공신고를 할 때</span> 허가권자에게 제출함.</li>
+            </ul>
+        </li>
+        <li><strong>구조안전확인 및 내진설계 대상 (★내진 9대 대상 - 암기 필수)</strong>:
+            <ol>
+                <li>층수가 <span class="highlight-blue">2층 이상</span> (목구조 건축물은 3층 이상)</li>
+                <li>연면적이 <span class="highlight-blue">200제곱미터 이상</span> (목구조 건축물은 500제곱미터 이상)</li>
+                <li>높이가 <span class="highlight-purple">13미터 이상</span></li>
+                <li>처마높이가 <span class="highlight-purple">9미터 이상</span></li>
+                <li>기둥과 기둥 사이의 거리가 <span class="highlight-purple">10미터 이상</span></li>
+                <li>연면적 5,000m² 이상인 박물관, 미술관 등</li>
+                <li>특수구조 건축물</li>
+                <li><span class="highlight-red">모든 단독주택 및 공동주택</span> (규모·층수 불문하고 내진설계 무조건 의무화!)</li>
+            </ol>
+        </li>
+        <li><strong>내진등급 설정 및 내진능력 공개 의무 (건축법 제48조의2, 제48조의3)</strong>:
+            <ul>
+                <li><strong>내진등급 설정</strong>: <span class="highlight-blue">국토교통부장관</span>이 건축물의 중요도에 따라 설정함.</li>
+                <li><strong>내진능력 공개 시기</strong>: 대상 건축물을 건축하고자 하는 자는 <span class="highlight-red">사용승인을 받는 즉시</span> 지진 시 견딜 수 있는 내진능력을 공개하여야 함 (<span class="highlight-purple">★착공신고 시가 아니며, 축사·작물재배사는 공개 면제</span>).</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        5. 소방관 진입창·통로 및 아파트 대피공간 기준 (★피파하대 공식)
+    </h2>
+    <ul>
+        <li><strong>소방관 진입창 설치 (건축법 제49조, 영 제51조)</strong>:
+            <ul>
+                <li>건축물의 <span class="highlight-blue">11층 이하의 층(2층 이상 11층 이하)</span>에는 소방관이 진입할 수 있는 창을 설치하고 주야간 식별 표지를 설치해야 함.</li>
+                <li><strong>아파트 면제 예외</strong>: 아파트로서 대피공간을 설치했거나 비상용 승강기를 설치한 경우 소방관 진입창 설치 의무를 면제함.</li>
+            </ul>
+        </li>
+        <li><strong>대지 안 피난 및 소화 통로 너비 기준</strong>:
+            <ul>
+                <li>단독주택: 유효 너비 <span class="highlight-green">0.9미터 이상</span></li>
+                <li>문화 및 집회시설 (500m² 이상 등): 유효 너비 <span class="highlight-red">3미터 이상</span></li>
+                <li>그 밖의 용도 (공동주택 포함): 유효 너비 <span class="highlight-blue">1.5미터 이상</span></li>
+                <li><span class="highlight-purple">11층 이상</span> 건축물, 다중이용, 준다중이용 건축물: 소방자동차 진입이 가능한 통로를 의무적으로 확보하여야 함.</li>
+            </ul>
+        </li>
+        <li><strong>아파트 대피공간 설치 대상 및 구획·면적 요건</strong>:
+            <ul>
+                <li><strong>대상</strong>: 공동주택 중 <span class="highlight-red">아파트로서 4층 이상인 층</span>의 각 세대가 2개 이상의 직통계단을 사용할 수 없는 경우 발코니에 대피공간 설치.</li>
+                <li><strong>면적 요건</strong>: 각 세대별 설치 시 <span class="highlight-blue">2제곱미터 이상</span>, 인접 세대와 공동 설치 시 <span class="highlight-blue">3제곱미터 이상</span>.</li>
+                <li><strong>구획 및 문 성능</strong>: 바깥 공기와 접할 것, 실내 다른 부분과 <span class="highlight-purple">방화구획</span>으로 구획될 것, 출입문은 <span class="highlight-red">60분+ 방화문</span>(또는 60분 방화문)을 설치할 것.</li>
+            </ul>
+        </li>
+        <li><strong>대피공간 설치 면제 대안 4가지 (★피파하대 공식)</strong>:
+            <ol>
+                <li>인접 세대와의 경계벽이 <span class="highlight-blue">파괴하기 쉬운 경량구조</span>인 경우 (파)</li>
+                <li>경계벽에 <span class="highlight-blue">피난구</span>를 설치한 경우 (피)</li>
+                <li>발코니 바닥에 <span class="highlight-purple">하향식 피난구</span>를 설치한 경우 (하)</li>
+                <li>국토교통부장관이 인정하는 <span class="highlight-green">대체시설</span>을 설치한 경우 (대)</li>
+            </ol>
+        </li>
+        <li><strong>대피공간 바닥면적 산입 제외 특례 (★숫자 구분)</strong>:
+            <ul>
+                <li>하향식 피난구 또는 대체시설(하대)을 설치하여 대피공간을 확보하는 경우, 인접 세대 공동 설치 시 <span class="highlight-red">4제곱미터</span>까지, 각 세대별 설치 시 <span class="highlight-red">3제곱미터</span>까지 건축물의 <span class="highlight-blue">바닥면적 산입에서 제외</span>하여 인센티브를 제공함.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">구분</th>
+                <th style="width: 38%;">원칙적 대피공간 설치 기준</th>
+                <th style="width: 37%;">면제 대안 및 면적 산입 제외</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th class="highlight-blue">대상 및 면적</th>
+                <td>아파트 <span class="highlight-red">4층 이상</span> (직통계단 1개)<br>세대별 <span class="highlight-blue">2m² 이상</span>, 공동 <span class="highlight-blue">3m² 이상</span></td>
+                <td><span class="highlight-purple">피파하대</span> 설치 시 대피공간 면제<br>(경량구조, 피난구, 하향식, 대체시설)</td>
+            </tr>
+            <tr>
+                <th class="highlight-purple">성능 및 인센티브</th>
+                <td><span class="highlight-purple">방화구획</span> 필수, <span class="highlight-red">60분+ 방화문</span> 설치</td>
+                <td>바닥면적 산입 제외:<br>공동 <span class="highlight-red">4m²</span>, 세대별 <span class="highlight-red">3m²</span>까지 제외</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        6. 피난층 및 직통계단의 보행거리 규정
+    </h2>
+    <ul>
+        <li><strong>피난층의 정의 (건축법 제49조)</strong>:
+            <ul>
+                <li>직접 지상으로 통하는 출입구가 있는 층을 말하며, 초고층/준초고층 건축물에 설치하는 <span class="highlight-blue">피난안전구역</span>도 피난층으로 본다.</li>
+            </ul>
+        </li>
+        <li><strong>거실에서 직통계단까지의 보행거리 기준 (★기출 단골 수치)</strong>:
+            <ul>
+                <li><strong>원칙</strong>: 거실의 각 부분으로부터 직통계단에 이르는 보행거리는 <span class="highlight-blue">30미터 이하</span>이어야 함.</li>
+                <li><strong>내화구조/불연재료 건축물</strong>: 보행거리 <span class="highlight-purple">50미터 이하</span>까지 완화.</li>
+                <li><strong>16층 이상 공동주택 특례 (★강화 규정)</strong>: 16층 이상인 층에 대해서는 보행거리를 <span class="highlight-red">40미터 이하</span>로 강화하여 적용함.</li>
+                <li><strong>스프링클러 설치 공장</strong>: 보행거리 <span class="highlight-green">75미터 이하</span> (무인화 공장은 <span class="highlight-green">100미터 이하</span>)까지 인정.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>주관식 단답형 및 빈칸 채우기 실전 훈련</h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡)에 들어갈 알맞은 핵심 용어나 법정 숫자를 작성해 보십시오.</p>
+    
+    <ol class="quiz-list" style="line-height: 2.1;">
+        <li>
+            공개공지 확보 대상 용도지역은 일반주거, 준주거, 상업지역 및 ( ㉠ )지역이다.
+        </li>
+        <li>
+            공개공지는 대지면적의 100분의 ( ㉠ ) 이하의 범위에서 설치하여야 한다.
+        </li>
+        <li>
+            공개공지를 확보한 경우 해당 건축물에 적용되는 용적률 및 높이 제한을 ( ㉠ )배 이하의 범위에서 완화 적용할 수 있다.
+        </li>
+        <li>
+            공개공지 등에서는 연간 ( ㉠ )일 이내의 범위에서 문화행사나 판촉활동을 할 수 있다.
+        </li>
+        <li>
+            경사도가 1 대 1.5 이상으로서 옹벽의 높이가 ( ㉠ )미터 이상인 경우 옹벽을 설치하여야 하고, 높이가 ( ㉡ )미터 이상인 경우 콘크리트구조로 하여야 한다.
+        </li>
+        <li>
+            건축법상 높이가 ( ㉠ )미터를 넘는 옹벽이나 담장을 축조하려는 자는 지자체장에게 신고하여야 한다.
+        </li>
+        <li>
+            면적이 ( ㉠ )제곱미터 이상인 대지에 건축을 하는 건축주는 조경이나 그 밖에 필요한 조치를 하여야 한다.
+        </li>
+        <li>
+            자연환경보전지역, 농림지역, 관리지역이라도 ( ㉠ )구역으로 지정된 지역은 대지의 조경을 의무적으로 실시하여야 한다.
+        </li>
+        <li>
+            옥상 부분 조경 면적의 ( ㉠ )에 해당하는 면적을 대지의 조경 면적으로 산정하며, 대지 조경 의무면적의 100분의 ( ㉡ )을 초과할 수 없다.
+        </li>
+        <li>
+            건축허가 대상 건축물의 건축 또는 대수선 시 ( ㉠ )가 구조안전을 확인하여야 하며, ( ㉡ )는 착공신고 시 구조안전 확인서류를 허가권자에게 제출하여야 한다.
+        </li>
+        <li>
+            층수가 ( ㉠ )층 이상이거나 연면적이 ( ㉡ )제곱미터 이상인 건축물은 구조안전 확인 및 내진설계 대상이다.
+        </li>
+        <li>
+            건축물의 내진등급은 ( ㉠ )장관이 설정하며, 내진능력 공개 대상 건축주는 ( ㉡ )를 받는 즉시 내진능력을 공개하여야 한다.
+        </li>
+        <li>
+            건축물의 ( ㉠ )층 이하의 층에는 소방관이 진입할 수 있는 창을 설치하고 식별 표지를 하여야 한다.
+        </li>
+        <li>
+            아파트로서 ( ㉠ )층 이상인 층의 각 세대가 2개 이상의 직통계단을 사용할 수 없는 경우 발코니에 대피공간을 설치하여야 한다.
+        </li>
+        <li>
+            아파트 대피공간은 각 세대별로 설치 시 ( ㉠ )제곱미터 이상, 인접 세대와 공동 설치 시 ( ㉡ )제곱미터 이상이어야 하고, 출입문은 ( ㉢ ) 방화문을 설치하여야 한다.
+        </li>
+        <li>
+            대피공간 대체시설을 설치하여 바닥면적 산입에서 제외받을 때, 공동 설치 시 ( ㉠ )제곱미터, 세대별 설치 시 ( ㉡ )제곱미터까지 산입에서 제외된다.
+        </li>
+        <li>
+            거실 각 부분으로부터 직통계단에 이르는 보행거리는 원칙적으로 ( ㉠ )미터 이하이어야 하나, 16층 이상인 공동주택의 층에 대해서는 ( ㉡ )미터 이하로 적용한다.
+        </li>
+    </ol>
+
+    <div class="answer-container">
+        <strong>[제52강 주관식 단답형 정답 리스트]</strong>
+        <div class="answer-grid">
+            <div><strong>1.</strong> ㉠ 준공업</div>
+            <div><strong>2.</strong> ㉠ 10</div>
+            <div><strong>3.</strong> ㉠ 1.2</div>
+            
+            <div><strong>4.</strong> ㉠ 60</div>
+            <div><strong>5.</strong> ㉠ 1 | ㉡ 2</div>
+            <div><strong>6.</strong> ㉠ 2</div>
+            
+            <div><strong>7.</strong> ㉠ 200</div>
+            <div><strong>8.</strong> ㉠ 지구단위계획</div>
+            <div><strong>9.</strong> ㉠ 3분의 2 | ㉡ 50</div>
+            
+            <div><strong>10.</strong> ㉠ 설계자 | ㉡ 건축주</div>
+            <div><strong>11.</strong> ㉠ 2 | ㉡ 200</div>
+            <div><strong>12.</strong> ㉠ 국토교통부 | ㉡ 사용승인</div>
+            
+            <div><strong>13.</strong> ㉠ 11</div>
+            <div><strong>14.</strong> ㉠ 4</div>
+            <div><strong>15.</strong> ㉠ 2 | ㉡ 3 | ㉢ 60분+ (또는 60분)</div>
+            
+            <div><strong>16.</strong> ㉠ 4 | ㉡ 3</div>
+            <div><strong>17.</strong> ㉠ 30 | ㉡ 40</div>
+            <div></div>
+        </div>
+    </div>
+
+</body>
+</html>

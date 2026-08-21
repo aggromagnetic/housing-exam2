@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 - 제62강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+            letter-spacing: -0.05em;
+        }
+        
+        h1 {
+            font-size: 12pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        /* 토너 절약 4색 시각 강조 클래스 */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #16803d; 
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #6d28d9; 
+        }
+        
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        ol.quiz-list {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+            line-height: 2.1;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        /* 정답 리스트 3열 격자 레이아웃 */
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px 15px;
+        }
+
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        제62강. 관류·입형 보일러 특성, 보일러 3대/4대 출력 체계(정미·상용·정격), 표준방열량·상당방열면적(EDR), 팽창탱크, 스케일 및 가동 이상현상(수격·포밍·프라이밍·캐리오버·팽출·압궤), 압축식/흡수식 냉동기, 히트펌프(COP) 및 에어컨 실외기 법정 설치기준
+    </h1>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        1. 보일러 추가 특성: 관류 보일러 (Once-through Boiler) 및 입형 보일러 (Vertical Boiler)
+    </h2>
+    <ul>
+        <li><strong>관류 보일러 (Once-through Boiler / 관류형 보일러 / 증기 발생기) (★출제 빈도 급상승)</strong>:
+            <ul>
+                <li><span class="highlight-blue">메커니즘 및 4단계 변화</span>: 긴 관(파이프) 한쪽으로 물을 밀어 넣어 관 내부를 흐르는 동안 <span class="highlight-blue">예열 &rarr; 가열 &rarr; 증발 &rarr; 과열</span>이 일시·연속적으로 이뤄져 과열증기를 발생하는 소형 패키지 증기 보일러.</li>
+                <li><span class="highlight-purple">구조적 특성</span>: 상·하부 드럼(수실)이 <span class="highlight-purple">없음</span>! (드럼이 존재한다고 서술 시 <span class="highlight-red">100% 오답!</span>).</li>
+                <li><span class="highlight-green">장점 및 추종성</span>: 보유수량이 극히 작아 <span class="highlight-green">가동시간(예열시간)이 가장 짧고 부하 변동에 대한 추종성(가동 응답속도)이 최고</span>임. 호텔, 목욕탕, 병원 등에 다수 활용.</li>
+                <li><span class="highlight-red">치명적 단점</span>: 수관식과 마찬가지로 수관 내 스케일(관석) 우려가 커 <span class="highlight-red">수처리(연수화) 과정이 매우 복잡</span>하며 가동 소음이 수반됨.</li>
+            </ul>
+        </li>
+        <li><strong>입형 보일러 (Vertical Boiler / 수직형 보일러)</strong>:
+            <ul>
+                <li><span class="highlight-blue">구조적 특성</span>: 수직으로 세운 드럼 내에 연관 또는 수관이 있는 소형 패키지형 보일러.</li>
+                <li><span class="highlight-purple">용도 및 장점</span>: <span class="highlight-purple">설치 면적이 최소</span>이고 구조 및 취급이 간단하며 가격이 저렴하여 소형 온수 전용(가정용 등)으로 이용됨.</li>
+                <li><span class="highlight-red">단점 및 출제 함정</span>: 열효율이 낮고 <span class="highlight-red">대용량 및 고압 보일러로는 절대 부적합</span>함! (※ "대용량 건물에 유용하다"고 출제 시 <span class="highlight-red">100% 오답!</span>).</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        2. 보일러 용량 산정 및 3대/4대 출력 체계 (정미출력·상용출력·정격출력) (★주관식 최다 단골)
+    </h2>
+    <ul>
+        <li><strong>보일러 4대 난방 부하 구성 요소</strong>:
+            <br>&rarr; <span class="highlight-blue">1. 난방부하</span> / <span class="highlight-purple">2. 급탕부하</span> / <span class="highlight-green">3. 배관부하 (손실부하)</span> / <span class="highlight-red">4. 예열부하</span>
+        </li>
+        <li><strong>★ 보일러 3대 출력 분류 및 수식 정의 (★용어 및 주관식 단골)</strong>:
+            <ol>
+                <li><span class="highlight-blue">정미출력 (Net Output)</span>:
+                    <br>&rarr; <span class="highlight-blue">정미출력 = 난방부하 + 급탕부하</span>
+                </li>
+                <li><span class="highlight-purple">상용출력 (Commercial Output)</span>:
+                    <br>&rarr; <span class="highlight-purple">상용출력 = 난방부하 + 급탕부하 + 배관부하</span> = <span class="highlight-purple">정미출력 + 배관부하</span>
+                </li>
+                <li><span class="highlight-red">정격출력 (Rated Output) (★보일러 용량 결정 기준)</span>:
+                    <br>&rarr; <span class="highlight-red">정격출력 = 난방부하 + 급탕부하 + 배관부하 + 예열부하</span> = <span class="highlight-red">상용출력 + 예열부하</span>
+                    <br>&rarr; <span class="highlight-red">출제 핵심</span>: 보일러 용량(크기)을 결정할 때 가장 기준이 되는 주요 출력은 <span class="highlight-red">정격출력</span>임!</li>
+            </ol>
+        </li>
+        <li><strong>출력 간의 포함 관계 및 덧셈·뺄셈 출제 함정</strong>:
+            <ul>
+                <li>"상용출력은 정격출력에서 예열부하를 뺀 것이다" &rarr; <span class="highlight-blue">정답 (O)</span>.</li>
+                <li>"정격출력은 정미출력에 배관부하와 예열부하를 더한 것이다" &rarr; <span class="highlight-purple">정답 (O)</span>.</li>
+                <li>"상용출력은 난방부하와 급탕부하만을 합한 것이다" &rarr; <span class="highlight-red">오답 (X)</span> (배관부하 누락).</li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 20%;">보일러 출력 구분</th>
+                <th style="width: 50%;">포함되는 부하 항목 구성</th>
+                <th style="width: 30%;">수험 핵심 특징 및 역할</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th><span class="highlight-blue">정미출력</span></th>
+                <td><span class="highlight-blue">난방부하 + 급탕부하</span></td>
+                <td>순수 열 사용 부하의 합계</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-purple">상용출력</span></th>
+                <td><span class="highlight-purple">난방부하 + 급탕부하 + 배관부하</span> (손실부하)</td>
+                <td>정미출력 + 배관부하</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-red">정격출력</span></th>
+                <td><span class="highlight-red">난방부하 + 급탕부하 + 배관부하 + 예열부하</span></td>
+                <td><span class="highlight-red">보일러 용량 결정의 핵심 기준</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        3. 표준방열량(증기 vs 온수), 상당방열면적(EDR) 산정 및 팽창탱크 (Expansion Tank)
+    </h2>
+    <ul>
+        <li><strong>표준방열량 (Standard Radiation) 법정 기준 수치 (★수치 암기)</strong>:
+            <ul>
+                <li><span class="highlight-blue">증기난방 표준방열량</span>: 열매온도 <span class="highlight-blue">102℃</span>, 실내온도 <span class="highlight-blue">18.5℃</span> 기준 &rarr; <span class="highlight-red">0.756 kW/m²</span> (756 W/m² / 450 kcal/m²h).</li>
+                <li><span class="highlight-purple">온수난방 표준방열량</span>: 열매온도 <span class="highlight-purple">80℃</span>, 실내온도 <span class="highlight-purple">18.5℃</span> 기준 &rarr; <span class="highlight-red">0.523 kW/m²</span> (523 W/m² / 300 kcal/m²h).</li>
+            </ul>
+        </li>
+        <li><strong>★ 상당방열면적 (EDR, Equivalent Direct Radiation) 및 소요 절수 공식 (★계산 및 주관식)</strong>:
+            <br>&rarr; <span class="highlight-red">상당방열면적 (EDR, m²) = 전방열량 (손실열량, kW) / 표준방열량 (kW/m²)</span>
+            <br>&rarr; <span class="highlight-purple">소요 방열기 절수 (Section 수) = 상당방열면적 (m²) / 방열기 1절당 방열면적 (m²/절)</span>
+            <br>&rarr; <span class="highlight-purple">핵심 함정</span>: 분모는 <span class="highlight-purple">표준방열량</span>이며, 분자와 분모를 바꾼 지문("표준방열량을 전방열량으로 나눈 값")은 <span class="highlight-red">100% 오답!</span></li>
+        </li>
+        <li><strong>팽창탱크 (Expansion Tank) 설치 목적 및 적용 난방방식 (★단독 출제)</strong>:
+            <ul>
+                <li><span class="highlight-blue">설치 목적</span>: 온수 보일러 수온 상승에 따른 유체 체적 팽창을 흡수하여 관내 수압 상승 및 보일러 파열을 방지하는 안전장치.</li>
+                <li><span class="highlight-red">적용 난방방식</span>: <span class="highlight-red">오직 온수난방(온수 보일러) 전용!</span> (※ 증기난방에는 팽창탱크를 설치하지 아니함!).</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4 4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg>
+        4. 보일러 장애 현상: 스케일 (Scale) 원인·영향 및 가동 중 6대 이상현상 정밀 비교
+    </h2>
+    <ul>
+        <li><strong>스케일 (Scale / 관석) 원인, 악영향 및 예방 대책</strong>:
+            <ul>
+                <li><span class="highlight-blue">원인</span>: 급수 중 포함된 경도 성분(칼슘, 마그네슘 등)이 전열면에 부착·침전된 단단한 물때.</li>
+                <li><span class="highlight-red">악영향 5가지</span>: 열전달 저해로 <span class="highlight-red">보일러 열효율 감소</span>, <span class="highlight-red">연료소비량 증가</span>, <span class="highlight-red">배기가스 온도 상승</span>(높아짐), 전열면 국부 과열로 인한 <span class="highlight-red">파열 사고</span>, 보일러 수명 단축.</li>
+                <li><span class="highlight-green">예방 대책</span>: 보일러 급수로 반드시 <span class="highlight-green">연수(Soft Water)를 사용</span>할 것. (※ 경수를 사용하면 스케일 극심!).</li>
+                <li><span class="highlight-purple">수험 출제 함정</span>: 스케일 발생은 <span class="highlight-red">수격작용(Water Hammering)과는 아무런 직접적 관계가 없음!</span></li>
+            </ul>
+        </li>
+        <li><strong>★ 보일러 가동 중 6대 이상현상 메커니즘 정밀 비교 (★주관식 단골 1순위)</strong>:
+            <ol>
+                <li><span class="highlight-blue">수격작용 (Water Hammering)</span>:
+                    <br>&rarr; 증기관 내부에서 생성된 응결수(드레인)가 고온·고압 증기의 밀림 현상으로 배관을 강하게 타격하여 소음·진동을 일으키는 현상.</li>
+                <li><span class="highlight-purple">포밍 (Foaming / 거품 발생)</span>:
+                    <br>&rarr; 보일러 관수 내 함유된 유분, 부유물 등에 의해 관수가 끓을 때 수면에 <span class="highlight-purple">다량의 물거품이 발생하는 현상</span>. (가동 이상 초기 단계).</li>
+                <li><span class="highlight-green">프라이밍 (Priming / 비산)</span>:
+                    <br>&rarr; 관수가 급격히 끓어오를 때 <span class="highlight-green">물거품이 수면을 벗어나 증기 속으로 함께 비산(飛散)</span>하는 현상.</li>
+                <li><span class="highlight-red">캐리오버 (Carry-over / 이월 현상)</span>:
+                    <br>&rarr; 비산된 수분 및 물방울이 증기와 함께 증기관으로 보내져 <span class="highlight-red">배관 내에 물이 고이는 현상</span>. (수격작용의 직접적 전조 현상).</li>
+                <li><span class="highlight-blue">팽출 (Bulging)</span>:
+                    <br>&rarr; 전열면 국부 과열로 인해 <span class="highlight-blue">내압(내부 압력)에 견디지 못하고 전열면이 바깥쪽으로 부풀어 오르는</span> 현상.</li>
+                <li><span class="highlight-purple">압궤 (Collapse)</span>:
+                    <br>&rarr; 전열면 국부 과열로 인해 <span class="highlight-purple">외압(외부 압력)에 견디지 못하고 전열면이 안쪽으로 오목하게 찌그러지는</span> 현상.</li>
+            </ol>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 20%;">이상현상 명칭</th>
+                <th style="width: 45%;">발생 메커니즘 및 징후</th>
+                <th style="width: 35%;">수험 핵심 키워드 구분</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th><span class="highlight-blue">수격작용</span></th>
+                <td>응결수(드레인)가 고온 증기에 밀려 관벽 강하게 타격</td>
+                <td>소음·진동, <span class="highlight-blue">응결수 충격</span></td>
+            </tr>
+            <tr>
+                <th><span class="highlight-purple">포밍</span></th>
+                <td>유분·부유물에 의해 수면에 <span class="highlight-purple">물거품 발생</span></td>
+                <td>관수 표면 거품 형성</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-green">프라이밍</span></th>
+                <td>급격히 끓어 물거품이 수면 벗어나 <span class="highlight-green">증기 속 비산</span></td>
+                <td>수면 튀어 오름 비산</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-red">캐리오버</span></th>
+                <td>비산된 수분이 증기와 함께 증기관으로 이월·고임</td>
+                <td><span class="highlight-red">수격작용 전조 현상</span></td>
+            </tr>
+            <tr>
+                <th><span class="highlight-blue">팽출</span></th>
+                <td>국부 과열로 <span class="highlight-blue">내압에 견디지 못해 바깥으로 부풀어 옴</span></td>
+                <td>내압 &rarr; 바깥 부풀음</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-purple">압궤</span></th>
+                <td>국부 과열로 <span class="highlight-purple">외압에 견디지 못해 안쪽으로 찌그러짐</span></td>
+                <td>외압 &rarr; 안쪽 찌그러짐</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+        5. 냉동설비 정밀 비교: 압축식 냉동기 vs 흡수식 냉동기, 히트펌프 성적계수(COP) 및 에어컨 실외기 설치기준
+    </h2>
+    <ul>
+        <li><strong>압축식 냉동기 (Vapor-compression Refrigeration)</strong>:
+            <ul>
+                <li><span class="highlight-blue">4대 사이클</span>: <span class="highlight-blue">압축기 &rarr; 응축기(실외기) &rarr; 팽창밸브 &rarr; 증발기(실내기)</span>.</li>
+                <li><span class="highlight-purple">구동 에너지</span>: <span class="highlight-purple">전기에너지 (기계적 에너지)</span> 사용.</li>
+                <li><span class="highlight-red">★ 냉수 생산 및 냉동목적 달성 부위 (★출제 최다)</span>: 실내기인 <span class="highlight-red">증발기 (Evaporator)</span>에서 냉수를 생산하고 냉동 목적을 달성함.</li>
+                <li><span class="highlight-green">특성</span>: 소형·개별 방식, 소음 및 진동이 크고 전력 소비량이 많음.</li>
+            </ul>
+        </li>
+        <li><strong>흡수식 냉동기 (Absorption Refrigeration) (★대용량 중앙 방식)</strong>:
+            <ul>
+                <li><span class="highlight-blue">4대 주요 구성요소</span>: <span class="highlight-blue">증발기, 흡수기, 재생기(발생기), 응축기</span> (+팽창밸브). (※ 압축기가 없음!).</li>
+                <li><span class="highlight-purple">구동 에너지 & 냉매/흡수제</span>: <span class="highlight-purple">열에너지 (가스, 폐열 등)</span> 사용. <span class="highlight-purple">냉매 = 물 (H₂O) / 흡수제 = 리튬 브로마이드 (LiBr)</span>.</li>
+                <li><span class="highlight-green">특성</span>: 소음·진동이 극히 작고, 전력 소비량이 작아 <span class="highlight-green">특별고압 수전설비가 불필요</span>함. 대용량 중앙 냉방에 유용.</li>
+                <li><span class="highlight-red">단효용 vs 이중효용 흡수식 (★기출)</span>: <span class="highlight-red">이중효용 흡수식은 재생기(발생기)가 고온·저온 2개</span>로 구성되어 단효용 흡수식보다 <span class="highlight-red">열효율이 훨씬 뛰어남</span>! (※ 흡수기나 팽창밸브가 2개인 것이 아님!).</li>
+            </ul>
+        </li>
+        <li><strong>★ 히트펌프 (Heat Pump / 열펌프) 및 성적계수 (COP) 관계식 (★기출 수치)</strong>:
+            <ul>
+                <li>사방밸브 전환을 통해 1대의 기기로 냉방과 난방을 겸용하는 장치. (압축식 냉동 사이클 응축기 방열량 이용).</li>
+                <li><span class="highlight-red">히트펌프 성적계수 (COP) 공식</span>: <span class="highlight-red">히트펌프 COP = 냉동기 COP + 1</span>
+                    <br>&rarr; <span class="highlight-purple">해석</span>: 동일 기기에서 히트펌프(난방)의 성적계수는 냉동기(냉방) 성적계수보다 <span class="highlight-red">항상 1만큼 큼</span>! (※ "2만큼 크다"고 출제 시 오답!).</li>
+            </ul>
+        </li>
+        <li><strong>냉방설비 배기장치(에어컨 실외기) 법정 설치 공간 기준 (주택건설기준 등에 관한 규칙 제8조)</strong>:
+            <ul>
+                <li><span class="highlight-blue">연결배관 설치 의무</span>: 세대별 주거전용면적이 <span class="highlight-blue">50제곱미터(50m²)를 초과</span>하고 거실/침실이 2개 이상인 경우 <span class="highlight-blue">거실을 포함한 최소 2개 공간</span>에 배기장치 연결배관을 설치할 것.</li>
+                <li><span class="highlight-red">배기장치 설치 여유 공간 치수 (★주관식 수치)</span>:
+                    <br>&rarr; 외부 공기에 직접 닿는 곳 (출입문 설치/열림 상태): <span class="highlight-red">가로 0.5미터(0.5m) 이상</span>.
+                    <br>&rarr; 그 밖의 경우 (실내 및 미서기문 등): <span class="highlight-red">가로 0.5미터(0.5m) 이상 및 세로 0.7미터(0.7m) 이상</span>.</li>
+                <li><span class="highlight-purple">도로면 이격 높이 (건축물의 설비기준 등에 관한 규칙 제23조제3항)</span>: 상업·주거지역 도로면에 설치하는 배기구는 도로면으로부터 <span class="highlight-purple">2미터(2m) 이상의 높이에 설치</span>할 것.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 20%;">구분</th>
+                <th style="width: 40%;">압축식 냉동기</th>
+                <th style="width: 40%;">흡수식 냉동기</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>4대 구성요소</th>
+                <td><span class="highlight-blue">압축기, 응축기, 팽창밸브, 증발기</span></td>
+                <td><span class="highlight-purple">증발기, 흡수기, 재생기(발생기), 응축기</span></td>
+            </tr>
+            <tr>
+                <th>구동 에너지</th>
+                <td><span class="highlight-blue">전기에너지</span> (기계적 압축)</td>
+                <td><span class="highlight-purple">열에너지</span> (가스, 폐열, 증기)</td>
+            </tr>
+            <tr>
+                <th>냉매 / 흡수제</th>
+                <td>프레온 등 화학 냉매</td>
+                <td><span class="highlight-red">냉매 = 물(H₂O) / 흡수제 = LiBr</span></td>
+            </tr>
+            <tr>
+                <th>소음 & 전력</th>
+                <td>소음·진동 큼 / 전력 소비 많음</td>
+                <td><span class="highlight-green">소음·진동 적음 / 특별고압 불필요</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+            💡 [수험 핵심 팁] 제62강 실전 출제 포인트 & 함정 방지 최종 체크
+        </div>
+        <ul>
+            <li><strong>보일러 3대 출력 식</strong>: 정미 = <span class="highlight-blue">난방 + 급탕</span>. 상용 = <span class="highlight-purple">정미 + 배관</span>. 정격 = <span class="highlight-red">상용 + 예열 (용량 결정 기준)</span>.</li>
+            <li><strong>표준방열량 & EDR</strong>: 증기 = <span class="highlight-blue">0.756 kW/m²</span> / 온수 = <span class="highlight-purple">0.523 kW/m²</span>. EDR = <span class="highlight-red">전방열량 / 표준방열량</span>. 팽창탱크 = <span class="highlight-red">온수 보일러 전용</span>.</li>
+            <li><strong>스케일 영향 & 방지</strong>: 효율 감소, 연료증가, 배기가스 상승. 예방 = <span class="highlight-green">연수 사용</span> (수격작용 무관!).</li>
+            <li><strong>가동 이상 6종 핵심</strong>: 수격작용 = <span class="highlight-blue">응결수 충격</span>. 포밍 = <span class="highlight-purple">수면 거품</span>. 프라이밍 = <span class="highlight-green">수면 비산</span>. 캐리오버 = <span class="highlight-red">증기관 이월/고임</span>. 팽출 = <span class="highlight-blue">내압 부풀음</span>. 압궤 = <span class="highlight-purple">외압 찌그러짐</span>.</li>
+            <li><strong>냉동기 & 히트펌프</strong>: 냉수 생산 = <span class="highlight-red">증발기(실내기)</span>. 흡수식 냉매 = <span class="highlight-purple">물</span>. 이중효용 = <span class="highlight-red">재생기(발생기) 2개</span>. 히트펌프 COP = <span class="highlight-red">냉동기 COP + 1</span>.</li>
+            <li><strong>실외기 설치 치수</strong>: 전용면적 <span class="highlight-blue">50m² 초과</span>. 외기 직접 출입문 열림 = <span class="highlight-red">가로 0.5m 이상</span>. 기타 = <span class="highlight-red">가로 0.5m 이상, 세로 0.7m 이상</span>. 도로 이격 = <span class="highlight-purple">2m 이상</span>.</li>
+        </ul>
+    </div>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>주관식 단답형 및 빈칸 채우기 실전 훈련</h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡, ㉢)에 들어갈 알맞은 핵심 용어나 법정 수치, 단위를 아래 빈칸에 직접 작성해 보십시오.</p>
+
+    <ol class="quiz-list">
+        <li>
+            보일러 중 긴 한 개의 관 내에서 예열, 가열, 증발, 과열이 일시 연속적으로 수행되며 보유수량이 작아 부하 추종성이 가장 뛰어난 보일러는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 보일러이다.
+        </li>
+        <li>
+            수직 드럼 구조로 설치 면적이 작고 구조가 간단하여 소형 온수 전용으로만 사용되는 보일러는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 보일러이다.
+        </li>
+        <li>
+            보일러 출력 중 난방부하와 급탕부하만을 합한 용량을 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )출력이라 하고, 여기에 배관부하를 더한 용량을 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )출력이라 한다.
+        </li>
+        <li>
+            보일러 용량(크기)을 결정할 때 기준이 되는 출력으로 난방, 급탕, 배관, 예열부하를 모두 합한 용량을 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )출력이라 한다.
+        </li>
+        <li>
+            증기난방의 표준방열량은 1m²당 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )kW이고, 온수난방의 표준방열량은 1m²당 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )kW이다.
+        </li>
+        <li>
+            상당방열면적(EDR, m²) 계산식의 분모는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )방열량이고, 분자는 전방열량(손실열량)이다.
+        </li>
+        <li>
+            온수 보일러 수온 상승에 따른 체적 팽창 흡수 및 수압 상승 방지를 위해 설치하는 안전장치는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )탱크이며, 증기난방에는 설치하지 않는다.
+        </li>
+        <li>
+            보일러 급수 중 경도 성분이 침전되어 형성되는 스케일(관석) 생성을 예방하기 위해서는 급수로 반드시 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )(을)를 사용하여야 한다.
+        </li>
+        <li>
+            고온·고압 증기관 내부에서 생성된 응결수(드레인)가 증기에 밀려 배관을 강하게 타격하는 현상을 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )작용이라 한다.
+        </li>
+        <li>
+            보일러 관수 내 유분이나 부유물에 의해 관수 표면에 다량의 물거품이 발생하는 현상을 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )(이라) 한다.
+        </li>
+        <li>
+            보일러 관수가 급격히 끓어 물거품이 수면을 벗어나 증기와 함께 비산하는 현상을 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )(이라) 한다.
+        </li>
+        <li>
+            비산된 수분 및 물방울이 증기와 함께 증기관으로 보내져 배관 내에 물이 고이는 현상을 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )(이라) 하며, 이는 수격작용의 전조 현상이 된다.
+        </li>
+        <li>
+            보일러 전열면 국부 과열로 내압에 견디지 못하고 바깥쪽으로 부풀어 오르는 현상을 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )(이라) 하고, 외압에 견디지 못해 안쪽으로 찌그러지는 현상을 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )(이라) 한다.
+        </li>
+        <li>
+            압축식 및 흡수식 냉동기에서 냉수를 생산하고 냉동 목적을 달성하는 실내기 부위는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이다.
+        </li>
+        <li>
+            흡수식 냉동기에서 사용하는 냉매는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )(이)고, 흡수제는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이다.
+        </li>
+        <li>
+            흡수식 냉동기 중 단효용보다 열효율이 뛰어난 이중효용 흡수식 냉동기는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )(이)가 2개로 구성되어 있다.
+        </li>
+        <li>
+            동일 기기에서 히트펌프(열펌프)의 성적계수(COP)는 냉동기의 성적계수보다 항상 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )만큼 크다.
+        </li>
+        <li>
+            주택건설기준상 세대별 주거전용면적이 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )제곱미터를 초과하고 거실/침실이 2개 이상인 경우 최소 2개 공간에 에어컨 실외기 연결배관을 설치해야 한다.
+        </li>
+        <li>
+            에어컨 실외기 설치 공간 여유 치수는 외부 공기에 직접 닿고 출입문 열림 상태 시 가로 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이상이고, 그 밖의 경우 가로 0.5미터 이상 및 세로 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이상이다.
+        </li>
+        <li>
+            상업·주거지역 건축물에 설치하는 에어컨 배기구는 도로면으로부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이상의 높이에 설치해야 한다.
+        </li>
+    </ol>
+
+    <div style="font-size: 9.5pt; color: #666666; margin-top: 30px; padding: 15px; border-top: 1px dashed #666666; line-height: 1.8;">
+        <strong style="display: block; margin-bottom: 10px; color: #333333;">[제62강 주관식 단답형 정답 리스트]</strong>
+        <div class="answer-grid">
+            <div><strong>1.</strong> ㉠ 관류(관류형)</div>
+            <div><strong>2.</strong> ㉠ 입형</div>
+            <div><strong>3.</strong> ㉠ 정미, ㉡ 상용</div>
+            <div><strong>4.</strong> ㉠ 정격</div>
+            <div><strong>5.</strong> ㉠ 0.756, ㉡ 0.523</div>
+            <div><strong>6.</strong> ㉠ 표준</div>
+            <div><strong>7.</strong> ㉠ 팽창</div>
+            <div><strong>8.</strong> ㉠ 연수(Soft Water)</div>
+            <div><strong>9.</strong> ㉠ 수격(워터해머)</div>
+            <div><strong>10.</strong> ㉠ 포밍(Foaming)</div>
+            <div><strong>11.</strong> ㉠ 프라이밍(Priming)</div>
+            <div><strong>12.</strong> ㉠ 캐리오버(Carry-over)</div>
+            <div><strong>13.</strong> ㉠ 팽출(Bulging), ㉡ 압궤(Collapse)</div>
+            <div><strong>14.</strong> ㉠ 증발기</div>
+            <div><strong>15.</strong> ㉠ 물(H₂O), ㉡ 리튬 브로마이드(LiBr)</div>
+            <div><strong>16.</strong> ㉠ 재생기(발생기)</div>
+            <div><strong>17.</strong> ㉠ 1</div>
+            <div><strong>18.</strong> ㉠ 50</div>
+            <div><strong>19.</strong> ㉠ 0.5, ㉡ 0.7</div>
+            <div><strong>20.</strong> ㉠ 2</div>
+        </div>
+    </div>
+
+</body>
+</html>

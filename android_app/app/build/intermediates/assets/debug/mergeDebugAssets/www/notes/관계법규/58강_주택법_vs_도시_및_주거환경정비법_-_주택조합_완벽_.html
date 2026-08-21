@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 관계법규 - 제58강 학습 노트 (주택법·정비법 조합 비교·정비사업 절차·토지등소유자 동의산정)</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+            letter-spacing: -0.05em;
+        }
+        
+        h1 {
+            font-size: 13pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        /* 토너 절약 4색 시각 강조 클래스 */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #16803d;
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #6d28d9;
+        }
+        
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        ol {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        .quiz-list li {
+            margin-bottom: 8px;
+        }
+
+        .answer-container {
+            margin-top: 30px;
+            padding: 15px;
+            border-top: 1px dashed #666666;
+            font-size: 9.5pt;
+            color: #666666;
+            line-height: 1.8;
+        }
+
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px 15px;
+            margin-top: 10px;
+        }
+
+        .answer-grid div {
+            border-bottom: 1px none #eeeeee;
+        }
+
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        제58강. 주택법 vs 도시 및 주거환경정비법 - 주택조합 완벽 비교, 정비사업 전체 절차, 철거·인가 특칙 & 토지등소유자 산정기준
+    </h1>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        1. [시험 최다 출제] 주택법상 주택조합 VS 도시정비법상 정비사업조합 핵심 비교
+    </h2>
+    <ul>
+        <li><strong>주택법상 주택조합 (지역·직장·리모델링주택조합)</strong>:
+            <ul>
+                <li>종류: <span class="highlight-blue">지역주택조합</span>, <span class="highlight-blue">직장주택조합</span>, <span class="highlight-blue">리모델링주택조합</span>의 3가지.</li>
+                <li>관할 행정청 및 설립 절차: 원칙적으로 <span class="highlight-red">특별자치시장·특별자치도지사·시장·군수·구청장의 인가</span>를 받아야 함.</li>
+                <li><strong>★[최다 빈출 특례] 국민주택 공급 직장주택조합</strong>: 국민주택을 공급받기 위하여 직장주택조합을 설립하려는 경우에는 인가가 아닌 <span class="highlight-red">신고</span>하여야 함.</li>
+                <li>법인격 및 등기: 원칙적으로 비법인 사단(등기 불요)이나, <span class="highlight-purple">리모델링주택조합</span> 등은 등기하여 법인으로 설립 가능.</li>
+                <li>설립요건 (토지 확보): 지역·직장주택조합은 대지의 <span class="highlight-purple">100분의 80 이상 사용권원</span> + <span class="highlight-purple">100분의 15 이상 소유권</span> 확보 필수.</li>
+                <li>리모델링주택조합 결의요건: 동별 <span class="highlight-green">3분의 2 이상</span> 결의 (단지 전체 리모델링 시 전체 <span class="highlight-green">3분의 2 이상</span> + 각 동 <span class="highlight-green">과반수</span> 결의).</li>
+            </ul>
+        </li>
+        <li><strong>도시정비법상 정비사업조합 (재개발정비사업조합·재건축정비사업조합)</strong>:
+            <ul>
+                <li>종류 및 명칭: <span class="highlight-blue">재개발정비사업조합</span> 및 <span class="highlight-blue">재건축정비사업조합</span>. 반드시 상호에 <span class="highlight-red">'정비사업조합'</span>이라는 문자를 사용하여야 함.</li>
+                <li>관할 행정청: <span class="highlight-red">시장·군수등</span>(특별자치시장, 특별자치도지사, 시장, 군수, 자치구 구청장)의 인가를 받아야 함.</li>
+                <li><strong>★[필수 암기] 법인격 및 성립 요건 (제38조)</strong>: 조합은 인가를 받은 날부터 <span class="highlight-red">30일 이내</span>에 주된 사무소 소재지에서 <span class="highlight-red">등기함'으로써' 성립</span>함 (등기가 성립요건! 법적 성격 = <span class="highlight-purple">사단법인</span>). 민법 중 사단법인에 관한 규정을 준용함.</li>
+                <li><strong>★[출제 1순위] 정비사업조합 설립 동의 요건 (제35조)</strong>:
+                    <ol>
+                        <li><strong>재개발사업 조합</strong>: 토지등소유자의 <span class="highlight-red">4분의 3 이상</span> 및 토지면적의 <span class="highlight-red">2분의 1 이상</span>의 토지소유자 동의.</li>
+                        <li><strong>재건축사업 조합 (주택단지 안)</strong>: 동별 구분소유자의 <span class="highlight-blue">과반수</span> 동의 + 주택단지 전체 구분소유자의 <span class="highlight-blue">4분의 3 이상(또는 100분의 70 이상)</span> 및 토지면적의 <span class="highlight-blue">4분의 3 이상(또는 100분의 70 이상)</span> 토지소유자 동의.</li>
+                        <li><strong>재건축사업 조합 (주택단지가 아닌 지역 포함 시)</strong>: 토지 또는 건축물 소유자의 <span class="highlight-purple">4분의 3 이상</span> 및 토지면적의 <span class="highlight-purple">3분의 2 이상</span> 토지소유자 동의.</li>
+                    </ol>
+                </li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 15%;">구분</th>
+                <th style="width: 42%;">주택법상 주택조합</th>
+                <th style="width: 43%;">도시정비법상 정비사업조합</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>조합 종류</th>
+                <td>지역, 직장, 리모델링 주택조합</td>
+                <td><span class="highlight-blue">재개발, 재건축</span> 정비사업조합</td>
+            </tr>
+            <tr>
+                <th>관할 관청</th>
+                <td>특별자치시장·특별자치도지사·시장·군수·구청장</td>
+                <td><span class="highlight-red">시장·군수등</span> (지자체장 전원 포함)</td>
+            </tr>
+            <tr>
+                <th>설립 행위</th>
+                <td>원칙: <span class="highlight-red">인가</span><br>예외: 국민주택 공급 직장조합은 <span class="highlight-red">신고</span></td>
+                <td>원칙: <span class="highlight-red">인가</span><br>(신고 예외 없음)</td>
+            </tr>
+            <tr>
+                <th>성립 요건 및 법인격</th>
+                <td>원칙 비법인 사단 (등기 불요)<br>리모델링은 법인 설립 가능</td>
+                <td>인가 후 <span class="highlight-red">30일 이내 설립등기</span>로 성립<br>(법적 성격: <span class="highlight-purple">사단법인</span>)</td>
+            </tr>
+            <tr>
+                <th>핵심 동의 요건</th>
+                <td>지역/직장: 대지사용권원 <span class="highlight-purple">100분의 80</span> + 소유권 <span class="highlight-purple">100분의 15</span><br>리모델링: 동 <span class="highlight-green">2/3</span> (전체 <span class="highlight-green">2/3</span> + 동 <span class="highlight-green">과반수</span>)</td>
+                <td>재개발: 토지등소유자 <span class="highlight-red">3/4</span> + 면적 <span class="highlight-red">1/2</span><br>재건축(단지내): 동 <span class="highlight-blue">과반수</span> + 전체 <span class="highlight-blue">3/4(70%)</span> + 면적 <span class="highlight-blue">3/4(70%)</span><br>재건축(단지외): 소유자 <span class="highlight-purple">3/4</span> + 면적 <span class="highlight-purple">2/3</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        2. 도시 및 주거환경정비법 - 전체 사업 추진 절차 체계 정밀 분석
+    </h2>
+    <ul>
+        <li><strong>정비사업 추진 10단계 핵심 흐름</strong>:
+            <br>① 기본방침 수립 -> ② 기본계획 수립 -> ③ 정비계획 입안 및 정비구역 지정 -> ④ 조합설립인가(등기 30일) -> ⑤ 사업시행계획인가 -> ⑥ 분양신청 통지·공고 -> ⑦ 관리처분계획인가 -> ⑧ 기존 건축물 철거 및 공사 -> ⑨ 준공인가 -> ⑩ 소유권 이전고시 및 소유권 취득.
+        </li>
+        <li><strong>① 도시·주거환경정비기본방침 (국토교통부장관)</strong>:
+            <ul>
+                <li>주체: <span class="highlight-blue">국토교통부장관</span>이 10년마다 수립하고, <span class="highlight-blue">5년마다 타당성</span>을 검토하여 결과를 기본방침에 반영함.</li>
+            </ul>
+        </li>
+        <li><strong>② 도시·주거환경정비기본계획 (★군수 수립 제외)</strong>:
+            <ul>
+                <li>수립권자: 특별시장, 광역시장, 특별자치시장, 특별자치도지사, <span class="highlight-red">시장</span> (※ <span class="highlight-red">군수는 수립권자에서 전면 제외!★</span> 추상적 방향 계획이므로 군 단위는 수립하지 않음).</li>
+                <li>주기: <span class="highlight-purple">10년 단위</span>로 수립하고, <span class="highlight-purple">5년마다 타당성</span> 검토.</li>
+            </ul>
+        </li>
+        <li><strong>③ 정비계획 수립 및 정비구역 지정 (구체적 구역 지정)</strong>:
+            <ul>
+                <li>구분: 구체적 집행 계획이므로 군지역도 반드시 정비계획을 수립함.</li>
+                <li>특별시장·광역시장 구역: 자치구 구청장 또는 가로구역 군수가 정비계획을 <span class="highlight-blue">입안</span>하여 특별시장·광역시장에게 정비구역 지정을 <span class="highlight-blue">신청</span>함.</li>
+                <li>특별자치시·특별자치도·시·군 구역: 시장 또는 <span class="highlight-green">군수가 직접</span> 정비계획을 <span class="highlight-green">입안·결정</span>하여 정비구역을 <span class="highlight-green">지정</span>함.</li>
+            </ul>
+        </li>
+        <li><strong>④ 조합 설립 및 ⑤ 사업시행계획인가</strong>:
+            <ul>
+                <li>조합설립인가 후 <span class="highlight-red">30일 이내 등기</span>로 조합 성립 -> 사업시행자가 구체적 공사기획서인 <span class="highlight-purple">사업시행계획서</span>를 작성하여 시장·군수등의 <span class="highlight-purple">인가</span>를 받음.</li>
+            </ul>
+        </li>
+        <li><strong>⑥ 분양신청 및 ⑦ 관리처분계획인가 (분양처분 확정)</strong>:
+            <ul>
+                <li>사업시행자는 사업시행계획인가 고시가 있은 날부터 <span class="highlight-blue">120일 이내</span>에 개별 토지등소유자에게 분담금 추산액 등을 통지하고 일간신문에 공고함 (분양신청기간 = 통지한 날부터 <span class="highlight-blue">30일 이상 60일 이내</span>, 20일 연장 가능).</li>
+                <li>분양신청 현황을 기초로 <span class="highlight-red">관리처분계획</span>(분양계획)을 수립하여 시장·군수등의 <span class="highlight-red">인가</span>를 받음.</li>
+            </ul>
+        </li>
+        <li><strong>⑧ 공사·⑨ 준공인가 및 ⑩ 소유권 이전고시 (★소유권 취득 시기)</strong>:
+            <ul>
+                <li>공사 완료 후 시장·군수등의 <span class="highlight-green">준공인가</span> 및 공사완료 고시 -> 사업시행자가 대지확정측량 및 토지분할 후 <span class="highlight-purple">소유권 이전고시</span>를 함.</li>
+                <li><strong>★[주관식 최다 빈출] 소유권 취득 시기 (제86조 제2항)</strong>: 대지 또는 건축물을 분양받을 자는 소유권 이전고시가 있은 날의 <span class="highlight-red">다음 날</span>에 그 대지 또는 건축물의 <span class="highlight-red">소유권을 취득</span>함 (등기 없이도 법률 규정에 의해 다음 날 물권변동 발생!).</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        3. 사업시행계획인가·관리처분계획인가 특칙 및 기존 건축물 철거 시기 (도시정비법 제50조, 제52조, 제81조)
+    </h2>
+    <ul>
+        <li><strong>사업시행계획인가 시 치안 및 화재 예방 통보 (제50조, 제52조)</strong>:
+            <ul>
+                <li>취지: 정비구역 안의 철거 및 이주 과정에서 범죄 및 화재 위험이 급증함에 따라 경찰 및 소방관서와 협조체계 구축.</li>
+                <li>시장·군수등은 사업시행계획인가를 한 경우 지체 없이 <span class="highlight-blue">시·도경찰청장 또는 경찰서장</span>, <span class="highlight-purple">소방서장</span>에게 통보하여야 함.</li>
+                <li>시장·군수등은 범죄 예방 및 화재 예방을 위하여 경찰서장 및 소방서장에게 <span class="highlight-red">순찰 강화</span>, <span class="highlight-red">순찰초소 설치</span> 등을 요청할 수 있음.</li>
+            </ul>
+        </li>
+        <li><strong>★기존 건축물의 철거 시기 및 예외적 조기 철거 (제81조★)</strong>:
+            <ul>
+                <li><strong>원칙적 철거 시기</strong>: 사업시행자는 <span class="highlight-red">관리처분계획인가를 받은 후</span> 기존 건축물을 철거하여야 함.</li>
+                <li><strong>★예외적 사전(조기) 철거 요건 (2가지 요건 동시 충족)</strong>:
+                    <ol>
+                        <li>사유: 건물의 붕괴 등 <span class="highlight-purple">안전사고의 우려</span>가 있는 경우 또는 폐공가 밀집으로 <span class="highlight-purple">범죄 발생의 우려</span>가 있는 경우.</li>
+                        <li>절차 요건: <span class="highlight-red">토지등소유자의 동의</span> + <span class="highlight-red">시장·군수등의 허가</span>를 받아 관리처분계획인가 전이라도 기존 건축물을 조기 철거할 수 있음.</li>
+                    </ol>
+                </li>
+            </ul>
+        </li>
+        <li><strong>관리처분계획 인가 고시의 효과 (사용·수익의 정지 - 제81조 제1항)</strong>:
+            <ul>
+                <li>원칙: 관리처분계획인가의 고시가 있은 때에는 종전의 토지 또는 건축물의 소유자·지상권자·전세권자·임차권자 등 권리자는 <span class="highlight-blue">소유권 이전고시가 있는 날까지</span> 종전의 토지 또는 건축물을 <span class="highlight-blue">사용하거나 수익할 수 없음</span>.</li>
+                <li>예외 (사용·수익 허용 2가지): ① <span class="highlight-green">사업시행자의 동의</span>를 받은 경우 ② 「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」에 따른 <span class="highlight-green">손실보상이 완료되지 아니한</span> 경우.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+            💡 [수험 핵심 비법] 기존 건축물 철거 절차 및 소유권 이전 물권변동 시점
+        </div>
+        <ul>
+            <li><strong>철거의 정석</strong>: 원칙 = <span class="highlight-red">관리처분계획인가 후</span> / 예외(안전사고·우범지대) = <span class="highlight-purple">토지등소유자 동의</span> + <span class="highlight-purple">시장·군수등의 허가</span> 받아 사전 철거!</li>
+            <li><strong>물권변동 완성 시점</strong>: 분양받을 자의 소유권 취득 = <span class="highlight-red">소유권 이전고시가 있은 날의 '다음 날'</span> (등기 없이 취득하며, 이후 지체 없이 등기촉탁·신청함).</li>
+        </ul>
+    </div>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg>
+        4. 노후·불량건축물의 정밀 정의 및 법정 수치 (도시정비법 제2조 제3호, 영 제2조)
+    </h2>
+    <ul>
+        <li><strong>노후·불량건축물의 개념 및 판단 요건</strong>:
+            <ol>
+                <li>건축물이 훼손되거나 일부가 멸실되어 붕괴, 그 밖의 <span class="highlight-red">안전사고의 우려</span>가 있는 건축물.</li>
+                <li><strong>★[수치 단답형 최다 빈출] 준공 후 내구연한 기준</strong>: 준공된 후 <span class="highlight-red">20년 이상 30년 이하</span>의 범위에서 시·도 조례로 정하는 기간이 지난 건축물.</li>
+                <li><strong>★[비교 비용 산식] 보수·보강 비용 vs 신축 비용</strong>: 건축물을 <span class="highlight-purple">40년까지 사용</span>하기 위하여 보수·보강하는 데 드는 비용이 철거 후 새로운 건축물을 <span class="highlight-purple">건설하는 데 드는 비용보다 클 것으로 예상</span>되는 건축물.</li>
+                <li>도시미관을 현저히 저해하거나 구조적 결함이 있는 건축물.</li>
+            </ol>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        5. 토지등소유자의 법정 정의 및 재건축과의 결정적 차이 (도시정비법 제2조 제9호)
+    </h2>
+    <ul>
+        <li><strong>주거환경개선사업 및 재개발사업의 토지등소유자</strong>:
+            <ul>
+                <li>범위: 정비구역에 위치한 <span class="highlight-red">토지 또는 건축물의 소유자</span> 또는 그 <span class="highlight-red">지상권자</span>.</li>
+                <li>특징: 토지만 소유한 자, 건축물만 소유한 자, 지상권자도 각각 독립된 토지등소유자에 포함됨.</li>
+            </ul>
+        </li>
+        <li><strong>★[시험 단골 함정] 재건축사업의 토지등소유자</strong>:
+            <ul>
+                <li>범위: 정비구역에 위치한 <span class="highlight-purple">건축물 및 그 부속토지의 소유자</span>.</li>
+                <li><strong>★결정적 차이점</strong>: 재건축사업에서는 <span class="highlight-red">지상권자가 전면 제외</span>되며, 토지만 소유하거나 건축물만 소유한 자도 토지등소유자에서 <span class="highlight-red">제외</span>됨 (이들은 조합원 자격이 없으며 <span class="highlight-purple">매도청구 대상</span>이 됨!).</li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">정비사업 구분</th>
+                <th style="width: 45%;">토지등소유자의 법정 범위 요건</th>
+                <th style="width: 30%;">지상권자 포함 여부</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th class="highlight-red">주거환경개선사업</th>
+                <td>정비구역 안의 <span class="highlight-red">토지 또는 건축물의 소유자</span> 또는 그 <span class="highlight-red">지상권자</span></td>
+                <td><span class="highlight-red">포함 (독립 토지등소유자)</span></td>
+            </tr>
+            <tr>
+                <th class="highlight-blue">재개발사업</th>
+                <td>정비구역 안의 <span class="highlight-blue">토지 또는 건축물의 소유자</span> 또는 그 <span class="highlight-blue">지상권자</span></td>
+                <td><span class="highlight-blue">포함 (독립 토지등소유자)</span></td>
+            </tr>
+            <tr>
+                <th class="highlight-purple">재건축사업</th>
+                <td>정비구역 안의 <span class="highlight-purple">건축물 및 그 부속토지의 소유자</span></td>
+                <td><span class="highlight-red">제외 (지상권자 전면 불인정)</span><br>토지/건물 단독 소유자 제외</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M11 5H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-5"></path><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+        6. 정비사업별 토지등소유자 동의자 수 산정 방법 정밀 정리 (도시정비법 시행령 제33조)
+    </h2>
+    <ul>
+        <li><strong>공유자 및 지상권 설정 토지의 산정 원칙</strong>:
+            <ul>
+                <li>공유 토지/건축물: 1필지의 토지 또는 하나의 건축물을 여럿이 공유하는 경우 그 여럿을 대표하는 <span class="highlight-red">1인</span>만을 토지등소유자로 산정함.</li>
+                <li><strong>★지상권 설정 토지 산정 (재개발)</strong>: 토지의 소유자와 해당 토지의 지상권자는 각각 1인이 아니라 <span class="highlight-red">토지소유자와 지상권자를 대표하는 1인</span>만을 토지등소유자로 산정함 (둘이 합쳐서 1표!).</li>
+            </ul>
+        </li>
+        <li><strong>1인이 다수 부동산 소유 시 산정 원칙</strong>:
+            <ul>
+                <li>1인이 다수 필지의 토지 또는 다수의 건축물을 소유하고 있는 경우 수에 관계없이 <span class="highlight-blue">토지등소유자를 1인</span>으로 산정함.</li>
+                <li>동일한 공유자가 둘 이상의 부동산을 소유한 경우에도 공유자 여럿을 대표하는 <span class="highlight-blue">1인</span>만을 산정함.</li>
+            </ul>
+        </li>
+        <li><strong>★국·공유지 산정 및 30일 간주 규정 (영 제33조 제1항 제5호)</strong>:
+            <ul>
+                <li>국·공유지에 대해서는 그 <span class="highlight-purple">재산관리청 각각</span>을 토지등소유자로 산정함.</li>
+                <li>재산관리청은 동의 요청을 받은 날부터 <span class="highlight-red">30일 이내</span>에 동의 여부를 표시하지 아니하면 <span class="highlight-red">동의한 것으로 봄</span>.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 30%;">부동산 소유 현황 구분</th>
+                <th style="width: 45%;">동의자 수 산정 방법 기준</th>
+                <th style="width: 25%;">비고 및 특례</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th class="highlight-blue">1필지/건물 여럿이 공유</th>
+                <td>여럿을 대표하는 <span class="highlight-red">1인</span>으로 산정</td>
+                <td>대표자 지정 필수</td>
+            </tr>
+            <tr>
+                <th class="highlight-red">토지 소유자 + 지상권자</th>
+                <td>토지소유자와 지상권자를 <span class="highlight-red">대표하는 1인</span>으로 산정</td>
+                <td>합쳐서 1인 처리</td>
+            </tr>
+            <tr>
+                <th class="highlight-purple">1인이 다수 필지/건물 소유</th>
+                <td>부동산 수에 관계없이 <span class="highlight-purple">1인</span>으로 산정</td>
+                <td>다수 소유도 1표</td>
+            </tr>
+            <tr>
+                <th class="highlight-green">국·공유지 재산관리청</th>
+                <td><span class="highlight-green">재산관리청 각각</span>을 토지등소유자로 산정</td>
+                <td><span class="highlight-red">30일 내</span> 미표시 시 동의 간주</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>주관식 단답형 및 빈칸 채우기 실전 훈련</h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡, ㉢)에 들어갈 알맞은 핵심 용어나 법정 숫자를 작성해 보십시오.</p>
+
+    <ol class="quiz-list" style="line-height: 2.1;">
+        <li>
+            국민주택을 공급받기 위하여 직장주택조합을 설립하려는 자는 관할 지자체장에게 ( ㉠ )하여야 한다.
+        </li>
+        <li>
+            정비사업조합은 조합설립인가를 받은 날부터 ( ㉠ )일 이내에 주된 사무소 소재지에서 ( ㉡ )함의로써 성립한다.
+        </li>
+        <li>
+            재개발사업 조합을 설립하려면 토지등소유자의 4분의 ( ㉠ ) 이상 및 토지면적의 2분의 ( ㉡ ) 이상의 토지소유자의 동의를 받아야 한다.
+        </li>
+        <li>
+            재건축사업 조합 설립 시 주택단지 안의 경우 공동주택의 각 동별 구분소유자의 ( ㉠ ) 동의와 전체 구분소유자의 4분의 3 이상의 동의를 받아야 한다.
+        </li>
+        <li>
+            도시·주거환경정비기본방침은 ( ㉠ )장관이 ( ㉡ )년마다 수립하고 ( ㉢ )년마다 타당성을 검토한다.
+        </li>
+        <li>
+            도시·주거환경정비기본계획 수립권자 중 ( ㉠ )는 수립권자에서 제외된다.
+        </li>
+        <li>
+            분양받을 자는 소유권 이전고시가 있은 날의 ( ㉠ )에 그 대지 또는 건축물의 소유권을 취득한다.
+        </li>
+        <li>
+            시장·군수등은 사업시행계획인가를 한 경우 지체 없이 시·도경찰청장 또는 ( ㉠ ) 및 ( ㉡ )에게 통보하여야 한다.
+        </li>
+        <li>
+            사업시행자는 ( ㉠ )인가를 받은 후 기존 건축물을 철거함이 원칙이다.
+        </li>
+        <li>
+            건물 붕괴 등 안전사고 우려가 있는 경우 토지등소유자의 ( ㉠ )와 시장·군수등의 ( ㉡ )를 받아 기존 건축물을 사전 철거할 수 있다.
+        </li>
+        <li>
+            관리처분계획인가 고시가 있은 때에는 종전의 권리자는 ( ㉠ )고시가 있는 날까지 종전 토지 및 건축물을 사용·수익할 수 없다.
+        </li>
+        <li>
+            노후·불량건축물이란 준공된 후 ( ㉠ )년 이상 ( ㉡ )년 이하의 범위에서 조례로 정하는 기간이 지난 건축물을 말한다.
+        </li>
+        <li>
+            노후·불량건축물 판정 시 건축물을 ( ㉠ )년까지 사용하기 위해 보수·보강하는 비용이 신축 비용보다 클 것으로 예상되는 건축물이 포함된다.
+        </li>
+        <li>
+            재개발사업의 토지등소유자에는 정비구역 안의 토지 또는 건축물의 소유자 및 그 ( ㉠ )자가 포함된다.
+        </li>
+        <li>
+            재건축사업의 토지등소유자는 정비구역 안의 ( ㉠ ) 및 그 ( ㉡ )의 소유자이다.
+        </li>
+        <li>
+            재건축사업에서 ( ㉠ )자는 토지등소유자에서 전면 제외된다.
+        </li>
+        <li>
+            재개발사업에서 토지에 지상권이 설정되어 있는 경우 토지소유자와 지상권자를 대표하는 ( ㉠ )인을 토지등소유자로 산정한다.
+        </li>
+        <li>
+            1인이 정비구역 내 다수 필지의 토지를 소유하고 있는 경우 필지의 수에 관계없이 토지등소유자를 ( ㉠ )인으로 산정한다.
+        </li>
+        <li>
+            정비사업에서 국·공유지에 대해서는 그 ( ㉠ ) 각각을 토지등소유자로 산정한다.
+        </li>
+        <li>
+            국·공유지 재산관리청은 동의 요청을 받은 날부터 ( ㉠ )일 이내에 동의 여부를 표시하지 아니하면 동의한 것으로 본다.
+        </li>
+    </ol>
+
+    <div class="answer-container">
+        <strong>[제58강 주관식 단답형 정답 리스트]</strong>
+        <div class="answer-grid">
+            <div><strong>1.</strong> ㉠ 신고</div>
+            <div><strong>2.</strong> ㉠ 30 | ㉡ 등기</div>
+            <div><strong>3.</strong> ㉠ 3 | ㉡ 1</div>
+
+            <div><strong>4.</strong> ㉠ 과반수</div>
+            <div><strong>5.</strong> ㉠ 국토교통부 | ㉡ 10 | ㉢ 5</div>
+            <div><strong>6.</strong> ㉠ 군수</div>
+
+            <div><strong>7.</strong> ㉠ 다음 날</div>
+            <div><strong>8.</strong> ㉠ 경찰서장 | ㉡ 소방서장</div>
+            <div><strong>9.</strong> ㉠ 관리처분계획</div>
+
+            <div><strong>10.</strong> ㉠ 동의 | ㉡ 허가</div>
+            <div><strong>11.</strong> ㉠ 소유권 이전</div>
+            <div><strong>12.</strong> ㉠ 20 | ㉡ 30</div>
+
+            <div><strong>13.</strong> ㉠ 40</div>
+            <div><strong>14.</strong> ㉠ 지상권</div>
+            <div><strong>15.</strong> ㉠ 건축물 | ㉡ 부속토지</div>
+
+            <div><strong>16.</strong> ㉠ 지상권</div>
+            <div><strong>17.</strong> ㉠ 1</div>
+            <div><strong>18.</strong> ㉠ 1</div>
+
+            <div><strong>19.</strong> ㉠ 재산관리청</div>
+            <div><strong>20.</strong> ㉠ 30</div>
+            <div></div>
+        </div>
+    </div>
+
+</body>
+</html>

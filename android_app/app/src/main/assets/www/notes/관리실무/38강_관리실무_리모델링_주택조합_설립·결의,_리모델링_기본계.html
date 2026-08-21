@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 관리실무 - 제38강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+            letter-spacing: -0.05em;
+        }
+        
+        h1 {
+            font-size: 12pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        /* 토너 절약 4색 시각 강조 클래스 */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #16803d; 
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #6d28d9; 
+        }
+        
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        ol {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        /* 정답 리스트 3열 격자 레이아웃 */
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px 15px;
+        }
+
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        제38강. 관리실무: 리모델링 주택조합 설립·결의, 리모델링 기본계획, 안전진단·지원센터, 행위허가 동의비율 및 법적 특례
+    </h1>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        1. 리모델링 주택조합 설립 절차, 결의요건 및 매도청구
+    </h2>
+    <ul>
+        <li><strong>관할 관청 및 행위 종류 (★인가 vs 신고)</strong>:
+            <ul>
+                <li>주택단지 전체 또는 특정 동을 리모델링하기 위하여 조합을 설립하려는 경우 시장·군수·구청장의 <span class="highlight-red">인가</span>를 받아야 함 (주택법 제11조제1항). (※ '신고'로 출제 시 오답★).</li>
+            </ul>
+        </li>
+        <li><strong>조합 설립 결의요건 (★구분소유자 및 의결권 법정 비율)</strong>:
+            <ul>
+                <li><span class="highlight-blue">주택단지 전체를 리모델링하는 경우</span>: 전체 구분소유자와 의결권의 각 <span class="highlight-red">3분의 2 이상</span>의 결의 + 각 동의 구분소유자와 의결권의 각 <span class="highlight-red">과반수</span> 결의.</li>
+                <li><span class="highlight-purple">동을 리모델링하는 경우</span>: 해당 동의 구분소유자와 의결권의 각 <span class="highlight-red">3분의 2 이상</span>의 결의.</li>
+            </ul>
+        </li>
+        <li><strong>설립인가 신청 시 첨부 서류 (경과 연수 증명)</strong>:
+            <ul>
+                <li>대수선 리모델링: 사용검사일 또는 사용승인일부터 <span class="highlight-green">10년 이상</span>이 지났음을 증명하는 서류.</li>
+                <li>증축형 리모델링: 사용검사일 또는 사용승인일부터 <span class="highlight-red">15년 이상</span>(15년 이상 20년 미만의 기간에서 조례로 정하는 경우에는 그 기간)이 지났음을 증명하는 서류.
+                    <br><em>※ 리모델링 주택조합이 대수선 리모델링을 추진할 때는 10년이 지나면 인가 신청이 가능함.</em></li>
+            </ul>
+        </li>
+        <li><strong>조합원 양수인에 대한 동의 간주 및 매도청구</strong>:
+            <ul>
+                <li>동의 간주: 조합 설립에 동의한 사람으로부터 주택을 취득한 사람은 설립에 <span class="highlight-blue">동의한 것으로 본다</span> (보지 아니한다 X).</li>
+                <li>매도청구(★주관식 키워드): 리모델링 주택조합은 리모델링 결의에 <span class="highlight-red">찬성하지 아니하는 자</span>의 주택 및 토지에 대하여 <span class="highlight-red">매도청구</span>를 할 수 있음 (「집합건물의 소유 및 관리에 관한 법률」 제48조 준용, 주택법 제22조).</li>
+            </ul>
+        </li>
+        <li><strong>사업계획승인 또는 허가 신청 기한 (★법정 기한 2년)</strong>:
+            <ul>
+                <li>리모델링 주택조합 설립인가를 받은 날부터 <span class="highlight-red">2년 이내</span>에 사업계획승인(세대수 증가 <span class="highlight-purple">30세대 이상</span>) 또는 리모델링 허가(대수선 또는 <span class="highlight-purple">30세대 미만</span> 세대수 증가)를 신청하여야 함.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        2. 리모델링 기본계획 (수립권자, 단위, 수립절차 및 경미한 변경)
+    </h2>
+    <ul>
+        <li><strong>개념 및 정의 (주택법 제41조의2)</strong>:
+            <ul>
+                <li>의의: <span class="highlight-red">세대수 증가형 리모델링</span>으로 인한 도시밀집, 이주수요 집중 등을 체계적으로 관리하기 위하여 수립하는 계획. (※ '주택종합계획'이나 '면적증가형'으로 출제 시 오답★).</li>
+            </ul>
+        </li>
+        <li><strong>수립권자 및 수립 단위/타당성 검토 (★빈출 법정 수치)</strong>:
+            <ul>
+                <li>수립권자: <span class="highlight-blue">특별시장, 광역시장, 대도시의 시장</span>. (※ 국토교통부장관, 도지사 X. 대도시가 아닌 시의 시장은 도시밀집 우려 등으로 도지사가 수립이 필요하다고 인정하는 시장만 수립하며 도지사의 승인을 받아야 함).</li>
+                <li>수립 단위 및 타당성 검토: <span class="highlight-red">10년 단위</span>로 수립하고, <span class="highlight-red">5년마다</span> 타당성 여부를 재검토하여 반영하여야 함.</li>
+                <li>수립 기준 및 방법: <span class="highlight-purple">국토교통부장관</span>이 정함 (국토교통부장관이 직접 수립하는 것은 아니며 기준만 제시함).</li>
+            </ul>
+        </li>
+        <li><strong>수립 절차 및 의견 제시 기한 (★주관식 숫자 짝짓기)</strong>:
+            <ul>
+                <li>주민 공람: <span class="highlight-red">14일 이상</span> 주민에게 공람.</li>
+                <li>지방의회 의견 청취: 지방의회는 의견 제시를 요청받은 날부터 <span class="highlight-red">30일 이내</span>에 의견을 제시하여야 함 (30일 내 미제시 시 이의 없는 것으로 간주).</li>
+                <li>관계 행정기관 협의: 협의를 요청받은 행정기관의 장은 <span class="highlight-red">30일 이내</span>에 의견을 제시하여야 함.</li>
+                <li>도시계획위원회 심의: 지방도시계획위원회의 심의를 거쳐 고시함.</li>
+            </ul>
+        </li>
+        <li><strong>공람 및 지방의회 의견청취 생략 가능 예외 (경미한 변경)</strong>:
+            <ul>
+                <li>세대수 증가형 리모델링의 수요 예측 결과 세대수가 감소하거나, <span class="highlight-green">10퍼센트 범위에서 증가</span>하는 경우 등 경미한 변경 시 수립 절차 일부 생략 가능.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 22%;">구분</th>
+                <th style="width: 38%;">리모델링 주택조합 설립인가</th>
+                <th style="width: 40%;">리모델링 기본계획</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>관할 및 주체</th>
+                <td><span class="highlight-red">시장·군수·구청장</span> 인가</td>
+                <td><span class="highlight-blue">특별시장, 광역시장, 대도시 시장</span> 수립</td>
+            </tr>
+            <tr>
+                <th>대상 행위</th>
+                <td>단지 전체 또는 특정 동 리모델링</td>
+                <td><span class="highlight-red">세대수 증가형</span> 리모델링 체계적 관리</td>
+            </tr>
+            <tr>
+                <th>수립/경과 기준</th>
+                <td>대수선 <span class="highlight-purple">10년</span> / 증축 <span class="highlight-red">15년</span> 이상 경과</td>
+                <td><span class="highlight-red">10년 단위</span> 수립, <span class="highlight-red">5년마다</span> 재검토</td>
+            </tr>
+            <tr>
+                <th>결의 및 처리</th>
+                <td>전체: <span class="highlight-red">3분의 2</span> + 동별 <span class="highlight-red">과반수</span><br>동별: 해당 동 <span class="highlight-red">3분의 2</span> 이상</td>
+                <td>주민공람 <span class="highlight-red">14일 이상</span><br>지방의회/협의 <span class="highlight-red">30일 이내</span> 의견 제시</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg>
+        3. 증축형 리모델링 안전진단, 전문기관 검토, 구조설계도서 및 지원센터
+    </h2>
+    <ul>
+        <li><strong>증축형 리모델링의 안전진단 요건 (★대상 구분)</strong>:
+            <ul>
+                <li>안전진단 요청 주체: <span class="highlight-red">증축형 리모델링</span>을 하려는 자만 시장·군수·구청장에게 안전진단을 요청함 (주택법 제68조제1항). (※ 대수선 리모델링은 안전진단 요청 대상이 아니므로 오답 주의!).</li>
+                <li>안전진단 결과 처리: 안전진단 결과 건축물의 구조안전에 위험이 있어 <span class="highlight-purple">재건축사업</span> 또는 <span class="highlight-purple">소규모재건축사업</span>의 추진이 필요하다고 결정된 경우 시장·군수·구청장은 <span class="highlight-red">증축형 리모델링 허가를 하여서는 아니 됨</span>.</li>
+            </ul>
+        </li>
+        <li><strong>수직증축형 리모델링의 전문기관 안전성 검토 및 구조설계도서</strong>:
+            <ul>
+                <li>전문기관 안전성 검토 의뢰: 시장·군수·구청장은 수직증축형 리모델링에 대하여 <span class="highlight-blue">국토안전관리원</span> 또는 <span class="highlight-blue">한국건설기술연구원</span>에 안전성 검토를 의뢰하여야 함.</li>
+                <li>구조설계도서 작성(★주관식 단골 용어): 수직증축형 리모델링의 설계자는 국토교통부장관이 정하여 고시하는 <span class="highlight-red">구조설계도서</span>를 작성하여야 함.</li>
+            </ul>
+        </li>
+        <li><strong>도시계획위원회 심의 기준 세대수 (★50세대 이상)</strong>:
+            <ul>
+                <li>시장·군수·구청장은 세대수 증가형 리모델링 허가 시 세대수가 <span class="highlight-red">50세대 이상</span> 증가하는 경우 시·군·구 도시계획위원회의 <span class="highlight-red">심의</span>를 거쳐야 함 (주택법 제66조제2항).</li>
+            </ul>
+        </li>
+        <li><strong>리모델링 지원센터 (공동주택관리법 제38조의2)</strong>:
+            <ul>
+                <li>설치·운영자: <span class="highlight-green">시장·군수·구청장</span>이 설치·운영할 수 있음.</li>
+                <li>주요 수행 업무: ① 리모델링 주택조합 설립업무 지원, ② 설계자 및 시공자 선정업무 지원, ③ <span class="highlight-purple">권리변동계획</span> 수립 지원 등.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        4. 공동주택 리모델링 행위허가 동의비율 및 허가기준
+    </h2>
+    <ul>
+        <li><strong>서면 동의 철회권 인정 시점 (★제출 전 vs 제출 후)</strong>:
+            <ul>
+                <li>리모델링 허가 신청에 동의한 소유자는 리모델링 주택조합이나 입주자대표회의가 시장·군수·구청장에게 허가신청서를 <span class="highlight-red">제출하기 전</span>에 서면으로 동의를 철회할 수 있음 (제출된 후에는 철회 불가).</li>
+            </ul>
+        </li>
+        <li><strong>행위주체별 리모델링 행위허가 동의 비율 (★공동주택관리법 시행령 별표 3)</strong>:
+            <ol>
+                <li><span class="highlight-blue">리모델링 주택조합이 허가 신청 시</span>:
+                    <ul>
+                        <li>주택단지 전체: 전체 구분소유자 및 의결권의 각 <span class="highlight-red">100분의 75 이상</span>의 동의 + 각 동 구분소유자 및 의결권의 각 <span class="highlight-red">100분의 50 이상</span>의 동의.</li>
+                        <li>동별 리모델링: 해당 동 구분소유자 및 의결권의 각 <span class="highlight-red">100분의 75 이상</span>의 동의.</li>
+                    </ul>
+                </li>
+                <li><span class="highlight-purple">입주자대표회의가 허가 신청 시</span>: 소유자 <span class="highlight-red">전원</span>의 동의 (3/4, 75% 등은 오답).</li>
+                <li><span class="highlight-green">입주자, 사용자, 관리주체가 허가 신청 시</span>: 입주자 <span class="highlight-red">전체</span>의 동의.</li>
+            </ol>
+        </li>
+        <li><strong>행위허가 기준 및 내력벽 철거 제한</strong>:
+            <ul>
+                <li><span class="highlight-red">내력벽 철거 세대합치기 금지</span>: 안전진단 결과 구조안전에 이상이 없더라도 공동주택의 <span class="highlight-red">내력벽을 철거하여 세대를 합치는 행위는 금지됨</span> (단, 비내력벽 철거는 허가기준 충족 시 가능).</li>
+                <li>입주자 공유가 아닌 복리시설(단지 내 상가): 사용검사 후 <span class="highlight-purple">10년 이상</span> 지난 복리시설로서 공동주택과 동시에 리모델링하는 경우 가능하며, 증축 면적은 기존 연면적의 <span class="highlight-purple">10분의 1 이내</span>이어야 함.</li>
+            </ul>
+        </li>
+        <li><strong>공사 완료 후 사용검사</strong>:
+            <ul>
+                <li>대수선 리모델링 및 증축형 리모델링 모두 공사가 완료된 후 시장·군수·구청장의 <span class="highlight-blue">사용검사</span>를 받아야 함 (증축형이 아니라는 이유로 사용검사를 면제받지 않음).</li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">허가 신청 주체</th>
+                <th style="width: 45%;">단지 전체 리모델링 동의 비율</th>
+                <th style="width: 30%;">동별 리모델링 동의 비율</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>리모델링 주택조합</th>
+                <td>전체 <span class="highlight-red">100분의 75 이상</span> + 각 동 <span class="highlight-red">100분의 50 이상</span></td>
+                <td>해당 동 <span class="highlight-red">100분의 75 이상</span></td>
+            </tr>
+            <tr>
+                <th>입주자대표회의</th>
+                <td colspan="2"><span class="highlight-red">소유자 전원</span> 동의</td>
+            </tr>
+            <tr>
+                <th>입주자 · 사용자 · 관리주체</th>
+                <td colspan="2"><span class="highlight-green">입주자 전체</span> 동의</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg>
+        5. 주택법상 리모델링 법적 특례 (대지사용권, 공용부분, 임대차 특례)
+    </h2>
+    <ul>
+        <li><strong>대지사용권에 관한 특례 (★원칙 및 단서)</strong>:
+            <ul>
+                <li>원칙: 공동주택의 소유자가 리모델링에 의하여 전유부분의 면적이 늘어나거나 줄어드는 경우 대지와 건물의 소유권에 관한 <span class="highlight-red">대지사용권은 변하지 아니하는 것</span>으로 봄 (주택법 제42조제1항).</li>
+                <li>단서(예외): <span class="highlight-red">세대수 증가를 수반하는 리모델링</span>의 경우에는 <span class="highlight-red">권리변동계획</span>에 따름.
+                    <br><em>※ 전유면적 확장 시에도 대지사용권은 변경되지 않는 것이 원칙이나, 세대수 증가형 시에만 권리변동계획에 따라 변함!</em></li>
+            </ul>
+        </li>
+        <li><strong>공용부분 및 임대차에 관한 특례</strong>:
+            <ul>
+                <li>공용부분의 전유부분 편입: 일부 공용부분 면적을 전유부분 면적으로 편입하더라도 나머지 공용부분의 지분 비율은 변하지 아니함 (단, 집합건물법 규약으로 달리 정한 경우 예외).</li>
+                <li>임대차 특례 적용 배제: 리모델링 주택조합 설립인가 사실 등을 미리 서면으로 알린 경우 해당 주택에 대하여 「주택임대차보호법」 및 「상가건물 임대차보호법」 규정을 <span class="highlight-purple">적용하지 아니함</span> (공사 착공을 위한 세입자 이주 보장).</li>
+            </ul>
+        </li>
+    </ul>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+            💡 [수험 핵심 팁] 제38강 관계법규 핵심 정밀 체크 포인트
+        </div>
+        <ul>
+            <li><strong>조합 설립 인가 vs 신고</strong>: 리모델링 주택조합 설립 시 관할 관청은 시장·군수·구청장이며, 절차는 <span class="highlight-red">인가</span> 대상임.</li>
+            <li><strong>조합 설립 결의 비율 수치</strong>: 단지 전체는 전체 <span class="highlight-red">3분의 2</span> + 각 동 <span class="highlight-red">과반수</span> / 특정 동은 <span class="highlight-red">3분의 2</span>.</li>
+            <li><strong>리모델링 기본계획 주체 및 단위</strong>: 특별시장·광역시장·대도시 시장이 <span class="highlight-blue">10년 단위</span>로 수립, <span class="highlight-red">5년마다</span> 타당성 검토.</li>
+            <li><strong>안전진단 신청 대상</strong>: 안전진단은 오직 <span class="highlight-red">증축형 리모델링</span>에 한하여 신청함 (대수선형은 요청 안 함).</li>
+            <li><strong>도시계획위원회 심의 수치</strong>: 세대수 증가형 리모델링 시 세대수가 <span class="highlight-red">50세대 이상</span> 증가하면 심의 필수.</li>
+            <li><strong>리모델링 허가 동의 비율 핵심</strong>: 주택조합(전체 <span class="highlight-red">100분의 75</span>, 동별 <span class="highlight-red">100분의 50</span>), 입주자대표회의(<span class="highlight-red">소유자 전원</span>).</li>
+            <li><strong>대지사용권 특례</strong>: 면적 증감 시에도 대지사용권은 <span class="highlight-purple">변하지 아니함</span>. 단, <span class="highlight-red">세대수 증가형</span>은 <span class="highlight-red">권리변동계획</span>에 따름!</li>
+        </ul>
+    </div>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>주관식 단답형 및 빈칸 채우기 실전 훈련</h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡)에 들어갈 알맞은 핵심 용어나 법정 숫자를 아래 여유 공백에 직접 기재해 보십시오.</p>
+
+    <ol class="quiz-list" style="line-height: 2.1;">
+        <li>
+            리모델링 주택조합을 설립하려는 경우 시장·군수·구청장의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )를 받아야 한다.
+        </li>
+        <li>
+            주택단지 전체를 리모델링하고자 조합을 설립할 때 전체 구분소유자 및 의결권의 각 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 이상의 결의와 각 동 구분소유자 및 의결권의 각 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )의 결의가 있어야 한다.
+        </li>
+        <li>
+            특정 동만을 리모델링하고자 조합을 설립하는 경우 해당 동 구분소유자 및 의결권의 각 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 이상의 결의가 있어야 한다.
+        </li>
+        <li>
+            대수선 리모델링 조합 설립인가 신청 시 사용검사일부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년 이상, 증축형 리모델링은 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년 이상 지난 증명서류를 첨부하여야 한다.
+        </li>
+        <li>
+            리모델링 결의에 찬성하지 아니하는 자의 주택 및 토지에 대하여는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )를 할 수 있다.
+        </li>
+        <li>
+            리모델링 주택조합 설립인가를 받은 날부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년 이내에 사업계획승인 또는 리모델링 허가를 신청하여야 한다.
+        </li>
+        <li>
+            세대수 증가형 리모델링으로 인한 도시밀집 등을 체계적으로 관리하기 위하여 수립하는 계획을 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이라 한다.
+        </li>
+        <li>
+            리모델링 기본계획은 특별시장, 광역시장, 대도시의 시장이 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년 단위로 수립하고, ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년마다 타당성을 재검토하여 반영하여야 한다.
+        </li>
+        <li>
+            리모델링 기본계획 수립 절차 중 주민 공람 기간은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이상, 지방의회 의견 제시 기간은 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이내이다.
+        </li>
+        <li>
+            세대수 증가형 리모델링 허가 시 세대수가 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )세대 이상 증가하는 경우 도시계획위원회의 심의를 거쳐야 한다.
+        </li>
+        <li>
+            세대수 증가형 리모델링을 하는 경우 기존 주택의 권리변동 및 비용분담 등에 관한 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )을 수립하여야 한다.
+        </li>
+        <li>
+            안전진단 신청은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )형 리모델링을 하려는 자에 한하여 시장·군수·구청장에게 요청한다.
+        </li>
+        <li>
+            수직증축형 리모델링 설계자는 국토교통부장관이 정하여 고시하는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )를 작성하여야 한다.
+        </li>
+        <li>
+            리모델링 동의자는 리모델링 허가신청서를 제출하기 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )에 서면으로 동의를 철회할 수 있다.
+        </li>
+        <li>
+            리모델링 주택조합이 허가를 신청하는 경우 단지 전체는 전체 구분소유자 및 의결권의 각 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 이상 동의와 각 동 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 이상 동의를 받아야 한다.
+        </li>
+        <li>
+            입주자대표회의가 리모델링 허가를 신청하는 경우 소유자 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )의 동의를 받아야 한다.
+        </li>
+        <li>
+            공동주택 리모델링 시 안전진단 결과 이상이 없더라도 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 철거를 통한 세대 합치기는 허용되지 아니한다.
+        </li>
+        <li>
+            리모델링으로 전유부분의 면적이 늘거나 줄어드는 경우 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )은 변하지 아니하는 것으로 본다. 다만, 세대수 증가를 수반하는 리모델링의 경우 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )에 따른다.
+        </li>
+    </ol>
+
+    <!-- 수험생 정답 확인용 하단 3열 배치 그리드 영역 -->
+    <div style="font-size: 9.5pt; color: #666666; margin-top: 30px; padding: 15px; border-top: 1px dashed #666666; line-height: 1.8;">
+        <strong style="display: block; margin-bottom: 10px; color: #333333;">[제38강 주관식 단답형 정답 리스트]</strong>
+        <div class="answer-grid">
+            <div><strong>1.</strong> ㉠ 인가</div>
+            <div><strong>2.</strong> ㉠ 3분의 2, &nbsp; ㉡ 과반수</div>
+            <div><strong>3.</strong> ㉠ 3분의 2</div>
+            <div><strong>4.</strong> ㉠ 10, &nbsp; ㉡ 15</div>
+            <div><strong>5.</strong> ㉠ 매도청구</div>
+            <div><strong>6.</strong> ㉠ 2</div>
+            <div><strong>7.</strong> ㉠ 리모델링 기본계획</div>
+            <div><strong>8.</strong> ㉠ 10, &nbsp; ㉡ 5</div>
+            <div><strong>9.</strong> ㉠ 14, &nbsp; ㉡ 30</div>
+            <div><strong>10.</strong> ㉠ 50</div>
+            <div><strong>11.</strong> ㉠ 권리변동계획</div>
+            <div><strong>12.</strong> ㉠ 증축</div>
+            <div><strong>13.</strong> ㉠ 구조설계도서</div>
+            <div><strong>14.</strong> ㉠ 전</div>
+            <div><strong>15.</strong> ㉠ 75%, &nbsp; ㉡ 50%</div>
+            <div><strong>16.</strong> ㉠ 전원</div>
+            <div><strong>17.</strong> ㉠ 내력벽</div>
+            <div><strong>18.</strong> ㉠ 대지사용권, &nbsp; ㉡ 권리변동계획</div>
+        </div>
+    </div>
+
+</body>
+</html>

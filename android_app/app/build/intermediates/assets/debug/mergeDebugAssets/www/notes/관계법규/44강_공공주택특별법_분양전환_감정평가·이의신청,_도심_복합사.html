@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 관계법규 - 제44강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+            letter-spacing: -0.05em;
+        }
+        
+        h1 {
+            font-size: 12pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        /* 토너 절약 4색 시각 강조 클래스 */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #16803d; 
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #6d28d9; 
+        }
+        
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        ol {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        /* 정답 리스트 3열 격자 레이아웃 */
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px 15px;
+        }
+
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        제44강. 공공주택특별법: 분양전환 감정평가·이의신청, 도심 복합사업 후보지 철회·해제, 장기수선계획 조정·특별수선충당금 개정, 3대 법령 관리체계 비교 및 건축법 총칙 정밀 정리
+    </h1>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        1. 우선 분양전환 가격 산정 감정평가 비용, 이의신청 및 재산정·도심 복합사업 후보지 철회
+    </h2>
+    <ul>
+        <li><strong>우선 분양전환 가격 감정평가 비용 부담 주체 (★원칙 vs 이의신청)</strong>:
+            <ul>
+                <li>원칙적 부담 주체: 시장·군수·구청장이 감정평가법인 등을 선정할 때 감정평가 비용은 <span class="highlight-blue">공공주택사업자</span>가 부담하는 것을 조건으로 함.</li>
+                <li>이의신청 시 부담 주체: 감정평가 금액에 이의가 있어 재평가를 요구할 때 비용은 <span class="highlight-red">이의신청을 한 자</span>가 부담함.</li>
+            </ul>
+        </li>
+        <li><strong>감정평가 완료 기간 및 이의신청 기한 (★숫자 주관식)</strong>:
+            <ul>
+                <li>기관 수 및 완료 기간: 감정평가는 감정평가법인 <span class="highlight-purple">2곳</span>에 의뢰하며, 의뢰받은 날부터 <span class="highlight-blue">20일 이내</span>에 완료하여야 함 (부득이한 사유 시 <span class="highlight-blue">10일 범위</span> 연장 가능).</li>
+                <li>이의신청 요건: 결과에 이의가 있는 경우 통보받은 날부터 <span class="highlight-red">30일 이내</span>에 시장·군수·구청장에게 이의신청을 할 수 있으며, 한 차례만 재평가 가능.</li>
+                <li><span class="highlight-purple">제3자 매각 시 감정평가 재산정(★1년)</span>: 제3자 매각 시 감정평가가 완료된 날부터 <span class="highlight-purple">1년이 경과</span>한 경우에는 감정평가를 재산정할 수 있음.</li>
+            </ul>
+        </li>
+        <li><strong>도심 공공주택 복합사업 후보지 선정 철회 및 복합지구 해제 요건</strong>:
+            <ul>
+                <li>후보지 선정 철회: 사정변경으로 추진 필요성이 소멸된 경우, 토지등소유자 <span class="highlight-red">2분의 1 이상</span>이 철회를 요청하는 경우, 또는 후보지 선정 후 <span class="highlight-blue">2년</span>이 되는 날까지 주민의견 청취를 미실시한 경우.</li>
+                <li>복합지구 해제 제안: 복합지구 지정 후 <span class="highlight-purple">3년</span>이 경과하고 토지등소유자 <span class="highlight-red">2분의 1 이상</span>이 해제를 요청하는 경우.</li>
+                <li><span class="highlight-green">세입자 주거대책 포함(★용어 주의)</span>: 공공주택사업자는 '임차인'이 아닌 <span class="highlight-green">'세입자'</span>의 주거 및 이주대책을 포함하여 도심 공공주택 복합사업계획을 수립하여야 함.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        2. 공공주택특별법 개정·신설 - 장기수선계획 조정, 특별수선충당금 요율/사용 및 과태료
+    </h2>
+    <ul>
+        <li><strong>★장기수선계획 조정 규정 신설 (★출제 1순위 주관식)</strong>:
+            <ul>
+                <li>공공주택사업자는 장기수선계획 수립 후 조정이 필요한 경우 <span class="highlight-red">임차인대표회의 구성원의 과반수 서면동의</span>(임차인대표회의가 미구성된 경우 <span class="highlight-red">전체 임차인의 과반수 서면동의</span>)를 받아 조정할 수 있음.</li>
+            </ul>
+        </li>
+        <li><strong>특별수선충당금 법정 적립요율 및 혼합주택단지 특례(★신설)</strong>:
+            <ul>
+                <li>기본 요율: 영구·국민·행복·통합공공임대(20년 이상)는 건설원가의 <span class="highlight-blue">1만분의 4</span>, 10년/5년 임대는 <span class="highlight-blue">1만분의 1</span>.</li>
+                <li><span class="highlight-purple">혼합주택단지 특례(★개정)</span>: 분양주택과 임대주택이 함께 있는 혼합주택단지에서 각자 결정하지 않고 공동결정을 하는 경우, 특별수선충당금 적립요율은 법정 요율이 아닌 <span class="highlight-purple">관리규약으로 정하는 장기수선충당금 적립요율</span>을 적용함.</li>
+            </ul>
+        </li>
+        <li><strong>특별수선충당금 사용 협의 및 예외 규정 신설</strong>:
+            <ul>
+                <li>원칙: 관리주체가 사용계획서를 작성하여 시장·군수·구청장과 협의하여 사용.</li>
+                <li><span class="highlight-red">협의 예외(★신설)</span>: <span class="highlight-red">천재지변 또는 중대한 하자</span>가 있는 경우에는 지자체장과의 협의 없이 사용 가능함. 단, 사용 후 <span class="highlight-blue">30일 이내</span>에 사유를 지자체장에게 통보하여야 함.</li>
+            </ul>
+        </li>
+        <li><strong>공공주택특별법 과태료 개정 및 신설 총정리 (★최신 개정 법령 기준)</strong>:
+            <ul>
+                <li>표준임대차계약서 미사용: 과태료 규정 신설 부과.</li>
+                <li>특별수선충당금 미적립 또는 미인계: <span class="highlight-red">1천만원 이하의 과태료</span> (민간임대주택법과 동일하게 정비).</li>
+                <li><span class="highlight-purple">장기수선계획 미수립·미검토</span>: <span class="highlight-purple">500만원 이하의 과태료</span>.</li>
+                <li><span class="highlight-green">장기수선충당금/특별수선충당금 미적립</span>: <span class="highlight-green">300만원 이하의 과태료</span>.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg>
+        3. 주택 관리 3대 법률 체계 종합 정밀 비교표
+    </h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 22%;">구분</th>
+                <th style="width: 26%;">공동주택관리법</th>
+                <th style="width: 26%;">민간임대주택 특별법</th>
+                <th style="width: 26%;">공공주택 특별법</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>자체/위탁관리 의무 대상</th>
+                <td>의무관리대상 공동주택<br>(300세대, 150세대 난방/승강기 등 5가지)</td>
+                <td>300세대 이상 /<br>150세대 이상(승강기·난방)</td>
+                <td>민간임대주택법 준용<br>(300세대 / 150세대)</td>
+            </tr>
+            <tr>
+                <th>지자체장 인가 규정</th>
+                <td>해당 없음 (입대위 의결)</td>
+                <td>자체관리 시 지자체장 <span class="highlight-blue">인가 필수</span></td>
+                <td><span class="highlight-red">준용 제외 (인가 불요)</span></td>
+            </tr>
+            <tr>
+                <th>대표회의 구성 요건</th>
+                <td>입주자대표회의 필수 구성</td>
+                <td>300세대/150세대 필수 구성<br>(20세대 이상 임의)</td>
+                <td>민간임대주택법 준용<br>(300세대/150세대 필수)</td>
+            </tr>
+            <tr>
+                <th>수선적립금 명칭</th>
+                <td>장기수선충당금</td>
+                <td>특별수선충당금</td>
+                <td>특별수선충당금</td>
+            </tr>
+            <tr>
+                <th>계획 조정 절차</th>
+                <td>3년마다 검토, 입대위 의결<br>(조기 조정 시 입주자 과반 서면동의)</td>
+                <td>임대사업자 수립 및 조정</td>
+                <td><span class="highlight-purple">임차인대표회의(또는 전체 임차인) 과반수 서면동의</span> (신설)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        4. 건축법 총칙 - 건축물 분류, 한옥·부속건축물·부속구조물 및 특수구조 건축물
+    </h2>
+    <ul>
+        <li><strong>건축물의 핵심 정의</strong>: 토지에 정착하는 공작물 중 <span class="highlight-blue">지붕과 기둥 또는 벽</span>이 있는 것과 이에 딸린 시설물.</li>
+        <li><strong>층수·높이에 따른 건축물 분류 (★피난안전구역 설치 기준)</strong>:
+            <ul>
+                <li><span class="highlight-red">고층건축물</span>: 층수가 <span class="highlight-red">30층 이상</span>이거나 높이가 <span class="highlight-red">120미터 이상</span>인 건축물 (둘 중 하나만 충족해도 성립, 피난안전구역 설치 필수).</li>
+                <li><span class="highlight-purple">초고층건축물</span>: 층수가 <span class="highlight-purple">50층 이상</span>이거나 높이가 <span class="highlight-purple">200미터 이상</span>인 건축물.</li>
+                <li><span class="highlight-blue">준초고층건축물</span>: 고층건축물 중 초고층건축물이 아닌 것 (예: 46층, 높이 150m 건축물).</li>
+            </ul>
+        </li>
+        <li><strong>한옥의 법정 정의 (★특별법 포함 범위)</strong>:
+            <ul>
+                <li>주요구조부가 기둥, 한식지붕틀로 된 <span class="highlight-green">목구조</span>로서 우리나라 전통양식이 반영된 건축물 및 <span class="highlight-green">부속건축물</span>을 포함함.</li>
+            </ul>
+        </li>
+        <li><strong>부속건축물 vs 부속구조물 비교 (★기출 구분)</strong>:
+            <ul>
+                <li><span class="highlight-blue">부속건축물</span>: <span class="highlight-blue">동일한 대지</span>에서 주된 건축물과 <span class="highlight-blue">분리된</span> 부속용도의 건축물로서 이용·관리에 필요한 건축물.</li>
+                <li><span class="highlight-purple">부속구조물</span>: 건축물의 안전·기능 등을 위해 건축물에 <span class="highlight-purple">추가로 설치/부합</span>하는 구조물 (환기시설, 개구부 등).</li>
+            </ul>
+        </li>
+        <li><strong>특수구조 건축물 요건 3가지 (★개정 수치 정밀 암기)</strong>:
+            <ol>
+                <li>외벽의 중심선으로부터 <span class="highlight-red">3미터 이상</span> 돌출된 차양·캔틸레버 등이 있는 건축물.</li>
+                <li>기둥과 기둥 사이의 거리가 <span class="highlight-red">20미터 이상</span>인 건축물.</li>
+                <li><span class="highlight-purple">무량판 구조(보가 없이 바닥판·기둥으로 구성)</span>로서 무량판 구조인 층의 보 없는 기둥 전체 단면적 비율이 <span class="highlight-purple">4분의 1 이상</span>인 건축물.</li>
+            </ol>
+        </li>
+        <li><strong>건축주 용어 정의 (★기출 오답 함정)</strong>:
+            <ul>
+                <li>건축주란 건축물 등의 건축·대수선·리모델링 공사를 발주하거나 <span class="highlight-red">스스로 그 공사를 하는 자</span>를 말함 ('스스로 공사를 하는 자'가 시공자가 아닌 '건축주'에 포함됨에 유의!).</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg>
+        5. 다중이용 건축물, 준다중이용 건축물 및 공개공지 확보 대상 비교
+    </h2>
+    <ul>
+        <li><strong>다중이용 건축물 요건 (원칙 vs 층수)</strong>:
+            <ul>
+                <li>면적 기준: 바닥면적 합계 <span class="highlight-blue">5,000제곱미터 이상</span>인 6대 용도 (문화 및 집회시설 중 <span class="highlight-red">동·식물원 제외</span>, 종교, 판매, 운수, 의료, 숙박시설).</li>
+                <li>층수 기준: 용도와 관계없이 <span class="highlight-red">16층 이상</span>인 건축물 (16층 이상 공동주택도 다중이용 건축물에 해당함).</li>
+            </ul>
+        </li>
+        <li><strong>진다중이용 건축물 면적 기준</strong>: 바닥면적 합계 <span class="highlight-purple">1,000제곱미터 이상 5,000제곱미터 미만</span>인 건축물.</li>
+        <li><strong>공개공지 확보 대상 건축물 (★쉼터 확보)</strong>:
+            <ul>
+                <li>대상 지역: 일반주거지역, 준주거지역, 상업지역, 준공업지역 등.</li>
+                <li>대상 규모: 바닥면적 합계 <span class="highlight-green">5,000제곱미터 이상</span>인 문화집회, 종교, 판매, 운수, 업무, 숙박시설 등.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+            💡 [수험 핵심 팁] 제44강 고난도 개정·신설 법령 및 숫자 암기 완전 정복
+        </div>
+        <ul>
+            <li><strong>감정평가 완료 및 재산정</strong>: 감정평가는 원칙 <span class="highlight-blue">20일 이내</span>(연장 10일) 완료, 이의신청은 <span class="highlight-red">30일 이내</span>(비용은 이의신청자 부담), 제3자 매각 감정평가 재산정은 완료일 기준 <span class="highlight-purple">1년 경과 시</span>.</li>
+            <li><strong>장기수선계획 조정 신설</strong>: 공공주택사업자 조정 시 <span class="highlight-red">임차인대표회의(또는 전체 임차인) 과반수 서면동의</span> 필수.</li>
+            <li><strong>특별수선충당금 사용 예외</strong>: <span class="highlight-red">천재지변, 중대한 하자</span> 시 협의 없이 사용 가능하며, 사용 후 <span class="highlight-blue">30일 이내</span> 지자체장에게 통보.</li>
+            <li><strong>특수구조 건축물 수치 3가지</strong>: 돌출 <span class="highlight-red">3m 이상</span>, 기둥 간격 <span class="highlight-red">20m 이상</span>, 무량판 구조 기둥 비율 <span class="highlight-purple">4분의 1 이상</span>.</li>
+            <li><strong>다중이용 건축물 함정</strong>: 문화 및 집회시설 중 <span class="highlight-red">동·식물원은 제외</span>되며, 용도 불문 <span class="highlight-red">16층 이상</span>이면 다중이용 건축물에 해당함.</li>
+        </ul>
+    </div>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>주관식 단답형 및 빈칸 채우기 실전 훈련</h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡)에 들어갈 알맞은 핵심 용어나 법정 숫자를 아래 여유 공백에 직접 기재해 보십시오.</p>
+
+    <ol class="quiz-list" style="line-height: 2.1;">
+        <li>
+            우선 분양전환 가격 산정을 위한 감정평가 비용은 원칙적으로 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )가 부담하며, 이의신청에 따른 재평가 비용은 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )가 부담한다.
+        </li>
+        <li>
+            감정평가법인은 감정평가를 의뢰받은 날부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이내에 완료하여야 하며, 부득이한 경우 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일의 범위에서 연장할 수 있다.
+        </li>
+        <li>
+            감정평가 결과에 이의가 있는 자는 결과를 통보받은 날부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이내에 시장·군수·구청장에게 이의신청을 할 수 있다.
+        </li>
+        <li>
+            공공주택사업자가 제3자에게 매각하려는 경우 감정평가가 완료된 날부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년이 경과한 때에는 감정평가를 재산정할 수 있다.
+        </li>
+        <li>
+            도심 공공주택 복합사업 후보지 선정 후 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년이 되는 날까지 주민의견 청취를 하지 않는 경우 선정을 철회할 수 있다.
+        </li>
+        <li>
+            공공주택사업자는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )의 주거 및 이주대책을 포함한 도심 공공주택 복합사업계획을 수립하여 승인을 받아야 한다.
+        </li>
+        <li>
+            공공주택사업자가 수립된 장기수선계획을 조정하려면 임차인대표회의 구성원(미구성 시 전체 임차인) ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )의 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )동의를 받아야 한다.
+        </li>
+        <li>
+            혼합주택단지에서 특별수선충당금을 공동결정하는 경우 적립요율은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )으로 정하는 장기수선충당금 적립요율을 적용한다.
+        </li>
+        <li>
+            공공주택사업자는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 또는 중대한 하자가 있는 경우 지자체장과 협의 없이 특별수선충당금을 사용할 수 있으며, 사용 후 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이내에 통보하여야 한다.
+        </li>
+        <li>
+            공공주택특별법상 특별수선충당금을 적립하지 아니하거나 인계하지 아니한 자에게는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )만원 이하의 과태료를 부과한다.
+        </li>
+        <li>
+            건축법상 고층건축물이란 층수가 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )층 이상이거나 높이가 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이상인 건축물을 말한다.
+        </li>
+        <li>
+            건축법상 초고층건축물이란 층수가 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )층 이상이거나 높이가 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이상인 건축물을 말한다.
+        </li>
+        <li>
+            한옥이란 주요구조부가 기둥, 한식지붕틀로 된 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )구조로서 전통양식이 반영된 건축물 및 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )건축물을 말한다.
+        </li>
+        <li>
+            동일한 대지에서 주된 건축물과 분리된 부속용도의 건축물을 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )건축물이라 한다.
+        </li>
+        <li>
+            특수구조 건축물이란 외벽 중심선에서 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이상 돌출된 차양이 있거나 기둥 간 거리가 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이상인 건축물을 말한다.
+        </li>
+        <li>
+            무량판 구조를 가진 건축물로서 보 없이 배치된 기둥의 전체 단면적 비율이 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )분의 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 이상인 경우 특수구조 건축물에 해당한다.
+        </li>
+        <li>
+            건축물 공사를 발주하거나 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 공사를 하는 자를 건축법상 건축주라 한다.
+        </li>
+        <li>
+            바닥면적 합계가 5천제곱미터 이상인 문화 및 집회시설 중 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )원은 다중이용 건축물 대상에서 제외된다.
+        </li>
+    </ol>
+
+    <!-- 수험생 정답 확인용 하단 3열 배치 그리드 영역 -->
+    <div style="font-size: 9.5pt; color: #666666; margin-top: 30px; padding: 15px; border-top: 1px dashed #666666; line-height: 1.8;">
+        <strong style="display: block; margin-bottom: 10px; color: #333333;">[제44강 주관식 단답형 정답 리스트]</strong>
+        <div class="answer-grid">
+            <div><strong>1.</strong> ㉠ 공공주택사업자, ㉡ 이의신청을 한 자</div>
+            <div><strong>2.</strong> ㉠ 20, &nbsp; ㉡ 10</div>
+            <div><strong>3.</strong> ㉠ 30</div>
+            <div><strong>4.</strong> ㉠ 1</div>
+            <div><strong>5.</strong> ㉠ 2</div>
+            <div><strong>6.</strong> ㉠ 세입자</div>
+            <div><strong>7.</strong> ㉠ 과반수, &nbsp; ㉡ 서면</div>
+            <div><strong>8.</strong> ㉠ 관리규약</div>
+            <div><strong>9.</strong> ㉠ 천재지변, &nbsp; ㉡ 30</div>
+            <div><strong>10.</strong> ㉠ 1,000 (1천)</div>
+            <div><strong>11.</strong> ㉠ 30, &nbsp; ㉡ 120</div>
+            <div><strong>12.</strong> ㉠ 50, &nbsp; ㉡ 200</div>
+            <div><strong>13.</strong> ㉠ 목, &nbsp; ㉡ 부속</div>
+            <div><strong>14.</strong> ㉠ 부속</div>
+            <div><strong>15.</strong> ㉠ 3, &nbsp; ㉡ 20</div>
+            <div><strong>16.</strong> ㉠ 4, &nbsp; ㉡ 1</div>
+            <div><strong>17.</strong> ㉠ 스스로</div>
+            <div><strong>18.</strong> ㉠ 동·식물</div>
+        </div>
+    </div>
+
+</body>
+</html>

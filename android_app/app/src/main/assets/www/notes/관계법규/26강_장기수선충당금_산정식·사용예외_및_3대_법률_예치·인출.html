@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 관계법규 - 제26강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght=400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+            letter-spacing: -0.05em;
+        }
+        
+        h1 {
+            font-size: 13pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        /* 토너 절약 4색 강조 클래스 */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #16803d; 
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #6d28d9; 
+        }
+        
+        /* 얇은 점선 형태의 토너 세이브 설명 상자 */
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        ol {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        /* 주관식 정답 가로 3열 배치 레이아웃 */
+        .answer-container {
+            margin-top: 30px;
+            padding: 15px;
+            border-top: 1px dashed #666666;
+            font-size: 10pt;
+            color: #777777;
+            line-height: 1.8;
+        }
+
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .answer-item {
+            border-bottom: 1px none #eeeeee;
+        }
+
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        제26강. 장기수선충당금 산정식·사용예외 및 3대 법률 예치·인출특례와 안전점검·소규모주택 완벽 정리
+    </h1>
+    
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        1. 세대별 월간 장기수선충당금 법정 산정공식 및 목적 외 사용 예외
+    </h2>
+    <ul>
+        <li><strong>세대별 월간 장기수선충당금 산정식 (★주관식 단답형 기출)</strong>:
+            <ul>
+                <li>매월 각 세대(예: 103호)가 부담해야 하는 장기수선충당금은 다음의 법정 계산식에 따라 산정한다.</li>
+                <li><strong>법정 계산공식</strong>: 
+                    <br><span class="highlight-blue">세대별 월간 장기수선충당금 = (장기수선계획기간 중의 수선비 총액 × 세대별 주택공급면적) ÷ (총공급면적 × 계획기간(년) × 12)</span>
+                </li>
+                <li><strong>주관식 빈칸 대비 포인트</strong>: 분모의 기준면적은 전유면적이 아닌 <span class="highlight-red">"총공급면적"</span>이며, 분자의 총 비용은 <span class="highlight-blue">"수선비 총액"</span>이다.</li>
+            </ul>
+        </li>
+        <li><strong>장기수선충당금 사용 원칙 및 하자진단 비용 목적 외 사용 예외</strong>:
+            <ul>
+                <li><strong>원칙</strong>: 장기수선충당금은 반드시 수립된 <span class="highlight-purple">장기수선계획에 따라서만</span> 사용하여야 한다.</li>
+                <li><strong>하자진단 비용 사용 예외 (★특례)</strong>: 하자보수 청구 전 사업주체와의 하자분쟁 과정에서 발생하는 <span class="highlight-red">하자진단 비용</span> 등은 장기수선계획에 명시되어 있지 않더라도 <span class="highlight-red">입주자(소유자) 과반수의 서면동의</span>를 받은 경우 장기수선충당금으로 지출할 수 있다. (입주자등이 아닌 '소유자' 동의 필수)</li>
+                <li><strong>미분양 세대 및 사용자 납부확인서</strong>:
+                    <ul>
+                        <li>분양되지 아니한 세대의 장기수선충당금은 <span class="highlight-blue">사업주체</span>가 전액 부담한다.</li>
+                        <li>임차인(사용자)이 소유자를 대신하여 충당금을 납부한 경우, 관리주체는 임차인의 요구 시 <span class="highlight-green">지체 없이 납부확인서를 발급</span>해주어야 한다.</li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        2. 3대 법률별 충당금 예치·인출 절차, 공동명의 및 혼합주택단지 특례
+    </h2>
+    <ul>
+        <li><strong>3대 법률별 계좌 관리 및 인출 승인 절차 비교</strong>:
+            <ul>
+                <li><strong>공동주택관리법 (분양주택)</strong>: 충당금은 별도 계좌로 예치하되, 부정이용 방지를 위해 <span class="highlight-blue">관리사무소장 직인</span> 외에 <span class="highlight-blue">입주자대표회의 회장 인감을 복수로 등록</span>하여 관리한다.</li>
+                <li><strong>민간임대주택특별법 (★유일한 지자체장 공동명의)</strong>: 임대사업자의 무단 인출을 막기 위해 예치금 계좌를 오직 <span class="highlight-red">시장·군수·구청장과 임대사업자의 공동명의</span>로 지정 금융기관에 예치하여야 한다.</li>
+                <li><strong>공공주택특별법 (★인출 전 사전협의 원칙 및 사후통보 예외)</strong>: 공공주택사업자는 충당금을 별도 관리하되, 인출·사용 전 미리 <span class="highlight-purple">시장·군수·구청장과 협의</span>해야 한다.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 20%;">법률 구분</th>
+                <th style="width: 30%;">공동주택관리법 (분양)</th>
+                <th style="width: 25%;">민간임대주택법 (민간)</th>
+                <th style="width: 25%;">공공주택법 (공공)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th class="highlight-blue">적립 요율 기준</th>
+                <td><span class="highlight-blue">관리규약</span>으로 정함</td>
+                <td>표준건축비의 <span class="highlight-purple">만분의 1</span></td>
+                <td>50·30·20년: <span class="highlight-red">만분의 4</span><br>기타: <span class="highlight-purple">만분의 1</span></td>
+            </tr>
+            <tr>
+                <th class="highlight-purple">계좌 예치 명의</th>
+                <td>관리주체 명의<br>(소장 직인 + 입대의회장 인감 복수등록)</td>
+                <td><span class="highlight-red">시장·군수·구청장 + 임대사업자 공동명의</span></td>
+                <td>공공주택사업자 별도 계좌 관리</td>
+            </tr>
+            <tr>
+                <th class="highlight-red">사용 인출 절차</th>
+                <td>사용계획서 작성 후 <span class="highlight-blue">입대의 의결</span></td>
+                <td>시장·군수·구청장과 사전 협의 필수</td>
+                <td>사전 협의 원칙<br>(<span class="highlight-red">중대하자·천재지변 시 사전협의 면제</span>)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+            💡 [최신 개정 신설] 공공임대 사전협의 생략 예외 및 혼합주택단지 적립요율 특례
+        </div>
+        <ul>
+            <li><strong>공공임대 협의 생략 및 30일 사후통보 (★개정 신설)</strong>: 공공주택사업자는 <span class="highlight-red">① 중대한 하자</span> 또는 <span class="highlight-red">② 천재지변</span>으로 긴급히 보수할 필요가 있는 경우에는 시·군·구청장과의 사전 협의 없이 특별수선충당금을 우선 사용할 수 있다. 단, 사용한 경우에는 사용 사유 및 사용액을 <span class="highlight-purple">사용일로부터 30일 이내에 시장·군수·구청장에게 통보</span>하여야 한다.</li>
+            <li><strong>혼합주택단지 적립요율 전환 (★개정 신설)</strong>: 분양주택과 공공임대주택이 혼합된 단지에서 장기수선충당금 및 특별수선충당금 적립요율을 **공동으로 결정**하는 경우, 공공임대의 적립요율은 법정 만분의 4/만분의 1 규정을 적용하지 아니하고 <span class="highlight-blue">관리규약으로 정한 적립요율</span>을 적용한다 (단, 각자 관리하기로 결정한 경우는 제외).</li>
+        </ul>
+    </div>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        3. 분양전환 임대주택의 충당금 과도기적 적립 시기 및 적용 요율 (★기출 핵심)
+    </h2>
+    <ul>
+        <li><strong>임대주택의 분양전환 진행 과정별 적립 체계</strong>:
+            <ul>
+                <li><strong>임대 기간 중</strong>: 사용검사일로부터 1년이 지난 날이 속하는 달부터 임대사업자가 <span class="highlight-blue">특별수선충당금</span> 적립.</li>
+                <li><strong>분양전환 진행 중 (관리업무 인계 전 과도기)</strong>: 세대별로 순차적 분양전환이 이뤄지더라도 아직 관리업무가 완전 인계되기 전 단계라면 충당금 명칭은 부득이 장기수선충당금으로 변환되지만, 요율은 관리규약이 아직 없으므로 <span class="highlight-purple">특별수선충당금 적립요율</span>을 적용하여 적립한다 (분양받은 자 및 미분양 보유 임대사업자가 각 세대별 부담).</li>
+                <li><strong>관리업무 인계 완료 후 (★기출 출제)</strong>: 분양전환이 완료되어 입대위가 구성되고 관리주체에게 정식으로 관리업무가 인계된 후에는 <span class="highlight-red">"관리업무를 인계한 날이 속하는 달"부터 매달</span> 관리규약 요율에 따른 장기수선충당금을 징수·적립한다. (인계일로부터 1년 후가 아님에 극도로 주의!)</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        4. 설계도서 보관 의무, 이력관리 및 K-apt 등록 의무 (유일한 '등록' 표현)
+    </h2>
+    <ul>
+        <li><strong>설계도서 보관 및 이력관리 주체</strong>: 의무관리대상 공동주택의 <span class="highlight-blue">관리주체</span>는 사업주체로부터 인계받은 설계도서, 안전점검결과보고서, 감리보고서, 공용부분 시설 교체·유지보수·하자보수 이력서류를 보관하고 유지·관리하여야 한다.</li>
+        <li><strong>공동주택관리정보시스템(K-apt) 등록 의무 (★주관식 단답형)</strong>:
+            <ul>
+                <li>관리주체가 공용부분의 주요 시설물 교체 및 하자보수 공사 등을 시행한 경우, 그 시설물별 <span class="highlight-red">이력명세, 주요 도면, 주요 공사 사진</span> 등을 <span class="highlight-purple">공동주택관리정보시스템(K-apt)에 등록</span>하여야 한다.</li>
+                <li>(참고: 법률 조문상 타 항목은 모두 '공개' 표현을 쓰나, 본 이력관리에 대해서만 유일하게 <span class="highlight-green">'등록'</span> 단어를 사용함)</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        5. 정기 안전점검 수행 주체, 전문기관 위탁 요건, 후속조치 및 예산 확보 주체
+    </h2>
+    <ul>
+        <li><strong>정기 안전점검 수행 원칙 및 주기</strong>:
+            <ul>
+                <li>의무관리대상 공동주택의 <span class="highlight-blue">관리주체</span>가 <span class="highlight-blue">반기마다</span> 직접 수행한다 (비용은 관리비 중 수선유지비로 처리).</li>
+            </ul>
+        </li>
+        <li><strong>대형·고령·고위험 시설의 전문기관 위탁 의무 요건 (★개정 사항 반영)</strong>:
+            <ul>
+                <li><strong>위탁 대상 시설</strong>: ① <span class="highlight-purple">16층 이상</span>의 공동주택(시특법상 시설물), ② 15층 이하 중 건축 후 <span class="highlight-purple">30년이 경과</span>한 공동주택, ③ 시설물안전법(시특법)상 안전등급이 <span class="highlight-red">C, D, E 등급</span>인 공동주택.</li>
+                <li><strong>위탁 가능 전문 수행자</strong>: 시설물안전법상 <span class="highlight-red">책임기술자</span>, 시특법 정기안전점검 교육을 이수한 주택관리사, <span class="highlight-blue">시·도지사에게 등록한 안전진단전문기관</span>, 국토교통부장관에게 등록한 유지관리업자.</li>
+            </ul>
+        </li>
+        <li><strong>안전점검 위험 보고 및 시장·군수·구청장의 후속조치</strong>:
+            <ul>
+                <li>점검 결과 붕괴 등 위험이 우려되는 경우 관리주체는 즉시 지자체장에게 보고해야 하며, 보고를 받은 시장·군수·구청장은 해당 고위험 공동주택에 대하여 <span class="highlight-red">매월 1회 이상 안전점검을 직접 실시</span>하여야 한다.</li>
+            </ul>
+        </li>
+        <li><strong>안전점검 예산 확보의 주체 (★함정 오답 주의)</strong>:
+            <ul>
+                <li>공동주택의 안전점검 및 재난예방에 필요한 예산을 매년 확보해야 하는 법적 주체는 지자체장이 아니라 오직 <span class="highlight-red">입주자대표회의 및 관리주체</span>이다.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        6. 소규모 공동주택(비의무관리) 지자체 안전관리 지원 및 층간소음 상담 신설
+    </h2>
+    <ul>
+        <li><strong>소규모 공동주택의 법적 정의</strong>: 공동주택관리법상 의무관리대상에 해당하지 아니하는 소형 공동주택을 공식적으로 <span class="highlight-blue">"소규모 공동주택"</span>이라 칭한다.</li>
+        <li><strong>지자체장의 소규모 공동주택 안전관리 지원 (재량 규정)</strong>:
+            <ul>
+                <li>지자체장은 소규모 공동주택의 안전사고 예방을 위하여 <span class="highlight-purple">안전관리계획의 수립·시행 및 안전점검</span> 업무를 실시할 수 있다 (의무사항 아니며, 관리인이 수행하는 것이 아님에 주의).</li>
+            </ul>
+        </li>
+        <li><strong>소규모 공동주택 층간소음 지원 제도 신설 (★개정 조문)</strong>:
+            <ul>
+                <li>비의무 단지 내 극심한 층간소음 분쟁 해결을 위하여, <span class="highlight-red">지자체장</span>은 조례로 정하는 바에 따라 소규모 공동주택 입주자등을 대상으로 <span class="highlight-green">층간소음 상담, 진단 및 교육 등에 필요한 지원</span>을 제공할 수 있다.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><line x1="18" y1="2" x2="22" y2="6"></line><path d="M7.5 20.5L19 9l-4-4L3.5 16.5 2 22z"></path></svg>
+        7. 주관식 단답형 및 다단 빈칸 채우기 완벽 대비 (실전 훈련)
+    </h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡)에 들어갈 알맞은 핵심 용어나 법정 숫자를 아래 여유 공백에 직접 기재해 보십시오.</p>
+    
+    <ol style="line-height: 2.1;">
+        <li>
+            세대별 월간 장기수선충당금 산정식에서 분모의 기준이 되는 면적 용어는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이다.
+        </li>
+        <li>
+            하자보수 청구 전 전문기관의 하자진단에 소요되는 비용을 장기수선충당금에서 지출하기 위해 필요한 입주민 동의 요건은 전체 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 과반수의 서면동의이다.
+        </li>
+        <li>
+            분양되지 아니한 공동주택 세대의 장기수선충당금을 매달 납부해야 하는 법적 의무자는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이다.
+        </li>
+        <li>
+            임차인(사용자)이 소유자 대신 충당금을 납부하고 확인서 발급을 요구하는 경우, 관리주체는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 발급해 주어야 한다.
+        </li>
+        <li>
+            민간임대주택특별법상 특별수선충당금을 예치하는 계좌는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 및 임대사업자의 공동명의로 지정 금융기관에 예치하여야 한다.
+        </li>
+        <li>
+            공공임대주택의 공공주택사업자가 중대하자나 천재지변으로 시·군·구청장과 사전 협의 없이 충당금을 사용한 경우 사용일로부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이내에 통보하여야 한다.
+        </li>
+        <li>
+            혼합주택단지에서 장기수선충당금과 특별수선충당금 적립요율을 공동으로 결정하는 경우 적용되는 적립요율은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )으로 정한 요율이다.
+        </li>
+        <li>
+            임대주택이 분양전환된 후 정식 장기수선충당금의 적립이 시작되는 법정 개시 시점은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )한 날이 속하는 달이다.
+        </li>
+        <li>
+            관리주체가 공용부분 주요 시설 교체 공사를 마친 후 이력명세, 도면, 사진 등을 등록해야 하는 시스템은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이다.
+        </li>
+        <li>
+            공동주택 정기 안전점검을 전문기관에 의탁해야 하는 15층 이하 공동주택의 건축 후 경과 연수 기준은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년 이상이다.
+        </li>
+        <li>
+            시설물안전법(시특법)에 따른 정기안전점검 결과 안전등급이 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 등급에 해당하는 공동주택은 전문기관 등에 위탁점검을 실시해야 한다.
+        </li>
+        <li>
+            안전점검 시 위험 우려가 보고된 단지에 대하여 시장·군수·구청장이 직접 안전점검을 실시해야 하는 법정 주기는 매 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )회 이상이다.
+        </li>
+        <li>
+            안전점검 지정 전문기관 중 안전진단전문기관으로 지정받아 사업을 영위하고자 하는 자는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )에게 정식 등록하여야 한다.
+        </li>
+        <li>
+            건축물 안전점검 및 재난예방에 필요한 예산을 매년 의무적으로 확보해야 하는 주체는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 및 관리주체이다.
+        </li>
+        <li>
+            의무관리대상 공동주택에 해당하지 않는 비의무 단지에 대해 법령에서 공식 지정한 명칭은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이다.
+        </li>
+        <li>
+            소규모 공동주택 단지 내 층간소음 분쟁 예방을 위하여 상담·진단·교육 지원 프로그램을 제공할 수 있는 주체는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이다.
+        </li>
+    </ol>
+
+    <!-- 수험생 정답 확인용 하단 주르륵 배치 영역 (가로 3열 정렬 방식) -->
+    <div class="answer-container">
+        <strong>[제26강 주관식 단답형 정답 리스트]</strong> (가로 3열 정렬 방식)
+        <div class="answer-grid">
+            <div class="answer-item"><strong>1.</strong> ㉠ 총공급면적</div>
+            <div class="answer-item"><strong>2.</strong> ㉠ 입주자(또는 소유자)</div>
+            <div class="answer-item"><strong>3.</strong> ㉠ 사업주체</div>
+            
+            <div class="answer-item"><strong>4.</strong> ㉠ 지체 없이</div>
+            <div class="answer-item"><strong>5.</strong> ㉠ 시장·군수·구청장</div>
+            <div class="answer-item"><strong>6.</strong> ㉠ 30(또는 삼십)</div>
+            
+            <div class="answer-item"><strong>7.</strong> ㉠ 관리규약</div>
+            <div class="answer-item"><strong>8.</strong> ㉠ 관리업무를 인계</div>
+            <div class="answer-item"><strong>9.</strong> ㉠ 공동주택관리정보시스템(K-apt)</div>
+            
+            <div class="answer-item"><strong>10.</strong> ㉠ 30(또는 삼십)</div>
+            <div class="answer-item"><strong>11.</strong> ㉠ C, D, E(또는 C·D·E)</div>
+            <div class="answer-item"><strong>12.</strong> ㉠ 월 1(또는 한)</div>
+            
+            <div class="answer-item"><strong>13.</strong> ㉠ 시·도지사</div>
+            <div class="answer-item"><strong>14.</strong> ㉠ 입주자대표회의</div>
+            <div class="answer-item"><strong>15.</strong> ㉠ 소규모 공동주택</div>
+            
+            <div class="answer-item"><strong>16.</strong> ㉠ 지방자치단체의 장(또는 지자체장)</div>
+            <div class="answer-item"></div>
+            <div class="answer-item"></div>
+        </div>
+    </div>
+
+</body>
+</html>

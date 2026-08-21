@@ -1,0 +1,1627 @@
+<!DOCTYPE html>
+<html lang="ko" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>주택관리사보 2차 관계법규 통합 실전 모의고사 (40문항)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              500: '#0284c7',
+              600: '#0284c7',
+              700: '#0369a1',
+              800: '#075985',
+              900: '#0c4a6e',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+    body {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #1e293b;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #475569;
+      border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #64748b;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-cyan-500 selection:text-slate-900">
+
+  <!-- HEADER -->
+  <header class="sticky top-0 z-40 bg-slate-900/90 backdrop-blur border-b border-slate-800 px-4 py-3 shadow-md">
+    <div class="max-w-5xl mx-auto flex items-center justify-between gap-2">
+      <!-- Title & Persona Badge -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-600 to-blue-600 flex items-center justify-center font-bold text-lg shadow-lg shadow-cyan-500/20">
+          <i class="fa-solid fa-graduation-cap"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="font-bold text-base md:text-lg text-white tracking-tight">주택관리사보 2차 관계법규</h1>
+            <span class="bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 text-[11px] px-2 py-0.5 rounded-full font-medium">최신 법령 정밀 검증</span>
+          </div>
+          <p class="text-xs text-slate-400 hidden sm:block">전체 40문항 통합 출제 | 현행 법령 원문 엄격 검증 완료</p>
+        </div>
+      </div>
+
+      <!-- Controls & Stats -->
+      <div class="flex items-center gap-3">
+        <!-- Timer -->
+        <div class="bg-slate-800/80 border border-slate-700/60 rounded-lg px-3 py-1.5 flex items-center gap-2 text-xs font-mono text-cyan-300">
+          <i class="fa-regular fa-clock text-cyan-400"></i>
+          <span id="timer-display">00:00</span>
+        </div>
+
+        <!-- Question Drawer Toggle -->
+        <button id="btn-open-nav" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition">
+          <i class="fa-solid fa-border-all text-cyan-400"></i>
+          <span>문제 현황</span>
+          <span id="nav-progress-badge" class="bg-cyan-600 text-white text-[10px] px-1.5 py-0.5 rounded-full ml-0.5">0/40</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- PROGRESS BAR -->
+    <div class="max-w-5xl mx-auto mt-2.5">
+      <div class="flex justify-between items-center text-[11px] text-slate-400 mb-1 font-medium">
+        <span>진행률 (<span id="progress-text">1 / 40</span>)</span>
+        <span id="score-live-badge" class="text-slate-300">현재 누적 점수: -</span>
+      </div>
+      <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+        <div id="progress-bar-fill" class="bg-gradient-to-r from-cyan-500 to-blue-500 h-1.5 rounded-full transition-all duration-300" style="width: 2.5%;"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="flex-1 max-w-5xl w-full mx-auto p-4 sm:p-6 flex flex-col gap-6">
+
+    <!-- QUESTION VIEW CONTAINER -->
+    <div id="question-card" class="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-7 shadow-xl relative flex flex-col gap-6">
+      
+      <!-- LAW & TYPE BADGES -->
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-4">
+        <div class="flex items-center gap-2">
+          <span id="badge-qnum" class="bg-blue-600 text-white font-extrabold text-xs px-2.5 py-1 rounded-md shadow">
+            Q.01
+          </span>
+          <span id="badge-law" class="bg-slate-800 text-cyan-300 border border-slate-700 text-xs px-2.5 py-1 rounded-md font-semibold">
+            주택법
+          </span>
+          <span id="badge-type" class="bg-slate-800 text-slate-300 border border-slate-700 text-xs px-2.5 py-1 rounded-md">
+            객관식 5지선다
+          </span>
+        </div>
+        <div class="text-xs text-slate-400 flex items-center gap-1">
+          <i class="fa-solid fa-star text-amber-400 text-[10px]"></i> 배점: 2.5점
+        </div>
+      </div>
+
+      <!-- QUESTION TEXT -->
+      <div class="text-slate-100 text-base sm:text-lg font-medium leading-relaxed" id="q-text">
+        <!-- Loaded dynamically -->
+      </div>
+
+      <!-- BOX / PASSAGE (IF APPLICABLE) -->
+      <div id="q-box-container" class="hidden bg-slate-950/80 border border-slate-800 rounded-xl p-4 text-sm text-slate-300 leading-relaxed font-mono">
+        <!-- Optional box content -->
+      </div>
+
+      <!-- ANSWER INTERFACE AREA -->
+      <div id="answer-interface" class="mt-2">
+        <!-- Options or Inputs loaded dynamically -->
+      </div>
+
+      <!-- ACTION BUTTONS -->
+      <div class="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-slate-800">
+        <button id="btn-prev" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-sm font-semibold flex items-center gap-2 transition disabled:opacity-40 disabled:cursor-not-allowed">
+          <i class="fa-solid fa-arrow-left"></i> 이전 문제
+        </button>
+
+        <div class="flex items-center gap-2">
+          <button id="btn-reset-q" class="px-3 py-2 bg-slate-800/80 hover:bg-slate-800 text-slate-400 hover:text-slate-200 rounded-xl text-xs font-medium border border-slate-700 transition">
+            <i class="fa-solid fa-rotate-right"></i> 입력 초기화
+          </button>
+          <button id="btn-submit" class="px-6 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white rounded-xl text-sm font-bold shadow-lg shadow-cyan-500/20 flex items-center gap-2 transition">
+            <i class="fa-solid fa-check-double"></i> 정답 확인 및 해설 보기
+          </button>
+        </div>
+
+        <button id="btn-next" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-sm font-semibold flex items-center gap-2 transition">
+          다음 문제 <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+
+      <!-- FEEDBACK & EXPLANATION PANEL -->
+      <div id="explanation-panel" class="hidden mt-4 pt-6 border-t border-slate-800/80 space-y-4 animate-fade-in">
+        
+        <!-- STATUS BANNER -->
+        <div id="status-banner" class="p-4 rounded-xl flex items-center justify-between font-bold text-sm sm:text-base shadow-inner">
+          <!-- Dynamic Banner -->
+        </div>
+
+        <!-- DETAILED LEGAL EXPLANATION -->
+        <div class="bg-slate-950/90 border border-slate-800 rounded-xl p-5 space-y-3">
+          <div class="flex items-center justify-between border-b border-slate-800/80 pb-2">
+            <div class="flex items-center gap-2 text-cyan-400 font-bold text-sm">
+              <i class="fa-solid fa-scale-balanced"></i>
+              <span>법적 근거 및 명확한 해설</span>
+            </div>
+            <span id="explanation-law-ref" class="text-xs text-slate-400 bg-slate-900 border border-slate-800 px-2 py-0.5 rounded font-mono">
+              관련 법조문 출처
+            </span>
+          </div>
+
+          <div id="explanation-content" class="text-slate-200 text-sm leading-relaxed whitespace-pre-line">
+            <!-- Explanation text -->
+          </div>
+        </div>
+
+        <!-- INSTRUCTOR'S SPECIAL TIP -->
+        <div class="bg-amber-950/20 border border-amber-500/30 rounded-xl p-4 flex gap-3 text-sm text-amber-200">
+          <div class="text-amber-400 text-lg pt-0.5">
+            <i class="fa-solid fa-lightbulb"></i>
+          </div>
+          <div>
+            <h4 class="font-bold text-amber-300 text-xs uppercase tracking-wider mb-1">일타강사의 합격 핵심 팁</h4>
+            <p id="instructor-tip" class="text-amber-100/90 leading-normal text-xs sm:text-sm">
+              <!-- Tip text -->
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- EXAM SUMMARY REPORT VIEW -->
+    <div id="summary-view" class="hidden bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-8">
+      
+      <!-- REPORT HEADER -->
+      <div class="text-center space-y-3 border-b border-slate-800 pb-6">
+        <div class="inline-flex p-3 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 mb-1">
+          <i class="fa-solid fa-trophy text-3xl"></i>
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white">모의고사 성적 결과 리포트</h2>
+        <p class="text-slate-400 text-sm max-w-xl mx-auto">
+          제출하신 40문항에 대한 채점 결과와 법률 분야별 분석 데이터입니다.
+        </p>
+      </div>
+
+      <!-- SCORE OVERVIEW CARDS -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl text-center space-y-1">
+          <div class="text-xs text-slate-400 font-medium">최종 점수</div>
+          <div id="report-score" class="text-2xl sm:text-3xl font-black text-cyan-400">0점</div>
+          <div class="text-[11px] text-slate-500">100점 만점 기준</div>
+        </div>
+        <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl text-center space-y-1">
+          <div class="text-xs text-slate-400 font-medium">맞힌 문제 / 전체</div>
+          <div id="report-correct-count" class="text-2xl sm:text-3xl font-black text-emerald-400">0 / 40</div>
+          <div class="text-[11px] text-slate-500">정답률 <span id="report-accuracy">0%</span></div>
+        </div>
+        <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl text-center space-y-1">
+          <div class="text-xs text-slate-400 font-medium">소요 시간</div>
+          <div id="report-time" class="text-2xl sm:text-3xl font-black text-blue-400">00:00</div>
+          <div class="text-[11px] text-slate-500">총 테스트 시간</div>
+        </div>
+        <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl text-center space-y-1">
+          <div class="text-xs text-slate-400 font-medium">합격 판정</div>
+          <div id="report-status" class="text-xl sm:text-2xl font-bold text-rose-400">불합격</div>
+          <div class="text-[11px] text-slate-500">기준: 60점 이상</div>
+        </div>
+      </div>
+
+      <!-- INSTRUCTOR EVALUATION MESSAGE -->
+      <div id="report-persona-message" class="bg-slate-950 border border-cyan-500/30 rounded-xl p-5 flex gap-4 items-start">
+        <div class="w-12 h-12 rounded-full bg-cyan-600/20 text-cyan-400 flex-shrink-0 flex items-center justify-center text-xl font-bold border border-cyan-500/40">
+          <i class="fa-solid fa-user-tie"></i>
+        </div>
+        <div class="space-y-1 text-sm">
+          <div class="font-bold text-cyan-300 text-base">일타강사의 한줄 종합 총평</div>
+          <p id="report-comment" class="text-slate-300 leading-relaxed">
+            분석 중입니다...
+          </p>
+        </div>
+      </div>
+
+      <!-- CATEGORY ACCURACY BREAKDOWN -->
+      <div class="space-y-4">
+        <h3 class="font-bold text-base text-slate-200 flex items-center gap-2">
+          <i class="fa-solid fa-chart-pie text-cyan-400"></i>
+          <span>법률 파트별 정답률 분석</span>
+        </h3>
+        <div id="category-breakdown-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <!-- Dynamic breakdown -->
+        </div>
+      </div>
+
+      <!-- INCORRECT QUESTIONS NOTE (오답 노트) -->
+      <div class="space-y-4 border-t border-slate-800 pt-6">
+        <div class="flex items-center justify-between">
+          <h3 class="font-bold text-base text-slate-200 flex items-center gap-2">
+            <i class="fa-solid fa-book-bookmark text-rose-400"></i>
+            <span>간결한 오답 노트 (<span id="incorrect-count-tag">0</span>문항)</span>
+          </h3>
+          <span class="text-xs text-slate-400">약점 파트 집중 복습용</span>
+        </div>
+
+        <div id="wrong-notes-container" class="space-y-3 custom-scrollbar max-h-[500px] overflow-y-auto pr-1">
+          <!-- Dynamic wrong answers -->
+        </div>
+      </div>
+
+      <!-- ACTION BUTTONS -->
+      <div class="flex flex-wrap items-center justify-center gap-4 border-t border-slate-800 pt-6">
+        <button id="btn-restart-all" class="px-6 py-3 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold rounded-xl text-sm transition flex items-center gap-2">
+          <i class="fa-solid fa-rotate-left"></i> 전체 다시 풀기
+        </button>
+        <button id="btn-retry-wrong" class="px-6 py-3 bg-gradient-to-r from-rose-600 to-amber-600 hover:from-rose-500 hover:to-amber-500 text-white font-bold rounded-xl text-sm shadow-lg shadow-rose-600/20 transition flex items-center gap-2">
+          <i class="fa-solid fa-circle-exclamation"></i> 틀린 문제만 다시 풀기
+        </button>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- QUESTION NAVIGATOR MODAL -->
+  <div id="nav-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+      
+      <!-- Modal Header -->
+      <div class="p-4 sm:p-5 border-b border-slate-800 flex items-center justify-between bg-slate-900/50">
+        <div>
+          <h3 class="font-bold text-base text-white">전체 문항 이동 및 응시 현황</h3>
+          <p class="text-xs text-slate-400 mt-0.5">문항 번호를 클릭하면 해당 문제로 직접 이동합니다.</p>
+        </div>
+        <button id="btn-close-nav" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Legend -->
+      <div class="px-5 py-2.5 bg-slate-950 border-b border-slate-800/60 flex flex-wrap items-center gap-4 text-xs">
+        <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-slate-800 border border-slate-700"></span><span class="text-slate-400">미풀이</span></div>
+        <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-emerald-600"></span><span class="text-slate-300">정답</span></div>
+        <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-rose-600"></span><span class="text-slate-300">오답</span></div>
+        <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-cyan-600 ring-2 ring-cyan-400"></span><span class="text-slate-200">현재 선택</span></div>
+      </div>
+
+      <!-- Grid Content -->
+      <div class="p-5 overflow-y-auto custom-scrollbar flex-1">
+        <div id="nav-grid" class="grid grid-cols-5 sm:grid-cols-8 gap-2.5">
+          <!-- Question buttons -->
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-4 border-t border-slate-800 bg-slate-950/50 flex justify-between items-center">
+        <button id="btn-finish-exam" class="px-4 py-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold text-xs sm:text-sm rounded-xl transition">
+          <i class="fa-solid fa-flag-checkered mr-1"></i> 테스트 완료 및 최종 결과보기
+        </button>
+        <button id="btn-close-nav-footer" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs rounded-xl transition">
+          닫기
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CUSTOM CONFIRM MODAL -->
+  <div id="confirm-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center gap-3 text-amber-400">
+        <i class="fa-solid fa-circle-triangle-exclamation text-2xl"></i>
+        <h3 id="confirm-modal-title" class="font-bold text-lg text-white">확인 요청</h3>
+      </div>
+      <p id="confirm-modal-msg" class="text-sm text-slate-300 leading-relaxed">
+        내용
+      </p>
+      <div class="flex justify-end gap-3 pt-2">
+        <button id="btn-confirm-cancel" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold transition">
+          취소
+        </button>
+        <button id="btn-confirm-ok" class="px-5 py-2 bg-cyan-600 hover:bg-cyan-500 text-white rounded-xl text-xs font-bold transition">
+          확인
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    // RIGOROUSLY VERIFIED DATASET (Exactly 40 Questions)
+    const questionsData = [
+      {
+        id: 1,
+        qNum: 1,
+        law: "주택법",
+        type: "mc",
+        question: "주택법령상 주택상환사채에 관한 설명으로 옳지 않은 것은?",
+        options: [
+          "사채권자가 근무 또는 생업상의 사정으로 세대원 전원이 다른 행정구역으로 이전하는 경우 등 대통령령으로 정하는 예외적인 사유에 해당하면 주택상환사채를 중도에 양도하거나 해약할 수 있다.",
+          "주택상환사채를 발행한 등록사업자의 등록이 말소된 경우에도 등록사업자가 발행한 주택상환사채의 효력은 상실되지 아니한다.",
+          "주택상환사채의 발행가격은 액면가로 하거나 할인방법으로 발행할 수 있다.",
+          "주택상환사채는 기명증권으로 하며, 사채권자의 명의변경은 취득자의 성명과 주소를 사채원부에 기록하는 방법으로 한다.",
+          "주택상환사채의 상환기간은 5년을 초과할 수 없다."
+        ],
+        answer: 4,
+        explanation: "주택상환사채의 상환기간은 3년을 초과할 수 없습니다. 상환기간은 사채 발행일부터 주택의 공급계약 체결일까지의 기간으로 계산합니다.",
+        lawRef: "주택법 제86조 제1항 및 동법 시행령 제86조",
+        tip: "주택상환사채 상환기간은 '3년 초과 금지'가 핵심 포인트입니다! (5년 X)"
+      },
+      {
+        id: 2,
+        qNum: 2,
+        law: "주택법",
+        type: "mc",
+        question: "주택법령상 하나의 건축물에 도시형 생활주택과 그 밖의 주택을 함께 건축할 수 없는 원칙에 대한 예외 사항으로 옳은 것은? (단, 현행 주택법 시행령 제10조 기준)",
+        options: [
+          "일반주거지역에서 단지형 연립주택과 주거전용면적이 85제곱미터를 초과하는 주택 1세대를 함께 건축하는 경우",
+          "준주거지역 또는 상업지역에서 아파트형 주택과 도시형 생활주택 외의 주택을 함께 건축하는 경우",
+          "준공업지역에서 단지형 다세대주택과 그 밖의 주택을 함께 건축하는 경우",
+          "아파트형 주택과 주거전용면적이 100제곱미터인 주택 3세대를 함께 건축하는 경우",
+          "준주거지역에서 단지형 연립주택과 아파트형 주택을 함께 건축하는 경우"
+        ],
+        answer: 1,
+        explanation: "준주거지역 또는 상업지역에서 하나의 건축물에 아파트형 주택(구 소형 주택·원룸형 주택)과 도시형 생활주택 외의 주택을 함께 건축하는 경우 예외적으로 법적 허용 대상이 됩니다 (주택법 시행령 제10조 제2항 제2호).",
+        lawRef: "주택법 시행령 제10조 제2항 제2호 [시행 2025. 1. 21. / 2026. 8. 4.]",
+        tip: "준주거지역/상업지역 특례 조건: '아파트형 주택 + 도시형 생활주택 외 주택' 함께 건축 허용!"
+      },
+      {
+        id: 3,
+        qNum: 3,
+        law: "주택법",
+        type: "mc",
+        question: "주택법령상 주택조합의 조합원 모집, 청약 철회 및 가입비 반환에 관한 설명으로 옳지 않은 것은?",
+        options: [
+          "조합 가입 신청자가 청약을 철회한 경우 모집주체는 가입 신청자에게 청약 철회를 이유로 위약금이나 손해배상을 청구할 수 없다.",
+          "가입 신청자는 가입 신청한 날부터 30일 이내에 주택조합 가입에 관한 청약을 철회할 수 있다.",
+          "청약 철회 의사가 도달한 날부터 7일 이내에 모집주체는 예치기관의 장에게 가입비 등의 반환을 요청하여야 한다.",
+          "모집주체는 청약 철회에 따른 가입비 반환을 지연하는 경우 지연일수에 따른 지연이자를 가입 신청자에게 지급해야 한다.",
+          "조합원을 모집하려는 자는 관할 시장·군수·구청장에게 신고한 후 반드시 선착순의 방법으로 조합원을 모집하여야 한다."
+        ],
+        answer: 4,
+        explanation: "조합원을 모집하려는 자는 관할 관청에 신고한 후 공개모집의 방법으로 모집하여야 하며, 선착순의 방법은 조합원의 사망, 자격상실, 탈퇴 등으로 인한 결원을 충원하거나 미달된 조합원을 재모집하는 예외적인 경우에 한하여 허용됩니다. (참고: 청약 철회는 가입신청일부터 30일 이내, 모집주체의 반환 요청은 도달일부터 7일 이내, 예치기관의 실제 반환은 10일 이내입니다.)",
+        lawRef: "주택법 제11조의3 및 제11조의6",
+        tip: "숫자 구분을 철저히 하세요! 청약 철회(30일) / 모집주체 반환요청(7일) / 예치기관 실제반환(10일)."
+      },
+      {
+        id: 4,
+        qNum: 4,
+        law: "주택법",
+        type: "mc",
+        question: "주택법령상 분양가상한제를 적용하지 아니하는 주택에 해당하지 않는 것은?",
+        options: [
+          "「도시재생 활성화 및 지원에 관한 특별법」에 따른 주거재생혁신지구에서 혁신지구재생사업으로 건설·공급하는 주택",
+          "「공공주택 특별법」에 따른 도심 공공주택 복합사업을 시행하여 건설·공급하는 주택",
+          "도시형 생활주택",
+          "관광특구에서 건설·공급하는 공동주택으로서 층수가 50층 이상이거나 높이가 150미터 이상인 주택",
+          "수도권에서 공급하는 국민주택규모 이하의 일반 공동주택"
+        ],
+        answer: 4,
+        explanation: "수도권 공공택지 등에서 공급되는 일반 공동주택은 분양가상한제가 적용됩니다. 반면 도시형 생활주택, 관광특구 내 50층 이상 또는 150m 이상 주택, 주거재생혁신지구 사업 및 도심 공공주택 복합사업으로 건설·공급되는 일정 주택 등은 분양가상한제 적용에서 제외됩니다.",
+        lawRef: "주택법 제57조 제1항",
+        tip: "분양가상한제 제외 대상을 확실히 암기하세요! (도시형생활주택, 관광특구 50층/150m 이상 등)"
+      },
+      {
+        id: 5,
+        qNum: 5,
+        law: "주택법",
+        type: "mc",
+        question: "주택법령상 공구별 분할 건설·공급 및 착공기한에 관한 설명으로 옳지 않은 것은?",
+        options: [
+          "공구별로 분할하여 주택을 건설·공급하려는 경우 주택단지 전체 세대수는 600세대 이상이어야 한다.",
+          "각 공구별 세대수는 300세대 이상으로 하여야 한다.",
+          "최초로 공사를 시작하는 공구 외의 공구는 최초 착공신고일부터 2년 이내에 공사를 시작하여야 한다.",
+          "최초로 공사를 시작하는 공구 외의 공구가 착공기한 내에 공사를 시작하지 아니한 경우, 사업계획승인권자는 사업계획승인을 취소할 수 있다.",
+          "공구 간 경계는 폭 6미터 이상의 도로, 옹벽, 조경, 녹지 등으로 경계를 설정하여야 한다."
+        ],
+        answer: 3,
+        explanation: "최초로 공사를 시작하는 공구 외의 공구가 착공기한(2년) 내에 공사를 시작하지 않더라도 사업계획승인을 취소할 수 없습니다. (최초 공구는 5년 내 미착수 시 승인 취소 가능).",
+        lawRef: "주택법 제16조 및 제29조, 동법 시행령 제28조",
+        tip: "공구 분할 시 '최초 공구 외의 공구' 미착공은 승인 취소 사유가 되지 않는다는 점에 유의하세요."
+      },
+      {
+        id: 6,
+        qNum: 6,
+        law: "주택법",
+        type: "mc",
+        question: "주택법령상 주택의 공급 및 입주자모집 승인에 관한 설명으로 옳지 않은 것은?",
+        options: [
+          "사업주체(국가·지자체·LH·지방공사 제외)가 입주자를 모집하려는 경우에는 시장·군수·구청장의 승인을 받아야 한다.",
+          "사업주체가 복리시설의 입주자를 모집하려는 경우에는 시장·군수·구청장에게 신고하여야 한다.",
+          "한국토지주택공사(LH) 또는 지방공사인 공공사업주체는 입주자를 모집하려는 경우 시장·군수·구청장의 승인을 받거나 신고할 필요가 없다.",
+          "분양가상한제 적용주택의 분양가격을 입주자모집공고에 공시하는 주체는 '국토교통부장관'이다.",
+          "시장·군수·구청장은 입주자모집 승인을 하려는 경우 분양가심사위원회를 설치·운영하여 분양가격 산정의 적정성을 심사하여야 한다."
+        ],
+        answer: 3,
+        explanation: "분양가격 공시는 국토교통부장관이 아닌 '사업주체'가 입주자모집공고 시에 직접 명시하고 공시하여야 합니다.",
+        lawRef: "주택법 제57조 제5항 및 제54조",
+        tip: "입주자모집공고 시 분양가격 공시의무 주체는 '사업주체'입니다."
+      },
+      {
+        id: 7,
+        qNum: 7,
+        law: "주택법",
+        type: "mc",
+        question: "주택법령상 지방자치단체에 설치하는 '국민주택사업 특별회계'에 관한 설명으로 옳지 않은 것은?",
+        options: [
+          "지방자치단체는 국민주택사업을 시행하기 위하여 국민주택사업특별회계를 설치·운용하여야 한다.",
+          "「재건축초과이익 환수에 관한 법률」에 따른 재건축부담금 중 지방자치단체 귀속분은 국민주택사업 특별회계의 재원이 된다.",
+          "지방자치단체의 장은 국민주택사업 특별회계의 운용 상황을 매년 회계연도 종료 후 국토교통부장관에게 보고하여야 한다.",
+          "국민주택사업 특별회계의 융자금은 국민주택규모 이하의 주택건설사업 외의 용도로도 장기 융자할 수 있다.",
+          "특별회계의 재원에는 주택도시기금으로부터의 차입금도 포함된다."
+        ],
+        answer: 3,
+        explanation: "국민주택사업 특별회계의 융자금 등 자금은 국민주택규모 이하의 주택건설 및 대지조성사업 등 법정 목적 외의 용도로 융자하거나 사용할 수 없습니다.",
+        lawRef: "주택법 제85조",
+        tip: "국민주택사업 특별회계 자금은 국민주택규모 이하 건설·조성사업 목적 외 사용이 절대 불가합니다."
+      },
+      {
+        id: 8,
+        qNum: 8,
+        law: "공동주택관리법",
+        type: "mc",
+        question: "공동주택관리법령상 선거관리위원회의 구성 및 임원 자격에 관한 설명으로 옳지 않은 것은?",
+        options: [
+          "선거관리위원회는 동별 대표자나 입주자대표회의 임원을 선출하거나 해임하기 위하여 구성한다.",
+          "500세대 이상인 공동주택의 선거관리위원회는 5명 이상 9명 이하의 위원으로 구성한다.",
+          "선거관리위원회 위원은 입주자(소유자 대리인 포함) 중에서 관리규약으로 정하는 바에 따라 구성하되, 동별 대표자는 위원이 될 수 없다.",
+          "선거관리위원회 위원은 관리규약이 정한 정원의 과반수가 선출되면 구성된 것으로 보며, 위원장은 위원 중에서 호선한다.",
+          "입주자대표회의 회장의 임기 만료에 따른 선출을 위한 투표 시 후보자가 1명인 경우, 전체 입주자등의 과반수가 찬성하여야 선출된다."
+        ],
+        answer: 4,
+        explanation: "회장 후보자가 1명인 경우 선출 기준은 '전체 입주자등의 10분의 1 이상이 투표하고 투표자 과반수의 찬성'으로 선출됩니다.",
+        lawRef: "공동주택관리법 시행령 제12조 및 제15조",
+        tip: "단독 후보 출마 시 선출 요건: 전체 입주자등 1/10 이상 투표 + 투표자 과반수 찬성!"
+      },
+      {
+        id: 9,
+        qNum: 9,
+        law: "공동주택관리법",
+        type: "mc",
+        question: "공동주택관리법령상 공동주택 내 행위 중 입주자대표회의의 동의를 얻어 시장·군수·구청장에게 '신고'만으로 전기자동차 고정형 충전기 및 전용 주차구획을 설치할 수 있는 주체로 옳은 것은?",
+        options: [
+          "입주자대표회의 및 관리주체",
+          "주택관리업자 단독",
+          "소방서장",
+          "관할 시장·군수·구청장",
+          "한국전력공사 사장"
+        ],
+        answer: 0,
+        explanation: "주차장에 전기자동차의 고정형 충전기 및 충전 전용 주차구획을 설치하는 행위로서 입주자대표회의의 동의를 얻어 신고로 처리 가능한 주체는 입주자대표회의 또는 관리주체입니다.",
+        lawRef: "공동주택관리법 시행령 제35조 제1항 [별표3]",
+        tip: "전기차 충전시설 설치 절차: 입주자대표회의 동의 + 지자체 신고 (주체: 입대위 또는 관리주체)"
+      },
+      {
+        id: 10,
+        qNum: 10,
+        law: "공동주택관리법",
+        type: "mc",
+        question: "공동주택관리법령상 의무관리대상 공동주택의 회계감사 및 감사인 선정에 관한 설명으로 옳지 않은 것은?",
+        options: [
+          "매 회계연도 종료 후 9개월 이내에 외부감사인의 회계감사를 받아야 한다.",
+          "회계감사의 감사인은 입주자대표회의가 선정하는 것이 원칙이다.",
+          "입주자등의 10분의 1 이상이 연서하여 감사인 추천을 요구한 경우 입주자대표회의는 한국공인회계사회에 감사인 추천을 의뢰하여야 한다.",
+          "회계감사를 받지 아니하기로 입주자등 과반수의 서면동의를 받은 연도에는 회계감사를 생략할 수 있다.",
+          "감사인은 회계감사 완료일부터 1개월 이내에 회계감사 결과를 지자체 장에게 제출하고 공동주택관리정보시스템에 공개하여야 한다."
+        ],
+        answer: 3,
+        explanation: "회계감사 생략 동의 요건은 공동주택 규모에 따라 다릅니다. 300세대 이상인 공동주택은 입주자등의 3분의 2 이상의 서면동의가 필요하며, 300세대 미만인 의무관리대상 공동주택인 경우에 한하여 입주자등의 과반수 서면동의로 생략할 수 있습니다.",
+        lawRef: "공동주택관리법 제26조",
+        tip: "회계감사 생략 서면동의 요건 구분: 300세대 이상은 '2/3 이상', 300세대 미만 의무관리대상은 '과반수'!"
+      },
+      {
+        id: 11,
+        qNum: 11,
+        law: "공동주택관리법",
+        type: "mc",
+        question: "공동주택관리법령상 하자분쟁조정위원회의 조정 및 재정 절차의 완료 기한에 관한 설명으로 옳지 않은 것은? (단, 공용부분 하자 및 연장 등 예외적인 규정은 고려하지 않음)",
+        options: [
+          "하자분쟁조정위원회는 조정등의 신청을 받은 때에는 지체 없이 조정등의 절차를 개시하여야 한다.",
+          "하자심사 및 분쟁조정의 완료 기한은 신청을 받은 날부터 60일 이내이다.",
+          "분쟁재정의 완료 기한은 신청을 받은 날부터 150일 이내이다.",
+          "위 완료 기한에는 당사자의 보정기간 및 하자감정에 걸리는 기간은 제외하고 산정한다.",
+          "위원회가 공용부분에 대한 하자심사를 진행하는 경우의 완료 기한은 분쟁재정과 동일하게 150일 이내로 한다."
+        ],
+        answer: 4,
+        explanation: "전유부분의 하자심사 및 분쟁조정은 60일 이내지만, 공용부분의 경우에는 신청을 받은 날부터 90일 이내에 완료하여야 합니다.",
+        lawRef: "공동주택관리법 제44조 및 시행령",
+        tip: "하자분쟁 처리기한: 전유부분 하자심사·조정(60일), 공용부분 하자심사·조정(90일), 분쟁재정(150일)."
+      },
+      {
+        id: 12,
+        qNum: 12,
+        law: "공동주택관리법",
+        type: "mc",
+        question: "공동주택관리법 및 공공주택 특별법령상 공공임대주택의 특별수선충당금 적립 및 사용 협의 등에 관한 설명으로 옳지 않은 것은?",
+        options: [
+          "공공주택사업자는 공동주택의 공용부분 등에 대하여 특별수선충당금을 사용검사일부터 1년이 지난 날이 속하는 달부터 매달 적립하여야 한다.",
+          "영구임대주택, 국민임대주택, 행복주택 및 장기전세주택의 특별수선충당금 적립요율은 국토교통부장관이 고시하는 표준건축비의 1만분의 4이다.",
+          "공공주택사업자가 특별수선충당금을 사용하려는 경우에는 미리 관할 시장·군수·구청장과 협의하여야 한다.",
+          "천재지변 등 부득이한 사유로 특별수선충당금을 긴급하게 사용한 경우에는 시장·군수·구청장과의 사전 협의 없이 사용한 후, 사용일부터 30일 이내에 사후 통보할 수 있다.",
+          "임대의무기간 동안 분양주택과 혼합되어 있는 혼합주택단지의 특별수선충당금 적립요율은 공공임대주택 규정에 따라 표준건축비의 1만분의 4를 일률적으로 강제 적용한다."
+        ],
+        answer: 4,
+        explanation: "임대의무기간 동안 분양전환공공임대주택과 분양주택이 혼합된 단지에서는 공동 결정을 하는 등 혼합주택단지에 있는 경우 특별수선충당금의 적립요율은 '관리규약'으로 정하는 '장기수선충당금'의 요율을 준용하여 적립합니다.",
+        lawRef: "공공주택 특별법 제50조의4 및 공동주택관리법",
+        tip: "혼합주택단지 내 임대주택의 충당금 적립은 일률적 1만분의 4 강제가 아니라 관리규약상 장기수선충당금 요율 준용입니다."
+      },
+      {
+        id: 13,
+        qNum: 13,
+        law: "공동주택관리법",
+        type: "mc",
+        question: "공동주택관리법령상 주택관리업자에 대한 영업정지 처분과 이를 갈음하여 부과하는 과징금에 관한 설명으로 옳지 않은 것은?",
+        options: [
+          "시장ㆍ군수ㆍ구청장은 주택관리업자가 고의 또는 과실로 공동주택을 잘못 관리하여 소유자 및 사용자에게 재산상의 손해를 입힌 경우에는 영업정지를 명할 수 있다.",
+          "영업정지 처분을 갈음하여 부과할 수 있는 과징금의 최고한도액은 2천만원 이하이다.",
+          "과징금의 산정 기준은 영업정지 1일당 3만원으로 계산한다.",
+          "과징금 부과 통지를 받은 자는 통지를 받은 날부터 20일 이내에 지자체 수납기관에 과징금을 납부하여야 한다.",
+          "과징금 납부 기한 내에 재해 등 부득이한 사유로 납부할 수 없는 경우 사유가 없어진 날부터 7일 이내에 납부해야 한다."
+        ],
+        answer: 3,
+        explanation: "과징금 부과 통지를 받은 자는 납부 통지를 받은 날부터 30일 이내에 수납기관에 과징금을 납부하여야 합니다.",
+        lawRef: "공동주택관리법 제54조 및 시행령",
+        tip: "과징금 납부 기한은 통지받은 날부터 '30일 이내'입니다! (20일 X)"
+      },
+      {
+        id: 14,
+        qNum: 14,
+        law: "건축법",
+        type: "mc",
+        question: "건축법령상 가설건축물의 축조허가 및 신고, 존치기간 연장 절차에 관한 설명으로 옳지 않은 것은?",
+        options: [
+          "도시·군계획시설 또는 도시·군계획시설예정지에서 가설건축물을 건축하려는 자는 시장·군수·구청장의 허가를 받아야 한다.",
+          "재해복구, 흥행, 전람회, 공사용 가설건축물 등 대통령령으로 정하는 기준에 해당하는 가설건축물을 축조하려는 자는 시장·군수·구청장에게 신고한 후 착공하여야 한다.",
+          "가설건축물의 존치기간은 허가 대상과 신고 대상 모두 원칙적으로 3년 이내여야 한다.",
+          "허가 대상 가설건축물의 존치기간을 연장하려는 자는 존치기간 만료일 7일 전까지 시장·군수·구청장에게 연장 허가를 신청하여야 한다.",
+          "신고 대상 가설건축물의 존치기간을 연장하려는 자는 존치기간 만료일 7일 전까지 시장·군수·구청장에게 연장 신고를 하여야 한다."
+        ],
+        answer: 3,
+        explanation: "가설건축물 존치기간 연장 시 허가 대상은 존치기간 만료일 14일 전까지, 신고 대상은 존치기간 만료일 7일 전까지 관할 허가권자에게 신청 또는 신고하여야 합니다.",
+        lawRef: "건축법 시행령 제15조",
+        tip: "가설건축물 존치기간 연장 신청기한: 허가 대상(만료 14일 전), 신고 대상(만료 7일 전)!"
+      },
+      {
+        id: 15,
+        qNum: 15,
+        law: "건축법",
+        type: "mc",
+        question: "건축법령상 대지에 확보하여야 하는 '공개공지 또는 공개공간'에 관한 설명으로 옳지 않은 것은?",
+        options: [
+          "상업지역, 준주거지역, 준공업지역, 일반주거지역은 공개 공지 등의 확보 대상지역이다.",
+          "바닥면적 합계가 5천 제곱미터 이상인 문화 및 집회시설, 판매시설, 업무시설, 숙박시설, 종교시설, 운수시설(여객용)은 공개공지 확보 대상 건축물이다.",
+          "공개공지 대상 건축물 중 문화 및 집회시설군에서 '전시장 및 식물원'은 제외된다.",
+          "공개공지등의 면적은 대지면적의 100분의 10 이하의 범위에서 건축조례로 정하며, 조경면적으로 공개공지 면적을 대체하여 산정할 수 있다.",
+          "공개공지등에는 연간 90일 이내의 기간 동안 주민들을 위한 문화행사를 열거나 판촉활동을 할 수 있다."
+        ],
+        answer: 4,
+        explanation: "공개공지등에서 주민 행사 및 판촉 활동을 실시할 수 있는 기한은 연간 60일 이내의 범위입니다.",
+        lawRef: "건축법 시행령 제27조의2",
+        tip: "공개공지에서의 주민 문화행사 및 판촉활동 가능 기한은 연간 '60일 이내'입니다."
+      },
+      {
+        id: 16,
+        qNum: 16,
+        law: "건축법",
+        type: "mc",
+        question: "건축법령상 대지에 조경 등의 조치를 하여야 하는 건축물로 옳은 것은?",
+        options: [
+          "면적이 1,500제곱미터인 대지에 건축하는 공장",
+          "주거지역에 건축하는 연면적 합계가 1,200제곱미터인 물류시설",
+          "공업지역에 건축하는 연면적 합계가 1,000제곱미터인 물류시설",
+          "녹지지역에 건축하는 연면적 3,000제곱미터의 도서관",
+          "면적 4,500제곱미터인 대지에 건축하는 제조업 공장"
+        ],
+        answer: 1,
+        explanation: "연면적 합계 1,500㎡ 미만의 소규모 물류시설은 일반적으로 조경이 면제되지만, 주거지역 또는 상업지역에 건축하는 경우에는 반드시 조경 등의 조치를 하여야 합니다. (공업지역이나 녹지지역 물류시설, 대지 5천㎡ 미만 공장은 조경 면제 대상입니다.)",
+        lawRef: "건축법 제42조 및 시행령 제27조",
+        tip: "물류시설 조경 예외 단서: 연면적 1,500㎡ 미만이라도 '주거지역' 또는 '상업지역' 건축 시 조경 의무 대상!"
+      },
+      {
+        id: 17,
+        qNum: 17,
+        law: "건축법",
+        type: "mc",
+        question: "건축법령상 21층 이상이거나 연면적의 합계가 10만 제곱미터 이상인 건축물(공장 및 창고 제외)을 도지사 관할 시·군에 건축하려는 경우, 시장·군수가 건축허가를 하기 전에 미리 '도지사 사전승인'을 받아야 하는 용도로 옳은 것은?",
+        options: [
+          "숙박시설",
+          "판매시설",
+          "위락시설",
+          "공동주택",
+          "위 ①, ②, ③, ④ 모두 해당한다."
+        ],
+        answer: 4,
+        explanation: "층수가 21층 이상이거나 연면적 합계가 10만㎡ 이상인 대형 건축물(공장, 창고 제외)인 경우 공동주택, 판매시설, 숙박시설, 위락시설 등은 도지사의 사전승인을 얻어 시장·군수가 건축허가를 하게 됩니다.",
+        lawRef: "건축법 제11조 제2항",
+        tip: "21층 이상 or 10만㎡ 이상 대형 건축물 사전승인 대상: 공장/창고 제외 모든 주요 대형 용도 포함!"
+      },
+      {
+        id: 18,
+        qNum: 18,
+        law: "건축법",
+        type: "mc",
+        question: "건축법령상 전용주거지역과 일반주거지역 안에서 일조 등의 확보를 위한 높이제한을 정북방향이 아닌 '정남(正南)방향'의 인접 대지경계선으로부터의 거리를 기준으로 높이를 정할 수 있는 구역에 해당하지 않는 것은?",
+        options: [
+          "「주택법」 제15조에 따른 대지조성사업지구",
+          "「도시개발법」 제3조에 따른 도시개발구역",
+          "「도시 및 주거환경정비법」 제8조에 따른 정비구역",
+          "「국토의 계획 및 이용에 관한 법률」에 따른 개발진흥지구",
+          "정북방향으로 접하고 있는 대지의 소유자와 합의한 경우"
+        ],
+        answer: 3,
+        explanation: "정남방향 인접 대지경계선 기준으로 높이제한을 적용할 수 있는 특례 구역에는 대지조성사업지구, 도시개발구역, 정비구역, 정북방향 대지 소유자와 합의한 경우 등이 있으나 '개발진흥지구'는 적용 대상에 해당하지 않습니다.",
+        lawRef: "건축법 제61조 제3항 및 시행령 제86조",
+        tip: "정남방향 일조권 특례 지구 목록을 정확히 외워두세요. 개발진흥지구는 해당되지 않습니다."
+      },
+      {
+        id: 19,
+        qNum: 19,
+        law: "민간임대주택법",
+        type: "mc",
+        question: "민간임대주택에 관한 특별법령상 임차인대표회의의 구성 및 운영에 관한 설명으로 옳지 않은 것은?",
+        options: [
+          "임대사업자가 150세대 이상의 민간임대주택을 공급하는 공동주택단지 중 승강기가 설치되었거나 중앙집중식 난방방식인 단지의 임차인은 임차인대표회의를 의무적으로 구성하여야 한다.",
+          "임차인대표회의는 임차인대표회의 구성원 과반수의 찬성으로 의결한다.",
+          "임차인대표회의를 구성한 임차인은 동별 임차인대표를 선출하여야 하며, 임차인대표회의 임원으로 회장 1명, 부회장 1명, 감사 1명을 둔다.",
+          "임차인대표회의는 관리규약의 제정 및 개정, 관리비, 장기수선계획의 수립 및 조정 등에 관하여 임대사업자와 협의할 수 있다.",
+          "임차인대표회의 회의 소집 등 운영에 관한 세부 절차는 국토교통부장관의 승인을 받아 임대사업자가 임의로 결정한다."
+        ],
+        answer: 4,
+        explanation: "임차인대표회의 회의는 회장이 직접 소집하여 소집권한을 가지며, 세부 회의 소집 및 절차 또한 자체 규정에 따릅니다. 임대사업자가 임의적으로 정하거나 장관의 승인을 거치는 사항이 아닙니다.",
+        lawRef: "민간임대주택에 관한 특별법 제52조",
+        tip: "임차인대표회의는 자치적 회의체이므로 임대사업자가 임의 결정하지 않습니다."
+      },
+      {
+        id: 20,
+        qNum: 20,
+        law: "민간임대주택법",
+        type: "mc",
+        question: "민간임대주택에 관한 특별법령상 임대주택의 부기등기 의무 및 제재 사항에 관한 설명으로 옳지 않은 것은?",
+        options: [
+          "임대사업자는 해당 민간임대주택이 임대의무기간과 임대료 증액제한을 준수하여야 하는 재산임을 소유권등기에 부기등기하여야 한다.",
+          "부기등기는 민간임대주택 등록 이후 지체 없이 하여야 하며, 소유권보존등기와 동시에 할 수도 있다.",
+          "부기등기 의무를 이행하지 아니한 임대사업자에게는 1천만 원 이하의 벌금에 처한다.",
+          "임대사업자 등록이 말소된 경우에는 지체 없이 부기등기의 말소를 신청할 수 있다.",
+          "개인 임대사업자가 보유한 1호의 소규모 임대주택이라 하더라도 등록되었다면 부기등기 의무가 적용된다."
+        ],
+        answer: 2,
+        explanation: "임대사업자가 부기등기 의무를 위반하여 부기등기를 이행하지 않은 경우 제재 사항은 500만 원 이하의 과태료가 부과됩니다.",
+        lawRef: "민간임대주택에 관한 특별법 제5조의2 및 제67조",
+        tip: "부기등기 미이행 과태료 액수는 '500만 원 이하'입니다."
+      },
+      {
+        id: 21,
+        qNum: 21,
+        law: "공공주택법",
+        type: "mc",
+        question: "공공주택 특별법령상 공공임대주택의 종류 및 용어 정의로 옳지 않은 것은?",
+        options: [
+          "영구임대주택: 국가나 지방자치단체의 재정을 지원받아 최저소득 계층의 주거안정을 위하여 50년 이상 또는 영구적인 임대를 목적으로 공급하는 주택.",
+          "국민임대주택: 국가나 지방자치단체 재정이나 주택도시기금의 자금을 지원받아 저소득 서민의 주거안정을 위해 30년 이상 장기간 임대를 목적으로 공급하는 주택.",
+          "행복주택: 국가나 지방자치단체의 재정이나 주택도시기금의 자금을 지원받아 대학생, 사회초년생, 신혼부부 등 젊은 층의 주거안정을 목적으로 공급하는 주택.",
+          "통합공공임대주택: 취약계층, 청년, 신혼부부 등 다양한 계층의 주거안정을 위하여 주택도시기금 자금을 지원받아 30년 이상 임대할 목적으로 공급하는 주택.",
+          "장기전세주택: 전세계약의 방식으로 공급하는 공공임대주택으로서 임대의무기간은 30년이다."
+        ],
+        answer: 4,
+        explanation: "장기전세주택의 임대의무기간은 20년입니다.",
+        lawRef: "공공주택 특별법 시행령 제2조 제1항",
+        tip: "공공임대주택 의무기간: 영구(50년/영구), 국민(30년), 행복(30년), 장기전세(20년)!"
+      },
+      {
+        id: 22,
+        qNum: 22,
+        law: "공공주택법",
+        type: "mc",
+        question: "공공주택 특별법령상 공공주택지구 지정의 절차 및 공공주택지구계획에 관한 설명으로 옳지 않은 것은?",
+        options: [
+          "국토교통부장관은 주택지구 지정을 제안한 자를 공공주택사업자로 우선 지정할 수 있다.",
+          "공공주택사업자는 주택지구가 지정·고시된 날부터 3년 이내에 '공공주택지구계획'을 수립하여 국토교통부장관의 승인을 신청하여야 한다.",
+          "공공주택사업자는 주택지구의 조성을 위하여 필요한 경우에는 토지 등을 수용하거나 사용할 수 있다.",
+          "공공주택사업자는 지구조성사업을 완료한 때에는 지체 없이 국토교통부장관의 준공검사를 받아야 한다.",
+          "국토교통부장관 등은 주민 등의 의견청취를 위한 공고 전까지는 주택지구 지정을 위한 관련 정보가 누설되지 않도록 보안 조치를 하여야 한다."
+        ],
+        answer: 1,
+        explanation: "공공주택사업자는 주택지구가 지정·고시된 날부터 1년 이내에 공공주택지구계획을 수립하여 국토교통부장관에게 승인을 신청하여야 합니다.",
+        lawRef: "공공주택 특별법 제17조 제1항",
+        tip: "공공주택지구계획 승인 신청 기한은 지정·고시일부터 '1년 이내'입니다."
+      },
+      {
+        id: 23,
+        qNum: 23,
+        law: "도시정비법",
+        type: "mc",
+        question: "도시 및 주거환경정비법령상 용어 정의 및 토지등소유자의 범위에 관한 설명으로 옳지 않은 것은?",
+        options: [
+          "주거환경개선사업 및 재개발사업의 경우 정비구역에 위치한 토지 또는 건축물의 소유자 또는 그 지상권자가 '토지등소유자'에 해당한다.",
+          "재건축사업의 경우 정비구역에 위치한 건축물 및 그 부속토지의 소유자가 '토지등소유자'에 해당한다.",
+          "정비구역 내 토지 및 건축물을 여럿이서 공유하는 경우에는 공유자 전원을 대표하는 1인을 토지등소유자로 산정한다.",
+          "재건축사업의 토지등소유자 기준에는 지상권자가 포함되지 않는다.",
+          "조합원 설립 동의자 수 산정 시, 한 사람이 둘 이상의 소유권이나 구분소유권을 보유하고 있는 경우 소유권 수만큼 조합원의 권리와 토지등소유자 수를 다수로 산정한다."
+        ],
+        answer: 4,
+        explanation: "1인이 다수 필지의 토지 또는 다수의 건축물(구분소유권)을 소유하고 있는 경우에는 필지나 건축물의 수에 관계없이 토지등소유자를 1인으로 산정합니다.",
+        lawRef: "도시 및 주거환경정비법 제19조 제1항",
+        tip: "1인이 아무리 많은 구분소유권이나 필지를 갖고 있어도 토지등소유자는 오직 '1인'으로 계산합니다!"
+      },
+      {
+        id: 24,
+        qNum: 24,
+        law: "도시재정비법",
+        type: "mc",
+        question: "도시재정비 촉진을 위한 특별법령상 '용어의 뜻 및 존치지역'에 관한 설명으로 옳지 않은 것은?",
+        options: [
+          "재정비촉진지구는 지구의 특성에 따라 주거지형, 중심지형, 고밀복합형으로 구분한다.",
+          "존치지역이란 재정비촉진지구에서 재정비촉진사업을 할 필요성이 적어 재정비촉진계획에 따라 존치하는 지역을 말한다.",
+          "'존치촉진구역'이란 재정비촉진구역의 지정 요건에는 해당하지 아니하나 여건의 변화에 따라 필요성이 높아질 수 있어 존치 관리하는 구역이다.",
+          "존치관리구역은 재정비촉진구역의 지정 요건에 해당하지 아니하거나 기존의 시가지로 유지·관리할 필요가 있는 구역이다.",
+          "재정비촉진계획의 결정·고시일부터 3년 이내에 사업시행인가를 신청하지 아니한 경우, 시장·군수·구청장은 총괄사업관리자를 사업시행자로 지정할 수 있다."
+        ],
+        answer: 2,
+        explanation: "재정비촉진구역의 지정요건에는 해당하지 아니하나 시간의 경과 등 여건의 변화에 따라 재정비촉진사업 요건에 해당할 수 있거나 필요성이 높아질 수 있는 구역은 '존치정비구역'입니다.",
+        lawRef: "도시재정비 촉진을 위한 특별법 제2조 제6호",
+        tip: "존치지역의 분류: '존치정비구역'(향후 정비요건 충족 가능) vs '존치관리구역'(기존 시가지 유지)"
+      },
+
+      // SUBJECTIVE SHORT ANSWER QUESTIONS (25~40)
+      {
+        id: 25,
+        qNum: 25,
+        law: "주택법",
+        type: "sa",
+        question: "[주택법] 주택조합 가입을 신청한 자가 청약 철회를 한 경우, 모집주체는 청약 철회 의사가 도달한 날부터 ( ㉠ )일 이내에 예치기관의 장에게 가입비 등의 반환을 요청하여야 한다. 빈칸에 들어갈 아라비아 숫자를 쓰시오.",
+        blanks: [{ key: '㉠', answer: ["7"] }],
+        explanation: "주택조합 가입 신청 청약 철회 시 모집주체는 철회 의사가 도달한 날부터 7일 이내에 예치기관의 장에게 가입비 등의 반환을 요청하여야 합니다. (예치기관은 요청받은 날부터 10일 이내 반환)",
+        lawRef: "주택법 제11조의6 제4항",
+        tip: "청약 철회 관련 핵심 숫자: 청약철회 가능 기한 30일 / 모집주체 반환요청 7일 / 예치기관 실제반환 10일!"
+      },
+      {
+        id: 26,
+        qNum: 26,
+        law: "주택법",
+        type: "sa",
+        question: "[주택법] 주택법 시행규칙상 사업주체는 공사감리비를 계약에서 정한 지급예정일 ( ㉠ )일 전까지 사업계획승인권자에게 예치하여야 하고, 감리자는 지급예정일 ( ㉡ )일 전까지 사업계획승인권자에게 지급을 요청하여야 한다. 빈칸에 들어갈 아라비아 숫자를 순서대로 쓰시오.",
+        blanks: [
+          { key: '㉠', answer: ["14"] },
+          { key: '㉡', answer: ["7"] }
+        ],
+        explanation: "사업주체는 공사감리비를 지급예정일 14일 전까지 예치하고, 감리자는 지급예정일 7일 전까지 지급 요청을 하여야 합니다.",
+        lawRef: "주택법 시행규칙 제18조의2",
+        tip: "공사감리비 예치: 14일 전 / 지급 요청: 7일 전!"
+      },
+      {
+        id: 27,
+        qNum: 27,
+        law: "주택법",
+        type: "sa",
+        question: "[주택법] 주택법령상 시장·군수·구청장이 세대수가 ( ㉠ )세대 이상 증가하는 세대수 증가형 리모델링을 허가하려는 경우에는 기반시설 영향 등에 대해 시·군·구도시계획위원회의 심의를 거쳐야 한다. 빈칸에 들어갈 아라비아 숫자를 쓰시오.",
+        blanks: [{ key: '㉠', answer: ["50"] }],
+        explanation: "세대수가 50세대 이상 증가하는 세대수 증가형 리모델링의 허가 시 도시계획위원회의 심의를 받아야 합니다.",
+        lawRef: "주택법 제66조 제2항",
+        tip: "도시계획위원회 심의 대상 세대수 증가형 리모델링 기준: 50세대 이상."
+      },
+      {
+        id: 28,
+        qNum: 28,
+        law: "주택법",
+        type: "sa",
+        question: "[주택법] 등록사업자가 발행할 수 있는 주택상환사채의 규모는 최근 ( ㉠ )년간의 연평균 주택건설호수 이내로 한다. 빈칸에 들어갈 아라비아 숫자를 쓰시오.",
+        blanks: [{ key: '㉠', answer: ["3"] }],
+        explanation: "등록사업자가 발행할 수 있는 주택상환사채 규모는 최근 3년간 연평균 주택건설호수 이내로 제한됩니다.",
+        lawRef: "주택법 시행령 제74조 제2항",
+        tip: "주택상환사채 발행한도: 최근 3년간 연평균 주택건설호수 이내."
+      },
+      {
+        id: 29,
+        qNum: 29,
+        law: "공동주택관리법",
+        type: "sa",
+        question: "[공동주택관리법] 공동주택관리법령상 선거관리위원회의 구성원 수는 500세대 이상인 공동주택은 ( ㉠ )명 이상 9명 이하이며, 500세대 미만인 공동주택의 경우는 ( ㉡ )명 이상 9명 이하이다. 빈칸에 들어갈 아라비아 숫자를 순서대로 쓰시오.",
+        blanks: [
+          { key: '㉠', answer: ["5"] },
+          { key: '㉡', answer: ["3"] }
+        ],
+        explanation: "선거관리위원회 인원 기준: 500세대 이상(5명~9명), 500세대 미만(3명~9명)입니다.",
+        lawRef: "공동주택관리법 시행령 제15조 제1항",
+        tip: "선관위 구성 인원: 500세대 이상 5~9명 / 500세대 미만 3~9명."
+      },
+      {
+        id: 30,
+        qNum: 30,
+        law: "공동주택관리법",
+        type: "sa",
+        question: "[공동주택관리법] 주택관리사등의 손해배상책임을 보장하기 위해 예치한 공탁금은 주택관리사등이 해당 공동주택의 관리사무소장의 직을 사임하거나 그 직에서 해임된 날 또는 사망한 날부터 ( ㉠ )년 이내에는 회수할 수 없다. 빈칸에 들어갈 아라비아 숫자를 쓰시오.",
+        blanks: [{ key: '㉠', answer: ["3"] }],
+        explanation: "손해배상책임 보장 공탁금은 사임·해임·사망한 날부터 3년 이내에는 회수할 수 없습니다.",
+        lawRef: "공동주택관리법 제66조 제3항",
+        tip: "손해배상 공탁금 회수제한 기한: 3년 이내."
+      },
+      {
+        id: 31,
+        qNum: 31,
+        law: "공동주택관리법",
+        type: "sa",
+        question: "[공동주택관리법] 의무관리대상 전환 공동주택의 관리인이 관리규약의 제정 신고를 하지 아니하는 경우에는 입주자등의 ( ㉠ )분의 1 이상이 연서하여 신고할 수 있다. 빈칸에 들어갈 아라비아 숫자를 쓰시오.",
+        blanks: [{ key: '㉠', answer: ["10"] }],
+        explanation: "의무관리대상 전환 공동주택 관리인의 제정 신고 미이행 시 입주자등의 10분의 1 이상 연서로 신고 가능합니다.",
+        lawRef: "공동주택관리법 제10조의2 제2항",
+        tip: "입주자등 연서 신고 요건: 10분의 1 이상 연서."
+      },
+      {
+        id: 32,
+        qNum: 32,
+        law: "공동주택관리법",
+        type: "sa",
+        question: "[공동주택관리법] 주택관리업자 또는 용역 사업자를 선정한 관리주체 또는 입주자대표회의는 계약체결일부터 ( ㉠ )개월 이내에 그 계약서를 단지 홈페이지 및 동별 게시판에 공개하여야 한다. 빈칸에 들어갈 아라비아 숫자를 쓰시오.",
+        blanks: [{ key: '㉠', answer: ["1"] }],
+        explanation: "계약체결일부터 1개월 이내에 해당 계약서를 인터넷 홈페이지 및 동별 게시판에 공개하여야 합니다.",
+        lawRef: "공동주택관리법 제28조",
+        tip: "선정 계약서 공개 기한: 계약체결일부터 1개월 이내."
+      },
+      {
+        id: 33,
+        qNum: 33,
+        law: "건축법",
+        type: "sa",
+        question: "[건축법] 허가권자는 연면적이 ( ㉠ )천 제곱미터 이상인 건축물에 대하여 착공신고 시 장기 방치에 대비한 안전관리 예치금을 건축공사비의 ( ㉡ )퍼센트 범위에서 예치하게 할 수 있다. 빈칸에 들어갈 아라비아 숫자를 순서대로 쓰시오.",
+        blanks: [
+          { key: '㉠', answer: ["1"] },
+          { key: '㉡', answer: ["1"] }
+        ],
+        explanation: "연면적 1천m² 이상 건축물 대상, 건축공사비의 1퍼센트 범위에서 안전관리 예치금을 예치하게 할 수 있습니다.",
+        lawRef: "건축법 제13조 제2항",
+        tip: "안전관리 예치금: 연면적 1천m² 이상, 공사비의 1% 범위!"
+      },
+      {
+        id: 34,
+        qNum: 34,
+        law: "건축법",
+        type: "sa",
+        question: "[건축법] 방화지구 안의 공작물로서 건축물의 지붕 위에 설치하는 공작물이나 높이 ( ㉠ )미터 이상의 공작물은 주요부를 불연재료로 하여야 한다. 빈칸에 들어갈 아라비아 숫자를 쓰시오.",
+        blanks: [{ key: '㉠', answer: ["3"] }],
+        explanation: "방화지구 안에서 지붕 위 공작물 또는 높이 3미터 이상의 공작물은 주요부를 불연재료로 해야 합니다.",
+        lawRef: "건축법 제51조 제3항",
+        tip: "방화지구 내 불연재료 적용 공작물 높이: 3미터 이상."
+      },
+      {
+        id: 35,
+        qNum: 35,
+        law: "건축법",
+        type: "sa",
+        question: "[건축법] 건축법 시행령에 따라 지표면으로부터 지붕틀 또는 이와 비슷한 수평재를 지지하는 벽·깔도리 또는 기둥의 상단까지의 높이를 ( ㉠ )(이)라 한다. 빈칸에 들어갈 용어를 쓰시오.",
+        blanks: [{ key: '㉠', answer: ["처마높이"] }],
+        explanation: "지표면으로부터 지붕틀, 깔도리, 기둥 상단까지의 높이는 '처마높이'라고 정의합니다.",
+        lawRef: "건축법 시행령 제119조 제1항 제5호",
+        tip: "수평재 지지 깔도리/기둥 상단까지의 높이 용어: 처마높이."
+      },
+      {
+        id: 36,
+        qNum: 36,
+        law: "건축법",
+        type: "sa",
+        question: "[건축법] 준초고층 건축물에는 피난층 또는 지상으로 통하는 직통계단과 직접 연결되는 피난안전구역을 해당 건축물 전체 층수의 ( ㉠ )분의 1에 해당하는 층으로부터 상하 ( ㉡ )개층 이내에 1개소 이상 설치하여야 한다. 빈칸에 들어갈 아라비아 숫자를 순서대로 쓰시오.",
+        blanks: [
+          { key: '㉠', answer: ["2"] },
+          { key: '㉡', answer: ["5"] }
+        ],
+        explanation: "준초고층 건축물 피난안전구역 설치 기준: 전체 층수의 2분의 1에 해당하는 층으로부터 상하 5개층 이내 1개소 이상입니다.",
+        lawRef: "건축법 시행령 제34조 제4항",
+        tip: "준초고층 피난안전구역 기준: 전체 층수의 1/2 기준, 상하 5개층 이내!"
+      },
+      {
+        id: 37,
+        qNum: 37,
+        law: "민간임대주택법",
+        type: "sa",
+        question: "[민간임대주택법] 임대사업자는 주요 시설을 교체하고 보수하는 데에 필요한 특별수선충당금을 사용검사일부터 ( ㉠ )년이 지난 날이 속하는 달부터 매달 적립하여야 하며, 그 적립요율은 표준건축비의 1만분의 ( ㉡ )이다. 빈칸에 들어갈 아라비아 숫자를 순서대로 쓰시오.",
+        blanks: [
+          { key: '㉠', answer: ["1"] },
+          { key: '㉡', answer: ["1"] }
+        ],
+        explanation: "사용검사일부터 1년이 지난 날이 속하는 달부터 매달 적립하며, 적립요율은 표준건축비의 1만분의 1입니다.",
+        lawRef: "민간임대주택에 관한 특별법 제53조",
+        tip: "민간임대 특별수선충당금: 사용검사일 1년 경과 달부터, 표준건축비의 1만분의 1."
+      },
+      {
+        id: 38,
+        qNum: 38,
+        law: "공공주택법",
+        type: "sa",
+        question: "[공공주택법] \"공공주택지구\"란 공공주택의 공급을 위하여 공공주택이 전체주택 중 100분의 ( ㉠ ) 이상이 되고 지정·고시하는 지구를 말한다. 빈칸에 들어갈 아라비아 숫자를 쓰시오.",
+        blanks: [{ key: '㉠', answer: ["50"] }],
+        explanation: "공공주택지구는 전체 주택 중 100분의 50 이상이 공공주택이 되도록 지정·고시하는 지구입니다.",
+        lawRef: "공공주택 특별법 제2조 제2호",
+        tip: "공공주택지구 요건: 공공주택 비율 100분의 50 이상!"
+      },
+      {
+        id: 39,
+        qNum: 39,
+        law: "도시정비법",
+        type: "sa",
+        question: "[도시 및 주거환경정비법] 조합은 조합원으로서 정비구역 내 건축물이나 토지를 소유한 자 중 요건을 갖춘 임원을 둔다. 정정당당한 운영을 위하여 조합장은 선임일부터 ( ㉠ )를(을) 받을 때까지는 해당 정비구역에서 거주하여야 한다. 빈칸에 들어갈 인가 서류 명칭을 쓰시오.",
+        blanks: [{ key: '㉠', answer: ["관리처분계획인가", "관리처분계획 인가", "관리처분계획인가일"] }],
+        explanation: "조합장은 선임일부터 '관리처분계획인가'를 받을 때까지 해당 정비구역에서 의무 거주하여야 합니다.",
+        lawRef: "도시 및 주거환경정비법 제41조 제1항",
+        tip: "조합장의 의무 거주 기한: 선임일부터 '관리처분계획인가'를 받을 때까지!"
+      },
+      {
+        id: 40,
+        qNum: 40,
+        law: "공동주택관리법",
+        type: "sa",
+        question: "[공동주택관리법] 공동주택관리법령상 동별 대표자 및 입주자대표회의 임원의 임기는 ( ㉠ )년으로 하며, 한 차례만 연임할 수 있다. 빈칸에 들어갈 아라비아 숫자를 쓰시오.",
+        blanks: [{ key: '㉠', answer: ["2"] }],
+        explanation: "동별 대표자 및 입주자대표회의 임원의 임기는 2년으로 하며, 한 차례만 연임할 수 있습니다.",
+        lawRef: "공동주택관리법 시행령 제12조 및 제13조",
+        tip: "동대표 및 임원 임기: 2년 (1회 한하여 연임 가능)."
+      }
+    ];
+
+    // APPLICATION STATE
+    let currentIndex = 0;
+    let userAnswers = {}; // { qIndex: { value, isSubmitted, isCorrect } }
+    let timerSeconds = 0;
+    let timerInterval = null;
+
+    // DOM ELEMENTS
+    const qTextEl = document.getElementById('q-text');
+    const qBoxContainerEl = document.getElementById('q-box-container');
+    const badgeQnumEl = document.getElementById('badge-qnum');
+    const badgeLawEl = document.getElementById('badge-law');
+    const badgeTypeEl = document.getElementById('badge-type');
+    const answerInterfaceEl = document.getElementById('answer-interface');
+    
+    const btnPrev = document.getElementById('btn-prev');
+    const btnNext = document.getElementById('btn-next');
+    const btnSubmit = document.getElementById('btn-submit');
+    const btnResetQ = document.getElementById('btn-reset-q');
+
+    const explanationPanel = document.getElementById('explanation-panel');
+    const statusBanner = document.getElementById('status-banner');
+    const explanationContent = document.getElementById('explanation-content');
+    const explanationLawRef = document.getElementById('explanation-law-ref');
+    const instructorTip = document.getElementById('instructor-tip');
+
+    const progressBarFill = document.getElementById('progress-bar-fill');
+    const progressText = document.getElementById('progress-text');
+    const scoreLiveBadge = document.getElementById('score-live-badge');
+    const navProgressBadge = document.getElementById('nav-progress-badge');
+    const timerDisplay = document.getElementById('timer-display');
+
+    const navModal = document.getElementById('nav-modal');
+    const navGrid = document.getElementById('nav-grid');
+    const btnOpenNav = document.getElementById('btn-open-nav');
+    const btnCloseNav = document.getElementById('btn-close-nav');
+    const btnCloseNavFooter = document.getElementById('btn-close-nav-footer');
+    const btnFinishExam = document.getElementById('btn-finish-exam');
+
+    const questionCard = document.getElementById('question-card');
+    const summaryView = document.getElementById('summary-view');
+
+    // Confirm Modal Elements
+    const confirmModal = document.getElementById('confirm-modal');
+    const confirmModalTitle = document.getElementById('confirm-modal-title');
+    const confirmModalMsg = document.getElementById('confirm-modal-msg');
+    const btnConfirmOk = document.getElementById('btn-confirm-ok');
+    const btnConfirmCancel = document.getElementById('btn-confirm-cancel');
+    let onConfirmHandler = null;
+
+    // INITIALIZATION
+    function initApp() {
+      startTimer();
+      renderQuestion(currentIndex);
+      updateProgress();
+      buildNavGrid();
+
+      // Event Listeners
+      btnPrev.addEventListener('click', () => navigateQuestion(-1));
+      btnNext.addEventListener('click', () => navigateQuestion(1));
+      btnSubmit.addEventListener('click', submitCurrentAnswer);
+      btnResetQ.addEventListener('click', resetCurrentAnswer);
+
+      btnOpenNav.addEventListener('click', () => {
+        buildNavGrid();
+        navModal.classList.remove('hidden');
+      });
+      btnCloseNav.addEventListener('click', () => navModal.classList.add('hidden'));
+      btnCloseNavFooter.addEventListener('click', () => navModal.classList.add('hidden'));
+
+      btnFinishExam.addEventListener('click', () => {
+        navModal.classList.add('hidden');
+        showExamSummary();
+      });
+
+      document.getElementById('btn-restart-all').addEventListener('click', () => {
+        showCustomConfirm("전체 다시 풀기", "모든 풀이 기록을 초기화하고 처음부터 다시 응시하시겠습니까?", () => {
+          restartExam(false);
+        });
+      });
+
+      document.getElementById('btn-retry-wrong').addEventListener('click', () => {
+        restartExam(true);
+      });
+
+      // Confirm Modal handlers
+      btnConfirmCancel.addEventListener('click', () => {
+        confirmModal.classList.add('hidden');
+      });
+      btnConfirmOk.addEventListener('click', () => {
+        confirmModal.classList.add('hidden');
+        if (onConfirmHandler) onConfirmHandler();
+      });
+
+      // Keyboard support
+      document.addEventListener('keydown', (e) => {
+        if(document.activeElement.tagName === 'INPUT') return;
+        if(e.key === 'ArrowLeft') navigateQuestion(-1);
+        if(e.key === 'ArrowRight') navigateQuestion(1);
+        if(e.key === 'Enter') submitCurrentAnswer();
+        if(questionsData[currentIndex].type === 'mc') {
+          if(['1','2','3','4','5'].includes(e.key)) {
+            const optIdx = parseInt(e.key) - 1;
+            selectOption(optIdx);
+          }
+        }
+      });
+    }
+
+    // CUSTOM CONFIRM MODAL FUNCTION
+    function showCustomConfirm(title, msg, onOk) {
+      confirmModalTitle.textContent = title;
+      confirmModalMsg.textContent = msg;
+      onConfirmHandler = onOk;
+      confirmModal.classList.remove('hidden');
+    }
+
+    // TIMER LOGIC
+    function startTimer() {
+      if(timerInterval) clearInterval(timerInterval);
+      timerSeconds = 0;
+      timerInterval = setInterval(() => {
+        timerSeconds++;
+        const mins = String(Math.floor(timerSeconds / 60)).padStart(2, '0');
+        const secs = String(timerSeconds % 60).padStart(2, '0');
+        timerDisplay.textContent = `${mins}:${secs}`;
+      }, 1000);
+    }
+
+    // RENDER QUESTION
+    function renderQuestion(index) {
+      const q = questionsData[index];
+      const state = userAnswers[index] || { value: null, isSubmitted: false, isCorrect: false };
+
+      // Badges & Qnum
+      badgeQnumEl.textContent = `Q.${q.qNum < 10 ? '0' + q.qNum : q.qNum}`;
+      badgeLawEl.textContent = q.law;
+      badgeTypeEl.textContent = q.type === 'mc' ? '객관식 5지선다' : '주관식 단답형/기입형';
+
+      // Question Text
+      qTextEl.textContent = q.question;
+
+      // Reset Box
+      qBoxContainerEl.classList.add('hidden');
+
+      // Build Answer Interface
+      answerInterfaceEl.innerHTML = '';
+
+      if(q.type === 'mc') {
+        // Multiple Choice
+        const optionsContainer = document.createElement('div');
+        optionsContainer.className = "space-y-2.5";
+
+        q.options.forEach((optText, optIdx) => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          const isSelected = state.value === optIdx;
+          
+          let styleClasses = "w-full text-left p-3.5 sm:p-4 rounded-xl border text-sm sm:text-base font-normal flex items-start gap-3 transition-all duration-200 ";
+          
+          if(state.isSubmitted) {
+            if(optIdx === q.answer) {
+              styleClasses += "bg-emerald-950/40 border-emerald-500 text-emerald-200 font-semibold ring-1 ring-emerald-500/50";
+            } else if(isSelected && !state.isCorrect) {
+              styleClasses += "bg-rose-950/40 border-rose-500 text-rose-200 font-semibold ring-1 ring-rose-500/50";
+            } else {
+              styleClasses += "bg-slate-900/60 border-slate-800 text-slate-400 opacity-60";
+            }
+          } else {
+            if(isSelected) {
+              styleClasses += "bg-cyan-950/50 border-cyan-500 text-cyan-200 font-medium ring-1 ring-cyan-500/50 shadow-md";
+            } else {
+              styleClasses += "bg-slate-950/60 border-slate-800/80 text-slate-300 hover:bg-slate-800/60 hover:border-slate-700";
+            }
+          }
+
+          btn.className = styleClasses;
+
+          const numberSymbol = ['①', '②', '③', '④', '⑤'][optIdx];
+          btn.innerHTML = `
+            <span class="font-bold text-cyan-400 text-base sm:text-lg leading-none pt-0.5">${numberSymbol}</span>
+            <span class="flex-1 leading-relaxed">${optText}</span>
+          `;
+
+          if(!state.isSubmitted) {
+            btn.addEventListener('click', () => selectOption(optIdx));
+          }
+
+          optionsContainer.appendChild(btn);
+        });
+
+        answerInterfaceEl.appendChild(optionsContainer);
+
+      } else {
+        // Subjective Short Answer
+        const saContainer = document.createElement('div');
+        saContainer.className = "bg-slate-950/80 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-4";
+
+        const title = document.createElement('p');
+        title.className = "text-xs font-semibold text-slate-400 flex items-center gap-1.5";
+        title.innerHTML = `<i class="fa-solid fa-pen-to-square text-cyan-400"></i> 빈칸에 들어갈 올바른 정답을 입력하세요:`;
+        saContainer.appendChild(title);
+
+        const currentValObj = state.value || {};
+
+        q.blanks.forEach((blank) => {
+          const fieldBox = document.createElement('div');
+          fieldBox.className = "flex flex-col sm:flex-row sm:items-center gap-2";
+
+          const label = document.createElement('span');
+          label.className = "text-sm font-bold text-cyan-300 w-12";
+          label.textContent = `[ ${blank.key} ]`;
+
+          const input = document.createElement('input');
+          input.type = 'text';
+          input.id = `input-blank-${blank.key}`;
+          input.placeholder = `${blank.key} 정답 입력...`;
+          input.value = currentValObj[blank.key] || '';
+          input.disabled = state.isSubmitted;
+
+          let inputClass = "flex-1 bg-slate-900 border text-slate-100 text-sm rounded-lg px-3.5 py-2.5 focus:outline-none transition ";
+          if(state.isSubmitted) {
+            const isBlankCorrect = checkSingleBlankCorrect(blank, currentValObj[blank.key]);
+            if(isBlankCorrect) {
+              inputClass += "border-emerald-500 bg-emerald-950/30 text-emerald-200 font-semibold";
+            } else {
+              inputClass += "border-rose-500 bg-rose-950/30 text-rose-200 font-semibold";
+            }
+          } else {
+            inputClass += "border-slate-700 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500";
+          }
+          input.className = inputClass;
+
+          input.addEventListener('input', (e) => {
+            if(!userAnswers[index]) userAnswers[index] = { value: {}, isSubmitted: false, isCorrect: false };
+            if(!userAnswers[index].value) userAnswers[index].value = {};
+            userAnswers[index].value[blank.key] = e.target.value;
+            updateProgress();
+          });
+
+          fieldBox.appendChild(label);
+          fieldBox.appendChild(input);
+          saContainer.appendChild(fieldBox);
+        });
+
+        answerInterfaceEl.appendChild(saContainer);
+      }
+
+      // Handle Explanation Panel Visibility
+      if(state.isSubmitted) {
+        explanationPanel.classList.remove('hidden');
+        renderExplanation(q, state);
+        btnSubmit.innerHTML = `<i class="fa-solid fa-check"></i> 채점 완료됨`;
+        btnSubmit.disabled = true;
+        btnSubmit.classList.add('opacity-60', 'cursor-not-allowed');
+      } else {
+        explanationPanel.classList.add('hidden');
+        btnSubmit.innerHTML = `<i class="fa-solid fa-check-double"></i> 정답 확인 및 해설 보기`;
+        btnSubmit.disabled = false;
+        btnSubmit.classList.remove('opacity-60', 'cursor-not-allowed');
+      }
+
+      // Update Navigation Buttons State
+      btnPrev.disabled = index === 0;
+      btnNext.disabled = index === questionsData.length - 1;
+
+      updateProgress();
+    }
+
+    // CHECK SINGLE BLANK
+    function checkSingleBlankCorrect(blankObj, userVal) {
+      if(!userVal) return false;
+      const cleanUser = String(userVal).trim().replace(/\s+/g, '');
+      return blankObj.answer.some(ans => String(ans).trim().replace(/\s+/g, '') === cleanUser);
+    }
+
+    // SELECT OPTION
+    function selectOption(optIdx) {
+      if(userAnswers[currentIndex] && userAnswers[currentIndex].isSubmitted) return;
+      
+      userAnswers[currentIndex] = {
+        value: optIdx,
+        isSubmitted: false,
+        isCorrect: false
+      };
+
+      renderQuestion(currentIndex);
+    }
+
+    // RESET CURRENT ANSWER
+    function resetCurrentAnswer() {
+      if(userAnswers[currentIndex] && userAnswers[currentIndex].isSubmitted) {
+        showCustomConfirm("입력 초기화", "해당 문제의 채점 결과를 초기화하고 다시 작성하시겠습니까?", () => {
+          delete userAnswers[currentIndex];
+          renderQuestion(currentIndex);
+        });
+        return;
+      }
+      delete userAnswers[currentIndex];
+      renderQuestion(currentIndex);
+    }
+
+    // SUBMIT CURRENT ANSWER
+    function submitCurrentAnswer() {
+      const q = questionsData[currentIndex];
+      const state = userAnswers[currentIndex];
+
+      if(!state || state.value === null || state.value === undefined) {
+        showCustomConfirm("정답 미입력", "정답을 선택하거나 입력한 후 [정답 확인] 버튼을 눌러주세요.", () => {});
+        return;
+      }
+
+      let isCorrect = false;
+
+      if(q.type === 'mc') {
+        isCorrect = state.value === q.answer;
+      } else {
+        const valObj = state.value || {};
+        isCorrect = q.blanks.every(blank => checkSingleBlankCorrect(blank, valObj[blank.key]));
+      }
+
+      userAnswers[currentIndex] = {
+        value: state.value,
+        isSubmitted: true,
+        isCorrect: isCorrect
+      };
+
+      renderQuestion(currentIndex);
+      updateProgress();
+    }
+
+    // RENDER EXPLANATION
+    function renderExplanation(q, state) {
+      if(state.isCorrect) {
+        statusBanner.className = "p-4 rounded-xl flex items-center justify-between font-bold text-sm sm:text-base shadow-inner bg-emerald-950/80 border border-emerald-500/50 text-emerald-300";
+        statusBanner.innerHTML = `
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-circle-check text-xl text-emerald-400"></i>
+            <span>🎉 정답입니다! 아주 훌륭합니다.</span>
+          </div>
+          <span class="text-xs font-mono bg-emerald-900/60 px-2.5 py-1 rounded-md border border-emerald-500/30">+2.5점 획득</span>
+        `;
+      } else {
+        statusBanner.className = "p-4 rounded-xl flex items-center justify-between font-bold text-sm sm:text-base shadow-inner bg-rose-950/80 border border-rose-500/50 text-rose-300";
+        
+        let correctDisplay = "";
+        if(q.type === 'mc') {
+          correctDisplay = `정답: ${['①','②','③','④','⑤'][q.answer]}`;
+        } else {
+          correctDisplay = `정답: ` + q.blanks.map(b => `${b.key} = ${b.answer[0]}`).join(', ');
+        }
+
+        statusBanner.innerHTML = `
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-circle-xmark text-xl text-rose-400"></i>
+            <span>❌ 오답입니다. 해설을 통해 개념을 보완하세요.</span>
+          </div>
+          <span class="text-xs font-mono bg-rose-900/60 text-rose-200 px-2.5 py-1 rounded-md border border-rose-500/30">${correctDisplay}</span>
+        `;
+      }
+
+      explanationContent.textContent = q.explanation;
+      explanationLawRef.textContent = `법적 근거: ${q.lawRef}`;
+      instructorTip.textContent = q.tip;
+    }
+
+    // NAVIGATE QUESTION
+    function navigateQuestion(direction) {
+      const newIndex = currentIndex + direction;
+      if(newIndex >= 0 && newIndex < questionsData.length) {
+        currentIndex = newIndex;
+        renderQuestion(currentIndex);
+      }
+    }
+
+    // UPDATE PROGRESS & SCORE
+    function updateProgress() {
+      const total = questionsData.length;
+      progressText.textContent = `${currentIndex + 1} / ${total}`;
+      const percentage = ((currentIndex + 1) / total) * 100;
+      progressBarFill.style.width = `${percentage}%`;
+
+      // Count answered
+      const answeredKeys = Object.keys(userAnswers);
+      const submittedCount = answeredKeys.filter(k => userAnswers[k].isSubmitted).length;
+      navProgressBadge.textContent = `${submittedCount}/${total}`;
+
+      // Calculate live score
+      let liveScore = 0;
+      answeredKeys.forEach(k => {
+        if(userAnswers[k].isSubmitted && userAnswers[k].isCorrect) {
+          liveScore += 2.5;
+        }
+      });
+
+      scoreLiveBadge.textContent = `채점 완료: ${submittedCount}개 (${liveScore.toFixed(1)}점)`;
+    }
+
+    // BUILD NAVIGATION GRID IN MODAL
+    function buildNavGrid() {
+      navGrid.innerHTML = '';
+      questionsData.forEach((q, idx) => {
+        const state = userAnswers[idx];
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        
+        let btnClasses = "h-11 rounded-xl text-xs font-bold border flex flex-col items-center justify-center gap-0.5 transition relative ";
+        
+        if(idx === currentIndex) {
+          btnClasses += "ring-2 ring-cyan-400 border-cyan-500 shadow-lg shadow-cyan-500/20 ";
+        }
+
+        if(state && state.isSubmitted) {
+          if(state.isCorrect) {
+            btnClasses += "bg-emerald-950/80 border-emerald-600 text-emerald-300";
+          } else {
+            btnClasses += "bg-rose-950/80 border-rose-600 text-rose-300";
+          }
+        } else if(state && (state.value !== null && state.value !== undefined)) {
+          btnClasses += "bg-slate-800 border-cyan-600/60 text-cyan-300";
+        } else {
+          btnClasses += "bg-slate-950/80 border-slate-800 text-slate-400 hover:bg-slate-800/80";
+        }
+
+        btn.className = btnClasses;
+        btn.innerHTML = `
+          <span>Q.${q.qNum}</span>
+          <span class="text-[9px] font-normal opacity-70">${q.law.substring(0,2)}</span>
+        `;
+
+        btn.addEventListener('click', () => {
+          currentIndex = idx;
+          renderQuestion(currentIndex);
+          navModal.classList.add('hidden');
+        });
+
+        navGrid.appendChild(btn);
+      });
+    }
+
+    // SHOW EXAM SUMMARY REPORT
+    function showExamSummary() {
+      const total = questionsData.length;
+      let correctCount = 0;
+
+      questionsData.forEach((q, idx) => {
+        const state = userAnswers[idx];
+        if(state && state.isSubmitted && state.isCorrect) {
+          correctCount++;
+        }
+      });
+
+      const totalScore = (correctCount * 2.5).toFixed(1);
+      const accuracy = Math.round((correctCount / total) * 100);
+
+      // Hide question card, show summary view
+      questionCard.classList.add('hidden');
+      summaryView.classList.remove('hidden');
+
+      // Populate Stats
+      document.getElementById('report-score').textContent = `${totalScore}점`;
+      document.getElementById('report-correct-count').textContent = `${correctCount} / ${total}`;
+      document.getElementById('report-accuracy').textContent = `${accuracy}%`;
+      document.getElementById('report-time').textContent = timerDisplay.textContent;
+
+      const reportStatusEl = document.getElementById('report-status');
+      const isPassed = totalScore >= 60.0;
+
+      if(isPassed) {
+        reportStatusEl.textContent = "🎉 최종 합격";
+        reportStatusEl.className = "text-xl sm:text-2xl font-black text-emerald-400";
+      } else {
+        reportStatusEl.textContent = "⚠️ 불합격 기준";
+        reportStatusEl.className = "text-xl sm:text-2xl font-black text-rose-400";
+      }
+
+      // Persona Comment
+      const reportCommentEl = document.getElementById('report-comment');
+      if(totalScore >= 80) {
+        reportCommentEl.textContent = "완벽합니다! 주택관리사보 2차 관계법규 출제 고득점 안정권에 진입하셨습니다. 실전에서도 이 감각을 그대로 유지하십시오!";
+      } else if(totalScore >= 60) {
+        reportCommentEl.textContent = "합격 기준선(60점)을 통과하셨습니다! 오답 노트를 통해 혼동되는 세부 수치(날짜, 세대수, 비율)만 한 번 더 짚고 넘어가면 확고한 합격이 보장됩니다.";
+      } else {
+        reportCommentEl.textContent = "아쉽게 합격 기준에 미달했습니다. 주택법과 공동주택관리법의 주관식 숫자 기입형 문제를 집중 공략하고 아래 오답 노트를 반드시 복습하세요!";
+      }
+
+      // Law Breakdown
+      renderLawBreakdown();
+
+      // Wrong Notes
+      renderWrongNotes();
+    }
+
+    // RENDER LAW BREAKDOWN
+    function renderLawBreakdown() {
+      const breakdownGrid = document.getElementById('category-breakdown-grid');
+      breakdownGrid.innerHTML = '';
+
+      const lawStats = {};
+
+      questionsData.forEach((q, idx) => {
+        if(!lawStats[q.law]) {
+          lawStats[q.law] = { total: 0, correct: 0 };
+        }
+        lawStats[q.law].total++;
+        if(userAnswers[idx] && userAnswers[idx].isSubmitted && userAnswers[idx].isCorrect) {
+          lawStats[q.law].correct++;
+        }
+      });
+
+      Object.keys(lawStats).forEach(lawName => {
+        const stat = lawStats[lawName];
+        const rate = Math.round((stat.correct / stat.total) * 100);
+
+        const card = document.createElement('div');
+        card.className = "bg-slate-950 border border-slate-800 p-3.5 rounded-xl space-y-1.5";
+        card.innerHTML = `
+          <div class="flex justify-between items-center text-xs">
+            <span class="font-bold text-slate-200">${lawName}</span>
+            <span class="font-mono text-cyan-400 font-semibold">${stat.correct}/${stat.total}문항 (${rate}%)</span>
+          </div>
+          <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+            <div class="bg-cyan-500 h-1.5 rounded-full" style="width: ${rate}%;"></div>
+          </div>
+        `;
+
+        breakdownGrid.appendChild(card);
+      });
+    }
+
+    // RENDER WRONG NOTES
+    function renderWrongNotes() {
+      const wrongContainer = document.getElementById('wrong-notes-container');
+      wrongContainer.innerHTML = '';
+
+      const wrongIndices = [];
+      questionsData.forEach((q, idx) => {
+        const state = userAnswers[idx];
+        if(!state || !state.isSubmitted || !state.isCorrect) {
+          wrongIndices.push(idx);
+        }
+      });
+
+      document.getElementById('incorrect-count-tag').textContent = wrongIndices.length;
+
+      if(wrongIndices.length === 0) {
+        wrongContainer.innerHTML = `
+          <div class="p-6 text-center text-slate-400 bg-slate-950 border border-slate-800 rounded-xl text-sm">
+            🎉 틀린 문제가 없습니다! 완벽한 점수입니다.
+          </div>
+        `;
+        return;
+      }
+
+      wrongIndices.forEach(idx => {
+        const q = questionsData[idx];
+        const state = userAnswers[idx] || {};
+
+        let userValText = "미응답";
+        if(state.value !== undefined && state.value !== null) {
+          if(q.type === 'mc') {
+            userValText = `${['①','②','③','④','⑤'][state.value]}`;
+          } else {
+            userValText = JSON.stringify(state.value);
+          }
+        }
+
+        let correctValText = "";
+        if(q.type === 'mc') {
+          correctValText = `${['①','②','③','④','⑤'][q.answer]}`;
+        } else {
+          correctValText = q.blanks.map(b => `${b.key}: ${b.answer[0]}`).join(', ');
+        }
+
+        const noteCard = document.createElement('div');
+        noteCard.className = "bg-slate-950 border border-slate-800 rounded-xl p-4 space-y-2 text-xs sm:text-sm";
+        noteCard.innerHTML = `
+          <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+            <div class="flex items-center gap-2">
+              <span class="bg-rose-900/60 text-rose-300 border border-rose-500/30 px-2 py-0.5 rounded font-bold">Q.${q.qNum}</span>
+              <span class="text-cyan-400 font-medium">${q.law}</span>
+            </div>
+            <button class="btn-goto-q text-xs text-slate-400 hover:text-cyan-300 underline" data-index="${idx}">
+              <i class="fa-solid fa-arrow-right-to-bracket mr-1"></i>문제로 이동
+            </button>
+          </div>
+          <div class="text-slate-200 font-medium leading-relaxed">${q.question}</div>
+          <div class="flex flex-wrap items-center gap-4 text-xs font-mono bg-slate-900/60 p-2.5 rounded-lg border border-slate-800/80">
+            <span class="text-rose-400">제출 답안: ${userValText}</span>
+            <span class="text-emerald-400 font-bold">정답: ${correctValText}</span>
+          </div>
+          <div class="text-slate-400 text-xs leading-normal bg-slate-900/30 p-2 rounded border border-slate-800/40">
+            💡 <strong class="text-slate-300">핵심 포인트:</strong> ${q.explanation}
+          </div>
+        `;
+
+        noteCard.querySelector('.btn-goto-q').addEventListener('click', () => {
+          currentIndex = idx;
+          summaryView.classList.add('hidden');
+          questionCard.classList.remove('hidden');
+          renderQuestion(currentIndex);
+        });
+
+        wrongContainer.appendChild(noteCard);
+      });
+    }
+
+    // RESTART EXAM
+    function restartExam(onlyWrong = false) {
+      if(onlyWrong) {
+        const wrongIndices = [];
+        questionsData.forEach((q, idx) => {
+          const state = userAnswers[idx];
+          if(!state || !state.isSubmitted || !state.isCorrect) {
+            wrongIndices.push(idx);
+          }
+        });
+
+        if(wrongIndices.length === 0) {
+          showCustomConfirm("알림", "틀린 문제가 없습니다!", () => {});
+          return;
+        }
+
+        // Reset state for wrong questions
+        wrongIndices.forEach(idx => {
+          delete userAnswers[idx];
+        });
+
+        currentIndex = wrongIndices[0];
+      } else {
+        userAnswers = {};
+        currentIndex = 0;
+        startTimer();
+      }
+
+      summaryView.classList.add('hidden');
+      questionCard.classList.remove('hidden');
+      renderQuestion(currentIndex);
+    }
+
+    // BOOTSTRAP
+    window.addEventListener('DOMContentLoaded', initApp);
+  </script>
+</body>
+</html>

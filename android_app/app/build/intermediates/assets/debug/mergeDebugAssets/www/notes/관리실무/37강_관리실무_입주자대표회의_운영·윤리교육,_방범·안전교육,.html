@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 관리실무 - 제37강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+            letter-spacing: -0.05em;
+        }
+        
+        h1 {
+            font-size: 12pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        /* 토너 절약 시각 강조 클래스 */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #16803d; 
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #6d28d9; 
+        }
+        
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        ol {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        /* 정답 리스트 3열 격자 레이아웃 */
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px 15px;
+        }
+
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        제37강. 관리실무: 입주자대표회의 운영·윤리교육, 방범·안전교육, 행위허가·신고 및 경미한 행위, 주택법·건축법상 리모델링
+    </h1>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        1. 입주자대표회의 구성원 교육 (운영 및 윤리교육)
+    </h2>
+    <ul>
+        <li><strong>실시권자 및 성격 (★주체 구분 기출 출제포인트)</strong>:
+            <ul>
+                <li>실시권자: <span class="highlight-red">시장·군수·구청장</span>이 실시하여야 함 (공동주택관리법 제17조제1항). (※ 관리사무소장 또는 시·도지사가 실시한다는 지문은 X).</li>
+                <li>성격: 실시권자에게는 <span class="highlight-blue">의무적 실시 규정</span>이나, 피교육자인 입주자대표회의 구성원에 대해서는 미이수 시 과태료가 부과되지 아니함 (임의적 수강 권장).</li>
+            </ul>
+        </li>
+        <li><strong>입주자등 및 관리주체의 임의교육 신청</strong>:
+            <ul>
+                <li>시장·군수·구청장은 관리주체 또는 입주자등이 희망하는 경우 교육을 <span class="highlight-purple">실시할 수 있다</span> (임의규정).</li>
+                <li>이 경우 수강 비용은 <span class="highlight-purple">수강생 본인</span>이 부담함.</li>
+            </ul>
+        </li>
+        <li><strong>교육내용의 유효성</strong>:
+            <ul>
+                <li>입주자대표회의 구성원 교육 내용(운영 및 윤리사항)에 관한 지문은 법령상 포함 범위가 방대하므로 시험 출제 시 <span class="highlight-blue">모두 옳은 지문</span>으로 구성됨.</li>
+            </ul>
+        </li>
+        <li><strong>위탁 및 공고·교육시간 (★주관식 단골 법정 수치)</strong>:
+            <ul>
+                <li>위탁기관: 시장·군수·구청장은 교육을 법 제89조제2항에 따른 <span class="highlight-green">공동주택관리지원기구</span>에 위탁하여 실시할 수 있음.</li>
+                <li>교육 공고/통보: 교육 실시 <span class="highlight-red">10일 전까지</span> 공고하거나 대상자에게 알려야 함 (시행령 제18조제1항).</li>
+                <li>교육 시간: <span class="highlight-red">매년 4시간</span> 실시함 (2년 주기가 아닌 '매년' 실시).</li>
+            </ul>
+        </li>
+        <li><strong>교육 방법 및 비용 부담 (★회계처리 기출 문제)</strong>:
+            <ul>
+                <li>교육 방법: <span class="highlight-blue">집합교육 원칙</span> (단, 교육참여 현황 관리가 가능한 경우 전문기관을 통한 <span class="highlight-blue">온라인 교육</span> 가능).</li>
+                <li>비용 부담: 입주자대표회의 구성원의 운영·윤리교육 수강 비용은 <span class="highlight-red">입주자대표회의 운영비</span>에서 부담함 (시행령 제18조제5항). (※ 일반관리비의 교육훈련비, 잡수입, 수강생 개인 부담으로 처리 시 X).</li>
+                <li>지방자치단체의 지원: 시장·군수·구청장은 필요하다고 인정하는 경우 교육 비용의 전부 또는 일부를 지원할 수 있음.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        2. 방범교육 및 안전교육
+    </h2>
+    <ul>
+        <li><strong>실시권자 및 대상자</strong>:
+            <ul>
+                <li>실시권자: <span class="highlight-red">시장·군수·구청장</span> (공동주택관리법 제32조제2항).</li>
+                <li>교육 대상자:
+                    <ol>
+                        <li>경비업무에 종사하는 사람 (경비 책임자 포함).</li>
+                        <li>시설물 안전관리계획에 따라 시설물 안전관리자 및 안전관리책임자로 선정된 사람.</li>
+                    </ol>
+                    <em>※ <span class="highlight-red">관리사무소장</span>은 방범 및 안전교육의 직접적인 대상자로 지정되어 있지 않으므로 오답 유의!</em>
+                </li>
+                <li>제재: 교육 미이수 시 <span class="highlight-red">300만원 이하의 과태료</span> 부과 (의무적 교육).</li>
+            </ul>
+        </li>
+        <li><strong>교육 횟수 및 시간 (★주관식 핵심 법정 수치)</strong>:
+            <ul>
+                <li>교육 횟수 및 시간: <span class="highlight-red">연 2회 이내</span>에서 시장·군수·구청장이 정하는 횟수로 하되, 매회 <span class="highlight-red">4시간</span>으로 함 (시행령 제33조제1항).</li>
+                <li>주의 법률 용어: '연 2회 이상'이 아닌 <span class="highlight-red">'연 2회 이내'</span>임에 엄격히 주의!</li>
+            </ul>
+        </li>
+        <li><strong>업무의 위탁 기관 구분 (★주관식 및 박스형 출제)</strong>:
+            <ul>
+                <li>방범교육: <span class="highlight-blue">관할 경찰서장</span> 또는 <span class="highlight-blue">공동주택관리지원기구</span>에 위탁.</li>
+                <li>소방에 관한 안전교육: <span class="highlight-purple">관할 소방서장</span> 또는 <span class="highlight-purple">공동주택관리지원기구</span>에 위탁.</li>
+                <li>시설물에 관한 안전교육: <span class="highlight-green">공동주택관리지원기구</span> 또는 <span class="highlight-green">주택관리사단체</span>에 위탁.</li>
+            </ul>
+        </li>
+        <li><strong>교육 통보 및 상호 인정 특례</strong>:
+            <ul>
+                <li>교육 통보: 교육 실시 <span class="highlight-red">10일 전까지</span> 대상자에게 통보하여야 함.</li>
+                <li>상호 인정: 「화재의 예방 및 안전관리에 관한 법률」에 따른 소방안전관리자 실무교육 등을 이수한 사람은 공동주택관리법상 소방에 관한 안전교육을 받은 것으로 봄.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 20%;">교육 종류</th>
+                <th style="width: 18%;">실시권자</th>
+                <th style="width: 22%;">교육시간 및 주기</th>
+                <th style="width: 25%;">비용 부담 / 위탁기관</th>
+                <th style="width: 15%;">미이수 제재</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>입주자대표회의<br>운영·윤리교육</th>
+                <td>시장·군수·구청장</td>
+                <td><span class="highlight-red">매년 4시간</span><br>(10일 전 공고/통보)</td>
+                <td><span class="highlight-red">입주자대표회의 운영비</span><br>(공동주택관리지원기구 위탁)</td>
+                <td>과태료 없음<br>(임의적 교육)</td>
+            </tr>
+            <tr>
+                <th>방범교육 및<br>안전교육</th>
+                <td>시장·군수·구청장</td>
+                <td><span class="highlight-red">연 2회 이내</span><br>(매회 <span class="highlight-red">4시간</span>)</td>
+                <td>경찰서장·소방서장·<br>공동주택관리지원기구 등</td>
+                <td><span class="highlight-red">300만원 이하</span><br>과태료</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        3. 공동주택관리법상 행위허가·신고 및 경미한 행위 (허가·신고 제외)
+    </h2>
+    <ul>
+        <li><strong>행위허가 및 신고의 의의</strong>:
+            <ul>
+                <li>공동주택, 부대시설 및 입주자 공유인 복리시설에 대하여 용도변경, 증축·개축·재축, 파손·철거, 세대구분형 공동주택 설치, 용도폐지, 비내력벽 철거 등을 하고자 하는 경우에는 시장·군수·구청장의 <span class="highlight-blue">허가를 받거나 신고</span>를 하여야 함 (공동주택관리법 제35조).</li>
+            </ul>
+        </li>
+        <li><strong>허가·신고에서 제외되는 '경미한 행위' (시행령 제35조제3항 / ★출제 1순위)</strong>:
+            <ol>
+                <li><span class="highlight-purple">창틀·문틀의 교체</span> (※ 단순 '제거'는 철거에 해당하여 행위허가·신고 대상임).</li>
+                <li><span class="highlight-purple">세대 내 천장·벽·바닥의 마감재 교체</span>.</li>
+                <li><span class="highlight-purple">급·배수관 등 배관설비의 교체</span> (가스 배관, 급·배수 배관 포함).</li>
+                <li><span class="highlight-purple">세대 내 난방설비의 교체</span> (단, <span class="highlight-red">난방방식의 변경이 포함되는 경우는 제외</span>되며, 이 경우 파손·철거로서 행위허가·신고 필요).</li>
+                <li><span class="highlight-purple">구내통신선로설비, 구내전화, 지능형 홈네트워크 설비, 방송수신설비, 영상정보처리기기(폐쇄회로 텔레비전 및 네트워크 카메라)의 교체</span> (동일 수량 교체 기준).</li>
+                <li><span class="highlight-purple">담장 및 보도블록의 교체</span> (★단, <span class="highlight-red">축대의 교체</span>는 위험시설 수해방지 조치로서 행위허가·신고 대상임).</li>
+                <li><span class="highlight-purple">폐기물보관실(재활용품 분리보관실 포함), 택배보관함, 우편함의 교체</span>.</li>
+                <li><span class="highlight-purple">조경시설 중 수목의 일부 제거 또는 교체</span>.</li>
+                <li><span class="highlight-purple">주민운동시설의 종목 변경</span> (★단, <span class="highlight-red">면적이 변경되는 경우</span>는 증축에 해당하여 행위허가·신고 대상임).</li>
+                <li><span class="highlight-purple">부대시설 중 각종 설비·장비의 수선·유지·보수를 위한 부분적 일부 교체</span>.</li>
+            </ol>
+        </li>
+        <li><strong>입주자 공유가 아닌 복리시설(단지 내 상가)의 특례</strong>:
+            <ul>
+                <li>입주자 공유가 아닌 복리시설의 <span class="highlight-blue">비내력벽 철거</span>는 행위허가·신고 대상이나, 그 외 단순 개수나 경미한 변경 등은 완화 적용됨.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg>
+        4. 주택법 및 건축법상 리모델링 종합 정리
+    </h2>
+    <ul>
+        <li><strong>주택법상 vs 건축법상 리모델링 정의 비교 (★개축 포함 여부)</strong>:
+            <ul>
+                <li><span class="highlight-red">주택법상 리모델링</span>: 건축물의 노후화 억제 또는 기능 향상 등을 위한 <span class="highlight-red">대수선</span> 또는 <span class="highlight-red">증축</span> 행위 (주택법 제2조제25호 / ★개축은 주택법상 리모델링에 포함되지 아니함).</li>
+                <li><span class="highlight-blue">건축법상 리모델링</span>: 건축물의 노후화를 억제하거나 기능 향상 등을 위하여 <span class="highlight-blue">대수선</span>하거나 건축물의 일부를 <span class="highlight-blue">증축 또는 개축</span>하는 행위 (건축법 제2조제1항제10호).</li>
+            </ul>
+        </li>
+        <li><strong>주택법상 증축형 리모델링의 요건 및 기준 (★법정 용어 및 초빈출 수치)</strong>:
+            <ul>
+                <li>경과 연수 요건: 사용검사일 또는 사용승인일부터 <span class="highlight-red">15년</span>(15년 이상 20년 미만의 기간에서 조례로 정하는 경우에는 그 기간)이 지난 공동주택.
+                    <br><em>※ 대수선형 리모델링은 사용검사일/사용승인일부터 <span class="highlight-purple">10년 이상</span> 지난 공동주택 대상.</em></li>
+                <li>주거전용면적 증가 범위: 각 세대 주거전용면적의 <span class="highlight-red">100분의 30 이내</span> (세대별 주거전용면적이 <span class="highlight-purple">85제곱미터 미만</span>인 경우에는 <span class="highlight-red">100분의 40 이내</span>).</li>
+                <li>공용부분 증축: 별도로 주민공동시설 등 공용부분에 대하여도 증축 가능.</li>
+            </ul>
+        </li>
+        <li><strong>세대수 증가형 및 수직증축형 리모델링 기준 (★주관식 필수)</strong>:
+            <ul>
+                <li>세대수 증가 범위: 기존 세대수의 <span class="highlight-red">100분의 15 이내</span>.</li>
+                <li>수직증축형 리모델링 허용 범위:
+                    <ol>
+                        <li>기존 건축물의 층수가 <span class="highlight-red">15층 이상</span>인 경우: 최대 <span class="highlight-red">3개 층</span>까지 증축.</li>
+                        <li>기존 건축물의 층수가 <span class="highlight-red">14층 이하</span>인 경우: 최대 <span class="highlight-red">2개 층</span>까지 증축.</li>
+                    </ol>
+                </li>
+                <li>구조도 보유 요건: 수직증축형 리모델링을 하려는 경우 <span class="highlight-purple">신축 당시의 구조도</span>를 보유하고 있어야 함.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 20%;">구분</th>
+                <th style="width: 40%;">주택법상 리모델링</th>
+                <th style="width: 40%;">건축법상 리모델링</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>행위의 범위</th>
+                <td><span class="highlight-red">대수선, 증축</span> (개축 제외)</td>
+                <td><span class="highlight-blue">대수선, 증축, 개축</span></td>
+            </tr>
+            <tr>
+                <th>증축형 경과연수</th>
+                <td>사용검사일/사용승인일부터 <span class="highlight-red">15년 이상</span></td>
+                <td>상동 (건축법 적용 대상 완화 규정 존재)</td>
+            </tr>
+            <tr>
+                <th>전용면적 증가</th>
+                <td>세대별 <span class="highlight-red">100분의 30 이내</span><br>(85㎡ 미만은 <span class="highlight-red">100분의 40 이내</span>)</td>
+                <td>법령에서 정하는 일정 기준 내 완화</td>
+            </tr>
+            <tr>
+                <th>세대수 증가</th>
+                <td>기존 세대수의 <span class="highlight-red">100분의 15 이내</span></td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <th>수직증축 상한</th>
+                <td>15층 이상 → <span class="highlight-red">3개 층</span> / 14층 이하 → <span class="highlight-red">2개 층</span></td>
+                <td>-</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+            💡 [수험 핵심 팁] 제37강 관계법규 핵심 정밀 체크 포인트
+        </div>
+        <ul>
+            <li><strong>입대의 교육 주체 및 비용</strong>: 시장·군수·구청장이 실시권자이며, 비용은 <span class="highlight-red">입주자대표회의 운영비</span>에서 부담함.</li>
+            <li><strong>방범 및 안전교육 수치</strong>: <span class="highlight-red">연 2회 이내</span>, 매회 <span class="highlight-red">4시간</span> (관리사무소장은 법령상 직접 교육 대상자 아님).</li>
+            <li><strong>경미한 행위 구분</strong>: 담장/보도블록/문틀 '교체'는 경미한 행위이나, <span class="highlight-red">축대 교체</span>, 난방방식 변경을 동반한 난방설비 교체, <span class="highlight-red">주민운동시설 면적 변경</span>은 행위허가·신고 대상!</li>
+            <li><strong>주택법상 리모델링 범위</strong>: <span class="highlight-red">개축은 제외</span>됨에 명심할 것!</li>
+            <li><strong>법정 비율 표기</strong>: 주거전용면적 증가 비율은 <span class="highlight-red">100분의 30</span> (85㎡ 미만은 <span class="highlight-red">100분의 40</span>), 세대수 증가 비율은 <span class="highlight-red">100분의 15</span>.</li>
+            <li><strong>수직증축 수치 짝짓기</strong>: 15층 이상은 <span class="highlight-red">3개 층</span>, 14층 이하(예: 12층)는 <span class="highlight-red">2개 층</span>. 신축 당시 구조도 보유 필수.</li>
+        </ul>
+    </div>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>주관식 단답형 및 빈칸 채우기 실전 훈련</h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡)에 들어갈 알맞은 핵심 용어나 법정 숫자를 아래 여유 공백에 직접 기재해 보십시오.</p>
+
+    <ol class="quiz-list" style="line-height: 2.1;">
+        <li>
+            시장·군수·구청장은 입주자대표회의 구성원에게 입주자대표회의의 운영과 관리에 필요한 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 및 윤리교육을 실시하여야 한다.
+        </li>
+        <li>
+            입주자대표회의 구성원 교육은 매년 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )시간 실시하며, 교육 실시 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 전까지 공고하거나 알린다.
+        </li>
+        <li>
+            입주자대표회의 구성원 운영 및 윤리교육 수강 비용은 입주자대표회의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )에서 부담한다.
+        </li>
+        <li>
+            방범교육 및 안전교육은 연 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )회 이내에서 시장·군수·구청장이 정하는 횟수로 하되, 매회 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )시간으로 한다.
+        </li>
+        <li>
+            시장·군수·구청장은 방범교육을 관할 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )서장 또는 공동주택관리지원기구에 위탁하여 실시할 수 있다.
+        </li>
+        <li>
+            방범교육 및 안전교육을 받지 아니한 자에게는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )만원 이하의 과태료를 부과한다.
+        </li>
+        <li>
+            공동주택 세대 내 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )관, 급·배수관 등 배관설비의 교체는 행위허가나 신고를 요하지 아니하는 경미한 행위에 해당한다.
+        </li>
+        <li>
+            담장 및 보도블록의 교체는 경미한 행위에 해당하나, ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )의 교체는 행위허가 또는 신고를 받아야 한다.
+        </li>
+        <li>
+            주민운동시설의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 변경은 경미한 행위이나, 면적이 변경되는 경우는 허가·신고 대상이다.
+        </li>
+        <li>
+            주택법상 리모델링이란 건축물의 노후화 억제 또는 기능 향상 등을 위한 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 또는 증축 행위를 말한다.
+        </li>
+        <li>
+            건축법상 리모델링에는 대수선, 증축 외에 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 행위가 포함된다.
+        </li>
+        <li>
+            증축형 리모델링은 사용검사일 또는 사용승인일부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년이 지난 공동주택을 대상으로 한다.
+        </li>
+        <li>
+            증축형 리모델링 시 각 세대의 주거전용면적은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 이내에서 증축할 수 있으며, 세대별 주거전용면적이 85제곱미터 미만인 경우에는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 이내에서 증축할 수 있다.
+        </li>
+        <li>
+            세대수 증가형 리모델링으로 늘릴 수 있는 세대수는 기존 세대수의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 이내이어야 한다.
+        </li>
+        <li>
+            수직증축형 리모델링의 경우 기존 건축물의 층수가 15층 이상인 경우에는 최대 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )개 층까지 증축할 수 있다.
+        </li>
+        <li>
+            수직증축형 리모델링의 경우 기존 건축물의 층수가 14층 이하인 경우에는 최대 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )개 층까지 증축할 수 있다.
+        </li>
+        <li>
+            수직증축형 리모델링을 하려는 경우 대상 건축물의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 당시의 구조도를 보유하고 있어야 한다.
+        </li>
+        <li>
+            화재의 예방 및 안전관리에 관한 법률에 따른 소방안전관리자 실무교육을 이수한 사람은 공동주택관리법상 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )에 관한 안전교육을 받은 것으로 본다.
+        </li>
+    </ol>
+
+    <!-- 수험생 정답 확인용 하단 3열 배치 그리드 영역 -->
+    <div style="font-size: 9.5pt; color: #666666; margin-top: 30px; padding: 15px; border-top: 1px dashed #666666; line-height: 1.8;">
+        <strong style="display: block; margin-bottom: 10px; color: #333333;">[제37강 주관식 단답형 정답 리스트]</strong>
+        <div class="answer-grid">
+            <div><strong>1.</strong> ㉠ 운영</div>
+            <div><strong>2.</strong> ㉠ 4, &nbsp; ㉡ 10</div>
+            <div><strong>3.</strong> ㉠ 운영비</div>
+            <div><strong>4.</strong> ㉠ 2, &nbsp; ㉡ 4</div>
+            <div><strong>5.</strong> ㉠ 경찰</div>
+            <div><strong>6.</strong> ㉠ 300</div>
+            <div><strong>7.</strong> ㉠ 가스</div>
+            <div><strong>8.</strong> ㉠ 축대</div>
+            <div><strong>9.</strong> ㉠ 종목</div>
+            <div><strong>10.</strong> ㉠ 대수선</div>
+            <div><strong>11.</strong> ㉠ 개축</div>
+            <div><strong>12.</strong> ㉠ 15</div>
+            <div><strong>13.</strong> ㉠ 30%, &nbsp; ㉡ 40%</div>
+            <div><strong>14.</strong> ㉠ 15%</div>
+            <div><strong>15.</strong> ㉠ 3</div>
+            <div><strong>16.</strong> ㉠ 2</div>
+            <div><strong>17.</strong> ㉠ 신축</div>
+            <div><strong>18.</strong> ㉠ 소방</div>
+        </div>
+    </div>
+
+</body>
+</html>

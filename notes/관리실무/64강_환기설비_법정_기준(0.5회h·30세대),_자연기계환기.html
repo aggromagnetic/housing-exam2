@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 - 제64강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+            letter-spacing: -0.05em;
+        }
+        
+        h1 {
+            font-size: 12pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        /* 토너 절약 4색 시각 강조 클래스 (배경색 없음) */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #16803d; 
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #6d28d9; 
+        }
+        
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        ol.quiz-list {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+            line-height: 2.1;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        /* 정답 리스트 3열 격자 레이아웃 */
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px 15px;
+        }
+
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        제64강. 환기설비 법정 기준(0.5회/h·30세대), 자연/기계환기설비 비교, 소방시설 5대 구분(소·경·피·용·활), 소화활동설비(3연무제비), 무창층(30분의 1·50cm·1.2m) 및 피난층
+    </h1>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        1. 공동주택 환기설비 법정 기준 (건축물의 설비기준 등에 관한 규칙 제11조)
+    </h2>
+    <ul>
+        <li><strong>★ 환기설비 의무 설치 대상 및 법정 환기횟수 (★주관식 최다 출제 1순위)</strong>:
+            <ul>
+                <li><span class="highlight-blue">의무 설치 대상</span>: <span class="highlight-blue">30세대 이상의 공동주택</span> 및 주택을 주택 외의 시설과 동일 건축물로 건축하는 경우로서 <span class="highlight-blue">주택이 30세대 이상인 건축물</span>(주상복합).</li>
+                <li><span class="highlight-red">★ 법정 최소 환기횟수 기준</span>: 신축 또는 리모델링하는 신축공동주택등은 <span class="highlight-red">시간당 0.5회 이상</span>의 환기가 이루어질 수 있도록 자연환기설비 또는 기계환기설비를 설치해야 함. (설치는 선택이나 환기횟수 기준은 의무!).</li>
+                <li><span class="highlight-purple">권장 사항 (제4항)</span>: 30세대 미만 공동주택 및 단독주택에 대해서도 시간당 0.5회 이상의 환기가 이루어지도록 권장 가능.</li>
+            </ul>
+        </li>
+        <li><strong>자연환기설비 세부 설치기준 (별표 1의4)</strong>:
+            <ol>
+                <li><span class="highlight-blue">불쾌감 방지</span>: 외부 찬 공기의 지속적 유입으로 발생하는 불쾌감(<span class="highlight-blue">콜드 드래프트 Cold Draft / 위풍 현상</span>)을 방지하는 재료 및 구조를 갖출 것.</li>
+                <li><span class="highlight-red">★ 입자 포집률 측정법</span>: 한국산업표준(KS F 2921)에 따른 입자 포집률을 <span class="highlight-red">질량법으로 측정하여 70퍼센트 이상</span> 확보할 것.</li>
+                <li><span class="highlight-purple">★ 설치 높이 및 간격</span>: 바닥부터 수직으로 <span class="highlight-purple">1.2미터 이상</span> 높이에 설치하고, 2개 이상을 상하로 설치 시 <span class="highlight-purple">1미터 이상</span>의 수직간격을 확보할 것.</li>
+                <li><span class="highlight-green">보일러 배기통 이격</span>: 보일러 배기통 등 유해물질 배출부위로부터 수평거리로 <span class="highlight-green">1.2미터 이상</span> 이격하여 설치할 것.</li>
+            </ol>
+        </li>
+        <li><strong>★ 기계환기설비 세부 설치기준 (별표 1의5) (★핵심 함정 정밀 대비)</strong>:
+            <ol>
+                <li><span class="highlight-red">★ 환기횟수 산정식 및 정의 (★분자/분모 전환 주의)</span>:
+                    <br>&rarr; <span class="highlight-red">환기횟수 (회/h) = 총체적 풍량 / 실내 총체적</span>
+                    <br>&rarr; 즉, <span class="highlight-red">최종 공기급기구에서 공급된 공기량의 합(총체적 풍량)을 실내 총체적으로 나눈 값</span>을 말함. (실내 총체적을 총체적 풍량으로 나눈 것으로 서술 시 <span class="highlight-red">100% 오답!</span>).</li>
+                <li><span class="highlight-blue">★ 둘 이상의 실 외기 공급 시 필요 환기량</span>: 한 대의 기계환기설비로 둘 이상의 실에 바깥공기를 공급할 경우 필요 환기량은 <span class="highlight-blue">각 실에 필요한 환기량의 '합계' 이상</span>일 것. (평균상 X, 가장 큰 실 기준 X).</li>
+                <li><span class="highlight-purple">★ 환기량 단계별 조절</span>: 세대 환기량 조절을 위해 정격풍량을 <span class="highlight-purple">최소, 적정, 최대의 3단계 이상</span>으로 조절할 수 있어야 하며, <span class="highlight-purple">'적정' 단계의 필요 환기량은 시간당 0.5회 이상</span>일 것. ('최소'나 '최대' 단계로 변경 출제 시 오답!).</li>
+                <li><span class="highlight-green">가동 시간</span>: 모든 세대가 시간당 0.5회 이상을 만족하도록 <span class="highlight-green">24시간 가동</span>할 수 있어야 함. (중앙 관리 방식 공기조화 설비 3대인 경우 포함).</li>
+                <li><span class="highlight-red">★ 공기여과기 입자 포집률</span>: 한국산업표준(KS B 6141)에 따른 입자 포집률을 <span class="highlight-red">계수법으로 측정하여 60퍼센트 이상</span>일 것. (자연환기 = 질량법 70% vs 기계환기 = 계수법 60%).</li>
+                <li><span class="highlight-blue">급속환기설비 병행</span>: 주방 가스레인지 후드(전동환기설비), 화장실 배기송풍기 등 급속환기설비와 <span class="highlight-blue">함께 설치 가능</span>함.</li>
+                <li><span class="highlight-red">★ 소음 기준</span>: 대표길이 1m에서 <span class="highlight-red">40dB 이하</span> (본체가 거주공간 외부에 설치 시 1m에서 <span class="highlight-red">50dB 이하</span> 또는 거주공간 내부 <span class="highlight-red">40dB 이하</span>).</li>
+                <li><span class="highlight-purple">★ 흡입구와 배기구 이격 및 방향</span>: 교차오염 방지를 위해 <span class="highlight-purple">1.5미터 이상의 이격거리</span>를 확보하거나, 방향이 서로 <span class="highlight-purple">90도 이상</span> 되는 위치에 설치할 것.</li>
+                <li><span class="highlight-green">열회수형 환기장치</span>: 열회수형 환기장치를 설치하는 경우 유효환기량이 표시용량의 <span class="highlight-green">90퍼센트 이상</span>일 것.</li>
+            </ol>
+        </li>
+        <li><strong>환기구의 안전 기준 (건축물의 설비기준 등에 관한 규칙 제11조의4)</strong>:
+            <ul>
+                <li>환기구는 보행자 및 건축물 이용자의 안전이 확보되도록 바닥으로부터 <span class="highlight-red">2미터 이상의 높이</span>에 설치해야 함. (단, 벽면 설치 등 올라설 수 없는 구조이거나 안전울타리/조경 차단 시 예외).</li>
+                <li>실내공기 오염 지표: 일반 실내공기 종합 오염지표는 <span class="highlight-purple">이산화탄소($CO_2$)</span>, 지하주차장 오염지표는 <span class="highlight-purple">일산화탄소($CO$)</span>임.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">환기설비 구분</th>
+                <th style="width: 45%;">입자 포집률 및 핵심 성능 기준</th>
+                <th style="width: 30%;">설치 위치 / 높이 및 수치</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th><span class="highlight-blue">자연환기설비</span></th>
+                <td><span class="highlight-red">질량법 70% 이상</span> (KS F 2921)</td>
+                <td>바닥 수직 <span class="highlight-purple">1.2m 이상</span> (상하 간격 <span class="highlight-purple">1m 이상</span>)</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-purple">기계환기설비</span></th>
+                <td><span class="highlight-red">계수법 60% 이상</span> (KS B 6141)</td>
+                <td>소음 <span class="highlight-red">40dB 이하</span> (외부 <span class="highlight-red">50dB 이하</span>)</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-green">공통 의무 기준</span></th>
+                <td>신축 30세대 이상 / 환기횟수 <span class="highlight-red">시간당 0.5회 이상</span></td>
+                <td>환기구 바닥 높이 <span class="highlight-red">2m 이상</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+        2. 소방시설 5대 구분 및 대통령령 세부 분류 (소·경·피·용·활)
+    </h2>
+    <ul>
+        <li><strong>소방시설의 정의 (소방시설 설치 및 관리에 관한 법률 제2조제1항제1호)</strong>:
+            <ul>
+                <li>소방시설이란 <span class="highlight-blue">소화설비</span>, <span class="highlight-purple">경보설비</span>, <span class="highlight-green">피난구조설비</span>, <span class="highlight-blue">소화용수설비</span>, <span class="highlight-red">소화활동설비</span>로서 대통령령으로 정하는 것을 말함. (암기 공식: <span class="highlight-red">소·경·피·용·활</span>).</li>
+            </ul>
+        </li>
+        <li><strong>★ 소방시설 5대 분류별 세부 종류 및 주관식 타깃 (시행령 별표 1)</strong>:
+            <ol>
+                <li><span class="highlight-blue">소화설비 (현장에서 누구나 직접 소화)</span>:
+                    <br>&rarr; 소화기구(소화기, 간이소화용구, 자동확산소화기), 주거용/상업용/캐비닛형 등 <span class="highlight-blue">자동소화장치</span>, <span class="highlight-blue">옥내소화전설비</span>, <span class="highlight-blue">스프링클러설비등</span>(스프링클러, 간이스프링클러, 화재조기진압용 스프링클러), <span class="highlight-blue">물분무등소화설비</span>(물분무, 포, CO2, 할론, 분말 등), <span class="highlight-blue">옥외소화전설비</span>.
+                    <br>&rarr; <span class="highlight-purple">핵심 구분</span>: 명칭에 '소화'가 들어가면 소화설비이며, <span class="highlight-blue">스프링클러설비</span>는 명칭에 '소화'가 없어도 소화설비임!</li>
+                <li><span class="highlight-purple">경보설비 (화재 발생 사실 통보)</span>:
+                    <br>&rarr; 단독경보형 감지기, 비상경보설비(<span class="highlight-purple">비상벨설비, 자동식 사이렌설비</span>), 시각경보기, 비상방송설비, <span class="highlight-purple">자동화재탐지설비</span>, 화재알림설비, 자동화재속보설비, 통합감시시설, 누전경보기, 가스누설경보기.</li>
+                <li><span class="highlight-green">피난구조설비 (피난 및 인명구조)</span>:
+                    <br>&rarr; 가. 피난기구: <span class="highlight-green">피난사다리, 구조대, 완강기, 간이완강기</span>, 피난교, 피난용 트랩, 승강식 피난기, 하향식 피난구용 내림식 사다리 등.
+                    <br>&rarr; 나. 인명구조기구 (★주관식 단골 암기: <span class="highlight-green">방·공·인</span>): <span class="highlight-green">방열복·방화복</span>(안전모, 보호장갑, 안전화 포함), <span class="highlight-green">공기호흡기</span>, <span class="highlight-green">인공소생기</span>. (※ 소방관 전용이 아니라 피난자/관계인용 피난구조설비임!).
+                    <br>&rarr; 다. 유도등: 피난구유도등, 통로유도등, 객석유도등, 유도표지.
+                    <br>&rarr; 라. 비상조명등 및 표지.</li>
+                <li><span class="highlight-blue">소화용수설비 (소화 용수 저장/공급)</span>:
+                    <br>&rarr; 상수도소화용수설비, 소화수조·저수조.</li>
+                <li><span class="highlight-red">★ 소화활동설비 (소방관 진압 및 구조 전용) (★출제율 100% 암기: 3연무제비)</span>:
+                    <br>&rarr; 1) <span class="highlight-red">연결송수관설비</span>
+                    <br>&rarr; 2) <span class="highlight-red">연결살수설비</span>
+                    <br>&rarr; 3) <span class="highlight-red">연소방지설비</span>
+                    <br>&rarr; 4) <span class="highlight-red">무선통신보조설비</span> (★주관식 최다 출제: 8자 정확히 작성!)
+                    <br>&rarr; 5) <span class="highlight-red">제연설비</span> (특별피난계단 연기 배출)
+                    <br>&rarr; 6) <span class="highlight-red">비상콘센트설비</span> (소방관 소화용 전원 공급)</li>
+            </ol>
+        </li>
+        <li><strong>특정소방대상물 중 공동주택 범위</strong>:
+            <ul>
+                <li>아파트등(주택으로 쓰는 층수가 5개 층 이상인 주택), 연립주택, 다세대주택, 기숙사.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 20%;">소방시설 구분</th>
+                <th style="width: 50%;">주요 포함 설비 및 명칭 특징</th>
+                <th style="width: 30%;">수험 핵심 출제 포인트</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th><span class="highlight-blue">소화설비</span></th>
+                <td>소화기, 자동소화장치, 옥내/옥외소화전, <span class="highlight-blue">스프링클러</span></td>
+                <td>스프링클러는 '소화' 명칭 없어도 소화설비</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-purple">경보설비</span></th>
+                <td>비상벨, 사이렌, 비상방송, <span class="highlight-purple">자동화재탐지설비</span></td>
+                <td>통보 및 경보 시스템 (수전/통신 관련)</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-green">피난구조설비</span></th>
+                <td>피난사다리, 완강기, <span class="highlight-green">인명구조기구(방·공·인)</span>, 유도등</td>
+                <td>방열복/공기호흡기/인공소생기 = 피난구조설비</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-red">소화활동설비</span></th>
+                <td><span class="highlight-red">연결송수관, 연결살수, 연소방지, 무선통신보조, 제연, 비상콘센트</span></td>
+                <td><span class="highlight-red">소방관 전용 설비 (3연무제비)</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M3 3h18v18H3z"></path><path d="M8 12h8"></path></svg>
+        3. 무창층(無窓層) 요건 및 피난층 법정 정의 (시행령 제2조)
+    </h2>
+    <ul>
+        <li><strong>★ 무창층(無窓層)의 법정 정의 (★수치 및 5대 요건 주관식/객관식 단골)</strong>:
+            <ul>
+                <li><span class="highlight-red">기본 비율 정의</span>: 지상층 중 법정 요건을 모두 갖춘 개구부 면적의 합계가 해당 층 <span class="highlight-red">바닥면적의 30분의 1 이하</span>가 되는 층을 말함. (※ 무창층에 해당하면 피난이 어려우므로 소방시설 설치 기준이 크게 강화됨!).</li>
+            </ul>
+        </li>
+        <li><strong>★ 무창층 개구부의 법정 5대 요건 (★반드시 정밀 암기)</strong>:
+            <ol>
+                <li><span class="highlight-red">크기</span>: 지름 <span class="highlight-red">50센티미터 이상의 원</span>이 통과(내접)할 수 있을 것. (※ 일반 개구부 60센티미터와 구분!).</li>
+                <li><span class="highlight-red">높이</span>: 해당 층의 바닥면으로부터 개구부 밑부분까지의 높이가 <span class="highlight-red">1.2미터 이내</span>일 것. (낮을수록 피난 용이).</li>
+                <li><span class="highlight-blue">진입 방향</span>: <span class="highlight-blue">도로 또는 차량이 진입할 수 있는 빈터</span>를 향할 것.</li>
+                <li><span class="highlight-purple">피난 장애</span>: 화재 시 건축물로부터 쉽게 피난할 수 있도록 <span class="highlight-purple">창살이나 그 밖의 장애물이 설치되지 아니할 것</span>.</li>
+                <li><span class="highlight-green">개폐성</span>: <span class="highlight-green">내부 또는 외부에서 쉽게 부수거나 열 수 있을 것</span>.</li>
+            </ol>
+        </li>
+        <li><strong>★ 피난층(Evacuation Floor)의 법정 정의</strong>:
+            <ul>
+                <li><span class="highlight-blue">정의</span>: <span class="highlight-blue">곧바로 지상으로 갈 수 있는 출입구가 있는 층</span>을 말함. (피난이 매우 용이하므로 소방시설 기준이 완화됨).</li>
+            </ul>
+        </li>
+    </ul>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+            💡 [수험 핵심 팁] 제64강 실전 출제 포인트 & 함정 방지 최종 체크
+        </div>
+        <ul>
+            <li><strong>환기설비 수치</strong>: 의무 대상 = <span class="highlight-blue">30세대 이상</span>. 환기횟수 = <span class="highlight-red">시간당 0.5회 이상</span>. 자연환기 = <span class="highlight-red">질량법 70퍼센트</span> (바닥 1.2m/상하 1m). 기계환기 = <span class="highlight-red">계수법 60퍼센트</span> (3단계 조절/적정 0.5회/24시간 가동/소음 40dB/외부 50dB/이격 1.5m/방향 90도/열회수 90퍼센트). 환기구 높이 = <span class="highlight-purple">2미터 이상</span>.</li>
+            <li><strong>소방시설 5대 구분</strong>: <span class="highlight-red">소·경·피·용·활</span>. 소화활동설비(<span class="highlight-red">3연무제비</span> = 연결송수관, 연결살수, 연소방지, 무선통신보조, 제연, 비상콘센트). 인명구조기구(<span class="highlight-green">방·공·인</span> = 방열복·방화복, 공기호흡기, 인공소생기).</li>
+            <li><strong>무창층 핵심 수치</strong>: 개구부 합계가 바닥면적의 <span class="highlight-red">30분의 1 이하</span>. 크기 = 지름 <span class="highlight-red">50센티미터 이상 원</span>. 높이 = 바닥 밑부분 <span class="highlight-red">1.2미터 이내</span>. 도로/빈터, 창살X, 부수거나 열 수 있을 것.</li>
+            <li><strong>피난층</strong>: <span class="highlight-blue">곧바로 지상으로 갈 수 있는 출입구가 있는 층</span>.</li>
+        </ul>
+    </div>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>주관식 단답형 및 빈칸 채우기 실전 훈련</h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡, ㉢)에 들어갈 알맞은 핵심 용어나 법정 수치, 단위를 아래 빈칸에 직접 작성해 보십시오.</p>
+
+    <ol class="quiz-list">
+        <li>
+            건축물의 설비기준상 신축 또는 리모델링하는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )세대 이상의 공동주택은 시간당 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )회 이상의 환기가 이루어질 수 있도록 자연환기설비 또는 기계환기설비를 설치하여야 한다.
+        </li>
+        <li>
+            신축공동주택등에 설치하는 자연환기설비의 입자 포집률은 한국산업표준에 따라 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )법으로 측정하여 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )퍼센트 이상이어야 한다.
+        </li>
+        <li>
+            자연환기설비는 설치되는 실의 바닥부터 수직으로 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이상의 높이에 설치하여야 하며, 2개 이상을 상하로 설치하는 경우 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이상의 수직간격을 확보하여야 한다.
+        </li>
+        <li>
+            기계환기설비의 환기횟수는 최종 공기급기구에서 세대의 실내로 공급되는 공기량의 합인 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )풍량을 실내 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )(으)로 나눈 환기횟수를 말한다.
+        </li>
+        <li>
+            한 대의 기계환기설비로 세대 내 둘 이상의 실에 바깥공기를 공급할 경우 필요한 환기량은 각 실에 필요한 환기량의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 이상이어야 한다.
+        </li>
+        <li>
+            기계환기설비의 정격풍량은 최소, 적정, 최대의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )단계 이상으로 조절할 수 있어야 하며, ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 단계의 필요 환기량은 시간당 0.5회 이상이어야 한다.
+        </li>
+        <li>
+            기계환기설비는 신축공동주택 등의 모든 세대가 시간당 0.5회 이상의 환기횟수를 만족시킬 수 있도록 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )시간 가동할 수 있어야 한다.
+        </li>
+        <li>
+            기계환기설비의 공기여과기는 한국산업표준에 따른 입자 포집률이 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )법으로 측정하여 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )퍼센트 이상이어야 한다.
+        </li>
+        <li>
+            기계환기설비에서 발생하는 소음은 거주공간 내부에서 대표길이 1미터 측정 시 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )dB 이하이어야 하며, 환기설비 본체가 거주공간 외부에 설치될 경우 1미터 측정 시 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )dB 이하이어야 한다.
+        </li>
+        <li>
+            기계환기설비의 외기에 면하는 공기흡입구와 배기구는 교차오염 방지를 위해 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이상의 이격거리를 확보하거나, 방향이 서로 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )도 이상 되는 위치에 설치되어야 한다.
+        </li>
+        <li>
+            열회수형 환기장치를 설치하는 경우 열회수형 환기장치의 유효환기량이 표시용량의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )퍼센트 이상이어야 한다.
+        </li>
+        <li>
+            환기구는 보행자 및 건축물 이용자의 안전이 확보되도록 바닥으로부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이상의 높이에 설치하여야 한다.
+        </li>
+        <li>
+            실내공기 오염도를 측정하는 대표적인 종합 오염지표 물질은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )(이)다.
+        </li>
+        <li>
+            소방시설이란 소화설비, 경보설비, ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ), 소화용수설비, ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )(으)로 구분된다.
+        </li>
+        <li>
+            소방관이 화재진압 및 인명구조활동을 위하여 사용하는 소화활동설비 6가지에는 연결송수관설비, 연결살수설비, 연소방지설비, ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ), 제연설비, ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )(이)가 있다.
+        </li>
+        <li>
+            피난구조설비 중 인명구조기구 3가지에는 방열복·방화복, ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ), ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )(이)가 포함된다.
+        </li>
+        <li>
+            무창층이란 지상층 중 요건을 갖춘 개구부 면적의 합계가 해당 층 바닥면적의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )분의 1 이하가 되는 층을 말한다.
+        </li>
+        <li>
+            무창층 개구부는 크기가 지름 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )센티미터 이상의 원이 통과할 수 있어야 하고, 바닥면으로부터 개구부 밑부분까지의 높이가 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이내이어야 한다.
+        </li>
+        <li>
+            무창층 개구부는 도로 또는 차량이 진입할 수 있는 빈터를 향하고, 화재 시 쉽게 피난할 수 있도록 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이나 그 밖의 장애물이 설치되지 않아야 하며, 내부 또는 외부에서 쉽게 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )거나 열 수 있어야 한다.
+        </li>
+        <li>
+            소방시설 관련 법령상 곧바로 지상으로 갈 수 있는 출입구가 있는 층을 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )(이)라 한다.
+        </li>
+    </ol>
+
+    <div style="font-size: 9.5pt; color: #666666; margin-top: 30px; padding: 15px; border-top: 1px dashed #666666; line-height: 1.8;">
+        <strong style="display: block; margin-bottom: 10px; color: #333333;">[제64강 주관식 단답형 정답 리스트]</strong>
+        <div class="answer-grid">
+            <div><strong>1.</strong> ㉠ 30, ㉡ 0.5</div>
+            <div><strong>2.</strong> ㉠ 질량, ㉡ 70</div>
+            <div><strong>3.</strong> ㉠ 1.2, ㉡ 1</div>
+            <div><strong>4.</strong> ㉠ 총체적, ㉡ 총체적</div>
+            <div><strong>5.</strong> ㉠ 합계</div>
+            <div><strong>6.</strong> ㉠ 3, ㉡ 적정</div>
+            <div><strong>7.</strong> ㉠ 24</div>
+            <div><strong>8.</strong> ㉠ 계수, ㉡ 60</div>
+            <div><strong>9.</strong> ㉠ 40, ㉡ 50</div>
+            <div><strong>10.</strong> ㉠ 1.5, ㉡ 90</div>
+            <div><strong>11.</strong> ㉠ 90</div>
+            <div><strong>12.</strong> ㉠ 2</div>
+            <div><strong>13.</strong> ㉠ 이산화탄소($CO_2$)</div>
+            <div><strong>14.</strong> ㉠ 피난구조설비, ㉡ 소화활동설비</div>
+            <div><strong>15.</strong> ㉠ 무선통신보조설비, ㉡ 비상콘센트설비</div>
+            <div><strong>16.</strong> ㉠ 공기호흡기, ㉡ 인공소생기</div>
+            <div><strong>17.</strong> ㉠ 30</div>
+            <div><strong>18.</strong> ㉠ 50, ㉡ 1.2</div>
+            <div><strong>19.</strong> ㉠ 창살, ㉡ 부수</div>
+            <div><strong>20.</strong> ㉠ 피난층</div>
+        </div>
+    </div>
+
+</body>
+</html>

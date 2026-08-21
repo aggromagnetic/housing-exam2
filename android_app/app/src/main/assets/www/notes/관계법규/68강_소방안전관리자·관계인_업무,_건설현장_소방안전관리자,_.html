@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 관계법규 - 제68강 학습 노트 (소방안전관리자 업무 및 소방시설법)</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+            letter-spacing: -0.05em;
+        }
+        
+        h1 {
+            font-size: 12pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #16803d;
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #6d28d9;
+        }
+        
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        ol {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        .quiz-list li {
+            margin-bottom: 8px;
+        }
+
+        .answer-container {
+            margin-top: 30px;
+            padding: 15px;
+            border-top: 1px dashed #666666;
+            font-size: 9.5pt;
+            color: #666666;
+            line-height: 1.8;
+        }
+
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px 15px;
+            margin-top: 10px;
+        }
+
+        .answer-grid div {
+            border-bottom: 1px none #eeeeee;
+        }
+
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        제68강. 소방안전관리자·관계인 업무, 건설현장 소방안전관리자, 공동 소방안전관리, 화재예방안전진단 및 소방시설법상 용어·소방시설 종류
+    </h1>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        1. 특정소방대상물 관계인 vs 소방안전관리자 법적 업무 구분 및 자위소방대 편성 (법 제24조)
+    </h2>
+    <ul>
+        <li><strong>소방안전관리 업무의 주체 구분 원칙 (법 제24조제5항)</strong>:
+            <ul>
+                <li>단순 특정소방대상물(소방안전관리대상물 제외): <span class="highlight-blue">관계인</span>(소유자·관리자·점유자)이 업무 수행.</li>
+                <li>소방안전관리대상물: 전문 자격을 갖춘 <span class="highlight-red">소방안전관리자</span>가 업무 수행.</li>
+            </ul>
+        </li>
+        <li><strong>★ [출제 1순위 핵심] 소방안전관리자에게만 전속되는 4대 전용 업무 (법 제24조제5항 단서)</strong>:
+            <ul>
+                <li><strong>제1호</strong>: <span class="highlight-red">소방계획서의 작성 및 시행</span>.</li>
+                <li><strong>제2호</strong>: <span class="highlight-red">자위소방대 및 초기대응체계의 구성·운영 및 교육</span>.</li>
+                <li><strong>제5호</strong>: <span class="highlight-red">피난훈련 및 소방훈련·교육</span>.</li>
+                <li><strong>제7호</strong>: <span class="highlight-red">화기 취급 작업에 대한 사전 안전조치 및 감독 등 공사 중 소방안전관리</span>.</li>
+                <li>(※ 소방시설·피난시설·방화시설의 유지·관리, 화기취급 감독 등 기타 5개 업무는 관계인과 공동 영역에 해당하나, 위 1, 2, 5, 7호 4가지 업무는 소방안전관리자만 수행함!).</li>
+            </ul>
+        </li>
+        <li><strong>자위소방대 및 초기대응체계 구축·운영 특칙 (법 제24조, 시행령 제27조)</strong>:
+            <ul>
+                <li>소방안전관리대상물의 소방안전관리자는 자위소방대를 효율적으로 편성·운영하여야 함.</li>
+                <li>초기대응체계는 자위소방대에 포함하여 편성하고, <span class="highlight-purple">상시적으로 운영</span>하여야 함.</li>
+            </ul>
+        </li>
+        <li><strong>소방안전관리자의 시정조치 요구 및 불이익 처분 금지</strong>:
+            <ul>
+                <li>소방안전관리자는 소방시설 위반사항 발견 시 관계인에게 시정(개선·이전·제거)을 요구할 수 있으며, 관계인이 미이행 시 <span class="highlight-blue">소방본부장 또는 소방서장에게 알릴 수 있음</span>.</li>
+                <li>관계인은 이를 이유로 소방안전관리자를 해임하거나 불이익한 대우를 하여서는 아니 됨.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">구분</th>
+                <th style="width: 45%;">소방안전관리대상물 (소방안전관리자 전속 업무)</th>
+                <th style="width: 30%;">일반 특정소방대상물 (관계인)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>전속 핵심 업무</th>
+                <td>
+                    1) <span class="highlight-red">소방계획서 작성 및 시행</span><br>
+                    2) <span class="highlight-red">자위소방대 및 초기대응체계 구성·운영·교육</span><br>
+                    5) <span class="highlight-red">피난훈련 및 소방훈련·교육</span><br>
+                    7) <span class="highlight-red">화기취급 작업 사전 안전조치 및 감독</span>
+                </td>
+                <td>해당 4가지 업무는 적용되지 아니함 (기타 점검·유지 관리 등 기본적인 조치만 수행)</td>
+            </tr>
+            <tr>
+                <th>자위소방대 운용</th>
+                <td><span class="highlight-purple">소방안전관리자가 편성·운영</span> (초기대응체계 상시 운용)</td>
+                <td>의무 편성 대상 아님</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 3-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+        2. 건설현장 소방안전관리자 및 관리권원 분리 시 공동 소방안전관리 (법 제29조·제35조)
+    </h2>
+    <ul>
+        <li><strong>★[신설 및 출제 1순위] 건설현장 소방안전관리자 선임 제도 (법 제29조)</strong>:
+            <ul>
+                <li>선임 의무자: <span class="highlight-red">공사시공자</span> (관계인이 아님에 주의!).</li>
+                <li>선임 기간: <span class="highlight-purple">착공신고일부터 사용승인일까지</span>.</li>
+                <li>선임 자격: 소방안전관리자 자격증 발급자로서 <span class="highlight-purple">강습교육을 이수한 사람</span> (업무대행 불가!).</li>
+                <li>선임신고 기한: 선임한 날부터 <span class="highlight-red">14일 이내</span>에 소방본부장 또는 소방서장에게 신고.</li>
+                <li><strong>건설현장 소방안전관리대상물 범위 (영 제31조)</strong>:
+                    <ol>
+                        <li>신축·증축·개축·재축·이전·용도변경·대수선 연면적 합계 <span class="highlight-red">1만5천제곱미터 이상</span>인 것.</li>
+                        <li>연면적 <span class="highlight-blue">5천제곱미터 이상</span>인 것으로서 지하 2층 이하, 지상 11층 이상, 냉동·냉장창고, 가연성 가스 100톤 이상 등.</li>
+                    </ol>
+                </li>
+            </ul>
+        </li>
+        <li><strong>★[주관식 빈출] 관리권원이 분리된 특정소방대상물의 공동 소방안전관리 (법 제35조)</strong>:
+            <ul>
+                <li>대상: 권원이 분리된 <span class="highlight-red">복합건축물(지상층 층수 11층 이상 또는 연면적 3만제곱미터 이상)</span>, 지하가 등.</li>
+                <li>선임 방식: 각 관리권원별 관계인이 소방안전관리자를 각각 선임하되, 상호 협의하여 전체에 걸쳐 업무를 총괄하는 <span class="highlight-red">총괄소방안전관리자</span>를 지정·선임하여야 함.</li>
+                <li>조직 체계: 소방안전관리를 효율적으로 수행하기 위하여 <span class="highlight-purple">공동 소방안전관리협의회</span>를 구성·운영하여야 함.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M19 21V5a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v16"></path><polyline points="1 21 23 21"></polyline><polyline points="9 10 9 10 10 11 10 10 9 10"></polyline></svg>
+        3. 소방훈련·교육, 불시 훈련 및 화재예방안전진단 (법 제37조·제40조·제41조·제43조)
+    </h2>
+    <ul>
+        <li><strong>피난계획 수립 및 소방훈련·교육 제출 기한 (법 제37조)</strong>:
+            <ul>
+                <li>원칙: 소방안전관리대상물의 관계인은 근무자·거주자에게 피난계획 수립·시행 및 소방훈련·교육을 실시함.</li>
+                <li><strong>★[수치 기출] 특급 및 1급 제출 의무</strong>: 특급 및 1급 소방안전관리대상물의 관계인은 훈련·교육을 실시한 날부터 <span class="highlight-red">30일 이내</span>에 소방훈련·교육 결과보고서를 소방본부장 또는 소방서장에게 제출하여야 함.</li>
+                <li><strong>불시 소방훈련·교육 (법 제37조제4항)</strong>: 소방관서장은 의료시설, 교육연구시설, 노유자시설 등 취약시설에 대하여 불시 훈련을 실시할 수 있으며, <span class="highlight-blue">10일 전까지</span> 사전에 통지하여야 함. (결과 평가 통지는 <span class="highlight-purple">11일 이내</span>).</li>
+            </ul>
+        </li>
+        <li><strong>★[출제 1순위] 화재예방안전진단 제도 (법 제40조, 제41조, 영 별표 7)</strong>:
+            <ul>
+                <li>대상: 공항시설(여객터미널 연면적 1천제곱미터 이상 등), 철도시설, 도시철도시설, 항만시설, 지하가 등 <span class="highlight-blue">소방안전 특별관리시설물</span>.</li>
+                <li>실시 주체: 소방안전 특별관리시설물의 <span class="highlight-red">관계인</span>이 한국소방안전원 또는 화재예방안전진단 전문기관에 의뢰하여 정기적으로 받음.</li>
+                <li>최초 진단 시기: 사용승인일 또는 완공검사증명서를 받은 날부터 <span class="highlight-purple">5년이 경과한 날이 속하는 해</span>에 최초 진단.</li>
+                <li>진단 결과보고서 제출: 진단을 완료한 날부터 <span class="highlight-red">60일 이내</span>에 소방본부장·서장에게 제출.</li>
+                <li>비밀누설 금지 벌칙: 직무상 알게 된 비밀을 누설한 경우 <span class="highlight-red">300만원 이하의 벌금</span>에 처함.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">화재예방안전진단 평가 등급</th>
+                <th style="width: 45%;">상태 및 요건 기준</th>
+                <th style="width: 30%;">정기 진단 주기</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th><span class="highlight-blue">우수 (A)</span></th>
+                <td>진단 결과 문제점이 발견되지 않은 최우수 상태</td>
+                <td><span class="highlight-blue">6년이 경과한 날이 속하는 해</span></td>
+            </tr>
+            <tr>
+                <th><span class="highlight-purple">양호 (B) · 보통 (C)</span></th>
+                <td>일부 문제점이 발견되었으나 안전 관리가 유지되는 상태</td>
+                <td><span class="highlight-purple">5년이 경과한 날이 속하는 해</span></td>
+            </tr>
+            <tr>
+                <th><span class="highlight-red">미흡 (D) · 불량 (E)</span></th>
+                <td>광범위한 문제점으로 조치명령 또는 사용제한 권고 필요 상태</td>
+                <td><span class="highlight-red">4년이 경과한 날이 속하는 해</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+        4. 소방시설 설치 및 관리에 관한 법률(소방시설법) 용어 정의 및 무창층 개구부 요건 (법 제2조, 영 제2조)
+    </h2>
+    <ul>
+        <li><strong>소방시설 및 소방시설등의 정밀 용어 구분 (법 제2조)</strong>:
+            <ul>
+                <li><span class="highlight-blue">소방시설 (5대 설비)</span>: 소화설비, 경보설비, 피난구조설비, 소화용수설비, 소화활동설비.</li>
+                <li><span class="highlight-red">소방시설등</span>: 소방시설 + <span class="highlight-red">비상구, 방화문, 자동방화셔터</span> (비상구는 소방시설이 아니라 소방시설등에 해당함!).</li>
+                <li><span class="highlight-purple">화재안전성능</span>: 화재를 예방하고 화재 발생 시 피해를 최소화하기 위해 소방대상물의 재료·구조·설비 등에 요구되는 안전성능.</li>
+                <li><span class="highlight-green">성능위주설계</span>: 공학적 방법으로 화재 위험성을 평가하고 그 결과에 따라 화재안전성능이 확보되도록 하는 설계.</li>
+            </ul>
+        </li>
+        <li><strong>★[주관식 다출제] 무창층(無窓層) 및 개구부 법정 요건 (영 제2조)</strong>:
+            <ul>
+                <li>무창층의 정의: <span class="highlight-red">지상층 중</span> 개구부 면적의 합계가 해당 층 <span class="highlight-red">바닥면적의 30분의 1 이하</span>가 되는 층 (지하층은 무창층 개념에 미적용!).</li>
+                <li><strong>★ 개구부의 5대 필수 구비 요건 (★암기 필수)</strong>:
+                    <ol>
+                        <li>크기: 지름 <span class="highlight-red">50센티미터 이상의 원</span>이 통과할 수 있을 것.</li>
+                        <li>높이: 해당 층의 바닥면으로부터 개구부 밑부분까지의 높이가 <span class="highlight-red">1.2미터 이내</span>일 것.</li>
+                        <li>위치: 도로 또는 차량이 진입할 수 있는 빈터를 향할 것.</li>
+                        <li>대피성: 화재 시 쉽게 피난할 수 있도록 창살이나 장애물이 설치되지 아니할 것.</li>
+                        <li>개폐성: 내부 또는 외부에서 <span class="highlight-purple">쉽게 부수거나 열 수 있을 것</span>.</li>
+                    </ol>
+                </li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        5. 소방시설 5대 종류별 완벽 종합 비교 (시행령 별표 1 정밀 분석)
+    </h2>
+    <ul>
+        <li><strong>소방시설 5가지 설비 세부 분류</strong>:
+            <ul>
+                <li><span class="highlight-red">1. 소화설비</span>: 소화기구(소화기, 간이소화용구 등. 단, 소화약제 외의 것을 이용한 간이소화용구 제외), 자동소화장치, 옥내소화전설비, 스프링클러설비등(6층 이상 건물 전층 설치), 옥외소화전설비.</li>
+                <li><span class="highlight-blue">2. 경보설비</span>: 단독경보형감지기, 비상경보설비, <span class="highlight-blue">자동화재탐지설비</span>, <span class="highlight-red">누전경보기</span> (※ 누전차단기는 소방시설이 아님!), 가스누설경보기, 비상방송설비.</li>
+                <li><span class="highlight-purple">3. 피난구조설비</span>: 피난기구, 유도등·피난유도선, <span class="highlight-purple">인명구조기구(방열복·방화복, 공기호흡기, 인공소생기)</span>, <span class="highlight-purple">휴대용 비상조명등</span>.</li>
+                <li><span class="highlight-green">4. 소화용수설비</span>: 상수도소화설비, 소화수조·저수조. (※ 소방기본법의 '소방용수시설': 소화전, 급수탑, 저수조와 명확히 구분!).</li>
+                <li><span class="highlight-red">5. 소화활동설비 (소방관이 사용하는 설비)</span>: <span class="highlight-red">제연설비</span>, 연결살수설비, 연결송수관설비, 비상콘센트설비, 무선통신보조설비, 연소방지설비.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            💡 [수험 핵심 비교] 소방기본법상 '소방용수시설' vs 소방시설법상 '소화용수설비'
+        </div>
+        <ul>
+            <li><strong>소방기본법상 소방용수시설</strong>: <span class="highlight-red">소화전, 급수탑, 저수조</span> (시·도지사 및 수도사업자가 설치·관리).</li>
+            <li><strong>소방시설법상 소화용수설비</strong>: <span class="highlight-blue">상수도소화설비, 소화수조·저수조</span> (특정소방대상물에 관계인이 설치).</li>
+            <li><strong>소방활동설비의 함정</strong>: 연결살수설비, 제연설비는 소화/피난 설비가 아니라 <span class="highlight-purple">소화활동설비</span>임!</li>
+        </ul>
+    </div>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>주관식 단답형 및 빈칸 채우기 실전 훈련</h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡, ㉢)에 들어갈 알맞은 핵심 용어나 법정 숫자를 작성해 보십시오.</p>
+
+    <ol class="quiz-list" style="line-height: 2.1;">
+        <li>
+            소방계획서 작성, 자위소방대 구성, 소방훈련·교육, 화기취급 작업 사전 안전조치는 특정소방대상물 중 ( ㉠ )의 전속 업무에 해당한다.
+        </li>
+        <li>
+            건설현장 소방안전관리대상물의 공사시공자는 착공신고일부터 ( ㉠ )일까지 소방안전관리자를 선임하고 선임한 날부터 ( ㉡ )일 이내에 신고하여야 한다.
+        </li>
+        <li>
+            건설현장 소방안전관리대상물은 신축·증축 등 개축·대수선을 하려는 부분의 연면적 합계가 ( ㉠ )만( ㉡ )천제곱미터 이상이거나 연면적 ( ㉢ )천제곱미터 이상인 특정 시설이다.
+        </li>
+        <li>
+            지상층의 층수가 ( ㉠ )층 이상이거나 연면적이 ( ㉡ )만제곱미터 이상인 복합건축물로서 관리권원이 분리된 특정소방대상물은 전체를 총괄하는 ( ㉢ )소방안전관리자를 선임하여야 한다.
+        </li>
+        <li>
+            관리권원이 분리된 특정소방대상물의 관계인 및 총괄소방안전관리자는 소방안전관리를 효율적으로 수행하기 위하여 공동 소방안전관리( ㉠ )을(를) 구성하여야 한다.
+        </li>
+        <li>
+            특급 및 1급 소방안전관리대상물의 관계인은 소방훈련 및 교육을 실시한 날부터 ( ㉠ )일 이내에 소방훈련 및 교육 결과보고서를 소방관서장에게 제출하여야 한다.
+        </li>
+        <li>
+            소방관서장이 불시에 소방훈련 및 교육을 실시하려는 경우 근무자 등에게 불편을 최소화하기 위해 훈련·교육 계획을 ( ㉠ )일 전까지 사전에 통지하여야 한다.
+        </li>
+        <li>
+            소방청장은 공항, 철도 등 소방안전 특별관리시설물에 대하여 화재예방안전진단을 받도록 해야 하며, 신규 지정 또는 완공 후 ( ㉠ )년이 경과한 날이 속하는 해에 최초로 진단을 받아야 한다.
+        </li>
+        <li>
+            화재예방안전진단 결과 안전등급이 우수인 경우 ( ㉠ )년, 양호·보통인 경우 ( ㉡ )년, 미흡·불량인 경우 ( ㉢ )년이 경과한 날이 속하는 해에 정기적으로 진단을 받아야 한다.
+        </li>
+        <li>
+            화재예방안전진단 업무를 수행하면서 알게 된 비밀을 누설한 자는 ( ㉠ )백만원 이하의 벌금에 처한다.
+        </li>
+        <li>
+            화재예방안전진단기관은 진단을 완료한 날부터 ( ㉠ )일 이내에 화재예방안전진단 결과보고서를 소방관서장에게 제출하여야 한다.
+        </li>
+        <li>
+            소방시설 설치 및 관리에 관한 법률상 소방시설이란 소화설비, 경보설비, 피난구조설비, 소화용수설비 및 ( ㉠ )설비를 말한다.
+        </li>
+        <li>
+            소방시설 등에 해당하는 방화문과 자동방화( ㉠ )은(는) 소방시설 외의 안전시설로서 소방시설등의 범주에 포함된다.
+        </li>
+        <li>
+            지상층 중 개구부 면적의 합계가 해당 층 바닥면적의 ( ㉠ )분의 1 이하가 되는 층을 무창층이라 한다.
+        </li>
+        <li>
+            무창층에 해당하는 개구부는 크기가 지름 ( ㉠ )센티미터 이상의 원이 통과할 수 있어야 하고, 해당 층의 바닥면으로부터 개구부 밑부분까지의 높이가 ( ㉡ )미터 이내이어야 한다.
+        </li>
+        <li>
+            소방시설 중 화재 발생 시 연기를 배출하거나 제어하는 제연설비, 연결살수설비, 연결송수관설비 등은 ( ㉠ )설비에 해당한다.
+        </li>
+        <li>
+            인명구조기구인 방열복·방화복, 공기호흡기, 인공소생기 및 휴대용 비상조명등은 ( ㉠ )설비에 해당한다.
+        </li>
+        <li>
+            소방시설 중 누전경보기는 경보설비에 해당하며, ( ㉠ )차단기는 소방시설에 해당하지 아니한다.
+        </li>
+        <li>
+            소방기본법상 시·도지사가 설치·유지관리하는 시설은 소방용수시설(소화전·급수탑·저수조)이고, 소방시설법상 특정소방대상물에 설치하는 시설은 ( ㉠ )설비(상수도소화설비, 소화수조·저수조)이다.
+        </li>
+        <li>
+            단독주택을 제외한 모든 공동주택은 특정소방대상물에 해당하며, 주택용 소방시설(소화기 및 단독경보형감지기)을 의무 설치하여야 하는 공동주택은 ( ㉠ )주택 및 ( ㉡ )주택이다.
+        </li>
+    </ol>
+
+    <div class="answer-container">
+        <strong>[제68강 주관식 단답형 정답 리스트]</strong>
+        <div class="answer-grid">
+            <div><strong>1.</strong> ㉠ 소방안전관리자</div>
+            <div><strong>2.</strong> ㉠ 사용승인 | ㉡ 14</div>
+            <div><strong>3.</strong> ㉠ 1 | ㉡ 5 | ㉢ 5</div>
+
+            <div><strong>4.</strong> ㉠ 11 | ㉡ 3 | ㉢ 총괄</div>
+            <div><strong>5.</strong> ㉠ 협의회</div>
+            <div><strong>6.</strong> ㉠ 30</div>
+
+            <div><strong>7.</strong> ㉠ 10</div>
+            <div><strong>8.</strong> ㉠ 5</div>
+            <div><strong>9.</strong> ㉠ 6 | ㉡ 5 | ㉢ 4</div>
+
+            <div><strong>10.</strong> ㉠ 300</div>
+            <div><strong>11.</strong> ㉠ 60</div>
+            <div><strong>12.</strong> ㉠ 소화활동</div>
+
+            <div><strong>13.</strong> ㉠ 셔터</div>
+            <div><strong>14.</strong> ㉠ 30</div>
+            <div><strong>15.</strong> ㉠ 50 | ㉡ 1.2</div>
+
+            <div><strong>16.</strong> ㉠ 소화활동</div>
+            <div><strong>17.</strong> ㉠ 피난구조</div>
+            <div><strong>18.</strong> ㉠ 누전</div>
+
+            <div><strong>19.</strong> ㉠ 소화용수</div>
+            <div><strong>20.</strong> ㉠ 연립 | ㉡ 다세대</div>
+            <div></div>
+        </div>
+    </div>
+
+</body>
+</html>

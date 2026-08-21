@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 관계법규 - 제17강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght=400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+            letter-spacing: -0.05em; /* 장평 및 자간 최적화 */
+        }
+        
+        h1 {
+            font-size: 13pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8; /* 프리미엄 블루 라인 */
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        /* 토너 절약 4색 강조 클래스 */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #16803d; /* 학습 편의 녹색 */
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #6d28d9; /* 구조 구분 보라색 */
+        }
+        
+        /* 얇은 점선 형태의 토너 세이브 설명 상자 */
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        ol {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        /* 인쇄 최적화 설정 */
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+        제17강. 리모델링 시공자 선정 및 안전성 검토·보칙·국민주택사업특별회계
+    </h1>
+    
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        1. 리모델링 시공자 선정 제도와 엄격한 벌칙 (부조리 차단책)
+    </h2>
+    <ul>
+        <li><strong>제도 도입 배경</strong>: 리모델링 추진 과정에서 사업 초기 이권 개입 및 시공자 간의 과열 경쟁으로 인한 다양한 조합 비리와 사파(私派) 형성 등의 심각한 부조리를 철저히 차단하고자, <span class="highlight-blue">법적 시공자 선정 시기 및 방법</span>을 구체적으로 규정하고 강력한 형사 처벌 조문을 두고 있다.</li>
+        <li><strong>주체별 법정 시공자 선정 시기</strong>:
+            <ul>
+                <li><strong>리모델링 주택조합</strong>: 반드시 관할 시·군·구청장으로부터 <span class="highlight-red">설립인가를 받은 후</span>, 정식 <span class="highlight-blue">총회</span>에서 시공자를 선정하여야 한다.</li>
+                <li><strong>입주자대표회의(입대위)</strong>: 소송이나 사업 지연 예방을 위해 소유자 <span class="highlight-red">전원 동의</span>를 얻은 후 정식 시공자를 선정하여야 한다.</li>
+            </ul>
+        </li>
+        <li><strong>법정 시공자 선정 방식</strong>: 부조리를 미연에 원천 봉쇄할 수 있도록 수의계약을 지양하며 원칙적으로 <span class="highlight-purple">경쟁입찰 방식</span>으로 시공자를 선정하여야 한다.</li>
+        <li><strong>위반 시 형사처벌 (★초빈출 벌칙 암기)</strong>: 시공자 선정 시기 및 방식 기준을 위반하여 시공자를 선정한 자뿐만 아니라 선정된 시공업자 역시 <span class="highlight-red">3년 이하의 징역 또는 3천만원 이하의 벌금 (3년/3천만원, 일명 3.3 법칙)</span>에 처해진다.</li>
+    </ul>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+            💡 [비교 학습] 도시 및 주거환경정비법(도정법) 재건축사업과의 연계
+        </div>
+        <ul>
+            <li>도시정비법상 재건축 추진 시에도 '정비사업 조합설립인가'를 받기 전에 건설업자 등을 시공자로 조기 선정할 경우 리모델링과 마찬가지로 동일하게 <span class="highlight-red">3년 이하의 징역 또는 3천만원 이하의 벌금</span>에 해당하는 일관적인 형벌 제재를 적용하고 있습니다.</li>
+        </ul>
+    </div>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M11 5H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-5"></path><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+        2. 공동주택 vs 입주자 공유가 아닌 복리시설(상가)의 리모델링 요건 비교
+    </h2>
+    <ul>
+        <li><strong>복리시설(상가 등) 리모델링의 개념</strong>: 상가 등은 분양을 목적으로 설치되어 입주자들의 공유 자산이 아닌 독립 소유 체계이므로 공동주택과 별도의 차별화된 기준을 적용한다.</li>
+    </ul>
+    
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 20%;">비교 항목</th>
+                <th style="width: 40%;">공동주택 리모델링 기준</th>
+                <th style="width: 40%;">공유가 아닌 복리시설(상가 등) 리모델링 기준</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>경과 연수 요건</th>
+                <td>대수선 <span class="highlight-blue">10년</span> / 증축 <span class="highlight-blue">15년</span> 경과</td>
+                <td class="highlight-red">10년 이상 경과 (대수선·증축 공통)</td>
+            </tr>
+            <tr>
+                <th>단독 시행 여부</th>
+                <td>단지별 혹은 개별 동별 단독 리모델링 가능</td>
+                <td class="highlight-purple">독자 수행 불가 (공동주택과 동시에 시행할 것)</td>
+            </tr>
+            <tr>
+                <th>지자체장 요건</th>
+                <td>허가 또는 신고 등 법정 행위절차 진행</td>
+                <td>시장·군수·구청장이 구조안전에 지장이 없다고 인정할 것</td>
+            </tr>
+            <tr>
+                <th>증축 면적 한도</th>
+                <td>세대별 주거전용면적의 <span class="highlight-green">30% 이내</span><br>(85㎡ 미만은 40% 이내)</td>
+                <td>상가 등 기존 건축물 <span class="highlight-red">연면적 합계의 10% 이내</span></td>
+            </tr>
+            <tr>
+                <th>주상복합 단서특례<br>(★출제 예상 1순위)</th>
+                <td>해당 없음</td>
+                <td class="highlight-blue">주택과 복리시설이 동일 건축물인 경우,<br>'주택의 증축 면적 비율 범위 안'에서 증축 가능 (균형 조율)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        3. 리모델링 기본계획의 시기 조정권 및 지원센터
+    </h2>
+    <ul>
+        <li><strong>시기 조정 제도</strong>: 세대수 증가형 리모델링의 동시 집중으로 인한 도시 과밀 및 전세난을 방지하기 위하여 공익적 차원에서 상급 기관이 리모델링 시기 및 기본계획 수립에 직접 관여한다.
+            <ul>
+                <li><strong>국토교통부장관의 시기 조정</strong>: 특별시장, 광역시장, 대도시 시장에게 <span class="highlight-blue">리모델링 기본계획의 변경</span>을 요청할 수 있으며, 시장·군수·구청장에게는 <span class="highlight-blue">리모델링 허가 시기 조정</span>을 요청할 수 있다.</li>
+                <li><strong>시·도지사의 시기 조정</strong>: 대도시 시장에게 <span class="highlight-purple">리모델링 기본계획의 변경</span>을 요청하거나, 시장·군수·구청장에게 <span class="highlight-purple">리모델링 허가 시기 조정</span>을 요청할 수 있다. (수평적 관계의 특별시장 등은 도지사급이므로 예외가 적용됨)</li>
+            </ul>
+        </li>
+        <li><strong>리모델링 지원센터 (주관식 단골 기출)</strong>:
+            <ul>
+                <li><strong>설치 및 운영 주체</strong>: 관할 <span class="highlight-red">시장·군수·구청장</span>이 리모델링의 체계적 지원을 위해 의무적 혹은 재량적으로 설치하여 운영한다. (시험 지문에서 시·도지사로 바꿔 출제되니 주의)</li>
+                <li><strong>주요 업무 내용</strong>: 리모델링 제도 설명, 상담, 조합 설립 지원 및 업무 대행 등 리모델링 행정 전반을 조율한다.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+        4. 안전진단 결과보고서 적정성 검토 및 수직증축형 안전성 검토 이원화
+    </h2>
+    <ul>
+        <li><strong>결과보고서 적정성 검토</strong>:
+            <ul>
+                <li>안전진단 실시기관은 결과보고서를 의뢰인과 시장·군수·구청장에게 제출하며, 시장·군수·구청장은 결과보고서 제출을 받은 날로부터 <span class="highlight-red">7일 이내</span>에 공인 기관에 적정성 검토를 의뢰할 수 있다.</li>
+                <li><strong>의뢰 한정 공공기관</strong>: 일반 사설 안전진단 전문기관은 적정성 검토를 할 수 없으며 오직 국교부 산하의 <span class="highlight-blue">국토안전관리원</span> 또는 <span class="highlight-blue">한국건설기술연구원</span>에만 의뢰할 수 있다.</li>
+                <li><strong>비용 부담 원칙</strong>: 시장·군수·구청장은 안전진단 실시 비용의 <span class="highlight-purple">전부 또는 일부를 리모델링을 요청한 자에게 부담하게 할 수 있다</span> (의무 사항이 아닌 임의 사항인 점 주의).</li>
+            </ul>
+        </li>
+        <li><strong>수직증축형 안전성 검토 의무화 (★최고 난이도 암기 영역)</strong>:
+            <ul>
+                <li>수직증축형 리모델링은 안전 보장이 필수적이므로, 임의 절차가 아니라 법령이 규정한 특례 요건 발생 시 <span class="highlight-red">반드시 안전성 검토를 의뢰하여 실시하여야 한다</span>.</li>
+                <li><strong>의무 의뢰 사유 3가지</strong>:
+                    <ul>
+                        <li>① 리모델링 하려는 자가 지자체 건축 심의를 위해 <span class="highlight-purple">건축위원회의 심의를 요청</span>하는 경우</li>
+                        <li>② 리모델링 하려는 자가 정식 행정 허가인 <span class="highlight-purple">허가를 신청</span>하는 경우</li>
+                        <li>③ 수직증축형 2차 안전진단(베타 진단) 진행 결과, 안전을 유도하기 위해 고시된 규격에 맞추어 <span class="highlight-purple">설계도서의 변경</span>이 필요하다고 판단되는 경우</li>
+                    </ul>
+                </li>
+                <li><strong>수행 기관 및 기간</strong>: 국토안전관리원 또는 한국건설기술연구원이 수행하며, 의뢰받은 날부터 <span class="highlight-green">30일 이내</span>에 검토 결과를 제출하여야 한다 (다만, 1회에 한하여 <span class="highlight-green">20일 범위</span> 내 연장 가능).</li>
+            </ul>
+        </li>
+    </ul>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#b91c1c" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+            💡 [최신 개정 핵심] '재건축 안전진단'에서 '재건축 진단'으로의 명칭 변경
+        </div>
+        <ul>
+            <li>도시 및 주거환경정비법(도정법)상의 공식 용어가 기존 '재건축 안전진단'에서 <span class="highlight-red">재건축 진단</span>으로 변경되었습니다. 리모델링의 '안전진단' 및 '안전성 검토' 개념과 혼동하지 않도록 구별하여 기재하는 연습이 필요합니다.</li>
+        </ul>
+    </div>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        5. 임대차 최단 기간 보장 배제 특례와 리모델링 비리 금품수수 벌칙
+    </h2>
+    <ul>
+        <li><strong>임대차 기간 특례 (명도 원활화)</strong>:
+            <ul>
+                <li>리모델링 사업 추진 과정 중 이주 단계에서 세입자의 주거 보장 기한에 묶여 이주가 정체되는 것을 타개하고자 예외 규정을 둔다.</li>
+                <li>조합 설립인가(또는 입대위 전원 동의) 이후, 임대차 계약 체결 시 임차인에게 <span class="highlight-blue">리모델링 추진 사실을 사전 고지</span>하고 이후 <span class="highlight-purple">행위허가까지 획득한 경우</span>에는, 주택임대차보호법상 2년 및 상가건물임대차보호법상 1년의 <span class="highlight-red">최단 존속기간 보장 의무를 적용하지 않는다</span>. (고지하지 않은 경우 기존 기간 보장 책임 있음)</li>
+            </ul>
+        </li>
+        <li><strong>리모델링 비리 금품수수 벌칙 (★중요!)</strong>:
+            <ul>
+                <li>입주자, 사용자, 입주자대표회의, 관리주체 또는 조합원 등이 리모델링 추진과 관련하여 금품이나 부정한 재산상 이익을 수수한 경우, 기본 벌칙은 <span class="highlight-blue">2년 이하의 징역 또는 2천만원 이하의 벌금 (2.2)</span>이다.</li>
+                <li><strong>초과이익 이수제 (벌금의 2배 가중제)</strong>: 만약 수수한 행위로 얻은 부정 이익의 50%에 해당하는 금액이 2천만원을 초과하는 고액 수수 사건인 경우, 벌금형을 <span class="highlight-red">그 부정이익의 2배에 상당하는 금액 이하의 벌금</span>으로 강력히 가중 처벌한다. (주택 전매제한이나 공급질서 교란 행위는 '3배 벌금'인 점과 명확히 구분 및 비교 요망)</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        6. 보칙: 주택상환사채의 발행 요건과 기명증권 관리 실무
+    </h2>
+    <ul>
+        <li><strong>발행 주체의 제한</strong>: 주택상환사채는 국가나 지자체는 직접 발행할 수 없으며, 오직 <span class="highlight-blue">한국토지주택공사(LH)</span> 및 <span class="highlight-blue">등록사업자</span>만 발행할 수 있다.</li>
+        <li><strong>등록사업자 발행 시 엄격한 3대 규제책 (★8회 이상 출제)</strong>:
+            <ul>
+                <li><strong>보증 조건</strong>: LH와 달리 등록사업자는 부도 리스크가 존재하므로 반드시 금융기관 또는 <span class="highlight-red">주택도시보증공사(HUG)의 보증</span>을 받은 경우에만 사채를 발행할 수 있다.</li>
+                <li><strong>인적·경험적 요건</strong>: 법인이어야 하며, 자본금 <span class="highlight-purple">5억원 이상</span>이고, 최근 3년간 연평균 주택건설실적이 <span class="highlight-purple">300호(세대) 이상</span>이어야 한다.</li>
+                <li><strong>발행 규모의 한계</strong>: 등록사업자의 최근 3년간 연평균 주택건설 호수 이내로 발행 규모를 제한한다.</li>
+            </ul>
+        </li>
+        <li><strong>발행 승인 및 기명식 원칙</strong>:
+            <ul>
+                <li>사채 발행 시 사전에 발행계획을 수립하여 반드시 <span class="highlight-red">국토교통부장관의 승인</span>을 취득하여야 한다 (행안부 장관 등의 지문 함정 주의).</li>
+                <li>주택으로 바꾸어 갚아주는 사채이므로 양도 제한 관리를 위해 무기명이 아닌 <span class="highlight-blue">기명증권</span> 방식으로 발행한다.</li>
+                <li><strong>명의변경과 대항요건</strong>: 사채권자 명의변경 시 성명과 주소를 <span class="highlight-purple">사채원부</span>에 기재하여야 하며, 사채 취득자의 성명을 <span class="highlight-purple">채권 자체</span>에도 기록하여야 사채발행인 및 제3자에게 유효하게 대항할 수 있다.</li>
+            </ul>
+        </li>
+        <li><strong>등록 말소와 효력 관계</strong>: 등록사업자가 중도에 기준 미달이나 부도로 등록이 말소되더라도, 이미 발행한 주택상환사채의 효력에는 <span class="highlight-red">영향을 미치지 않는다</span> (보증 기관의 대위변제 의무 작동).</li>
+        <li><strong>상환 기한 및 전매 특례</strong>:
+            <ul>
+                <li>주택상환사채의 상환 기한은 <span class="highlight-green">3년을 초과할 수 없다</span>. 이때 3년의 기한 계산점은 사채 발행일부터 <span class="highlight-green">주택의 공급계약 체결일</span>까지의 기간으로 산정한다.</li>
+                <li>원칙적으로 중도해약이나 양도가 불가능하나, 세대원 전원이 해외로 이주하거나 <span class="highlight-red">2년 이상</span> 해외 체류 등의 특례 사유 시 예외적으로 양도가 허용된다.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+        7. 국민주택사업특별회계 수립·보고 체계 및 재원 귀속
+    </h2>
+    <ul>
+        <li><strong>설치 및 운영 주체 (★주관식 단골 유의)</strong>: 국민주택 건설이나 대지 조성을 효과적으로 이행하기 위해 국가가 아닌 <span class="highlight-red">지방자치단체(지자체)</span>가 의무적으로 국민주택사업특별회계를 설치하고 운영하여야 한다.</li>
+        <li><strong>운영 상황 보고 주기</strong>:
+            <ul>
+                <li>지방자치단체의 장은 특별회계의 <span class="highlight-blue">분기별</span> 운영 상황을 해당 분기가 끝난 다음 달 <span class="highlight-blue">20일 이내</span>에 국토교통부장관에게 보고하여야 한다.</li>
+                <li><strong>행정 경로 규정</strong>: 기초자치단체인 시장·군수·구청장은 다이렉트 보고가 금지되며, 반드시 상급 기관인 <span class="highlight-purple">시·도지사를 거쳐서</span> 보고 체계를 밟아야 한다 (세종 및 제주 제외).</li>
+            </ul>
+        </li>
+        <li><strong>재원 확보와 재건축 부담금의 분리 귀속 함정 (★기출 3회)</strong>:
+            <ul>
+                <li>특별회계의 주요 재원은 자체 적립금, 주택도시기금 차입금 등이 포함되며 특히 재건축초과이익환수법에 근거한 <span class="highlight-purple">재건축부담금</span>도 귀속 비율에 따라 재원이 된다.</li>
+                <li><strong>귀속 기준 분리 (매우 중요)</strong>: 
+                    <ul>
+                        <li>재건축부담금 중 <span class="highlight-red">지방자치단체 귀속분</span>은 이 국민주택사업특별회계의 재원으로 편입된다.</li>
+                        <li>반면, 재건축부담금 중 <span class="highlight-blue">국가 귀속분</span>은 국민주택사업특별회계가 아닌 <span class="highlight-blue">주택도시기금</span>의 재원으로 귀속되므로 이를 바꾸어 낸 오답 지문에 특히 경계해야 한다.</li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+    </ul>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><line x1="18" y1="2" x2="22" y2="6"></line><path d="M7.5 20.5L19 9l-4-4L3.5 16.5 2 22z"></path></svg>
+        8. 주관식 단답형 및 다단 빈칸 채우기 완벽 대비 (실전 훈련)
+    </h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡, ㉢)에 들어갈 알맞은 핵심 용어나 법정 숫자를 직접 연필로 적으며 트레이닝 해보십시오.</p>
+    
+    <ol style="line-height: 2.1;">
+        <li>
+            리모델링 주택조합이 시공자를 선정하고자 할 때는 시장·군수·구청장으로부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )을 받은 후 정식 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )에서 시공자를 선정하여야 한다.
+        </li>
+        <li>
+            법정 시공자 선정 시기 및 경쟁입찰 방식을 위반하여 시공자를 선정하거나 선정된 자는 모두 형벌벌칙으로 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년 이하의 징역 또는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )만원 이하의 벌금에 처해진다.
+        </li>
+        <li>
+            상가 등 입주자 공유가 아닌 복리시설을 증축 리모델링하고자 하는 경우, 해당 복리시설은 사용검사일 등으로부터 최소 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년이 경과하여야 하며, 증축 범위는 기존 상가 연면적 합계의 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )% 이내로만 제한된다.
+        </li>
+        <li>
+            주상복합과 같이 주택과 주택외의 시설이 동일 건축물인 경우, 복리시설의 증축 면적 범위는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )의 범위 안에서 동일하게 증축을 허용하는 단서 예외 조항이 신설되었다.
+        </li>
+        <li>
+            시·도지사는 공합 조율을 위하여 필요한 경우, 대도시 시장에게 리모델링 기본계획의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )을 요청할 수 있으며, 기초 시군구청장에게는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )을 요청할 수 있다.
+        </li>
+        <li>
+            시장·군수·구청장은 안전진단 결과보고서의 적정성 검토가 필요한 경우, 결과보고서를 제출받은 날로부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이내에 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 또는 한국건설기술연구원에 적정성 검토를 의뢰하여야 한다.
+        </li>
+        <li>
+            수직증축형 리모델링에서 안전성 검토를 의무적으로 실시하여야 하는 사유 3가지는, 건축위원회 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )를 요청할 때, 리모델링 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )를 신청할 때, 그리고 2차 안전진단 결과 ( ㉢&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )의 변경이 필요하다고 고시된 기준에 따라 인정되는 때이다.
+        </li>
+        <li>
+            임대차 계약 시 리모델링 추진 계획을 서면 임차인에게 미리 설명 고지하고 이후 정식 행위허가를 얻은 경우, 세입자의 최단 존속기간 보장 의무인 주임법상 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년 및 상임법상 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년의 적용 규정을 전면 배제한다.
+        </li>
+        <li>
+            리모델링 사업과 관련하여 부정한 수수료나 금품을 주고받는 비리를 범한 경우 기본 벌칙 외에, 얻은 이익의 50%가 2천만원을 초과할 때 벌금형을 그 부정이익의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )배 이하에 상당하는 벌금으로 가중 과세한다.
+        </li>
+        <li>
+            주택상환사채를 등록사업자가 발행하려는 경우, 재정 건전성 확보를 위해 반드시 금융기관 또는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )의 보증을 받아야 하며, 최근 3년간 연평균 주택건설 실적이 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )호 이상이어야 정식 발행 자격이 주어진다.
+        </li>
+        <li>
+            주택상환사채는 양수 및 제한 관리를 투명하게 하기 위해 명의를 무조건 기록하는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )증권 형식으로 발행하며, 발행을 위해 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )의 정식 승인을 득해야 한다.
+        </li>
+        <li>
+            등록사업자의 자격 등록이 중간에 말소되는 사태가 초래되어도, 사전에 정식 발행 완료된 주택상환사채의 법적 효력에는 어떠한 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )을 미치지 아니한다.
+        </li>
+        <li>
+            주택상환사채의 상환 기간은 최대 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년을 초과할 수 없으며, 이때의 기간 계산은 사채 발행일부터 주택의 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일까지로 정산한다.
+        </li>
+        <li>
+            국민주택사업특별회계를 설치하고 적극적으로 운영하여야 하는 주체는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이며, 운영 상황은 분기가 끝난 다음 달 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일까지 국교부장관에게 보고해야 한다.
+        </li>
+        <li>
+            재건축초과이익환수법에 의한 재건축부담금 배분 중, 국가 귀속분은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )의 재원으로 직접 흡수되고, 지방자치단체 귀속분은 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )의 재원으로 각각 구분 귀속된다.
+        </li>
+    </ol>
+
+    <!-- 수험생 정답 확인용 하단 주르륵 배치 영역 -->
+    <div style="font-size: 10pt; color: #777777; margin-top: 30px; padding: 15px; border-top: 1px dashed #666666; line-height: 1.8;">
+        <strong style="display: block; margin-bottom: 8px;">[제17강 주관식 단답형 정답 리스트]</strong>
+        <strong>1.</strong> ㉠ 설립인가, ㉡ 총회 &nbsp;|&nbsp; <strong>2.</strong> ㉠ 3, ㉡ 3,000(또는 삼천) &nbsp;|&nbsp; <strong>3.</strong> ㉠ 10, ㉡ 10 <br>
+        <strong>4.</strong> ㉠ 주택의 증축 면적 비율 &nbsp;|&nbsp; <strong>5.</strong> ㉠ 변경(또는 조정), ㉡ 허가 시기 조정 &nbsp;|&nbsp; <strong>6.</strong> ㉠ 7, ㉡ 국토안전관리원 <br>
+        <strong>7.</strong> ㉠ 심의, ㉡ 허가, ㉢ 설계도서 &nbsp;|&nbsp; <strong>8.</strong> ㉠ 2, ㉡ 1 &nbsp;|&nbsp; <strong>9.</strong> ㉠ 2(또는 두) <br>
+        <strong>10.</strong> ㉠ 주택도시보증공사(또는 HUG), ㉡ 300 &nbsp;|&nbsp; <strong>11.</strong> ㉠ 기명, ㉡ 국토교통부장관 &nbsp;|&nbsp; <strong>12.</strong> ㉠ 영향 <br>
+        <strong>13.</strong> ㉠ 3, ㉡ 공급계약 체결일 &nbsp;|&nbsp; <strong>14.</strong> ㉠ 지방자치단체, ㉡ 20 &nbsp;|&nbsp; <strong>15.</strong> ㉠ 주택도시기금, ㉡ 국민주택사업특별회계
+    </div>
+
+</body>
+</html>

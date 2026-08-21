@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 - 제49강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+            letter-spacing: -0.05em;
+        }
+        
+        h1 {
+            font-size: 12pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        /* 토너 절약 4색 시각 강조 클래스 */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #16803d; 
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #6d28d9; 
+        }
+        
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        ol.quiz-list {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+            line-height: 2.1;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        /* 정답 리스트 3열 격자 레이아웃 */
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px 15px;
+        }
+
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        제49강. 시설관리/관계법규: 수압·수두, 유량·유속, 층류·난류(레이놀즈수), 베르누이 정리, 배관 마찰손실(달시-바이스바하), 상수도 및 수처리(폭기), 물의 경도, 세대별 수도계량기·급수전, 음용수 급수관 지름 기준, 비상급수시설, 수도법상 저수조 설치기준
+    </h1>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        1. 수압과 수두관계, 파스칼의 원리 및 유량·유속 기본공식 (★수치 및 비례관계)
+    </h2>
+    <ul>
+        <li><strong>수두(Water Head, H)와 수압(Pressure, P) 산정 관계 공식</strong>:
+            <ul>
+                <li>수두(H)는 물기둥의 높이(m)를 의미하며, 수압(P)은 물기둥 높이에 따라 작용하는 단위면적당 압력(Pa, kPa, MPa)임.</li>
+                <li><span class="highlight-red">메가파스칼(MPa) 환산 공식</span>: <span class="highlight-red">수압 P (MPa) = 높이 H(m) × 0.01</span> (또는 H = P × 100).</li>
+                <li><span class="highlight-blue">킬로파스칼(kPa) 환산 공식</span>: <span class="highlight-blue">수압 P (kPa) = 높이 H(m) × 10</span> (또는 H = P × 0.1).</li>
+                <li><span class="highlight-purple">수압과 수심(높이)의 관계</span>: 수압과 수심은 완전한 <span class="highlight-purple">정비례 관계</span>임 (수심이 깊을수록 수압은 커짐).</li>
+            </ul>
+        </li>
+        <li><strong>파스칼의 원리 (Pascal's Principle)</strong>:
+            <ul>
+                <li>밀폐된 용기 내 밀폐 유체의 일부에 가해진 압력은 유체 내부의 <span class="highlight-red">모든 방향으로 동일하게 감쇄 없이 전달됨</span>.</li>
+            </ul>
+        </li>
+        <li><strong>유량(Flow Rate, Q)과 유속(Velocity, V) 관계 공식</strong>:
+            <ul>
+                <li><span class="highlight-blue">유량 공식</span>: <span class="highlight-blue">Q = A × V</span> (단, Q는 유량 m³/s, A는 관 단면적 m², V는 유속 m/s).</li>
+                <li><span class="highlight-purple">관 단면적 공식</span>: A = (π / 4) × D² (단, D는 관경 m).</li>
+                <li><span class="highlight-red">유속과 관 단면적의 관계 (★단골 출제)</span>: 유량 Q가 일정할 때, 유속 V = Q / A 이므로 유속은 관 단면적 A에 <span class="highlight-red">반비례</span>함.</li>
+                <li><span class="highlight-green">단면적 변화에 따른 유속 변화 함정</span>: 관 단면적이 <span class="highlight-red">2배</span>가 되면 유속은 <span class="highlight-red">2분의 1로 감소</span>함 (4분의 1로 감소한다고 출제 시 오답!).</li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">물리 지표</th>
+                <th style="width: 45%;">공식 및 환산 관계</th>
+                <th style="width: 30%;">수험 핵심 포인트</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th><span class="highlight-red">수압 (MPa)</span></th>
+                <td>수압 P(MPa) = <span class="highlight-red">높이 H(m) × 0.01</span><br>높이 H(m) = 수압 P(MPa) × 100</td>
+                <td>수심과 수압은 <span class="highlight-red">정비례</span> 관계 (0.01 곱함)</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-blue">수압 (kPa)</span></th>
+                <td>수압 P(kPa) = <span class="highlight-blue">높이 H(m) × 10</span><br>높이 H(m) = 수압 P(kPa) × 0.1</td>
+                <td>1MPa = 1,000kPa 관계 적용</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-purple">유량 (Q) / 유속 (V)</span></th>
+                <td>Q = A × V (m³/s)<br>V = Q / A (m/s)</td>
+                <td>단면적 2배 증가 시 유속은 <span class="highlight-purple">2분의 1</span>로 감소</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        2. 유체의 흐름 특성: 층류·난류(레이놀즈수), 정상류·비정상류 및 베르누이 정리
+    </h2>
+    <ul>
+        <li><strong>층류(Laminar Flow) vs 난류(Turbulent Flow) 구별 및 판정 지표</strong>:
+            <ul>
+                <li><span class="highlight-blue">층류</span>: 저속 유체 흐름으로 유체 입자가 질서정연하게 나란히 흐르는 상태.</li>
+                <li><span class="highlight-purple">난류</span>: 고속 유체 흐름으로 유체 입자가 불규칙하게 소용돌이치며 섞여 흐르는 상태 (아파트 배관 소음 원인).</li>
+                <li><span class="highlight-red">판단 기준 무차원수 (★필수 암기)</span>: 층류와 난류를 판단하는 기준이 되는 무차원수는 <span class="highlight-red">레이놀즈수(Reynolds Number, Re)</span>임.</li>
+                <li><span class="highlight-green">임계유속(Critical Velocity)</span>: 층류 영역에서 난류 영역으로 전이(천이)될 때의 유속을 <span class="highlight-green">임계유속</span>이라 함 (평균유속이라 하면 오답!).</li>
+            </ul>
+        </li>
+        <li><strong>레이놀즈수(Re) 산정 공식 및 유인별 비례·반비례 관계</strong>:
+            <ul>
+                <li><span class="highlight-red">공식</span>: <span class="highlight-red">레이놀즈수(Re) = 관성력 / 점성력 = (유속 V × 관경 D) / 동점성계수 ν</span>.</li>
+                <li><span class="highlight-purple">비례·반비례 관계</span>: 레이놀즈수는 <span class="highlight-blue">유속(V)</span> 및 <span class="highlight-blue">관경(D)</span>에 <span class="highlight-blue">비례</span>하고, <span class="highlight-red">동점성계수(ν, 점성)</span>에 <span class="highlight-red">반비례</span>함.</li>
+            </ul>
+        </li>
+        <li><strong>정상류(Steady Flow) vs 비정상류(Unsteady Flow)</strong>:
+            <ul>
+                <li><span class="highlight-blue">정상류</span>: 시간에 따라 유체의 유동 특성(유속, 압력, 밀도 등)이 변하지 아니하는 흐름.</li>
+                <li><span class="highlight-purple">비정상류</span>: 시간에 따라 유체의 유동 특성이 변하는 흐름.</li>
+            </ul>
+        </li>
+        <li><strong>베르누이 정리 (Bernoulli's Theorem) (★출제 빈도 최고)</strong>:
+            <ul>
+                <li>유체가 흐를 때 <span class="highlight-blue">위치에너지</span>, <span class="highlight-purple">압력에너지</span>, <span class="highlight-red">속도에너지(운동에너지)</span>의 <span class="highlight-red">총합은 유선상 항상 일정함</span>.</li>
+                <li><span class="highlight-red">핵심 함정 지문 방지</span>: "어느 한 가지 에너지가 일정하다"는 것은 오답! 개별 에너지는 관경 변형에 따라 변할 수 있으며, 오직 <span class="highlight-red">에너지의 총합이 일정</span>함.</li>
+                <li><span class="highlight-green">관경 축소 시 현상</span>: 넓은 관에서 좁은 관으로 유입 시 유속(속도에너지)은 증가하고 압력(압력에너지)은 감소함.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        3. 배관의 마찰손실수두(달시-바이스바하) 및 마찰손실압력 산정 공식
+    </h2>
+    <ul>
+        <li><strong>달시-바이스바하(Darcy-Weisbach) 마찰손실수두(H_f) 산정 공식</strong>:
+            <ul>
+                <li><span class="highlight-red">공식</span>: <span class="highlight-red">H_f = f × (L / D) × (V² / 2g)</span> (단, f: 관 마찰계수, L: 관 길이, D: 관경, V: 유속, g: 중력가속도 9.8m/s²).</li>
+                <li><span class="highlight-blue">비례 요소</span>: 관 마찰계수(f), 관 길이(L)에 <span class="highlight-blue">비례</span>함.</li>
+                <li><span class="highlight-purple">반비례 요소</span>: 관경(D), 중력가속도(g)에 <span class="highlight-purple">반비례</span>함.</li>
+                <li><span class="highlight-red">제곱 비례 요소 (★가장 자주 나오는 함정)</span>: 유속(V)의 <span class="highlight-red">제곱에 비례</span>함 (유속에 비례한다고 출제 시 100% 오답!).</li>
+            </ul>
+        </li>
+        <li><strong>마찰손실압력(P_f) 산정 공식 및 특징</strong>:
+            <ul>
+                <li><span class="highlight-red">공식</span>: <span class="highlight-red">P_f = f × (L / D) × (ρ × V² / 2)</span> (단, ρ: 물의 밀도 1,000kg/m³).</li>
+                <li><span class="highlight-blue">특징</span>: 마찰손실수두 공식에서 중력가속도(g) 대신 물의 <span class="highlight-red">밀도(ρ)</span>가 반영되며, 마찰손실압력은 물의 <span class="highlight-blue">밀도에 비례</span>함.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">마찰손실 유인</th>
+                <th style="width: 45%;">손실수두(H_f) 및 손실압력(P_f)과의 관계</th>
+                <th style="width: 30%;">수험 암기 및 함정 방지</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th><span class="highlight-blue">관 마찰계수 (f) / 관 길이 (L)</span></th>
+                <td>마찰손실수두 및 압력에 <span class="highlight-blue">정비례</span></td>
+                <td>관 길이가 길수록 손실 커짐</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-purple">관경 (D)</span></th>
+                <td>마찰손실수두 및 압력에 <span class="highlight-purple">반비례</span></td>
+                <td>관경이 커질수록 손실 작아짐</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-red">유속 (V)</span></th>
+                <td>마찰손실수두 및 압력에 <span class="highlight-red">유속의 제곱에 비례</span></td>
+                <td>유속 2배 증가 시 손실 <span class="highlight-red">4배</span> 증가</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-green">물의 밀도 (ρ)</span></th>
+                <td>마찰손실압력(P_f)에 <span class="highlight-green">정비례</span></td>
+                <td>밀도가 클수록 마찰손실압력 커짐</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4 4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg>
+        4. 상수도 공급 계통 및 정수/수처리 과정 (★폭기 과정 철분 제거)
+    </h2>
+    <ul>
+        <li><strong>상수도 전체 공급 순서</strong>:
+            <ul>
+                <li><span class="highlight-blue">취수</span> &rarr; <span class="highlight-blue">도수</span> &rarr; <span class="highlight-purple">정수</span> &rarr; <span class="highlight-purple">송수</span> &rarr; <span class="highlight-red">배수</span> &rarr; <span class="highlight-red">급수</span>.</li>
+            </ul>
+        </li>
+        <li><strong>정수장 수처리 4단계 순서 및 목적 (★단독 출제 단골)</strong>:
+            <ul>
+                <li><span class="highlight-red">수처리 순서</span>: <span class="highlight-red">침전</span> &rarr; <span class="highlight-blue">폭기</span> &rarr; <span class="highlight-purple">여과</span> &rarr; <span class="highlight-green">살균(소독)</span>.</li>
+                <li><span class="highlight-blue">침전</span>: 물속의 흙, 모래, 부유물질을 가라앉혀 제거.</li>
+                <li><span class="highlight-red">폭기(Aeration)</span>: 물을 공기 중에 분사·접촉시켜 물속에 녹아있는 <span class="highlight-red">철분(Fe) 및 마그네슘, 유해가스, 불쾌한 냄새를 산화·제거</span>하는 공정.</li>
+                <li><span class="highlight-purple">여과</span>: 모래, 자갈층을 통과시켜 미세한 부유물질을 걸러냄.</li>
+                <li><span class="highlight-green">살균</span>: 염소, 오존 등을 투입하여 병원균 및 미생물 사멸.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+        5. 물의 경도(Hardness) 정의, 농도 단위, 연수·경수 특징 및 보일러 스케일
+    </h2>
+    <ul>
+        <li><strong>물의 경도 정의 및 환산 기준</strong>:
+            <ul>
+                <li>물속에 녹아있는 칼슘(Ca²⁺), 마그네슘(Mg²⁺) 등의 염류의 양을 <span class="highlight-red">탄산칼슘(CaCO₃)</span>의 농도로 환산하여 나타낸 수질 지표. (※ 탄산나트륨, 탄산마그네슘으로 출제 시 오답!).</li>
+                <li><span class="highlight-blue">경도 표시 단위 PPM</span>: PPM은 <span class="highlight-blue">100만 분의 1</span>의 농도 단위이며, 법적 수질 단위로는 <span class="highlight-blue">밀리그램 퍼 리터(mg/L)</span>와 동일함 (g/L로 출제 시 오답!).</li>
+            </ul>
+        </li>
+        <li><strong>연수(Soft Water) vs 경수(Hard Water) 특성 비교 (★유지관리 핵심)</strong>:
+            <ul>
+                <li><span class="highlight-blue">연수</span>: 총경도가 <span class="highlight-blue">90PPM 이하</span>인 물. 세탁용 및 보일러 급수용으로 적당함. (※ 연수 사용 시 황동관, 연관 부식 작용 유발).</li>
+                <li><span class="highlight-red">경수</span>: 총경도가 <span class="highlight-red">110PPM 이상</span>인 물. 세탁용 및 보일러 급수용으로 부적당함. (※ 보일러 급수로 사용 시 배관 내 <span class="highlight-red">스케일(Scale) 발생</span> 원인).</li>
+                <li><span class="highlight-purple">수원별 간주 기준</span>: 일반적으로 <span class="highlight-purple">지표수는 연수</span>로 간주하고, <span class="highlight-purple">지하수는 경수</span>로 간주함.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        6. 급수설비 관련 법정 기준 (세대별 수도계량기·급수전 및 음용수 급수관 지름)
+    </h2>
+    <ul>
+        <li><strong>주택건설기준상 세대별 수도계량기 및 급수전 (제43조)</strong>:
+            <ul>
+                <li>공동주택에는 세대별로 <span class="highlight-red">수도계량기</span>를 설치해야 함.</li>
+                <li>세대마다 <span class="highlight-blue">2개소 이상</span>의 급수전(수도꼭지)을 설치해야 함 (3개소가 아님에 주의!).</li>
+            </ul>
+        </li>
+        <li><strong>건축물의 설비기준상 음용수 급수관 지름 최소기준 (★필수 암기 별표 3)</strong>:
+            <ul>
+                <li><span class="highlight-blue">가구/세대 구분이 명확한 경우</span>:
+                    <ul>
+                        <li>1세대: <span class="highlight-blue">15밀리미터</span></li>
+                        <li>2~3세대: <span class="highlight-purple">20밀리미터</span></li>
+                        <li>4~5세대: <span class="highlight-green">25밀리미터</span></li>
+                        <li>6~8세대: <span class="highlight-purple">32밀리미터</span></li>
+                        <li>9~16세대: <span class="highlight-red">40밀리미터</span></li>
+                        <li>17세대 이상: <span class="highlight-red">50밀리미터</span></li>
+                    </ul>
+                </li>
+                <li><span class="highlight-red">가구/세대 구분이 불분명한 주거용 건축물 (바닥면적 산정)</span>:
+                    <ul>
+                        <li>바닥면적 85제곱미터 이하: <span class="highlight-blue">1가구</span> (15mm)</li>
+                        <li>85제곱미터 초과 150제곱미터 이하: <span class="highlight-purple">3가구</span> (20mm)</li>
+                        <li>150제곱미터 초과 300제곱미터 이하: <span class="highlight-green">5가구</span> (25mm)</li>
+                        <li>300제곱미터 초과 500제곱미터 이하: <span class="highlight-red">16가구</span> (40mm)</li>
+                        <li>500제곱미터 초과: <span class="highlight-red">17가구</span> (50mm)</li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 30%;">가구 또는 세대수 (명확)</th>
+                <th style="width: 40%;">구분 불분명 시 주거 바닥면적 합계</th>
+                <th style="width: 30%;">급수관 지름 최소기준</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>1세대</strong></td>
+                <td>85제곱미터 이하 (1가구)</td>
+                <td><span class="highlight-blue">15밀리미터</span></td>
+            </tr>
+            <tr>
+                <td><strong>2ㆍ3세대</strong></td>
+                <td>85제곱미터 초과 150제곱미터 이하 (3가구)</td>
+                <td><span class="highlight-purple">20밀리미터</span></td>
+            </tr>
+            <tr>
+                <td><strong>4ㆍ5세대</strong></td>
+                <td>150제곱미터 초과 300제곱미터 이하 (5가구)</td>
+                <td><span class="highlight-green">25밀리미터</span></td>
+            </tr>
+            <tr>
+                <td><strong>6 ~ 8세대</strong></td>
+                <td>-</td>
+                <td><span class="highlight-purple">32밀리미터</span></td>
+            </tr>
+            <tr>
+                <td><strong>9 ~ 16세대</strong></td>
+                <td>300제곱미터 초과 500제곱미터 이하 (16가구)</td>
+                <td><span class="highlight-red">40밀리미터</span></td>
+            </tr>
+            <tr>
+                <td><strong>17세대 이상</strong></td>
+                <td>500제곱미터 초과 (17가구)</td>
+                <td><span class="highlight-red">50밀리미터</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path></svg>
+        7. 비상급수시설(지하양수시설·지하저수조) 기준 및 수도법상 저수조 설치기준
+    </h2>
+    <ul>
+        <li><strong>주택건설기준상 비상급수시설 구분 및 법정 기준 (제35조) (★주관식 단골 수치)</strong>:
+            <ul>
+                <li><span class="highlight-purple">지하양수시설</span>: 매 세대당 하루 <span class="highlight-red">0.2톤</span>(시·군지역은 <span class="highlight-blue">0.1톤</span>) 이상의 양수능력과 매 세대당 <span class="highlight-purple">0.3톤</span> 이상의 저수조를 설치.</li>
+                <li><span class="highlight-red">지하저수조</span>: 고가수조 저수량(매 세대당 <span class="highlight-blue">0.25톤</span>까지 산입)을 포함하여 매 세대당 <span class="highlight-red">0.5톤</span>(독신자용 주택은 <span class="highlight-purple">0.25톤</span>) 이상의 수량을 저수할 수 있을 것.</li>
+                <li><span class="highlight-green">수동식 펌프 및 비상전원 펌프</span>: <span class="highlight-red">50세대</span>(독신자용 주택은 <span class="highlight-blue">100세대</span>)당 1대 이상의 수동식 펌프를 설치하거나 비상전원 가동 펌프 설치.</li>
+            </ul>
+        </li>
+        <li><strong>수도법 시행규칙상 저수조 구조 및 설치기준 [별표 3의2] (★정밀 암기)</strong>:
+            <ul>
+                <li><span class="highlight-red">상부 및 사방 이격거리</span>: 맨홀 부분은 건축물(천장 및 보)로부터 <span class="highlight-red">100센티미터 이상</span>, 그 밖의 부분은 <span class="highlight-blue">60센티미터 이상</span> 간격을 띄움.</li>
+                <li><span class="highlight-purple">맨홀 규격</span>: 각 변의 길이가 <span class="highlight-purple">90센티미터 이상</span>인 사각형 또는 지름 <span class="highlight-purple">90센티미터 이상</span> 원형 맨홀 1개 이상 (5m³ 이하 소규모는 <span class="highlight-blue">60센티미터 이상</span>).</li>
+                <li><span class="highlight-green">바닥 경사</span>: 침전찌꺼기 배출구를 맨 밑부분에 설치하고, 바닥은 배출구를 향하여 <span class="highlight-red">100분의 1 이상</span> 경사를 둠.</li>
+                <li><span class="highlight-blue">구획 및 분리</span>: <span class="highlight-red">5세제곱미터를 초과</span>하는 저수조는 청소·점검을 위해 2개 이상의 부분으로 구획하거나 2개 이상 설치.</li>
+                <li><span class="highlight-purple">유해물질 이격거리</span>: 외부 땅밑 설치 시 분뇨·쓰레기 등 유해물질로부터 <span class="highlight-red">5미터 이상</span> 띄움 (부득이한 경우 차단벽 설치).</li>
+            </ul>
+        </li>
+        <li><strong>대형건축물등 저수조 위생관리 및 소독 기준 (수도법 시행규칙 제22조의4)</strong>:
+            <ul>
+                <li><span class="highlight-red">청소 및 위생점검 주기</span>: 저수조를 <span class="highlight-red">반기 1회 이상</span> 청소하고, 위생상태를 <span class="highlight-blue">월 1회 이상</span> 점검해야 함.</li>
+                <li><span class="highlight-purple">사용 중단 시 청소</span>: 저수조가 신축되었거나 <span class="highlight-red">1개월 이상</span> 사용 중단된 경우 사용 전에 청소해야 함.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+            💡 [수험 핵심 팁] 제49강 실전 출제 포인트 & 함정 방지 체크
+        </div>
+        <ul>
+            <li><strong>수압 산정 환산 공식</strong>: P(MPa) = <span class="highlight-red">H(m) × 0.01</span>. 단면적 2배 증가 시 유속은 <span class="highlight-blue">2분의 1</span>로 감소.</li>
+            <li><strong>레이놀즈수 & 베르누이 정리</strong>: 층류/난류 판단 지표 = <span class="highlight-red">레이놀즈수</span>, 전이 유속 = <span class="highlight-purple">임계유속</span>. 베르누이 정리는 <span class="highlight-red">에너지 총합이 일정</span>(개별 에너지가 일정한 것이 아님!).</li>
+            <li><strong>마찰손실수두(달시-바이스바하)</strong>: 마찰손실수두는 유속의 <span class="highlight-red">제곱에 비례</span>. 마찰손실압력은 물의 <span class="highlight-blue">밀도에 비례</span>.</li>
+            <li><strong>수처리 폭기 & 물의 경도</strong>: 정수 순서 = 침전 &rarr; <span class="highlight-red">폭기</span> &rarr; 여과 &rarr; 살균. 철분 제거 = <span class="highlight-red">폭기</span>. 경도 환산 지표 = <span class="highlight-purple">탄산칼슘</span>, PPM = <span class="highlight-blue">밀리그램 퍼 리터(mg/L)</span>. 경수는 보일러 <span class="highlight-red">스케일</span> 원인.</li>
+            <li><strong>급수관 최소 지름 수치</strong>: 1세대 <span class="highlight-blue">15mm</span>, 2·3세대 <span class="highlight-purple">20mm</span>, 4·5세대 <span class="highlight-green">25mm</span>, 6~8세대 <span class="highlight-purple">32mm</span>, 9~16세대 <span class="highlight-red">40mm</span>, 17세대 이상 <span class="highlight-red">50mm</span>. 불분명 시 300초과~500이하 = <span class="highlight-red">16가구</span>.</li>
+            <li><strong>비상급수시설 수치</strong>: 지하양수 <span class="highlight-red">0.2톤</span>(저수 0.3톤), 지하저수조 세대당 <span class="highlight-red">0.5톤</span>(독신자 0.25톤), 수동식 펌프 <span class="highlight-purple">50세대당 1대</span>.</li>
+            <li><strong>수도법 저수조 수치</strong>: 상부 이격 <span class="highlight-red">100cm</span>, 사방 이격 <span class="highlight-blue">60cm</span>, 맨홀 <span class="highlight-purple">90cm</span>(소규모 60cm), 바닥 경사 <span class="highlight-red">100분의 1 이상</span>, 구획 기준 <span class="highlight-blue">5m³ 초과</span>, 외부 이격 <span class="highlight-red">5m</span>, 청소 <span class="highlight-red">반기 1회</span>, 점검 <span class="highlight-blue">월 1회</span>.</li>
+        </ul>
+    </div>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>주관식 단답형 및 빈칸 채우기 실전 훈련</h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡)에 들어갈 알맞은 핵심 용어나 법정 수치, 단위를 아래 빈칸에 직접 작성해 보십시오.</p>
+
+    <ol class="quiz-list">
+        <li>
+            수두 높이가 H(미터)일 때 메가파스칼(MPa) 단위의 수압 P를 산정하려면 높이 H에 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )을(를) 곱하여야 한다.
+        </li>
+        <li>
+            유량 공식 Q = A × V에 따라 일정 유량이 흐를 때 배관의 단면적이 2배로 증가하면 유속은 종전 유속의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )(으)로 감소한다.
+        </li>
+        <li>
+            유체 흐름에서 층류와 난류를 판단하는 기준이 되는 무차원수를 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )라 하고, 층류 영역에서 난류 영역으로 전이될 때의 유속을 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )라 한다.
+        </li>
+        <li>
+            레이놀즈수는 점성력 분의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )으로 정의되며, 유체의 동점성계수에는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )하고 유속과 관경에는 비례한다.
+        </li>
+        <li>
+            베르누이 정리는 유체가 유선을 따라 흐를 때 위치에너지, 압력에너지 및 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )의 총합이 항상 일정하다는 법칙이다.
+        </li>
+        <li>
+            달시-바이스바하 공식에 따른 배관의 마찰손실수두는 관 마찰계수와 관의 길이에 비례하고, 관경에 반비례하며, 유속의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )에 비례한다.
+        </li>
+        <li>
+            배관의 마찰손실압력 공식은 중력가속도 대신 유체인 물의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )에 정비례하는 특성을 갖는다.
+        </li>
+        <li>
+            상수도 정수장의 수처리 과정은 침전, ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ), 여과, 살균 순으로 진행되며, 물속의 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 및 유해가스를 산화·제거하는 공정은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이다.
+        </li>
+        <li>
+            물의 경도는 물속에 녹아있는 칼슘, 마그네슘 등의 염류의 양을 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )의 농도로 환산하여 나타낸 지표이다.
+        </li>
+        <li>
+            경도 수치 단위인 PPM은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )분의 1의 농도를 의미하며, 법정 수질 표시 단위인 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )와(과) 동일한 수치이다.
+        </li>
+        <li>
+            총경도가 90PPM 이하인 물을 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )라 하고 세탁용 및 보일러 급수용으로 적당하며, 110PPM 이상인 물을 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )라 하고 보일러 급수로 사용 시 배관 내 ( ㉢&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 발생 원인이 된다.
+        </li>
+        <li>
+            공동주택에는 세대별로 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )을(를) 설치하여야 하고, 세대마다 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )개소 이상의 급수전을 설치하여야 한다.
+        </li>
+        <li>
+            주거용 건축물의 음용수 급수관 지름 최소기준은 1세대 15밀리미터, 2·3세대 20밀리미터, 4·5세대 25밀리미터, 6~8세대 32밀리미터, 9~16세대 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )밀리미터, 17세대 이상 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )밀리미터이다.
+        </li>
+        <li>
+            가구 구분이 불분명한 주거용 건축물에서 주거에 쓰이는 바닥면적 합계가 85제곱미터 이하인 경우 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )가구, 300제곱미터 초과 500제곱미터 이하인 경우 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )가구로 산정한다.
+        </li>
+        <li>
+            공동주택 비상급수시설 중 지하양수시설은 매 세대당 하루 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )톤(시·군지역은 0.1톤) 이상의 양수능력과 매 세대당 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )톤 이상의 저수조를 설치해야 한다.
+        </li>
+        <li>
+            공동주택 비상급수시설 중 지하저수조는 고가수조 저수량을 포함하여 매 세대당 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )톤(독신자용 주택은 0.25톤) 이상 저수할 수 있어야 하고, ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )세대당 1대 이상의 수동식 펌프나 비상전원 펌프를 설치해야 한다.
+        </li>
+        <li>
+            수도법령상 저수조 맨홀 부분은 건축물 천장 및 보 등으로부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )센티미터 이상, 그 밖의 부분은 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )센티미터 이상의 간격을 띄워 설치해야 한다.
+        </li>
+        <li>
+            수도법령상 저수조 맨홀은 각 변의 길이가 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )센티미터 이상인 사각형 또는 지름 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )센티미터 이상인 원형이어야 하며, 저수조 바닥은 배출구를 향하여 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 이상의 경사를 두어야 한다.
+        </li>
+        <li>
+            용량이 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )세제곱미터를 초과하는 저수조는 2개 이상으로 구획하거나 설치해야 하고, 외부 땅밑 설치 시 유해물질로부터 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이상 띄워야 한다.
+        </li>
+        <li>
+            대형건축물등의 소유자등은 저수조를 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 1회 이상 청소하고 위생상태를 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 1회 이상 점검해야 하며, 저수조 사용이 ( ㉢&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )개월 이상 중단된 경우 사용 전에 청소해야 한다.
+        </li>
+    </ol>
+
+    <!-- 수험생 정답 확인용 하단 3열 배치 그리드 영역 -->
+    <div style="font-size: 9.5pt; color: #666666; margin-top: 30px; padding: 15px; border-top: 1px dashed #666666; line-height: 1.8;">
+        <strong style="display: block; margin-bottom: 10px; color: #333333;">[제49강 주관식 단답형 정답 리스트]</strong>
+        <div class="answer-grid">
+            <div><strong>1.</strong> ㉠ 0.01(또는 100분의 1)</div>
+            <div><strong>2.</strong> ㉠ 2분의 1(0.5)</div>
+            <div><strong>3.</strong> ㉠ 레이놀즈수, &nbsp; ㉡ 임계유속</div>
+            <div><strong>4.</strong> ㉠ 관성력, &nbsp; ㉡ 반비례</div>
+            <div><strong>5.</strong> ㉠ 속도에너지(운동에너지)</div>
+            <div><strong>6.</strong> ㉠ 제곱</div>
+            <div><strong>7.</strong> ㉠ 밀도</div>
+            <div><strong>8.</strong> ㉠ 폭기, &nbsp; ㉡ 철분</div>
+            <div><strong>9.</strong> ㉠ 탄산칼슘</div>
+            <div><strong>10.</strong> ㉠ 100만, &nbsp; ㉡ 밀리그램 퍼 리터(mg/L)</div>
+            <div><strong>11.</strong> ㉠ 연수, &nbsp; ㉡ 경수, &nbsp; ㉢ 스케일</div>
+            <div><strong>12.</strong> ㉠ 수도계량기, &nbsp; ㉡ 2</div>
+            <div><strong>13.</strong> ㉠ 40, &nbsp; ㉡ 50</div>
+            <div><strong>14.</strong> ㉠ 1, &nbsp; ㉡ 16</div>
+            <div><strong>15.</strong> ㉠ 0.2, &nbsp; ㉡ 0.3</div>
+            <div><strong>16.</strong> ㉠ 0.5, &nbsp; ㉡ 50</div>
+            <div><strong>17.</strong> ㉠ 100, &nbsp; ㉡ 60</div>
+            <div><strong>18.</strong> ㉠ 90, &nbsp; ㉡ 100분의 1</div>
+            <div><strong>19.</strong> ㉠ 5, &nbsp; ㉡ 5</div>
+            <div><strong>20.</strong> ㉠ 반기, &nbsp; ㉡ 월, &nbsp; ㉢ 1</div>
+        </div>
+    </div>
+
+</body>
+</html>

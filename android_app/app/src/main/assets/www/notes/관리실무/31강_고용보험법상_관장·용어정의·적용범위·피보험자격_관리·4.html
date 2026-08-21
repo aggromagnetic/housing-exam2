@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 공동주택관리실무 - 제31강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+            letter-spacing: -0.05em;
+        }
+        
+        h1 {
+            font-size: 13pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        /* 토너 절약 4색 강조 클래스 */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #16803d; 
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #6d28d9; 
+        }
+        
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        ol {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        /* 정답 리스트 3열 격자 레이아웃 */
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px 15px;
+        }
+
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        제31강. 고용보험법상 관장·용어정의·적용범위·피보험자격 관리·4대 사업 및 실업급여 종합 정리
+    </h1>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        1. 고용보험의 관장주체 · 집행 체계 및 핵심 용어 정의 (독자적 공단 부존재)
+    </h2>
+    <ul>
+        <li><strong>관장주체 (★고용노동부장관 / 별도 '고용보험공단' 없음)</strong>:
+            <ul>
+                <li>고용보험 사업은 <span class="highlight-red">고용노동부장관</span>이 관장한다.</li>
+                <li>산재보험과 달리 고용보험법 자체에는 위탁 수탁을 전담하는 별도의 '고용보험공단'이 <span class="highlight-red">존재하지 않는다</span> ('고용보험공단이 위탁 운영한다'로 출제 시 오답).</li>
+                <li>고용노동부 소속 <span class="highlight-blue">지방고용노동관서(고용센터)</span>에서 피보험자격 관리, 실업급여 지급, 고용안정·직업능력개발사업 등을 직접 집행한다 (단, 보험료 징수는 징수법에 따라 근로복지공단 및 건강보험공단에 위탁).</li>
+            </ul>
+        </li>
+        <li><strong>피보험자의 정의 (★사업주는 제외)</strong>:
+            <ul>
+                <li>고용보험법 및 보험료징수법에 따라 보험에 가입하거나 가입된 것으로 보는 <span class="highlight-blue">근로자, 예술인, 노무제공자, 자영업자</span> 등을 말한다.</li>
+                <li>사업주는 보험료징수법상 '보험가입자'일 뿐 고용보험법상 <span class="highlight-red">'피보험자'가 될 수 없다</span> (사업주를 피보험자라 표기 시 오답).</li>
+            </ul>
+        </li>
+        <li><strong>이직 · 실업 · 실업의 인정 개념 구별 (★주관식 단골)</strong>:
+            <ul>
+                <li><strong>이직(離職)</strong>: 피보험자와 사업주 사이의 <span class="highlight-purple">고용관계가 끝나는 것</span>을 말한다.</li>
+                <li><strong>실업(失業)</strong>: 근로의 <span class="highlight-red">의사와 능력이 있음에도 불구하고</span> 취업하지 못한 상태에 있는 것을 말한다.</li>
+                <li><strong>실업의 인정</strong>: <span class="highlight-blue">직업안정기관의 장</span>이 수급자격자가 실업한 상태에서 <span class="highlight-purple">적극적으로 재취업활동을 하고 있다고 인정</span>하는 것을 말한다.</li>
+            </ul>
+        </li>
+        <li><strong>일용근로자 정의 (★1개월 미만 엄격 적용)</strong>:
+            <ul>
+                <li><span class="highlight-red">1개월 미만 동안</span> 고용되는 자를 말한다 ('3개월 미만'으로 출제 시 오답, 4대보험 공통 적용).</li>
+            </ul>
+        </li>
+        <li><strong>보수의 정의 (★소득세법상 근로소득 기준)</strong>:
+            <ul>
+                <li>「소득세법」에 따른 근로소득에서 대통령령으로 정하는 금품(비과세 소득)을 뺀 금액을 말하며, 보험료 부과의 기준이 된다 (근로기준법상 임금과 동일 개념 X).</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        2. 고용보험 적용범위 · 적용제외 근로자 및 65세 이상 고용 특례
+    </h2>
+    <ul>
+        <li><strong>원칙적 적용범위</strong>:
+            <ul>
+                <li>근로자를 사용하는 <span class="highlight-blue">모든 사업 또는 사업장</span>에 적용한다 (공동주택 관리사무소는 당연 적용대상 사업장).</li>
+            </ul>
+        </li>
+        <li><strong>소정근로시간에 따른 적용제외 및 반대 예외 (★3개월 이상 계속 근로 / 일용근로자)</strong>:
+            <ul>
+                <li><strong>원칙적 적용제외</strong>: 1개월간 소정근로시간이 <span class="highlight-red">60시간 미만인 자</span> (1주간 소정근로시간이 <span class="highlight-red">15시간 미만인 자</span> 포함).</li>
+                <li><strong>예외적 적용대상 (★적용 전환)</strong>: 위 조건에 해당하더라도 <span class="highlight-purple">3개월 이상 계속하여 근로를 제공하는 자</span> 및 <span class="highlight-blue">일용근로자</span>는 고용보험 <span class="highlight-purple">적용대상</span>이 된다 (적용제외자라고 하면 오답).</li>
+            </ul>
+        </li>
+        <li><strong>기타 법률에 따른 적용제외자</strong>:
+            <ul>
+                <li>「국가공무원법」·「지방공무원법」에 따른 공무원 (단, 별정직·임기제 공무원은 본인 의사에 따라 <span class="highlight-blue">실업급여에 임의가입 가능</span>).</li>
+                <li>사립학교교직원 연금법 적용을 받는 자, 별정우체국 직원.</li>
+            </ul>
+        </li>
+        <li><strong>65세 이상 고용자에 대한 적용 특례 (★65세 전 유지자 vs 65세 이후 신규)</strong>:
+            <ul>
+                <li><strong>65세 전부터 피보험자격 유지자</strong>: 65세 전부터 고용되어 피보험자격을 유지하던 자가 65세 이후 계속 고용된 경우 <span class="highlight-purple">실업급여를 포함한 고용보험 전면 적용</span> (실업급여 지급대상 O).</li>
+                <li><strong>65세 이후 신규 고용자 / 자영업 개시자</strong>: <span class="highlight-red">실업급여</span> 및 <span class="highlight-red">육아휴직 급여 등</span>은 <span class="highlight-red">적용하지 아니한다</span>. 단, <span class="highlight-blue">고용안정·직업능력개발사업은 적용</span>된다 ('모든 고용보험 사업이 배제된다'고 하면 오답).</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+        3. 피보험자격의 취득 · 상실 시기(그날 vs 다음 날) 및 신고기한 · 이중취득 제한
+    </h2>
+    <ul>
+        <li><strong>피보험자격의 취득 시기 (★원칙적으로 모두 "그날")</strong>:
+            <ul>
+                <li>고용보험이 적용되는 사업에 고용된 날 → <span class="highlight-blue">고용된 날</span> (다음 날 X).</li>
+                <li>적용제외 근로자였던 자가 적용을 받게 된 날 → <span class="highlight-purple">적용을 받게 된 날</span>.</li>
+                <li>보험관계가 성립하기 전 고용된 근로자 → <span class="highlight-red">보험관계가 성립한 날</span> (고용된 날 X).</li>
+            </ul>
+        </li>
+        <li><strong>피보험자격의 상실 시기 (★"이·사 = 다음 날" 완벽 암기)</strong>:
+            <ul>
+                <li><strong>이직한 경우</strong> → <span class="highlight-red">이직한 날의 다음 날</span> (이직한 날 X).</li>
+                <li><strong>사망한 경우</strong> → <span class="highlight-red">사망한 날의 다음 날</span> (사망한 날 X).</li>
+                <li><strong>적용제외 근로자가 된 경우</strong> → <span class="highlight-blue">적용제외 대상자가 된 날</span> (그날).</li>
+                <li><strong>보험관계가 소멸한 경우</strong> → <span class="highlight-blue">보험관계가 소멸한 날</span> (그날).</li>
+            </ul>
+        </li>
+        <li><strong>피보험자격 신고 의무 및 기한 (★다음 달 15일까지 / 고용노동부장관)</strong>:
+            <ul>
+                <li><strong>신고주체 및 상대방</strong>: 사업주는 피보험자격의 취득·상실에 관한 사항을 <span class="highlight-purple">고용노동부장관</span>에게 신고하여야 한다 (사업주 미신고 시 근로자가 직접 신고 가능).</li>
+                <li><strong>신고기한</strong>: 사유가 발생한 달의 <span class="highlight-red">다음 달 15일까지</span> 신고하여야 한다 ('그 달 말일까지' 또는 '14일 이내'로 출제 시 오답).</li>
+            </ul>
+        </li>
+        <li><strong>피보험자격의 이중취득 제한 (★단일 사업장 피보험자격 원칙)</strong>:
+            <ul>
+                <li>근로자가 둘 이상의 사업에 동시에 고용되어 있는 경우 고용노동부령으로 정하는 바에 따라 <span class="highlight-red">한 사업의 피보험자격만 취득</span>한다 ('모든 사업장의 피보험자격을 동시에 취득한다'고 하면 오답).</li>
+            </ul>
+        </li>
+        <li><strong>피보험자격의 확인청구 (★언제든지 가능)</strong>:
+            <ul>
+                <li>피보험자 또는 피보험자였던 사람은 <span class="highlight-blue">언제든지</span> 고용노동부장관에게 피보험자격의 취득 또는 상실에 관한 확인을 청구할 수 있다.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><line x1="11" y1="5" x2="6" y2="5"></line><path d="M11 5H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-5"></path><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+        4. 고용보험 4대 사업 및 실업급여의 구조 · 취업촉진수당 4가지 · 수급권 보호
+    </h2>
+    <ul>
+        <li><strong>고용보험의 4대 주요 사업 구별</strong>:
+            <ul>
+                <li><span class="highlight-blue">① 고용안정·직업능력개발 사업, ② 실업급여, ③ 육아휴직 급여, ④ 출산전후휴가 급여</span>.</li>
+            </ul>
+        </li>
+        <li><strong>실업급여의 구조 및 구별 (★구직급여 vs 취업촉진수당)</strong>:
+            <ul>
+                <li>실업급여는 크게 <span class="highlight-red">구직급여</span>와 <span class="highlight-purple">취업촉진수당</span>으로 구분한다.</li>
+                <li><strong>구직급여</strong>: 연장급여(훈련연장급여, 개발연장급여, 특별연장급여) 및 <span class="highlight-blue">상병급여</span>를 포함한다.</li>
+                <li><strong>취업촉진수당 4가지 (★주관식 단골 암기)</strong>:
+                    <ul>
+                        <li><span class="highlight-red">① 조기재취업 수당, ② 직업능력개발 수당, ③ 광역 구직활동비, ④ 이주비</span>.</li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li><strong>실업급여 수급권 보호 및 압류 금지 특례</strong>:
+            <ul>
+                <li><strong>권리 보호</strong>: 실업급여를 받을 권리는 <span class="highlight-red">양도, 압류하거나 담보로 제공할 수 없다</span>.</li>
+                <li><strong>수급계좌 전액 압류금지</strong>: 지정된 실업급여수급계좌에 입금된 실업급여 예금 채권은 <span class="highlight-purple">전액 압류할 수 없다</span>.</li>
+                <li><strong>공과금 부과 금지</strong>: 실업급여로 지급된 금품에 대하여는 국가나 지방자치단체의 <span class="highlight-blue">공과금을 부과하지 아니한다</span> (조세 및 공과금 면제).</li>
+            </ul>
+        </li>
+    </ul>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+            💡 [핵심 비교] 고용보험법상 자격 상실 시기(그날 vs 다음 날) 및 취업촉진수당 완벽 정리
+        </div>
+        <ul>
+            <li><strong>다음 날 상실 (2가지)</strong>: 피보험자가 <span class="highlight-red">이직한 날의 다음 날</span>, 피보험자가 <span class="highlight-red">사망한 날의 다음 날</span>.</li>
+            <li><strong>그날 상실 (2가지)</strong>: 피보험자가 <span class="highlight-blue">적용제외 대상자가 된 날</span>, <span class="highlight-blue">보험관계가 소멸한 날</span>.</li>
+            <li><strong>1개월 미만</strong>: 고용보험법상 일용근로자의 법정 정의 기준.</li>
+            <li><strong>다음 달 15일</strong>: 피보험자격 취득·상실 신고 법정 기한 (상대방: 고용노동부장관).</li>
+            <li><strong>취업촉진수당 4가지</strong>: 조기재취업 수당, 직업능력개발 수당, 광역 구직활동비, 이주비.</li>
+        </ul>
+    </div>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        5. 고용보험법 핵심 숫자 및 자격관리 · 급여구조 종합 비교표
+    </h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 22%;">구분</th>
+                <th style="width: 39%;">주요 법정 조건 및 기준</th>
+                <th style="width: 39%;">관할 기관 및 특례 규정</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>관장주체 및 집행</th>
+                <td class="highlight-red">고용노동부장관이 관장<br>(독자적 고용보험공단 X)</td>
+                <td class="highlight-blue">지방고용노동관서(고용센터)에서 직접 집행<br>징수는 근로복지공단·건강보험공단 위탁</td>
+            </tr>
+            <tr>
+                <th>적용제외 및 예외</th>
+                <td>월 소정근로 60시간 미만 (주 15시간 미만)<br>65세 이후 신규 고용자 (실업급여 배제)</td>
+                <td class="highlight-purple">3개월 이상 계속 근로 시 적용 전환<br>65세 전부터 피보험자격 유지 시 전면 적용</td>
+            </tr>
+            <tr>
+                <th>자격 취득 및 상실</th>
+                <td class="highlight-blue">취득: 고용일, 적용일, 성립일 (그날)<br>상실: 적용제외일, 소멸일 (그날)</td>
+                <td class="highlight-red">이직 및 사망 시 상실일:<br>이직일의 다음 날, 사망일의 다음 날</td>
+            </tr>
+            <tr>
+                <th>자격 신고기한</th>
+                <td class="highlight-purple">사유 발생 달의 다음 달 15일까지</td>
+                <td>상대방: 고용노동부장관<br>이중취득 불가 (단일 사업장 적용)</td>
+            </tr>
+            <tr>
+                <th>실업급여의 구성</th>
+                <td class="highlight-red">구직급여 (연장급여 · 상병급여 포함)</td>
+                <td class="highlight-blue">취업촉진수당 4가지:<br>조기재취업수당, 직업능력개발수당, 광역구직활동비, 이주비</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><line x1="18" y1="2" x2="22" y2="6"></line><path d="M7.5 20.5L19 9l-4-4L3.5 16.5 2 22z"></path></svg>
+        6. 주관식 단답형 및 다단 빈칸 채우기 완벽 대비 (실전 훈련)
+    </h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡, ㉢)에 들어갈 알맞은 핵심 용어나 법정 숫자를 아래 여유 공백에 직접 기재해 보십시오.</p>
+
+    <ol style="line-height: 2.1;">
+        <li>
+            고용보험 사업은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이(가) 관장한다.
+        </li>
+        <li>
+            고용보험법상 "이직"이란 피보험자와 사업주 사이의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 관계가 끝나는 것을 말한다.
+        </li>
+        <li>
+            고용보험법상 "실업"이란 근로의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )와(과) 능력이 있음에도 불구하고 취업하지 못한 상태에 있는 것을 말한다.
+        </li>
+        <li>
+            고용보험법상 "일용근로자"란 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )개월 미만 동안 고용되는 자를 말한다.
+        </li>
+        <li>
+            1개월간 소정근로시간이 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )시간 미만인 근로자는 고용보험 적용제외 근로자이나, ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )개월 이상 계속하여 근로를 제공하는 경우에는 적용대상이 된다.
+        </li>
+        <li>
+            65세 이후에 고용된 자에게는 고용보험법상 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )급여 및 육아휴직 급여 등을 적용하지 아니한다. 단, 65세 전부터 피보험 자격을 유지하던 자가 65세 이후 계속 고용된 경우에는 적용한다.
+        </li>
+        <li>
+            피보험자가 고용보험이 적용되는 사업에 고용된 날에 피보험자격을 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )한다.
+        </li>
+        <li>
+            피보험자가 이직한 경우에는 이직한 날의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )에 피보험자격을 상실한다.
+        </li>
+        <li>
+            피보험자가 사망한 경우에는 사망한 날의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )에 피보험자격을 상실한다.
+        </li>
+        <li>
+            피보험자가 고용보험 적용제외 근로자에 해당하게 된 경우에는 그 적용제외 대상자가 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 피보험자격을 상실한다.
+        </li>
+        <li>
+            사업주는 피보험자격의 취득 및 상실에 관한 사항을 그 사유가 발생한 달의 다음 달 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일까지 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )에게 신고하여야 한다.
+        </li>
+        <li>
+            근로자가 둘 이상의 사업에 동시에 고용되어 있는 경우 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 사업의 피보험자격만 취득한다.
+        </li>
+        <li>
+            피보험자 또는 피보험자였던 사람은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 고용노동부장관에게 피보험자격의 취득 또는 상실에 관한 확인을 청구할 수 있다.
+        </li>
+        <li>
+            실업급여는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )급여와 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )수당으로 구분한다.
+        </li>
+        <li>
+            취업촉진 수당의 종류에는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )재취업 수당, 직업능력개발 수당, ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )구직활동비, 이주비가 있다.
+        </li>
+        <li>
+            실업급여를 받을 권리는 양도, 압류하거나 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )(으)로 제공할 수 없다.
+        </li>
+        <li>
+            지정된 실업급여수급계좌의 예금 중 실업급여에 해당하는 금액의 채권은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 압류할 수 없다.
+        </li>
+        <li>
+            실업급여로 지급된 금품에 대하여는 국가나 지방자치단체의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )을(를) 부과하지 아니한다.
+        </li>
+    </ol>
+
+    <!-- 수험생 정답 확인용 하단 3열 배치 그리드 영역 -->
+    <div style="font-size: 9.5pt; color: #666666; margin-top: 30px; padding: 15px; border-top: 1px dashed #666666; line-height: 1.8;">
+        <strong style="display: block; margin-bottom: 10px; color: #333333;">[제31강 주관식 단답형 정답 리스트]</strong>
+        <div class="answer-grid">
+            <div>1. ㉠ 고용노동부장관</div>
+            <div>2. ㉠ 고용</div>
+            <div>3. ㉠ 의사</div>
+            <div>4. ㉠ 1</div>
+            <div>5. ㉠ 60, &nbsp; ㉡ 3</div>
+            <div>6. ㉠ 실업</div>
+            <div>7. ㉠ 취득</div>
+            <div>8. ㉠ 다음 날</div>
+            <div>9. ㉠ 다음 날</div>
+            <div>10. ㉠ 된 날</div>
+            <div>11. ㉠ 15일, &nbsp; ㉡ 고용노동부장관</div>
+            <div>12. ㉠ 한</div>
+            <div>13. ㉠ 언제든지</div>
+            <div>14. ㉠ 구직, &nbsp; ㉡ 취업촉진</div>
+            <div>15. ㉠ 조기, &nbsp; ㉡ 광역</div>
+            <div>16. ㉠ 담보</div>
+            <div>17. ㉠ 전액</div>
+            <div>18. ㉠ 공과금</div>
+        </div>
+    </div>
+
+</body>
+</html>

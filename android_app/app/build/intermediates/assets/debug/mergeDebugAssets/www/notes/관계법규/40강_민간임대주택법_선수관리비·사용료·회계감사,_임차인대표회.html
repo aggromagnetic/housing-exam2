@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 관계법규 - 제40강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+            letter-spacing: -0.05em;
+        }
+        
+        h1 {
+            font-size: 12pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        /* 토너 절약 4색 강조 클래스 */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #16803d; 
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #6d28d9; 
+        }
+        
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        ol {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        /* 정답 리스트 3열 격자 레이아웃 */
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px 15px;
+        }
+
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        제40강. 민간임대주택법: 선수관리비·사용료·회계감사, 임차인대표회의 의무·협의사항, 부도등 분쟁조정 및 하자관리정보시스템 종합 정리
+    </h1>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        1. 선수관리비 부담 주체, 관리비·사용료 항목 및 신설 주거서비스 이용료
+    </h2>
+    <ul>
+        <li><strong>선수관리비 부담 주체 및 지급·반환 절차 (★신설 출제 포인트)</strong>:
+            <ul>
+                <li>부담 주체: 임대사업자는 임차인이 <span class="highlight-blue">최초로 납부하기 전까지</span> 관리사업 수행에 필요한 경비인 선수관리비를 <span class="highlight-blue">직접 부담</span>하여야 함.</li>
+                <li>지급 처: 임대사업자는 입주 가능일 전까지 해당 선수관리비를 <span class="highlight-purple">관리주체</span>(관리사무소장 또는 주택관리업자)에게 지급하여야 함.</li>
+                <li>금액 결정 방식: 임대사업자와 관리주체가 <span class="highlight-green">협의하여 결정</span>함.</li>
+                <li>반환 절차: 임차인의 임대기간이 종료된 경우 관리주체는 지급받은 선수관리비를 <span class="highlight-red">임대사업자에게 반환</span>하여야 함 (단, 승계 임차인이 들어오는 경우 미반환 가능).</li>
+            </ul>
+        </li>
+        <li><strong>관리비 부과 원칙 및 법정 항목</strong>:
+            <ul>
+                <li>산정 원칙: 세대별 부담액 산정은 <span class="highlight-blue">사용자 부담 원칙</span> 및 <span class="highlight-blue">공평 부담 원칙</span>에 따름.</li>
+                <li>부과 제한: 임대사업자는 법정 관리비·사용료 항목 외에 어떠한 명목으로도 관리비를 징수할 수 없음.</li>
+            </ul>
+        </li>
+        <li><strong>사용료 등 대행납부 항목 및 신설 규정 2가지 (★초빈출)</strong>:
+            <ul>
+                <li>기존 항목: 전기료, 수도료, 가스사용료, 지역난방 및 급탕비, 정화조 오물수수료, 생활폐기물 수수료.</li>
+                <li><span class="highlight-purple">신설 1 (임차인대표회의)</span>: <span class="highlight-purple">임차인대표회의 운영비</span> (입주자대표회의 운영비와 대응되는 사용료 항목으로 신설).</li>
+                <li><span class="highlight-red">신설 2 (고령자 주거서비스 이용료★)</span>: <span class="highlight-red">60세 이상</span>을 대상으로 <span class="highlight-red">20년 이상</span> 임대할 목적으로 공급되는 주거서비스 특화 공공지원민간임대주택의 <span class="highlight-red">식사, 청소, 세탁 등의 주거서비스 이용료</span>.</li>
+            </ul>
+        </li>
+        <li><strong>수선유지비 구성 비교 (공동주택관리법 vs 민간임대주택법 함정★)</strong>:
+            <ul>
+                <li><span class="highlight-blue">공동주택관리법</span>: 수선유지비 항목에 냉난방시설 청소비, 소화기 충약비 외에 <span class="highlight-blue">'안전점검 비용'이 관리비 항목에 포함</span>됨.</li>
+                <li><span class="highlight-red">민간임대주택법</span>: 주택의 소유자가 임대사업자이므로 안전점검 비용은 임대사업자가 부담하여야 하며, <span class="highlight-red">임차인에게 청구하는 관리비 항목에 안전점검 비용이 포함되지 않음</span> (수험생 최다 오답 항목!).</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        2. 회계서류 작성·보관 의무 대상 및 임차인 청구에 따른 회계감사 절차
+    </h2>
+    <ul>
+        <li><strong>공동주택관리법상 회계서류 작성·보관 규정 적용 대상 2가지</strong>:
+            <ul>
+                <li>① <span class="highlight-blue">민간건설임대주택</span> 전체.</li>
+                <li>② 분양 목적으로 건설된 공동주택 <span class="highlight-purple">전부를 매입</span>하여 임대하는 민간매입임대주택 (일부 세대 매입 시 적용 제외).</li>
+            </ul>
+        </li>
+        <li><strong>임차인 청구 회계감사 요구 절차 (★다툼 시 해결 방식)</strong>:
+            <ul>
+                <li>요청 요건: 관리비 등의 징수 및 집행에 관하여 임대사업자와 임차인 간에 다툼이 있는 경우.</li>
+                <li>요청 주체: <span class="highlight-red">임차인 과반수의 동의</span>를 받거나 <span class="highlight-red">임차인대표회의</span>가 요구 가능.</li>
+                <li>감사 실시: 임대사업자는 공인회계사 등 감사인으로부터 회계감사를 받고 결과를 열람할 수 있도록 비치하여야 함.</li>
+                <li><span class="highlight-purple">감사 비용 부담 주체</span>: 회계감사에 드는 비용은 <span class="highlight-purple">임차인 측이 부담</span>함.</li>
+                <li>감사인 선정 의뢰: 임차인 또는 임차인대표회의는 <span class="highlight-green">시장·군수·구청장 등</span>에게 공인회계사 추천·선정을 의뢰할 수 있음.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg>
+        3. 임차인대표회의 구성 의무, 4대 의무 세트, 임원·거주요건 및 필수 협의사항
+    </h2>
+    <ul>
+        <li><strong>임차인대표회의 구성 요건 (원칙 vs 예외)</strong>:
+            <ul>
+                <li>원칙 (임의 구성): <span class="highlight-blue">20세대 이상</span> 민간임대주택 단지에서 임차인들이 자율적으로 구성할 수 있음.</li>
+                <li>예외 (의무 구성★): <span class="highlight-red">300세대 이상</span>, 또는 <span class="highlight-red">150세대 이상</span>으로서 승강기 설치 및 중앙집중식/지역난방 방식 민간임대주택 단지는 <span class="highlight-red">임차인대표회의를 의무적으로 구성하여야 함</span>.</li>
+            </ul>
+        </li>
+        <li><strong>의무 관리 단지 '4대 이행 의무 세트' (★개정 완화 통통 완벽 세트)</strong>:
+            <ul>
+                <li>300세대 이상 / 150세대 이상(승강기·난방) 단지는 다음 4가지를 모두 필수 이행해야 함:
+                    <ol>
+                        <li>① <span class="highlight-blue">자체관리(인가) 또는 위탁관리</span>.</li>
+                        <li>② <span class="highlight-purple">장기수선계획 수립</span>.</li>
+                        <li>③ <span class="highlight-green">특별수선충당금 적립</span>.</li>
+                        <li>④ <span class="highlight-red">임차인대표회의 구성</span>.</li>
+                    </ol>
+                </li>
+            </ul>
+        </li>
+        <li><strong>임대사업자의 임차인대표회의 구성 지원 의무</strong>:
+            <ul>
+                <li>최초 통지: 입주예정자 <span class="highlight-blue">과반수가 입주한 날부터 30일 이내</span>에 구성 의무/가능 사실을 통지해야 함.</li>
+                <li>정기 통지: 미구성 시 임대사업자는 <span class="highlight-purple">반기 1회 이상</span> 구성 촉구 통지를 해야 함 (미이행 시 지자체장이 직접 통지 가능).</li>
+            </ul>
+        </li>
+        <li><strong>동대표 자격, 임원 구성 및 회의록 직접 보관 (★입대위와 정밀 비교)</strong>:
+            <ul>
+                <li>동대표 거주 요건: 해당 단지에서 <span class="highlight-red">6개월 이상 계속 거주</span> 중인 임차인 (입주자대표회의 3개월과 차이!).</li>
+                <li>임원 구성: <span class="highlight-blue">회장 1명, 부회장 1명 이상, 감사 1명 이상</span> (입대위 감사는 2명 이상!).</li>
+                <li>회의록 보관 주체: 입주자대표회의 회의록은 '관리주체'가 보관하나, <span class="highlight-red">임차인대표회의 회의록은 '임차인대표회의'가 직접 작성하고 직접 보관</span>함.</li>
+                <li>소집 통지 기한: 회의 개최 <span class="highlight-green">5일 전</span>까지 공고·통지 (단, <span class="highlight-red">임대주택 분쟁조정위원회 신청 회의는 2일 전</span>까지 통지★).</li>
+            </ul>
+        </li>
+        <li><strong>임대사업자와 임차인대표회의 간 필수 협의사항 (★하자보수 포함 기출)</strong>:
+            <ul>
+                <li>① 관리규약의 제정 및 개정.</li>
+                <li>② 임대료 증감 (5% 범위 내).</li>
+                <li>③ 민간임대주택의 유지·보수.</li>
+                <li>④ <span class="highlight-red">하자보수</span> (★수험생 오답 유발! 하자보수는 반드시 협의해야 하는 법정 사항임).</li>
+                <li>⑤ 임대차계약의 해제·해지 및 관리비 부과 내역 등.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 22%;">구분</th>
+                <th style="width: 39%;">공동주택관리법 (입주자대표회의)</th>
+                <th style="width: 39%;">민간임대주택법 (임차인대표회의)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>구성 의무</th>
+                <td>의무관리대상 공동주택 (필수)</td>
+                <td>300세대 이상 / 150세대 이상(승강기·난방) 필수<br>(20세대 이상은 임의 구성)</td>
+            </tr>
+            <tr>
+                <th>동대표 거주 요건</th>
+                <td>해당 단지 내 <span class="highlight-blue">3개월 이상</span> 계속 거주</td>
+                <td>해당 단지 내 <span class="highlight-red">6개월 이상</span> 계속 거주</td>
+            </tr>
+            <tr>
+                <th>임원 최소 인원</th>
+                <td>회장 1명, 부회장 1명 이상, <span class="highlight-purple">감사 2명 이상</span>, 이사 1명 이상</td>
+                <td>회장 1명, 부회장 1명 이상, <span class="highlight-purple">감사 1명 이상</span></td>
+            </tr>
+            <tr>
+                <th>회의록 보관 주체</th>
+                <td><span class="highlight-green">관리주체</span>가 보관 및 열람 처리</td>
+                <td><span class="highlight-red">임차인대표회의</span>가 직접 보관 및 열람 처리</td>
+            </tr>
+            <tr>
+                <th>소집 통지 기한</th>
+                <td>규약이 정하는 기한 (통상 5일 전)</td>
+                <td>원칙 <span class="highlight-green">5일 전</span> (분쟁조정 신청 회의는 <span class="highlight-red">2일 전</span>)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+        4. 임대주택 분쟁조정위원회 및 '부도등'의 법정 확장 사유
+    </h2>
+    <ul>
+        <li><strong>조정 신청 주체 및 대상</strong>:
+            <ul>
+                <li><span class="highlight-blue">민간임대주택</span>: 임대사업자 및 임차인대표회의.</li>
+                <li><span class="highlight-purple">공공임대주택</span>: 공공주택사업자 및 임차인대표회의.</li>
+            </ul>
+        </li>
+        <li><strong>조정 대상 '부도등'의 법정 확장 사유 4가지 (★초빈출 수치 암기)</strong>:
+            <ol>
+                <li><span class="highlight-blue">어음·수표 부도</span>: 어음·수표를 기한 내 결제하지 못하여 금융기관 거래정지 처분을 받은 경우.</li>
+                <li><span class="highlight-red">주택도시기금 이자 연체</span>: 주택도시기금 융자금 이자를 <span class="highlight-red">6개월을 초과하여 연체</span>한 경우 (★객관식 기출).</li>
+                <li><span class="highlight-purple">보증 가입 거절 경과</span>: 임대보증금 보증 가입 또는 재가입이 거절된 후 <span class="highlight-purple">6개월이 경과</span>한 경우 (★출제 예상 1순위).</li>
+                <li><span class="highlight-green">모회사 부도 및 자회사 자본잠식</span>: 모회사가 부도나거나 임대사업자인 자회사의 자본금이 <span class="highlight-green">전액 잠식</span>된 경우.</li>
+            </ol>
+        </li>
+        <li><strong>조정안 성립의 법적 효력</strong>: 당사자가 조정위원회의 조정안을 수락한 경우 당사자 간에 <span class="highlight-blue">조정조서와 동일한 내용의 합의가 성립</span>된 것으로 봄.</li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        5. 하자관리정보시스템 및 전자적 주택 정보체계 종합 정밀 정리
+    </h2>
+    <ul>
+        <li><strong>정보체계 명칭 정밀 구분</strong>:
+            <ul>
+                <li><span class="highlight-blue">민간임대주택법</span>: <span class="highlight-blue">'임대주택정보체계'</span> (국토교통부장관 구축·운영).</li>
+                <li><span class="highlight-purple">공공주택 특별법</span>: <span class="highlight-purple">'정보체계'</span> ('임대주택' 문구가 빠짐).</li>
+            </ul>
+        </li>
+        <li><strong>하자관리정보시스템 입력 및 등록 주체별 총정리 (★최고 난이도 출제 포인트)</strong>:</li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 20%;">행위 및 처리 방식</th>
+                <th style="width: 30%;">주요 내용 및 기한</th>
+                <th style="width: 25%;">주체 및 보관 기간</th>
+                <th style="width: 25%;">관련 법률</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>서류 등록 및 보관</th>
+                <td>하자보수 청구 서류 등을 시스템에 등록 및 보관</td>
+                <td><span class="highlight-blue">관리주체</span><br>(<span class="highlight-red">10년간 보관</span>)</td>
+                <td>공동주택관리법</td>
+            </tr>
+            <tr>
+                <th>사용/지급 내역 입력</th>
+                <td>하자보수보증금 사용내역신고서 및 지급내역서를 다음 해 <span class="highlight-red">1월 31일까지</span> 국토부에 제공·입력</td>
+                <td><span class="highlight-purple">시장·군수·구청장</span></td>
+                <td>공동주택관리법</td>
+            </tr>
+            <tr>
+                <th>품질점검 결과 등록</th>
+                <td>품질점검단으로부터 제출받은 결과를 시스템에 등록 및 보관</td>
+                <td><span class="highlight-green">사용검사권자</span><br>(<span class="highlight-red">2년간 보관</span>)</td>
+                <td>주택법</td>
+            </tr>
+            <tr>
+                <th>하자보수 결과 등록</th>
+                <td>하자여부 판정서, 분쟁조정서, 재정결과에 따라 하자보수를 완료한 후 결과 등록</td>
+                <td><span class="highlight-red">사업주체</span></td>
+                <td>공동주택관리법</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+            💡 [수험 핵심 팁] 제40강 고난도 빈출 함정 및 숫자 암기 완전 정복
+        </div>
+        <ul>
+            <li><strong>안전점검 비용 함정</strong>: 관리비 항목에 '안전점검 비용'이 포함되는 것은 '공동주택관리법'이며, 민간임대주택법에서는 임대사업자 소유이므로 <span class="highlight-red">관리비 항목에 포함되지 않음</span>.</li>
+            <li><strong>동대표 거주요건 함정</strong>: 입주자대표회의 동대표 자격은 '3개월 이상 계속 거주'이나, 임차인대표회의 동대표 자격은 <span class="highlight-blue">'6개월 이상 계속 거주'</span>이어야 함.</li>
+            <li><strong>부도등 이자 연체 수치 함정</strong>: 주택도시기금 융자금 이자를 <span class="highlight-red">6개월 초과 연체</span>하거나 보증 가입이 거절된 후 <span class="highlight-purple">6개월이 경과</span>한 경우 분쟁조정 대상인 '부도등'에 해당함.</li>
+        </ul>
+    </div>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>주관식 단답형 및 빈칸 채우기 실전 훈련</h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡)에 들어갈 알맞은 핵심 용어나 법정 숫자를 아래 여유 공백에 직접 기재해 보십시오.</p>
+
+    <ol class="quiz-list" style="line-height: 2.1;">
+        <li>
+            임대사업자는 임차인이 최초로 납부하기 전까지 민간임대주택 관리에 필요한 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )를 직접 부담하여야 한다.
+        </li>
+        <li>
+            임대사업자가 부담하는 선수관리비는 입주 가능일 전까지 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )에게 지급하여야 한다.
+        </li>
+        <li>
+            관리주체는 임차인의 임대기간이 종료된 경우 지급받은 선수관리비를 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )에게 반환하여야 한다.
+        </li>
+        <li>
+            ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )세 이상을 대상으로 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년 이상 임대할 목적으로 공급되는 특화 주택의 식사, 청소, 세탁 이용료는 사용료 항목에 포함된다.
+        </li>
+        <li>
+            민간임대주택법상 임차인에게 부과하는 관리비 항목에는 공동주택관리법과 달리 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 비용이 포함되지 않는다.
+        </li>
+        <li>
+            임대사업자와 임차인 간에 관리비 다툼이 있는 경우 임차인 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )의 동의 또는 임차인대표회의 요구로 공인회계사 회계감사를 청구할 수 있다.
+        </li>
+        <li>
+            임차인 청구에 따라 실시하는 회계감사에 드는 비용은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 측에서 부담한다.
+        </li>
+        <li>
+            민간건설임대주택 및 분양 목적 주택 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )를 매입하여 임대하는 민간매입임대주택은 공동주택관리법에 따라 회계서류를 작성·보관하여야 한다.
+        </li>
+        <li>
+            민간임대주택 단지에서 승강기 설치나 난방방식 조건 없이 임차인대표회의를 의무적으로 구성하여야 하는 주택 세대수는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )세대 이상이다.
+        </li>
+        <li>
+            임대사업자는 입주예정자 과반수가 입주한 날부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이내에 임차인대표회의 구성 관련 사실을 통지하여야 한다.
+        </li>
+        <li>
+            임차인대표회의 동별 대표자로 선출되려면 해당 민간임대주택 단지에서 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )개월 이상 계속 거주하고 있어야 한다.
+        </li>
+        <li>
+            임차인대표회의 임원은 회장 1명, 부회장 1명 이상, 감사 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )명 이상으로 구성한다.
+        </li>
+        <li>
+            임차인대표회의 회의록은 관리주체가 아닌 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )가 직접 작성하고 보관하여야 한다.
+        </li>
+        <li>
+            임차인대표회의 회의 소집 통지는 개최 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 전까지 하여야 하나, 임대주택 분쟁조정위원회 신청 회의는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 전까지 통지하여야 한다.
+        </li>
+        <li>
+            임대사업자가 임차인대표회의와 반드시 협의하여야 하는 법정 사항에는 관리규약, 임대료 증감 외에 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )에 관한 사항이 포함된다.
+        </li>
+        <li>
+            임대주택 분쟁조정 대상인 부도등의 사유 중 주택도시기금 융자금 이자를 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )개월을 초과하여 연체한 경우에 해당한다.
+        </li>
+        <li>
+            임대보증금 보증 가입 또는 재가입이 거절된 후 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )개월이 경과한 임대사업자는 분쟁조정 대상 부도등에 해당한다.
+        </li>
+        <li>
+            관리주체는 하자보수 청구 서류 등을 하자관리정보시스템에 등록하고 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년간 보관하여야 한다.
+        </li>
+        <li>
+            사용검사권자는 품질점검단으로부터 제출받은 품질점검 결과를 하자관리정보시스템에 등록하고 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년간 보관하여야 한다.
+        </li>
+    </ol>
+
+    <!-- 수험생 정답 확인용 하단 3열 배치 그리드 영역 -->
+    <div style="font-size: 9.5pt; color: #666666; margin-top: 30px; padding: 15px; border-top: 1px dashed #666666; line-height: 1.8;">
+        <strong style="display: block; margin-bottom: 10px; color: #333333;">[제40강 주관식 단답형 정답 리스트]</strong>
+        <div class="answer-grid">
+            <div><strong>1.</strong> ㉠ 선수관리비</div>
+            <div><strong>2.</strong> ㉠ 관리주체</div>
+            <div><strong>3.</strong> ㉠ 임대사업자</div>
+            <div><strong>4.</strong> ㉠ 60, &nbsp; ㉡ 8</div>
+            <div><strong>5.</strong> ㉠ 안전점검</div>
+            <div><strong>6.</strong> ㉠ 10분의 1</div>
+            <div><strong>7.</strong> ㉠ 임차인</div>
+            <div><strong>8.</strong> ㉠ 전부</div>
+            <div><strong>9.</strong> ㉠ 300 (승강기·난방 시 150)</div>
+            <div><strong>10.</strong> ㉠ 30</div>
+            <div><strong>11.</strong> ㉠ 6</div>
+            <div><strong>12.</strong> ㉠ 1</div>
+            <div><strong>13.</strong> ㉠ 임차인대표회의</div>
+            <div><strong>14.</strong> ㉠ 5, &nbsp; ㉡ 2</div>
+            <div><strong>15.</strong> ㉠ 하자보수</div>
+            <div><strong>16.</strong> ㉠ 6</div>
+            <div><strong>17.</strong> ㉠ 6</div>
+            <div><strong>18.</strong> ㉠ 10</div>
+            <div><strong>19.</strong> ㉠ 2</div>
+        </div>
+    </div>
+
+</body>
+</html>

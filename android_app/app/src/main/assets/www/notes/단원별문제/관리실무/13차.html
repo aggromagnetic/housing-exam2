@@ -1,0 +1,1410 @@
+<!DOCTYPE html>
+<html lang="ko" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>주택관리사보 2차 공동주택관리실무 실전 모의고사 40제 (최신 개정 법령 반영)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              800: '#166534',
+              900: '#14532d',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+    body {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #1e293b;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #475569;
+      border-radius: 3px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #64748b;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-emerald-500 selection:text-white">
+  
+  <header class="sticky top-0 z-40 bg-slate-900/90 backdrop-blur border-b border-slate-800 px-4 py-3 sm:px-6">
+    <div class="max-w-6xl mx-auto flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center font-black text-white shadow-lg shadow-emerald-950/40 text-sm">
+          2차
+        </div>
+        <div>
+          <h1 class="text-base sm:text-lg font-bold tracking-tight text-white flex items-center gap-2">
+            주택관리사보 2차 공동주택관리실무 모의고사
+            <span class="text-xs px-2.5 py-0.5 rounded-full bg-emerald-950 border border-emerald-700 text-emerald-300 font-semibold">40문항 실전형</span>
+          </h1>
+          <p class="text-xs text-slate-400 hidden sm:block">객관식 24문항 (1~24) + 주관식 단답·계산·괄호 16문항 (25~40) • 100% 법정 출제비율 반영</p>
+        </div>
+      </div>
+      
+      <!-- Action Buttons -->
+      <div class="flex items-center space-x-2">
+        <button id="toggle-grid-btn" onclick="toggleOMRModal()" class="px-3.5 py-2 text-xs font-semibold rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center gap-1.5 shadow-sm">
+          <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
+          <span>문항표 / OMR</span>
+        </button>
+        <button onclick="finishExam()" class="px-4 py-2 text-xs font-bold rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white shadow-md shadow-emerald-950 transition flex items-center gap-1">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          채점 및 결과보기
+        </button>
+      </div>
+    </div>
+  
+    <!-- Progress Bar -->
+    <div class="max-w-6xl mx-auto mt-2.5">
+      <div class="flex justify-between text-xs text-slate-400 mb-1 font-medium">
+        <span>진행 문항: <strong id="progress-text" class="text-emerald-400">1 / 40</strong> (<span id="progress-pct">2.5%</span>)</span>
+        <span id="answered-stat">답안 작성: 0 / 40 문항</span>
+      </div>
+      <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+        <div id="progress-bar" class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full transition-all duration-300 rounded-full" style="width: 2.5%;"></div>
+      </div>
+    </div>
+  </header>
+  
+  <main class="flex-1 max-w-4xl w-full mx-auto p-4 sm:p-6 flex flex-col justify-start">
+    
+    <!-- Exam View Area -->
+    <div id="exam-screen" class="w-full">
+  
+      <!-- Question Card -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-8 shadow-xl relative overflow-hidden transition-all duration-200">
+        
+        <!-- Question Header Meta -->
+        <div class="flex flex-wrap items-center justify-between gap-2 pb-4 mb-5 border-b border-slate-800/80">
+          <div class="flex items-center space-x-2">
+            <span id="badge-subject" class="px-2.5 py-1 text-xs font-bold rounded-lg bg-emerald-950 text-emerald-300 border border-emerald-800/60">2차 관리실무</span>
+            <span id="badge-category" class="px-2.5 py-1 text-xs font-medium rounded-lg bg-slate-800 text-slate-300 border border-slate-700">시설관리</span>
+            <span id="badge-type" class="px-2.5 py-1 text-xs font-semibold rounded-lg bg-teal-950 text-teal-300 border border-teal-800/60">객관식 (5지선다)</span>
+          </div>
+          <div class="text-xs text-slate-400 flex items-center gap-2 font-mono">
+            <span>QUESTION <span id="cur-num" class="text-base font-bold text-white">01</span> / 40</span>
+          </div>
+        </div>
+  
+        <!-- Question Body -->
+        <div class="mb-6">
+          <h2 id="question-text" class="text-base sm:text-lg font-medium text-slate-100 leading-relaxed whitespace-pre-line">
+            <!-- Question text goes here -->
+          </h2>
+        </div>
+  
+        <!-- Options or Subjective Input Area -->
+        <div id="interactive-input-area" class="space-y-3 mb-6">
+          <!-- Dynamically populated -->
+        </div>
+  
+        <!-- Submit & Navigation Controls -->
+        <div class="pt-4 border-t border-slate-800 flex flex-wrap items-center justify-between gap-3">
+          <div class="flex items-center space-x-2">
+            <button onclick="navQuestion(-1)" id="prev-btn" class="px-4 py-2 text-sm font-medium rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+              이전 문항
+            </button>
+            <button onclick="navQuestion(1)" id="next-btn" class="px-4 py-2 text-sm font-medium rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1">
+              다음 문항
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            </button>
+          </div>
+  
+          <div class="flex items-center space-x-2">
+            <button id="check-btn" onclick="toggleExplanation()" class="px-5 py-2 text-sm font-bold rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-950 transition flex items-center gap-1.5">
+              <span>정답 확인 및 해설 보기</span>
+            </button>
+          </div>
+        </div>
+  
+        <!-- Instant Explanation Box -->
+        <div id="explanation-box" class="hidden mt-6 pt-5 border-t border-slate-800 bg-slate-950/70 rounded-xl p-5 border border-slate-800">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <div class="flex items-center space-x-2">
+              <span id="result-status-badge" class="px-2.5 py-0.5 text-xs font-bold rounded-full"></span>
+              <h4 class="text-sm font-bold text-slate-200 flex items-center gap-1.5">
+                <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                정답 및 상세 법령·실무 해설
+              </h4>
+            </div>
+            <div id="correct-answer-display" class="text-sm font-bold text-emerald-400 font-mono"></div>
+          </div>
+          <div id="explanation-content" class="text-sm text-slate-300 leading-relaxed space-y-2 whitespace-pre-line bg-slate-900/90 p-4 rounded-xl border border-slate-800">
+            <!-- Explanation details -->
+          </div>
+          <div id="manual-grade-controls" class="hidden mt-3 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
+            <span>주관식 자가 채점 판정:</span>
+            <div class="flex space-x-2">
+              <button onclick="setManualGrade(true)" class="px-3 py-1 bg-emerald-950 hover:bg-emerald-900 border border-emerald-700 text-emerald-300 font-bold rounded-lg transition">정답 인정 (+2.5점)</button>
+              <button onclick="setManualGrade(false)" class="px-3 py-1 bg-rose-950 hover:bg-rose-900 border border-rose-700 text-rose-300 font-bold rounded-lg transition">오답 처리 (0점)</button>
+            </div>
+          </div>
+        </div>
+  
+      </div>
+    </div>
+  
+    <!-- Final Result Screen -->
+    <div id="result-screen" class="hidden w-full space-y-6">
+      <div class="bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 rounded-3xl p-6 sm:p-10 shadow-2xl text-center relative overflow-hidden">
+        <div class="inline-flex items-center justify-center p-3.5 rounded-2xl bg-emerald-950/80 border border-emerald-800/80 mb-4 text-emerald-400 shadow-inner">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138z"></path></svg>
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white mb-2">공동주택관리실무 모의고사 최종 성적표</h2>
+        <p class="text-xs sm:text-sm text-slate-400 mb-6">합격 기준: 60점 이상 합격 (과락 40점 미만)</p>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl mx-auto mb-6">
+          <div class="bg-slate-900/90 border border-slate-800 p-4 rounded-2xl">
+            <span class="text-xs text-slate-400 block mb-1">총 획득 점수</span>
+            <span id="final-total-score" class="text-3xl sm:text-4xl font-black text-emerald-400 font-mono">0</span>
+            <span class="text-xs text-slate-400 font-medium block mt-1">/ 100점 만점</span>
+          </div>
+          <div class="bg-slate-900/90 border border-slate-800 p-4 rounded-2xl">
+            <span class="text-xs text-teal-400 block mb-1">객관식 (24문항)</span>
+            <span id="final-mc-score" class="text-2xl font-bold text-white font-mono">0점</span>
+            <span id="final-mc-count" class="text-xs text-slate-400 block mt-1">0 / 24 정답</span>
+          </div>
+          <div class="bg-slate-900/90 border border-slate-800 p-4 rounded-2xl">
+            <span class="text-xs text-purple-400 block mb-1">주관식 (16문항)</span>
+            <span id="final-subj-score" class="text-2xl font-bold text-white font-mono">0점</span>
+            <span id="final-subj-count" class="text-xs text-slate-400 block mt-1">0 / 16 정답</span>
+          </div>
+        </div>
+  
+        <div id="pass-fail-badge" class="inline-block px-6 py-2 rounded-full font-bold text-sm"></div>
+  
+        <div class="mt-8 pt-6 border-t border-slate-800 text-left">
+          <h3 class="text-sm font-bold text-slate-200 mb-3 flex items-center gap-1.5">
+            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+            파트별 취약점 & 성취도 분석
+          </h3>
+          <div id="category-stats-list" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+        </div>
+
+        <div class="mt-8 flex flex-wrap justify-center gap-3">
+          <button onclick="restartExam()" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs transition">
+            처음부터 다시 풀기
+          </button>
+          <button onclick="returnToExam()" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs transition shadow-lg shadow-emerald-950">
+            문항 복습으로 돌아가기
+          </button>
+        </div>
+      </div>
+  
+      <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl">
+        <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-800">
+          <div class="flex items-center space-x-3">
+            <div class="w-9 h-9 rounded-xl bg-rose-950 border border-rose-800 flex items-center justify-center text-rose-400 font-bold">
+              오답
+            </div>
+            <div>
+              <h3 class="text-base sm:text-lg font-bold text-white">자동 생성 오답노트 & 핵심 암기사항</h3>
+              <p class="text-xs text-slate-400">틀린 문항의 법정 수치와 일타강사 풀이 비법을 집중 점검하세요.</p>
+            </div>
+          </div>
+          <span id="wrong-count-badge" class="px-3 py-1 text-xs font-bold rounded-full bg-rose-950 text-rose-300 border border-rose-800">오답 0개</span>
+        </div>
+  
+        <div id="wrong-answers-list" class="space-y-4"></div>
+      </div>
+    </div>
+  
+  </main>
+  
+  <div id="omr-modal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-3xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+      <div class="p-5 border-b border-slate-800 flex items-center justify-between bg-slate-950/60">
+        <div>
+          <h3 class="text-base font-bold text-white flex items-center gap-2">
+            전체 40문항 OMR 마킹 현황표
+          </h3>
+          <p class="text-xs text-slate-400">문항 번호를 클릭하면 해당 문항으로 즉시 이동합니다.</p>
+        </div>
+        <button onclick="toggleOMRModal()" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+  
+      <div class="flex-1 overflow-y-auto p-5 space-y-6 custom-scrollbar">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <h4 class="text-xs font-bold text-teal-400 uppercase tracking-wider">제 1 부: 객관식 5지선다 (1 ~ 24)</h4>
+            <span class="text-xs text-slate-500 font-mono">24문항 (각 2.5점)</span>
+          </div>
+          <div id="omr-grid-mc" class="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-12 gap-2"></div>
+        </div>
+  
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <h4 class="text-xs font-bold text-purple-400 uppercase tracking-wider">제 2 부: 주관식 단답·계산·괄호형 (25 ~ 40)</h4>
+            <span class="text-xs text-slate-500 font-mono">16문항 (각 2.5점)</span>
+          </div>
+          <div id="omr-grid-subj" class="grid grid-cols-4 sm:grid-cols-8 gap-2"></div>
+        </div>
+      </div>
+  
+      <div class="p-4 bg-slate-950/80 border-t border-slate-800 flex flex-wrap items-center justify-between text-xs text-slate-400 gap-2">
+        <div class="flex items-center space-x-4">
+          <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-slate-800 border border-slate-700 inline-block"></span> 미제출</span>
+          <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-blue-900 border border-blue-600 inline-block"></span> 작성완료</span>
+          <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-emerald-950 border border-emerald-600 inline-block"></span> 정답</span>
+          <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-rose-950 border border-rose-600 inline-block"></span> 오답</span>
+          <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded ring-2 ring-emerald-400 bg-slate-800 inline-block"></span> 현재 문항</span>
+        </div>
+        <button onclick="toggleOMRModal()" class="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg font-medium transition">
+          닫기
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    const examData = [
+      {
+        id: 1,
+        category: "시설관리",
+        type: "multiple_choice",
+        question: `공동주택관리법령상 공동주택의 안전점검 및 정밀안전점검에 관한 설명으로 옳지 않은 것은?`,
+        options: [
+          `① 의무관리대상 공동주택의 관리주체는 해당 공동주택에 대하여 반기마다 안전점검을 실시하여야 한다.`,
+          `② 16층 이상인 공동주택과 사용검사일부터 30년이 지난 15층 이하의 공동주택은 책임기술자 또는 교육을 이수한 주택관리사등이 안전점검을 실시하여야 한다.`,
+          `③ 안전점검 결과 건축물의 구조상 결함이 중대하여 위험이 있다고 인정되는 경우 지체 없이 시장·군수·구청장에게 보고하여야 한다.`,
+          `④ 관리주체는 안전점검 결과 이상이 있는 시설물에 대하여는 즉시 보수하거나 사용제한 등 위험방지 조치를 취하여야 한다.`,
+          `⑤ 15층 이하의 노후 공동주택은 매월 1회 이상 정밀안전점검을 실시하여야 한다.`
+        ],
+        answer: "5",
+        explanation: `⑤ [오답 해설]
+15층 이하 노후 공동주택이라 하더라도 '매월 1회 정밀안전점검'을 받는 법령 규정은 존재하지 않습니다. 기본 안전점검은 반기마다(연 2회) 실시하며, 정밀안전점검은 위해 발생 우려 시 지자체 보고 후 안전진단기관 등에 의뢰하여 실시합니다.
+
+💡 일타강사 핵심 정리:
+• 일반 안전점검 주기: 반기마다 (연 2회)
+• 정밀안전점검: 안전점검 결과 위해 발생 우려 시 지자체 보고 후 안전진단기관 등에 의뢰`
+      },
+      {
+        id: 2,
+        category: "시설관리",
+        type: "multiple_choice",
+        question: `건축물의 열환경 및 단열성능에 관한 설명으로 옳지 않은 것은?`,
+        options: [
+          `① 열관류율(K)은 단위면적당 단위온도차에서 전달되는 열량으로, 열관류율 값이 작을수록 단열성능이 우수하다.`,
+          `② 열관류저항(R)은 각 재료의 열저항 및 표면 열전달저항의 합계이며, 열관류율의 역수와 같다.`,
+          `③ 단열재의 열전도율(λ)은 낮을수록 단열효과가 크다.`,
+          `④ 중공층 내 알루미늄 단열재를 설치하는 경우 반사면은 공기층을 향하도록 시공하여야 한다.`,
+          `⑤ 외벽 창호의 기밀성 등급은 통기량이 많을수록(수치가 높을수록) 1등급에 가까워 에너지 절약 성능이 뛰어나다.`
+        ],
+        answer: "5",
+        explanation: `⑤ [오답 해설]
+창호의 기밀성 등급은 단위시간 및 단위면적당 '통기량(공기 누설량)이 적을수록' 높은 등급(1등급)을 받습니다. 통기량이 많을수록 기밀성이 떨어집니다.
+
+💡 열역학 핵심 공식:
+• 열관류율 K = 1 / ΣR (값이 작을수록 우수)
+• 열저항 R = d / λ (두께 d가 두껍고, 열전도율 λ가 작을수록 우수)`
+      },
+      {
+        id: 3,
+        category: "시설관리",
+        type: "multiple_choice",
+        question: `소방시설(옥내소화전 및 스프링클러)의 기술기준에 관한 설명으로 옳지 않은 것은?`,
+        options: [
+          `① 옥내소화전의 노즐선단 방수압력은 0.17MPa 이상 0.7MPa 이하이어야 한다.`,
+          `② 옥내소화전설비의 노즐 방수량은 분당 130L(130L/min) 이상이어야 한다.`,
+          `③ 폐쇄형 스프링클러 헤드의 표준 방수압력은 0.1MPa 이상 1.2MPa 이하이다.`,
+          `④ 스프링클러 헤드의 표준 방수량은 분당 80L 이상이어야 한다.`,
+          `⑤ 옥내소화전 방수구의 결합구는 바닥으로부터 높이 2.0m 이상인 위치에 설치하여 어린이를 보호하여야 한다.`
+        ],
+        answer: "5",
+        explanation: `⑤ [오답 해설]
+옥내소화전 방수구의 설치 높이는 바닥으로부터 '1.5m 이하'이어야 합니다(화재안전기준). 2.0m 이상 설치 시 비상상황 조작이 불가능해집니다.
+
+💡 일타강사 암기 공식:
+• 옥내소화전 방수압: 0.17 ~ 0.7 MPa
+• 옥내소화전 방수량: 130 L/min 이상
+• 옥내소화전 방수구 높이: 바닥으로부터 1.5m 이하
+• 스프링클러 방수압: 0.1 ~ 1.2 MPa / 방수량: 80 L/min 이상`
+      },
+      {
+        id: 4,
+        category: "시설관리",
+        type: "multiple_choice",
+        question: `승강기 안전관리법령상 승강기 안전검사의 종류 및 주기에 관한 설명으로 옳지 않은 것은?`,
+        options: [
+          `① 설치검사는 승강기의 설치를 끝낸 경우에 행정안전부장관이 실시하는 안전검사이다.`,
+          `② 정기검사의 검사주기는 2년 이하로 하되, 직전 정기검사를 받은 날부터 매 1년마다 실시한다.`,
+          `③ 승강기의 종류, 제원 또는 안전장치를 변경한 경우에는 수시검사를 받아야 한다.`,
+          `④ 승강기 설치검사를 받은 날부터 15년이 지난 승강기는 3년마다 정밀안전검사를 받아야 한다.`,
+          `⑤ 정밀안전검사를 받은 승강기에 대해서는 해당 연도의 정기검사를 면제할 수 없다.`
+        ],
+        answer: "5",
+        explanation: `⑤ [오답 해설]
+승강기 안전관리법 제32조 제3항에 따라 정밀안전검사를 받은 승강기에 대해서는 해당 연도의 '정기검사 또는 수시검사를 면제'합니다.
+
+💡 승강기 검사주기 핵심:
+• 정기검사: 원칙 1년
+• 정밀안전검사: 15년 경과 시 최초 실시, 이후 '3년마다' 정기적 실시 (정밀안전검사 합격 시 당해 정기검사 면제)`
+      },
+      {
+        id: 5,
+        category: "시설관리",
+        type: "multiple_choice",
+        question: `공동주택 전기설비의 안전관리 및 기술기준에 관한 설명으로 옳은 것은?`,
+        options: [
+          `① 인체 감전보호용 누전차단기는 정격감도전류 100mA 이하, 동작시간 0.5초 이내의 고감도 고속형을 사용하여야 한다.`,
+          `② 배선차단기(MCCB)는 과부하 전류는 차단하지 못하고 단락(합선)사고 전류만 차단하는 장치이다.`,
+          `③ 한국전기설비규정(KEC)상 접지시스템은 계통접지방식에 따라 TN계통, TT계통, IT계통으로 구분된다.`,
+          `④ 변압기 절연유의 절연파괴전압 시험은 5년에 1회 실시하며, 절연유 산가는 높을수록 양호한 상태를 의미한다.`,
+          `⑤ 저압 옥내 직류 배선의 경우 양극(+)선은 청색, 음극(-)선은 갈색으로 식별 표기한다.`
+        ],
+        answer: "3",
+        explanation: `③ [정답 해설]
+한국전기설비규정(KEC)에 따라 계통접지는 전원측과 부하측의 접지 형태에 따라 TN(TN-S, TN-C, TN-C-S), TT, IT 계통으로 분류됩니다.
+
+[오답 정리]
+① 인체감전보호용 누전차단기 규격: 정격감도전류 '30mA 이하', 동작시간 '0.03초 이내'.
+② 배선차단기는 과부하 전류와 단락전류를 모두 차단함.
+④ 절연유 산가는 낮을수록 양호함.
+⑤ KEC 도체 식별색: L1(갈색), L2(흑색), L3(회색), N(중성선: 청색), PE(보호도체: 녹/황 줄무늬).`
+      },
+      {
+        id: 6,
+        category: "시설관리",
+        type: "multiple_choice",
+        question: `급수용 원심펌프 운전 시 발생하는 제현상과 방지대책에 관한 설명으로 옳지 않은 것은?`,
+        options: [
+          `① 캐비테이션(공동현상)은 펌프 흡입측 압력이 포화증기압 이하로 떨어져 기포가 발생하는 현상이다.`,
+          `② 캐비테이션을 방지하기 위해서는 펌프 흡입양정을 가능한 한 낮추고, 펌프 회전수를 과도하게 높이지 않아야 한다.`,
+          `③ 서징(Surging, 맥동현상)은 배관 내 유량과 압력이 주기적으로 변동하는 현상으로 펌프 특성곡선의 우하향 구역에서 주로 발생한다.`,
+          `④ 수격작용(Water Hammering)은 밸브의 급폐쇄나 펌프 급정지 시 관내 유속이 급변하여 발생하는 급격한 압력상승 현상이다.`,
+          `⑤ 동일 규격의 펌프 2대를 병렬로 연결하여 운전하면 양정은 1대일 때와 거의 같고 토출유량은 증가한다.`
+        ],
+        answer: "3",
+        explanation: `③ [오답 해설]
+서징(맥동현상)은 펌프의 H-Q(양정-유량) 특성곡선에서 '우상향(산형 곡선의 왼쪽)' 구역에서 운전할 때 발생합니다. 정상적이고 안정적인 운전 구역은 '우하향' 구역입니다.`
+      },
+      {
+        id: 7,
+        category: "시설관리",
+        type: "multiple_choice",
+        question: `오수정화설비 및 하수도 시설관리에 관한 설명으로 옳지 않은 것은?`,
+        options: [
+          `① BOD(생물학적 산소요구량)는 수치가 높을수록 오염도가 높다.`,
+          `② 활성오니법은 호기성 미생물 플록(Floc)을 이용하여 유기물을 분해 정화하는 대표적인 생물학적 처리공법이다.`,
+          `③ 정화조 유입수의 BOD가 200mg/L이고 방류수의 BOD가 20mg/L인 경우 BOD 제거율은 90%이다.`,
+          `④ 혐기성 소화조는 산소가 풍부한 상태에서 슬러지를 고속 분해하여 메탄가스를 발생시키지 않는 공법이다.`,
+          `⑤ 정화조는 악취 발산 및 유독가스 체류를 방지하기 위해 단독 배기설비(통기관)를 설치하고 지붕 위로 개구하여야 한다.`
+        ],
+        answer: "4",
+        explanation: `④ [오답 해설]
+혐기성 소화조는 '산소가 없는(혐기성)' 상태에서 미생물에 의해 유기물을 분해하며 메탄가스(CH₄) 등을 형성합니다. 산소가 풍부한 상태는 호기성 처리입니다.`
+      },
+      {
+        id: 8,
+        category: "시설관리",
+        type: "multiple_choice",
+        question: `보일러의 구조, 부속장치 및 운전관리에 관한 설명으로 옳지 않은 것은?`,
+        options: [
+          `① 보일러의 3대 안전장치는 안전밸브, 고저수위경보기, 압력제한기이다.`,
+          `② 캐리오버(Carry-over)는 보일러 증기 속에 수분이 다량 포함되어 배관으로 함께 넘어가는 현상이다.`,
+          `③ 프라이밍(Priming)은 수면의 거품이 심하게 일어나는 현상이고, 포밍(Foaming)은 물방울이 튀어 올라가는 현상이다.`,
+          `④ 보일러 급수 중 경도성분이 많으면 스케일(Scale)이 생성되어 열효율을 떨어뜨린다.`,
+          `⑤ 블로우다운(Blow-down)은 용존 고형물 농도를 낮추고 침전 슬러지를 외부로 배출하기 위해 실시한다.`
+        ],
+        answer: "3",
+        explanation: `③ [오답 해설]
+용어 정의가 서로 바뀌었습니다.
+• 포밍(Foaming): 보일러수 내의 유지분, 부유물 등으로 인해 수면에 '거품(Foam)'이 생기는 현상
+• 프라이밍(Priming): 부하 급변 등으로 수면의 물방울이 거품과 함께 심하게 튀어 올라 비산하는 현상`
+      },
+      {
+        id: 9,
+        category: "시설관리",
+        type: "multiple_choice",
+        question: `콘크리트 구조물의 열화 현상 및 보수공법에 관한 설명으로 옳지 않은 것은?`,
+        options: [
+          `① 중성화는 공기 중의 이산화탄소(CO₂)가 침투하여 알칼리성(pH 12~13)이 pH 8.5~10 이하로 낮아져 철근 부식을 유발하는 현상이다.`,
+          `② 페놀프탈레인 1% 용액을 콘크리트 단면에 분무하였을 때 적자색(붉은색)으로 변하는 부분은 중성화가 이미 완료된 부분이다.`,
+          `③ 알칼리-골재 반응은 알칼리 실리카 겔을 형성하고 수분을 흡수 팽창하여 균열을 일으키는 현상이다.`,
+          `④ 염해는 침투한 염화물 이온(Cl⁻)이 철근의 부동태 피막을 파괴하여 녹을 발생시키는 현상이다.`,
+          `⑤ 균열 보수공법 중 0.2mm 이상의 구조적 균열에는 에폭시 수지 주입공법을 적용한다.`
+        ],
+        answer: "2",
+        explanation: `② [오답 해설]
+페놀프탈레인 용액은 알칼리성에서 '적자색(붉은색)'을 띠고, 중성화된 부분에서는 '무색'으로 나타납니다. 붉게 변하는 부분은 건전한 부위입니다.`
+      },
+      {
+        id: 10,
+        category: "시설관리",
+        type: "multiple_choice",
+        question: `건축물 지붕 및 지하구조물의 방수공법에 관한 설명으로 옳지 않은 것은?`,
+        options: [
+          `① 시멘트 액체방수공법은 방수제 혼합 시멘트 풀과 모르타르를 순차적으로 바르는 공법으로 결함부 발견과 보수가 용이하다.`,
+          `② 우레탄 도막방수는 경화 후 탄성 및 신축성이 우수하다.`,
+          `③ 아스팔트 방수공사 시 루핑의 이음 겹침 폭은 100mm 이상으로 한다.`,
+          `④ 바깥방수(외방수)는 안방수(내방수)에 비해 공사비가 저렴하고 유지보수가 쉬운 장점이 있다.`,
+          `⑤ 시트방수재의 상호 겹침 폭은 길이 및 폭 방향 모두 100mm 이상을 원칙으로 한다.`
+        ],
+        answer: "4",
+        explanation: `④ [오답 해설]
+바깥방수(외방수)는 방수 신뢰성이 높으나, 좁은 공간 시공 등으로 인해 '공사비가 비싸고 하자 발생 시 외부 굴착이 어려워 유지보수가 어렵다'는 단점이 있습니다.`
+      },
+      {
+        id: 11,
+        category: "사무 및 인사관리",
+        type: "multiple_choice",
+        question: `근로기준법령상 '통상임금'과 '평균임금'의 산정 및 활용에 관한 설명으로 옳지 않은 것은?`,
+        options: [
+          `① 통상임금이란 근로자에게 정기적이고 일률적으로 소정근로 또는 총 근로에 대하여 지급하기로 정한 임금을 말한다.`,
+          `② 연장·야간·휴일근로 가산수당 및 해고예고수당을 산정할 때의 기준 임금은 통상임금을 기준으로 한다.`,
+          `③ 평균임금이 그 근로자의 통상임금보다 적은 경우에는 통상임금과 관계없이 무조건 산출된 평균임금만을 지급기준으로 적용한다.`,
+          `④ 평균임금이란 이를 산정하여야 할 사유가 발생한 날 이전 3개월 동안에 그 근로자에게 지급된 임금의 총액을 그 기간의 총일수로 나눈 금액을 말한다.`,
+          `⑤ 퇴직급여, 휴업급여를 산정할 때에는 평균임금을 기초로 산정한다.`
+        ],
+        answer: "3",
+        explanation: `③ [오답 해설]
+근로기준법 제2조 제2항에 따라, 산출된 평균임금이 그 근로자의 통상임금보다 적으면 '통상임금액을 평균임금으로 한다'는 최저보장 규정이 적용됩니다.`
+      },
+      {
+        id: 12,
+        category: "사무 및 인사관리",
+        type: "multiple_choice",
+        question: `근로기준법령상 연장·야간 및 휴일근로의 가산수당에 관한 설명으로 옳은 것은?`,
+        options: [
+          `① 8시간 이내의 휴일근로에 대하여는 통상임금의 100분의 50 이상을 가산하여 지급하여야 한다.`,
+          `② 연장근로에 대하여는 통상임금의 100분의 100 이상을 가산하여 지급하여야 한다.`,
+          `③ 야간근로에 대하여는 통상임금의 100분의 20 이상을 가산하여 지급한다.`,
+          `④ 8시간을 초과한 휴일근로에 대하여는 통상임금의 100분의 50만을 가산하여 지급한다.`,
+          `⑤ 휴일근로가 야간근로에 중복된 경우라도 가산수당은 중복하여 지급되지 아니한다.`
+        ],
+        answer: "1",
+        explanation: `① [정답 해설]
+근로기준법 제56조: 8시간 이내의 휴일근로는 통상임금의 50%를 가산(150% 지급)합니다.
+
+[오답 정리]
+② 연장근로: 50% 이상 가산.
+③ 야간근로: 50% 이상 가산.
+④ 8시간 초과 휴일근로: 100% 이상 가산.
+⑤ 중복 근로 시 중복 가산하여 지급.`
+      },
+      {
+        id: 13,
+        category: "사무 및 인사관리",
+        type: "multiple_choice",
+        question: `남녀고용평등과 일·가정 양립 지원에 관한 법률상 배우자 출산휴가 및 난임치료휴가에 관한 설명으로 옳지 않은 것은? (2025.2.23. 개정 법령 반영)`,
+        options: [
+          `① 사업주는 근로자가 배우자의 출산을 이유로 휴가를 청구하는 경우에 20일의 유급휴가를 주어야 한다.`,
+          `② 배우자 출산휴가는 근로자의 배우자가 출산한 날부터 120일이 지나면 사용할 수 없다.`,
+          `③ 배우자 출산휴가는 3회에 한정하여 나누어(분할) 사용할 수 있다.`,
+          `④ 배우자 출산휴가를 청구한 근로자에 대해 사업주는 사업장 대체인력 부족을 이유로 일방적으로 무급휴가로 변경할 수 있다.`,
+          `⑤ 사업주는 난임치료휴가 청구 시 연간 6일 이내의 휴가를 주어야 하며 최초 2일은 유급으로 한다.`
+        ],
+        answer: "4",
+        explanation: `④ [오답 해설]
+배우자 출산휴가 20일은 법정 '전액 유급휴가'이며, 사업주가 일방적으로 무급으로 처리하거나 거부할 수 없습니다(위반 시 500만원 이하의 과태료).`
+      },
+      {
+        id: 14,
+        category: "사무 및 인사관리",
+        type: "multiple_choice",
+        question: `최저임금법령상 최저임금의 효력 및 산입범위에 관한 설명으로 옳지 않은 것은?`,
+        options: [
+          `① 사용자는 최저임금의 적용을 받는 근로자에게 최저임금액 이상의 임금을 지급하여야 한다.`,
+          `② 최저임금액에 미치지 못하는 금액을 임금으로 정한 근로계약 부분은 무효로 한다.`,
+          `③ 주휴수당은 소정근로의 대가로서 최저임금 월 환산기준 시간(월 209시간) 산정 시 포함된다.`,
+          `④ 매월 1회 이상 정기적으로 지급하는 상여금과 통화로 지급하는 복리후생비(식대 등)는 전액 최저임금 산입범위에 포함된다.`,
+          `⑤ 연장·야간·휴일근로에 대한 가산수당은 최저임금 비교대상 임금에 포함(산입)된다.`
+        ],
+        answer: "5",
+        explanation: `⑤ [오답 해설]
+소정근로시간/소정근로일에 대한 대가 외의 임금인 연장·야간·휴일근로수당, 연차수당 등은 최저임금 산입범위에 포함되지 않고 '제외'됩니다.`
+      },
+      {
+        id: 15,
+        category: "환경안전방재관리",
+        type: "multiple_choice",
+        question: `먹는물 수질기준 및 검사 등에 관한 규칙상 수돗물의 수질기준으로 옳지 않은 것은?`,
+        options: [
+          `① 일반세균은 1mL 중 100CFU를 넘지 아니할 것`,
+          `② 경도(Hardness)는 탄산칼슘(CaCO₃)으로서 1,000mg/L를 넘지 아니할 것`,
+          `③ 총대장균군은 100mL에서 검출되지 아니할 것`,
+          `④ 수소이온 농도는 pH 5.8 이상 pH 8.5 이하일 것`,
+          `⑤ 잔류염소(유리잔류염소)는 급수전에서 4.0mg/L를 넘지 아니할 것`
+        ],
+        answer: "2",
+        explanation: `② [오답 해설]
+수돗물의 경도(Hardness) 기준은 '300mg/L 이하'입니다.
+
+💡 수돗물 수질 핵심 기준치:
+• 일반세균: 100 CFU/mL 이하
+• 총대장균군/분원성대장균군: 100mL에서 불검출
+• 수소이온농도: pH 5.8 ~ 8.5
+• 탁도: 0.5 NTU 이하
+• 경도: 300 mg/L 이하`
+      },
+      {
+        id: 16,
+        category: "환경안전방재관리",
+        type: "multiple_choice",
+        question: `자원의 절약과 재활용촉진에 관한 법령상 공동주택의 재활용품 분리수거 및 폐기물 보관시설에 관한 설명으로 옳지 않은 것은?`,
+        options: [
+          `① 공동주택의 사업주체 또는 관리주체는 품목별 분리수거용기를 설치하여야 한다.`,
+          `② 종이류, 유리병류, 캔류, 플라스틱류, 비닐류 등은 분리수거용기를 구분하여 배치한다.`,
+          `③ 공동주택단지 내 폐기물 보관시설은 주민 이용 편의를 위해 지상 어린이놀이터 출입구 정중앙에 반드시 설치하여야 한다.`,
+          `④ 음식물류 폐기물 보관시설은 악취가 외부로 누출되지 않는 밀폐형 구조이거나 침출수 방지 구조이어야 한다.`,
+          `⑤ 의류수거함이나 폐가전제품 수거장소는 소방차량 통행에 지장이 없는 옥외 공간에 설치한다.`
+        ],
+        answer: "3",
+        explanation: `③ [오답 해설]
+폐기물 보관시설 및 분리수거장은 위생, 악취 및 어린이 안전을 고려하여 어린이놀이터나 휴게시설 등과 적정 거리를 두어야 합니다.`
+      },
+      {
+        id: 17,
+        category: "환경안전방재관리",
+        type: "multiple_choice",
+        question: `어린이놀이시설 안전관리법령상 공동주택 단지 내 어린이놀이시설의 안전관리에 관한 설명으로 옳지 않은 것은?`,
+        options: [
+          `① 어린이놀이시설 사고 손해배상책임보험은 의무가입 대상이 아니므로 관리주체가 자율적으로 가입 여부를 결정한다.`,
+          `② 관리주체는 어린이놀이시설을 인도받은 경우 안전인증기관으로부터 설치검사를 받아야 한다.`,
+          `③ 관리주체는 설치검사를 받은 어린이놀이시설에 대하여 2년마다 1회 이상 정기시설검사를 받아야 한다.`,
+          `④ 관리주체는 월 1회 이상 어린이놀이시설의 기능 및 안전상태를 점검하는 안전점검을 실시하여야 한다.`,
+          `⑤ 관리주체는 안전관리자를 선임한 경우 선임한 날부터 3개월 이내에 안전교육을 받게 하여야 한다.`
+        ],
+        answer: "1",
+        explanation: `① [오답 해설]
+어린이놀이시설 안전관리법 제21조에 따라 관리주체는 어린이놀이시설 사고 손해배상책임보험에 '의무적으로 가입'하여야 합니다.`
+      },
+      {
+        id: 18,
+        category: "환경안전방재관리",
+        type: "multiple_choice",
+        question: `화재의 예방 및 안전관리에 관한 법률상 특정소방대상물의 피난계획 및 소방안전관리에 관한 설명으로 옳지 않은 것은?`,
+        options: [
+          `① 특정소방대상물의 관계인은 피난계획을 수립·시행하여야 한다.`,
+          `② 피난계획에는 피난경로, 피난시설 위치 및 피난약자에 대한 대피 유도계획이 포함되어야 한다.`,
+          `③ 관리주체는 입주민 및 거주자에게 피난안내정보를 연 1회 이상 제공하여야 한다.`,
+          `④ 소방안전관리대상물의 관계인은 소방훈련 및 교육을 실시한 경우 그 기록을 작성하여 1년간 자체 보관하여야 한다.`,
+          `⑤ 소방안전관리대상물의 관계인은 소방훈련 및 교육을 연 1회 이상 실시하여야 한다.`
+        ],
+        answer: "4",
+        explanation: `④ [오답 해설]
+화재예방법 시행규칙 제23조에 따라 소방훈련·교육 실시 결과기록부는 '2년간' 보관하여야 합니다.`
+      },
+      {
+        id: 19,
+        category: "공동주택의 관리조직",
+        type: "multiple_choice",
+        question: `공동주택관리법령상 입주자대표회의의 회의 소집 및 의결에 관한 설명으로 옳지 않은 것은?`,
+        options: [
+          `① 입주자대표회의는 구성원 3분의 1 이상 또는 입주자등 10분의 1 이상 요청 시 회장이 14일 이내 소집한다.`,
+          `② 입주자대표회의는 해당 입주자대표회의 구성원 과반수의 찬성으로 의결한다.`,
+          `③ 구성원이란 관리규약 정원을 말하며, 동별 대표자의 3분의 2 이상이 선출된 때에는 선출된 인원을 말한다.`,
+          `④ 입주자대표회의는 회의록을 작성하여 관리주체에게 보관하게 하고 열람 청구 시 따라야 한다.`,
+          `⑤ 동별 대표자는 입주자대표회의에 대리인을 출석시켜 의결권을 행사하게 할 수 있다.`
+        ],
+        answer: "5",
+        explanation: `⑤ [오답 해설]
+동별 대표자는 직접선거로 선출된 대표자이므로 원칙적으로 '대리출석 및 대리투표가 금지'됩니다.`
+      },
+      {
+        id: 20,
+        category: "공동주택의 관리조직",
+        type: "multiple_choice",
+        question: `공동주택관리법령상 선거관리위원회의 구성 및 직무에 관한 설명으로 옳지 않은 것은?`,
+        options: [
+          `① 선거관리위원회는 500세대 이상은 5~9명, 500세대 미만은 3~9명의 위원으로 구성한다.`,
+          `② 선거관리위원회 위원이 사퇴하거나 해임된 경우, 남은 임기 중이라도 동별 대표자 후보자로 즉시 출마할 수 있다.`,
+          `③ 선거관리위원회 위위원장은 위원 중에서 호선한다.`,
+          `④ 동별 대표자나 임원 선출, 관리규약 제·개정 등의 찬반투표 선거관리를 총괄한다.`,
+          `⑤ 동별 대표자 또는 후보자의 배우자나 직계존비속은 선거관리위원회 위원이 될 수 없다.`
+        ],
+        answer: "2",
+        explanation: `② [오답 해설]
+선거관리위원회 위원(사퇴, 해임, 해촉된 사람으로서 남은 임기 중에 있는 사람 포함)은 동별 대표자가 될 수 없으며 출마할 수 없습니다.`
+      },
+      {
+        id: 21,
+        category: "공동주택 관리방법",
+        type: "multiple_choice",
+        question: `공동주택관리법령상 비의무관리대상 공동주택의 '의무관리대상 공동주택 전환 및 제외'에 관한 설명으로 옳지 않은 것은?`,
+        options: [
+          `① 100세대 이상 비의무관리대상은 전체 입주자등의 3분의 2 이상 동의로 전환할 수 있다.`,
+          `② 전환 동의를 받은 날부터 30일 이내에 관할 시장·군수·구청장에게 전환 신고를 하여야 한다.`,
+          `③ 의무관리대상 전환 공동주택은 한번 의무관리대상으로 전환되면 어떠한 경우에도 다시 의무관리대상에서 제외될 수 없다.`,
+          `④ 관리규약 제정 신고 수리일부터 3개월 이내에 입주자대표회의를 구성하여야 한다.`,
+          `⑤ 입주자대표회의 구성 신고 수리일부터 3개월 이내에 관리방법을 결정하여야 한다.`
+        ],
+        answer: "3",
+        explanation: `③ [오답 해설]
+전체 입주자등의 '3분의 2 이상의 서면동의'를 받아 다시 의무관리대상에서 제외할 수 있습니다.`
+      },
+      {
+        id: 22,
+        category: "공동주택 관리방법",
+        type: "multiple_choice",
+        question: `공동주택관리법령상 분양주택과 임대주택이 함께 있는 '혼합주택단지'의 관리에 관한 설명으로 옳지 않은 것은?`,
+        options: [
+          `① 입주자대표회의와 임대사업자는 공동결정기구를 구성할 수 있다.`,
+          `② 관리방법의 결정 및 주택관리업자 선정은 공동으로 협의하여 결정하여야 한다.`,
+          `③ 장기수선계획의 조정 및 충당금 사용하는 주요 시설 보수는 공동으로 결정하여야 한다.`,
+          `④ 혼합주택단지에서 분쟁 발생 시 입주자대표회의나 임대사업자는 관할 경찰서장에게 최종 직권 결정을 청구하여야 한다.`,
+          `⑤ 협의가 성립되지 아니한 경우 주택관리업자 선정은 전체 공급면적의 2분의 1 초과 면적을 관리하는 측에서 단독 결정한다.`
+        ],
+        answer: "4",
+        explanation: `④ [오답 해설]
+협의가 성립되지 아니하는 분쟁은 '공동주택관리 분쟁조정위원회'에 조정을 신청하며, 경찰서장 직권 결정 제도는 없습니다.`
+      },
+      {
+        id: 23,
+        category: "공동주택관리의 기준",
+        type: "multiple_choice",
+        question: `공동주택 회계처리기준상 회계장부 및 재무제표에 관한 설명으로 옳지 않은 것은?`,
+        options: [
+          `① 관리주체의 회계연도는 매년 1월 1일부터 12월 31일까지를 원칙으로 한다.`,
+          `② 재무제표는 재무상태표, 운영성과표, 이익잉여금처분계산서(또는 결손금처리계산서) 및 주석으로 구성된다.`,
+          `③ 계정별 원장 및 명세서는 매월 말에 마감하고, 현금출납장은 매일 마감한다.`,
+          `④ 지출은 물품 또는 용역 공급자 명의의 금융기관 계좌로 지급하는 것을 원칙으로 한다.`,
+          `⑤ 장기수선충당금은 관리 편의를 위하여 일반 관리비계좌와 구분하지 않고 단일 예금계좌로 통합하여 예치·관리할 수 있다.`
+        ],
+        answer: "5",
+        explanation: `⑤ [오답 해설]
+공동주택관리법 제63조 및 회계처리기준에 따라 장기수선충당금은 반드시 일반 관리비계좌와 완전히 분리하여 '별도의 전용 계좌'로 예치·관리하여야 합니다.`
+      },
+      {
+        id: 24,
+        category: "대외업무관리 및 리모델링",
+        type: "multiple_choice",
+        question: `주택법령상 공동주택의 리모델링에 관한 설명으로 옳지 않은 것은?`,
+        options: [
+          `① 대수선형 리모델링은 사용검사일부터 10년이 지나야 추진할 수 있다.`,
+          `② 증축형 리모델링은 사용검사일부터 15년이 지나야 추진할 수 있다.`,
+          `③ 기존 건축물이 14층 이하인 경우 수직증축 리모델링은 최대 3개 층까지 증축할 수 있다.`,
+          `④ 세대수 증가형 리모델링으로 늘릴 수 있는 세대수는 기존 세대수의 100분의 15 이내이어야 한다.`,
+          `⑤ 수직증축형 리모델링을 하려는 자는 시장·군수·구청장에게 1차 및 2차 안전진단을 요청하여야 한다.`
+        ],
+        answer: "3",
+        explanation: `③ [오답 해설]
+수직증축 리모델링 가능 층수:
+• 기존 층수 15층 이상: 최대 3개 층 증축 가능
+• 기존 층수 14층 이하: 최대 '2개 층' 증축 가능`
+      },
+      {
+        id: 25,
+        category: "시설관리",
+        type: "subjective",
+        question: `공동주택관리법 시행규칙상 공동주택 시설물의 안전관리진단 기준이다. ( )에 들어갈 점검 진단 주기를 각각 쓰시오.
+
+• 석축, 옹벽, 법면의 해빙기진단: 매년 2월 또는 3월 중 연 ( ㉠ )회
+• 담장, 하수도, 주차장의 우기진단: 매년 6월 중 연 ( ㉡ )회
+• 저수시설, 우물, 어린이놀이터의 위생진단: 연 ( ㉢ )회 이상
+• 변전실, 고압가스시설, 소방시설, 기계실의 안전진단: 매 ( ㉣ ) 1회 이상`,
+        answer: "㉠ 1, ㉡ 1, ㉢ 2, ㉣ 분기",
+        explanation: `【정답】 ㉠ 1, ㉡ 1, ㉢ 2, ㉣ 분기 (또는 1회, 1회, 2회, 분기)
+
+【해설】
+공동주택관리법 시행규칙 [별표 6]:
+1. 해빙기진단(2~3월): 연 1회
+2. 우기진단(6월): 연 1회
+3. 위생진단(저수조, 놀이터): 연 2회 이상
+4. 정기안전진단(전기·가스·소방·승강기·기계실): 매 분기 1회 이상`
+      },
+      {
+        id: 26,
+        category: "시설관리",
+        type: "subjective",
+        question: `화재안전성능기준(NFPC 102)상 옥내소화전설비의 수원의 유효저수량 산정 공식에 관한 내용이다. ( )에 들어갈 아라비아 숫자를 쓰시오.
+
+옥내소화전설비의 수원은 그 저수량이 옥내소화전의 설치개수가 가장 많은 층의 설치개수(2개 이상 설치된 경우에는 2개)에 ( )세제곱미터(층수가 30층 이상 49층 이하인 건축물은 5.2세제곱미터, 50층 이상인 건축물은 7.8세제곱미터)를 곱한 양 이상이 되도록 하여야 한다.`,
+        answer: "2.6",
+        explanation: `【정답】 2.6
+
+【해설】
+옥내소화전 수원 저수량 V = N × 2.6 m³ (최대 2개 대입)
+• 29층 이하: N × 2.6 m³
+• 30층~49층: N × 5.2 m³
+• 50층 이상: N × 7.8 m³`
+      },
+      {
+        id: 27,
+        category: "시설관리",
+        type: "subjective",
+        question: `승강기 안전관리법령상 승강기 정밀안전검사를 받아야 하는 기준이다. ( )에 들어갈 아라비아 숫자를 각각 순서대로 쓰시오.
+
+1. 승강기 설치검사를 받은 날부터 ( ㉠ )년이 지난 경우
+2. 위 1. 에 따라 정밀안전검사를 받은 후 ( ㉡ )년마다 정기적으로 정밀안전검사를 받아야 한다.`,
+        answer: "㉠ 15, ㉡ 3",
+        explanation: `【정답】 ㉠ 15, ㉡ 3
+
+【해설】
+승강기 안전관리법 제32조 제1항 제4호:
+승강기 설치검사를 받은 날부터 '15년'이 지난 승강기는 정밀안전검사를 받아야 하며, 이후 '3년마다' 정기적으로 정밀안전검사를 받아야 합니다.`
+      },
+      {
+        id: 28,
+        category: "시설관리",
+        type: "subjective",
+        question: `급수설비에서 양수펌프의 소요 축동력(kW)을 계산하는 문제이다. 다음 조건을 대입하여 산출된 펌프의 축동력(kW)을 구하여 아라비아 숫자로 쓰시오. (단, 소수점 둘째 자리에서 반올림하여 첫째 자리까지 표기할 것)
+
+[계산 조건]
+• 펌프 토출량(Q): 1.2 m³/min
+• 펌프 전양정(H): 50 m
+• 펌프 효율(η): 65% (0.65)
+• 펌프 축동력 공식: P = (0.163 × Q × H) / η (kW)`,
+        answer: "15.0",
+        explanation: `【정답】 15.0 (또는 15)
+
+【계산 풀이과정】
+1. 공식 대입: P = (0.163 × Q × H) / η
+2. 수치 대입: P = (0.163 × 1.2 × 50) / 0.65 = 9.78 / 0.65 = 15.046... kW
+3. 소수점 첫째 자리 정리: 15.0 kW`
+      },
+      {
+        id: 29,
+        category: "시설관리",
+        type: "subjective",
+        question: `주택건설기준 등에 관한 규정 제26조(비탈면의 수해방지) 규정의 일부이다. ( )에 들어갈 아라비아 숫자를 각각 순서대로 쓰시오.
+
+주택단지에 비탈면이 있는 경우 비탈면의 경사도가 1:1.5 이상으로서 높이가 1미터 이상인 경우에는 비탈면에 잔디심기 또는 돌붙임을 하여야 하며, 비탈면의 높이가 ( ㉠ )미터를 넘는 경우에는 ( ㉠ )미터 이내마다 그 비탈면 면적의 ( ㉡ )분의 1 이상에 해당하는 면적의 단(段)을 만들어야 한다.`,
+        answer: "㉠ 3, ㉡ 5",
+        explanation: `【정답】 ㉠ 3, ㉡ 5 (또는 3 / 5분의 1)
+
+【해설】
+주택건설기준 등에 관한 규정 제26조 제1항:
+비탈면 높이가 3m를 초과할 때는 3m 이내마다 비탈면 면적의 5분의 1 이상 면적의 단(段)을 설치하여야 합니다.`
+      },
+      {
+        id: 30,
+        category: "시설관리",
+        type: "subjective",
+        question: `공동주택관리법 시행규칙 [별표 1] 장기수선계획의 수립기준상 주요 공용시설물의 전면수리(전면교체) 수선주기(년)이다. ( )에 들어갈 아라비아 숫자를 각각 순서대로 쓰시오. (단, 최신 개정 법령 반영)
+
+• 지붕 방수공사 (전면수리): ( ㉠ )년
+• 건물 외벽 및 내부 페인트칠 (전면도장): ( ㉡ )년
+• 단지 내 도로 아스팔트 포장 (전면수리): ( ㉢ )년`,
+        answer: "㉠ 15, ㉡ 8, ㉢ 15",
+        explanation: `【정답】 ㉠ 15, ㉡ 8, ㉢ 15 (또는 15년, 8년, 15년)
+
+【해설】
+공동주택관리법 시행규칙 [별표 1] 장기수선계획 수립기준:
+1. 지붕 방수 (전면수리): 15년
+2. 페인트칠 (전면도장): 8년 (개정 반영)
+3. 단지 내 도로 아스팔트 포장 (전면수리): 15년`
+      },
+      {
+        id: 31,
+        category: "사무 및 인사관리",
+        type: "subjective",
+        question: `근로기준법령상 임금채권의 소멸시효 및 서류보존 기간에 관한 규정이다. ( )에 들어갈 아라비아 숫자를 각각 쓰시오.
+
+1. 이 법에 따른 임금채권은 ( ㉠ )년간 행사하지 아니하면 시효로 소멸한다.
+2. 사용자는 근로자 명부와 대통령령으로 정하는 근로계약에 관한 중요한 서류를 근로관계가 끝난 날부터 ( ㉡ )년간 보존하여야 한다.`,
+        answer: "㉠ 3, ㉡ 3",
+        explanation: `【정답】 ㉠ 3, ㉡ 3 (또는 3년, 3년)
+
+【해설】
+• 근로기준법 제49조: 임금채권 소멸시효 3년
+• 근로기준법 제42조: 근로계약 중요 서류 보존기간 3년`
+      },
+      {
+        id: 32,
+        category: "사무 및 인사관리",
+        type: "subjective",
+        question: `남녀고용평등과 일·가정 양립 지원에 관한 법률상 배우자 출산휴가에 관한 기준이다. ( )에 들어갈 아라비아 숫자를 각각 순서대로 쓰시오. (2025.2.23. 개정 법령 반영)
+
+• 부여 휴가 일수: 유급 ( ㉠ )일
+• 사용 가능 기간: 배우자가 출산한 날부터 ( ㉡ )일 이내
+• 분할 사용 가능 횟수: ( ㉢ )회에 한정하여 분할 사용 가능`,
+        answer: "㉠ 20, ㉡ 120, ㉢ 3",
+        explanation: `【정답】 ㉠ 20, ㉡ 120, ㉢ 3
+
+【해설】
+2025년 2월 23일 시행 개정 법령:
+• 배우자 출산휴가 일수: 20일 (전액 유급)
+• 사용 가능 기한: 출산일부터 120일 이내
+• 분할 사용 횟수: 3회 분할 사용 가능`
+      },
+      {
+        id: 33,
+        category: "사무 및 인사관리",
+        type: "subjective",
+        question: `근로기준법상 통상임금 및 연장근로수당 계산 문제이다. 다음 조건을 바탕으로 '1일 2시간 연장근로 시 지급하여야 할 연장근로수당(원)'을 계산하여 아라비아 숫자로 쓰시오.
+
+[계산 조건]
+• 월 기본급: 2,090,000원 (직책수당 등 통상임금 해당액 일체 포함)
+• 월 소정근로시간수: 209시간
+• 1일 연장근로시간: 2시간
+• 연장근로 가산율: 100분의 50 (50% 가산 지급)`,
+        answer: "30000",
+        explanation: `【정답】 30000 (또는 30,000원)
+
+【계산 풀이과정】
+1. 시간급 통상임금: 2,090,000원 / 209시간 = 10,000원/시간
+2. 연장근로 단가 (150%): 10,000원 × 1.5 = 15,000원/시간
+3. 2시간 연장근로수당: 15,000원 × 2시간 = 30,000원`
+      },
+      {
+        id: 34,
+        category: "환경안전방재관리",
+        type: "subjective",
+        question: `어린이놀이시설 안전관리법령상 관리주체의 안전의무 주기에 관한 규정이다. ( )에 들어갈 알맞은 숫자와 단어를 각각 순서대로 쓰시오.
+
+• 정기시설검사 주기: ( ㉠ )년마다 1회 이상
+• 자체 안전점검 주기: 매 ( ㉡ ) 1회 이상
+• 안전관리자 안전교육 이수기한: 선임된 날부터 ( ㉢ )개월 이내`,
+        answer: "㉠ 2, ㉡ 월, ㉢ 3",
+        explanation: `【정답】 ㉠ 2, ㉡ 월 (또는 1개월), ㉢ 3
+
+【해설】
+어린이놀이시설 안전관리법령:
+• 정기시설검사: 2년마다 1회 이상
+• 자체 안전점검: 월 1회 이상 (매월 1회 이상)
+• 안전교육 이수기한: 관리자 선임된 날(또는 변경된 날)부터 3개월 이내`
+      },
+      {
+        id: 35,
+        category: "환경안전방재관리",
+        type: "subjective",
+        question: `먹는물 수질기준 및 검사 등에 관한 규칙상 수돗물의 미생물 및 물리적 기준치이다. ( )에 들어갈 아라비아 숫자를 각각 순서대로 쓰시오.
+
+• 일반세균: 1mL 중 ( ㉠ )CFU를 넘지 아니할 것
+• 총대장균군: ( ㉡ )mL에서 검출되지 아니할 것
+• 탁도: ( ㉢ )NTU 이하일 것 (수돗물 기준)`,
+        answer: "㉠ 100, ㉡ 100, ㉢ 0.5",
+        explanation: `【정답】 ㉠ 100, ㉡ 100, ㉢ 0.5 (또는 0.5NTU)
+
+【해설】
+먹는물 수질기준 [별표 1]:
+• 일반세균: 1mL 중 100CFU 이하
+• 총대장균군: 100mL에서 불검출
+• 수돗물 탁도: 0.5 NTU 이하`
+      },
+      {
+        id: 36,
+        category: "공동주택의 관리조직",
+        type: "subjective",
+        question: `공동주택관리법 시행령 제4조 제3항 및 제14조 제1항상 입주자대표회의의 의결정족수 기준에 관한 규정이다. ( )에 들어갈 분수 형태의 숫자를 한글 또는 분수로 쓰시오.
+
+입주자대표회의는 관리규약으로 정한 구성원 정원의 과반수 찬성으로 의결한다. 다만, 해당 입주자대표회의 구성원 정원의 ( ) 이상이 선출된 때에는 관리규약으로 정하는 바에 따라 그 선출된 인원의 과반수 찬성으로 의결할 수 있다.`,
+        answer: "3분의 2",
+        explanation: `【정답】 3분의 2 (또는 2/3)
+
+【해설】
+공동주택관리법 시행령 제4조 제3항 및 제14조 제1항:
+1. 원칙: 입주자대표회의는 관리규약으로 정한 '구성원 정원'의 과반수 찬성으로 의결합니다.
+2. 특례: 구성원 정원의 '3분의 2 이상'이 선출된 때에는 관리규약으로 정한 바에 따라 '그 선출된 인원(현원)'의 과반수 찬성으로 의결할 수 있습니다.
+3. 정원의 '3분의 2 미만'이 선출된 경우에는 선출된 인원의 과반수가 아닌 '규약상 정원'의 과반수 찬성을 얻어야만 안건을 의결할 수 있습니다.`
+      },
+      {
+        id: 37,
+        category: "공동주택의 관리조직",
+        type: "subjective",
+        question: `공동주택관리법령상 동별 대표자 및 입주자대표회의 임원의 임기에 관한 규정이다. ( )에 들어갈 아라비아 숫자를 쓰시오.
+
+• 동별 대표자의 임기는 ( ㉠ )년으로 하며, 연속하여 ( ㉡ )회에 한하여 중임할 수 있다.
+(단, 500세대 미만 단지 또는 2회 선출공고에도 후보자가 없는 경우 등 예외 요건 충족 시 중임 제한 완화)`,
+        answer: "㉠ 2, ㉡ 1",
+        explanation: `【정답】 ㉠ 2, ㉡ 1 (또는 2년, 1회)
+
+【해설】
+공동주택관리법 시행령 제13조:
+동별 대표자의 임기는 2년으로 하며, 한 번만 중임(연속하여 1회에 한하여 중임)할 수 있습니다.`
+      },
+      {
+        id: 38,
+        category: "공동주택 관리방법",
+        type: "subjective",
+        question: `공동주택관리법 시행령상 비의무관리대상 공동주택이 의무관리대상 공동주택으로 전환하기 위해 필요한 동의 요건이다. ( )에 들어갈 분수를 쓰시오.
+
+100세대 이상인 비의무관리대상 공동주택의 관리인은 전체 입주자등의 ( ) 이상의 서면동의를 받아 시장·군수·구청장에게 의무관리대상 공동주택 전환 신고를 하여야 한다.`,
+        answer: "3분의 2",
+        explanation: `【정답】 3분의 2 (또는 2/3)
+
+【해설】
+공동주택관리법 제10조의2 제1항:
+비의무관리대상 공동주택을 의무관리대상 공동주택으로 전환(또는 제외)하려면 전체 입주자등의 '3분의 2 이상'의 서면동의를 받아야 합니다.`
+      },
+      {
+        id: 39,
+        category: "공동주택회계관리",
+        type: "subjective",
+        question: `공동주택 관리비 연체료 일할 계산 문제이다. 다음 조건을 바탕으로 '납부기한 후 15일 연체 시 부과되는 연체료(원)'를 계산하여 아라비아 숫자로 쓰시오. (단, 원 단위 미만은 절사함)
+
+[계산 조건]
+• 당월 부과 관리비 원금: 300,000원
+• 관리규약상 연체료율: 연 12% (1년은 365일로 계산)
+• 연체 일수: 15일
+• 일할 계산 공식: 연체료 = 관리비 원금 × 연이율(0.12) × (연체일수 15 / 365)`,
+        answer: "1479",
+        explanation: `【정답】 1479 (또는 1,479원)
+
+【계산 풀이과정】
+1. 연간 연체료 총액: 300,000원 × 0.12 = 36,000원
+2. 1일당 연체료 단가: 36,000원 / 365일 = 98.63013... 원/일
+3. 15일간 연체료: 98.63013... 원 × 15일 = 1,479.45... 원
+4. 원 단위 미만 절사: 1,479원
+
+⚠️ [일타강사 핵심 출제 함정 해설] 1,500원이 오답인 이유:
+• 1,500원은 1년을 '360일'로 잘못 계산(36,000원 × 15 / 360 = 1,500원)하거나, 연 12%를 월 1%로 간주하여 15일(0.5개월)을 단순 곱했을 때(300,000원 × 1% × 0.5 = 1,500원) 나오는 대표적 함정 수치입니다.
+• 공동주택관리법령 및 지자체 공동주택 관리규약 준칙상 일할계산은 반드시 '1년 = 365일'을 기준으로 하도록 정해져 있으며, 문제 조건에도 '365일 기준 및 원 단위 미만 절사'가 명시되어 있으므로 법정 유일 정답은 1,479원입니다.`
+      },
+      {
+        id: 40,
+        category: "입주자관리",
+        type: "subjective",
+        question: `공동주택관리법 제69조 제1항 단서에 따른 '주택관리사등의 자격에 대한 필요적(반드시) 취소 사유'에 관한 내용이다. ( )에 들어갈 알맞은 단어 또는 형벌의 종류를 쓰시오.
+
+시·도지사는 주택관리사등이 다음 각 호의 어느 하나에 해당하면 그 자격을 취소하여야 한다.
+1. 거짓이나 그 밖의 부정한 방법으로 자격을 취득한 경우
+2. 공동주택의 관리업무와 관련하여 ( ㉠ ) 이상의 형을 선고받은 경우
+3. 주택관리사등이 ( ㉡ ) 기간 중에 공동주택관리업무를 수행한 경우
+4. 자격증을 다른 사람에게 대여하거나 다른 사람에게 자기의 성명을 사용하여 업무를 수행하게 한 경우`,
+        answer: "㉠ 금고, ㉡ 자격정지",
+        explanation: `【정답】 ㉠ 금고, ㉡ 자격정지
+
+【해설】
+공동주택관리법 제69조 제1항 단서 (필요적 자격취소 사유):
+1. 거짓·부정한 방법으로 자격 취득
+2. 관리업무 관련하여 '금고' 이상의 형 선고
+3. '자격정지' 기간 중 관리업무 수행
+4. 자격증 대여 또는 타인에게 명의사용 허용`
+      }
+    ];
+
+    let currentIndex = 0;
+    const userAnswers = {};
+    const checkedStatus = {};
+    const manualGrades = {};
+
+    function initExam() {
+      renderQuestion();
+      renderOMRGrid();
+      updateProgressBar();
+    }
+
+    function renderQuestion() {
+      const q = examData[currentIndex];
+      document.getElementById('cur-num').textContent = String(q.id).padStart(2, '0');
+      document.getElementById('badge-category').textContent = q.category;
+      document.getElementById('badge-type').textContent = q.type === 'multiple_choice' ? '객관식 (5지선다)' : '주관식 단답/계산/괄호형';
+      document.getElementById('question-text').textContent = q.question;
+
+      const inputArea = document.getElementById('interactive-input-area');
+      inputArea.innerHTML = '';
+
+      if (q.type === 'multiple_choice') {
+        const optionContainer = document.createElement('div');
+        optionContainer.className = 'space-y-2.5';
+        
+        q.options.forEach((optText, idx) => {
+          const optNum = String(idx + 1);
+          const isSelected = userAnswers[q.id] === optNum;
+          
+          const optBtn = document.createElement('button');
+          optBtn.type = 'button';
+          optBtn.className = `w-full text-left p-3.5 sm:p-4 rounded-xl border transition flex items-start space-x-3 text-sm leading-relaxed ${
+            isSelected 
+              ? 'bg-emerald-950/60 border-emerald-500 text-white shadow-md shadow-emerald-950/30' 
+              : 'bg-slate-900 hover:bg-slate-800/80 border-slate-800 text-slate-200'
+          }`;
+          
+          optBtn.onclick = () => selectOption(optNum);
+
+          const badge = document.createElement('span');
+          badge.className = `w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5 ${
+            isSelected ? 'bg-emerald-500 text-slate-950 font-black' : 'bg-slate-800 text-slate-400 border border-slate-700'
+          }`;
+          badge.textContent = optNum;
+
+          const textSpan = document.createElement('span');
+          textSpan.className = 'flex-1';
+          textSpan.textContent = optText;
+
+          optBtn.appendChild(badge);
+          optBtn.appendChild(textSpan);
+          optionContainer.appendChild(optBtn);
+        });
+        
+        inputArea.appendChild(optionContainer);
+      } else {
+        const subjContainer = document.createElement('div');
+        subjContainer.className = 'bg-slate-950/80 border border-slate-800 p-4 sm:p-5 rounded-xl space-y-3';
+
+        const label = document.createElement('label');
+        label.className = 'block text-xs font-semibold text-slate-400';
+        label.textContent = '✍️ 답안 입력란 (숫자, 핵심 키워드 또는 ㉠, ㉡ 순서대로 기재):';
+
+        const inputGroup = document.createElement('div');
+        inputGroup.className = 'flex gap-2';
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.id = 'subjective-input';
+        input.className = 'flex-1 bg-slate-900 border border-slate-700 focus:border-emerald-500 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-500 outline-none transition';
+        input.placeholder = '답안을 입력하세요 (예: 3분의 2 또는 2/3 등)';
+        input.value = userAnswers[q.id] || '';
+        input.onkeydown = (e) => {
+          if (e.key === 'Enter') submitSubjectiveAnswer();
+        };
+
+        const submitBtn = document.createElement('button');
+        submitBtn.type = 'button';
+        submitBtn.onclick = submitSubjectiveAnswer;
+        submitBtn.className = 'px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl shadow transition shrink-0';
+        submitBtn.textContent = '입력 저장';
+
+        inputGroup.appendChild(input);
+        inputGroup.appendChild(submitBtn);
+        subjContainer.appendChild(label);
+        subjContainer.appendChild(inputGroup);
+        inputArea.appendChild(subjContainer);
+      }
+
+      // Explanation Box handling
+      const expBox = document.getElementById('explanation-box');
+      if (checkedStatus[q.id]) {
+        showExplanationContent();
+        expBox.classList.remove('hidden');
+      } else {
+        expBox.classList.add('hidden');
+      }
+
+      // Prev / Next button states
+      document.getElementById('prev-btn').disabled = (currentIndex === 0);
+      document.getElementById('next-btn').disabled = (currentIndex === examData.length - 1);
+
+      updateProgressBar();
+      renderOMRGrid();
+    }
+
+    function selectOption(optNum) {
+      const q = examData[currentIndex];
+      userAnswers[q.id] = optNum;
+      renderQuestion();
+    }
+
+    function submitSubjectiveAnswer() {
+      const q = examData[currentIndex];
+      const val = document.getElementById('subjective-input').value.trim();
+      userAnswers[q.id] = val;
+      renderQuestion();
+    }
+
+    function navQuestion(dir) {
+      if (currentIndex + dir >= 0 && currentIndex + dir < examData.length) {
+        currentIndex += dir;
+        renderQuestion();
+      }
+    }
+
+    function jumpToQuestion(index) {
+      currentIndex = index;
+      const modal = document.getElementById('omr-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      renderQuestion();
+    }
+
+    function toggleExplanation() {
+      const q = examData[currentIndex];
+      checkedStatus[q.id] = !checkedStatus[q.id];
+      renderQuestion();
+    }
+
+    function cleanString(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/\s+/g, '')
+        .replace(/[,.원세대한달년dB개%/]/g, '')
+        .replace(/[㉠㉡㉢㉣()]/g, '')
+        .replace(/또는|개월/g, '')
+        .toLowerCase();
+    }
+
+    function isCorrect(q) {
+      if (manualGrades[q.id] !== undefined) {
+        return manualGrades[q.id];
+      }
+      const userAns = userAnswers[q.id];
+      if (!userAns) return false;
+
+      if (q.type === 'multiple_choice') {
+        return String(userAns) === String(q.answer);
+      } else {
+        const uClean = cleanString(userAns);
+        const aClean = cleanString(q.answer);
+        if (uClean === aClean) return true;
+        
+        // Q36 flexible matching for fractions (3분의 2 or 2/3)
+        if (q.id === 36 || q.id === 38) {
+          if (uClean.includes('3분의2') || uClean.includes('2/3') || uClean.includes('3분2')) return true;
+        }
+
+        // Q34 flexible handling
+        if (q.id === 34) {
+          const has2 = userAns.includes('2');
+          const has3 = userAns.includes('3');
+          const hasMonth = userAns.includes('월') || userAns.includes('1') || userAns.includes('매월');
+          if (has2 && has3 && hasMonth) return true;
+        }
+
+        // Check numeric sequence equality
+        const uNums = (userAns.match(/\d+(\.\d+)?/g) || []).join('');
+        const aNums = (q.answer.match(/\d+(\.\d+)?/g) || []).join('');
+        if (uNums && aNums && uNums === aNums) return true;
+
+        if (aClean.includes(uClean) && uClean.length >= 2) return true;
+        return false;
+      }
+    }
+
+    function setManualGrade(val) {
+      const q = examData[currentIndex];
+      manualGrades[q.id] = val;
+      renderQuestion();
+    }
+
+    function showExplanationContent() {
+      const q = examData[currentIndex];
+      const correct = isCorrect(q);
+
+      const statusBadge = document.getElementById('result-status-badge');
+      if (userAnswers[q.id]) {
+        if (correct) {
+          statusBadge.className = 'px-2.5 py-0.5 text-xs font-black rounded-full bg-emerald-950 border border-emerald-600 text-emerald-300';
+          statusBadge.textContent = '✅ 정답';
+        } else {
+          statusBadge.className = 'px-2.5 py-0.5 text-xs font-black rounded-full bg-rose-950 border border-rose-600 text-rose-300';
+          statusBadge.textContent = '❌ 오답';
+        }
+      } else {
+        statusBadge.className = 'px-2.5 py-0.5 text-xs font-medium rounded-full bg-slate-800 border border-slate-700 text-slate-400';
+        statusBadge.textContent = '🔍 해설 열람';
+      }
+
+      document.getElementById('correct-answer-display').textContent = `정답: ${q.answer}`;
+      document.getElementById('explanation-content').textContent = q.explanation;
+
+      const manualGradeBox = document.getElementById('manual-grade-controls');
+      if (q.type === 'subjective') {
+        manualGradeBox.classList.remove('hidden');
+      } else {
+        manualGradeBox.classList.add('hidden');
+      }
+    }
+
+    function updateProgressBar() {
+      const total = examData.length;
+      const current = currentIndex + 1;
+      const answeredCount = Object.keys(userAnswers).filter(k => userAnswers[k] && userAnswers[k].trim() !== '').length;
+
+      document.getElementById('progress-text').textContent = `${current} / ${total}`;
+      const pct = Math.round((current / total) * 100);
+      document.getElementById('progress-pct').textContent = `${pct}%`;
+      document.getElementById('progress-bar').style.width = `${(current / total) * 100}%`;
+      document.getElementById('answered-stat').textContent = `답안 작성: ${answeredCount} / ${total} 문항`;
+    }
+
+    function toggleOMRModal() {
+      const modal = document.getElementById('omr-modal');
+      if (modal.classList.contains('hidden')) {
+        renderOMRGrid();
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      } else {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    function renderOMRGrid() {
+      const mcGrid = document.getElementById('omr-grid-mc');
+      const subjGrid = document.getElementById('omr-grid-subj');
+      if (!mcGrid || !subjGrid) return;
+
+      mcGrid.innerHTML = '';
+      subjGrid.innerHTML = '';
+
+      examData.forEach((q, idx) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.onclick = () => jumpToQuestion(idx);
+
+        const hasAnswer = userAnswers[q.id] && userAnswers[q.id].trim() !== '';
+        const isCurrent = (idx === currentIndex);
+
+        let bgClass = 'bg-slate-800 text-slate-300 border-slate-700';
+        if (checkedStatus[q.id]) {
+          bgClass = isCorrect(q) ? 'bg-emerald-950 text-emerald-300 border-emerald-600 font-bold' : 'bg-rose-950 text-rose-300 border-rose-600 font-bold';
+        } else if (hasAnswer) {
+          bgClass = 'bg-teal-950 text-teal-300 border-teal-600 font-semibold';
+        }
+
+        const ringClass = isCurrent ? 'ring-2 ring-emerald-400 ring-offset-2 ring-offset-slate-900' : '';
+
+        btn.className = `p-2 rounded-xl border text-xs font-mono transition flex flex-col items-center justify-center ${bgClass} ${ringClass}`;
+        btn.innerHTML = `<span class="text-[10px] opacity-70">Q${String(q.id).padStart(2, '0')}</span><span class="text-xs font-bold mt-0.5">${userAnswers[q.id] || '-'}</span>`;
+
+        if (q.type === 'multiple_choice') {
+          mcGrid.appendChild(btn);
+        } else {
+          subjGrid.appendChild(btn);
+        }
+      });
+    }
+
+    function finishExam() {
+      const answeredCount = Object.keys(userAnswers).filter(k => userAnswers[k] && userAnswers[k].trim() !== '').length;
+      if (answeredCount < examData.length) {
+        if (!confirm(`총 40문항 중 ${answeredCount}문항만 작성되었습니다. 채점 및 성적표를 확인하시겠습니까?`)) {
+          return;
+        }
+      }
+
+      examData.forEach(q => { checkedStatus[q.id] = true; });
+
+      document.getElementById('exam-screen').classList.add('hidden');
+      document.getElementById('result-screen').classList.remove('hidden');
+
+      calculateResults();
+    }
+
+    function calculateResults() {
+      let mcCorrect = 0;
+      let subjCorrect = 0;
+      const wrongList = [];
+      const catStats = {};
+
+      examData.forEach(q => {
+        if (!catStats[q.category]) {
+          catStats[q.category] = { total: 0, correct: 0 };
+        }
+        catStats[q.category].total += 1;
+
+        const correct = isCorrect(q);
+        if (correct) {
+          catStats[q.category].correct += 1;
+          if (q.type === 'multiple_choice') mcCorrect += 1;
+          else subjCorrect += 1;
+        } else {
+          wrongList.push({
+            question: q,
+            userAns: userAnswers[q.id] || '(미제출)'
+          });
+        }
+      });
+
+      const totalCorrect = mcCorrect + subjCorrect;
+      const totalScore = totalCorrect * 2.5;
+      const mcScore = mcCorrect * 2.5;
+      const subjScore = subjCorrect * 2.5;
+
+      document.getElementById('final-total-score').textContent = `${totalScore}점`;
+      document.getElementById('final-mc-score').textContent = `${mcScore}점`;
+      document.getElementById('final-mc-count').textContent = `${mcCorrect} / 24 정답`;
+      document.getElementById('final-subj-score').textContent = `${subjScore}점`;
+      document.getElementById('final-subj-count').textContent = `${subjCorrect} / 16 정답`;
+
+      const passBadge = document.getElementById('pass-fail-badge');
+      if (totalScore >= 60) {
+        passBadge.className = 'inline-block px-6 py-2 rounded-full font-extrabold text-sm bg-emerald-950 border border-emerald-500 text-emerald-300 shadow-lg shadow-emerald-950/50';
+        passBadge.textContent = '🎉 [합격 기준 달성] 축하합니다! 2차 관리실무 합격 안정권입니다.';
+      } else if (totalScore >= 40) {
+        passBadge.className = 'inline-block px-6 py-2 rounded-full font-extrabold text-sm bg-amber-950 border border-amber-600 text-amber-300 shadow-lg shadow-amber-950/50';
+        passBadge.textContent = '⚠️ [과락 면제 / 보완 필요] 평균 60점 합격선까지 오답노트를 집중 보완하세요.';
+      } else {
+        passBadge.className = 'inline-block px-6 py-2 rounded-full font-extrabold text-sm bg-rose-950 border border-rose-600 text-rose-300 shadow-lg shadow-rose-950/50';
+        passBadge.textContent = '🚨 [과락 위험] 40점 미만 과락 구간입니다. 핵심 암기사항을 철저히 복습하세요.';
+      }
+
+      // Render Category Stats
+      const catListEl = document.getElementById('category-stats-list');
+      catListEl.innerHTML = '';
+      Object.keys(catStats).forEach(cat => {
+        const item = catStats[cat];
+        const pct = Math.round((item.correct / item.total) * 100);
+        const card = document.createElement('div');
+        card.className = 'p-3 rounded-xl bg-slate-950/80 border border-slate-800 flex items-center justify-between text-xs';
+        card.innerHTML = `
+          <div>
+            <span class="font-bold text-slate-200">${cat}</span>
+            <span class="text-slate-400 block text-[11px] mt-0.5">${item.correct} / ${item.total} 문항 정답 (${pct}%)</span>
+          </div>
+          <div class="w-20 bg-slate-800 h-2 rounded-full overflow-hidden">
+            <div class="h-full ${pct >= 60 ? 'bg-emerald-500' : 'bg-rose-500'}" style="width: ${pct}%"></div>
+          </div>
+        `;
+        catListEl.appendChild(card);
+      });
+
+      // Render Wrong Answer Notes
+      const wrongListEl = document.getElementById('wrong-answers-list');
+      wrongListEl.innerHTML = '';
+      document.getElementById('wrong-count-badge').textContent = `오답 ${wrongList.length}개`;
+
+      if (wrongList.length === 0) {
+        wrongListEl.innerHTML = `
+          <div class="p-8 text-center text-emerald-400 bg-emerald-950/30 border border-emerald-800/40 rounded-2xl">
+            <p class="font-bold text-base">축하합니다! 40문항 전체 정답입니다!</p>
+            <p class="text-xs text-slate-400 mt-1">완벽한 실력입니다. 시험 당일까지 현재 감각을 잘 유지하세요.</p>
+          </div>
+        `;
+      } else {
+        wrongList.forEach(w => {
+          const card = document.createElement('div');
+          card.className = 'p-5 rounded-2xl bg-slate-950 border border-slate-800 space-y-3';
+          card.innerHTML = `
+            <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+              <span class="text-xs font-bold text-rose-400 font-mono">Q${String(w.question.id).padStart(2, '0')} [${w.question.category}]</span>
+              <span class="text-xs text-slate-400">내 답안: <strong class="text-rose-400 font-mono">${w.userAns}</strong> / 정답: <strong class="text-emerald-400 font-mono">${w.question.answer}</strong></span>
+            </div>
+            <p class="text-sm font-medium text-slate-200 whitespace-pre-line leading-relaxed">${w.question.question}</p>
+            <div class="bg-slate-900/90 p-4 rounded-xl text-xs text-slate-300 leading-relaxed whitespace-pre-line border border-slate-800">
+              ${w.question.explanation}
+            </div>
+          `;
+          wrongListEl.appendChild(card);
+        });
+      }
+    }
+
+    function returnToExam() {
+      document.getElementById('result-screen').classList.add('hidden');
+      document.getElementById('exam-screen').classList.remove('hidden');
+      renderQuestion();
+    }
+
+    function restartExam() {
+      if (confirm('모의고사를 처음부터 다시 푸시겠습니까? 모든 작성 내용이 초기화됩니다.')) {
+        Object.keys(userAnswers).forEach(k => delete userAnswers[k]);
+        Object.keys(checkedStatus).forEach(k => delete checkedStatus[k]);
+        Object.keys(manualGrades).forEach(k => delete manualGrades[k]);
+        currentIndex = 0;
+        document.getElementById('result-screen').classList.add('hidden');
+        document.getElementById('exam-screen').classList.remove('hidden');
+        initExam();
+      }
+    }
+
+    window.onload = initExam;
+  </script>
+</body>
+</html>

@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 관계법규 - 제36강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+            letter-spacing: -0.05em;
+        }
+        
+        h1 {
+            font-size: 13pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        /* 토너 절약 4색 강조 클래스 */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #16803d; 
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #6d28d9; 
+        }
+        
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        ol {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        /* 정답 리스트 3열 격자 레이아웃 */
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px 15px;
+        }
+
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        제36강. 임대사업자 등록 요건·신설 거부사유, 등록말소·부기등기 및 민간임대협동조합 모집·청약철회 완벽 분석
+    </h1>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        1. 임대사업자 등록 신청 자격 및 신설 등록 거부 사유 (★초빈출 기출)
+    </h2>
+    <ul>
+        <li><strong>등록 신청 가능 주체 (임차인 절대 불가★)</strong>:
+            <ul>
+                <li>주택을 임대하려는 자는 시장·군수·구청장에게 등록을 <span class="highlight-blue">신청할 수 있다</span>.</li>
+                <li><span class="highlight-green">등록 신청 가능 대상</span>: 주택을 <span class="highlight-blue">소유한 자</span>, 사업계획승인을 받은 자, 건축허가를 받은 자, 매매계약을 체결한 자, 건설사업자, 부리츠(부동산투자회사) 등.</li>
+                <li><span class="highlight-red">등록 신청 불가 대상</span>: 타인의 주택을 <span class="highlight-red">단순 임차한 자</span>는 등록을 신청할 수 없다.</li>
+                <li><span class="highlight-purple">분양계약 체결자 개정 특례</span>: 일반 주택공급계약(분양계약) 체결자는 원칙적으로 등록이 불가하나, 등록신청일 기준으로 <span class="highlight-red">잔금지급기일이 3개월 이내</span>이거나 잔금지급기일이 지난 경우 등 확정된 경우에 한하여 예외적으로 등록 신청 가능.</li>
+                <li><span class="highlight-blue">공동명의 등록</span>: 2인 이상이 공동으로 건설하거나 소유하는 주택은 <span class="highlight-blue">공동명의</span>로 등록하여야 함.</li>
+            </ul>
+        </li>
+        <li><strong>신설 임대사업자 등록 거부 사유 (3대 핵심 거부 요건★)</strong>:
+            <ul>
+                <li>① 신용도 등을 고려할 때 임대보증금 <span class="highlight-purple">보증가입이 현저히 곤란</span>하다고 판단되는 경우.</li>
+                <li>② 재건축 등 정비사업 또는 소규모주택정비사업 추진으로 임대의무기간 내에 주택이 <span class="highlight-red">멸실될 우려</span>가 있는 경우.</li>
+                <li>③ 체납 국세·지방세 합계액이 <span class="highlight-red">2억원 이상</span>인 경우 (임차인 보증금 보호 목적으로 등록 전면 거부).</li>
+            </ul>
+        </li>
+        <li><strong>유일한 등록 결격 사유 및 구분 등록</strong>:
+            <ul>
+                <li>과거 <span class="highlight-red">5년 이내</span>에 임대사업을 하다가 <span class="highlight-red">부도</span>를 낸 적이 있는 자 또는 미성년자는 등록할 수 없다.</li>
+                <li>등록 시 민간건설, 민간매입, 공공지원, 장기일반, 단기민간 유형별로 <span class="highlight-blue">구분 등록</span>하여야 한다.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M11 5H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-5"></path><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+        2. 등록사항 변경신고 및 경미한 변경(신고 불요) vs 주무관청 이송 절차
+    </h2>
+    <ul>
+        <li><strong>등록사항 변경신고 기한</strong>: 등록사항이 변경된 경우 변경사유 발생일부터 <span class="highlight-blue">30일 이내</span>에 시장·군수·구청장에게 신고하여야 한다.</li>
+        <li><strong>경미한 변경으로 신고를 요하지 아니하는 경우 (10% 규정 및 규모구간★)</strong>:
+            <ul>
+                <li>민간임대주택 면적이 법정 <span class="highlight-purple">규모 구간을 벗어나지 아니하는 범위</span>에서 <span class="highlight-red">10% 이하</span>로 증감·변경되는 경우 변경신고 불요.</li>
+                <li><strong>법정 4대 면적 규모 구간</strong>: ① 40㎡ 이하, ② 40㎡ 초과~60㎡ 이하, ③ 60㎡ 초과~85㎡ 이하, ④ 85㎡ 초과.</li>
+                <li><span class="highlight-red">주의</span>: 10% 이하 증감이더라도 법정 규모 구간을 벗어나는 경우(예: 38㎡ → 41㎡)에는 반드시 변경신고를 이행하여야 함.</li>
+            </ul>
+        </li>
+        <li><strong>등록 관청 및 주무 관청과 이송 규칙 (★초빈출 함정)</strong>:
+            <ul>
+                <li>신청 접수 관청: 임대사업자의 <span class="highlight-blue">주소지</span> 관할 또는 민간임대주택 <span class="highlight-blue">소재지</span> 관할 시장·군수·구청장 모두 가능.</li>
+                <li><strong>주무 관청의 원칙</strong>: 임대사업자 등록 업무의 주무 관청은 세원 관리 등을 위해 <span class="highlight-red">임대사업자의 주소지</span> 관할 지자체장임.</li>
+                <li>이송 절차: 소재지 관할 지자체장이 등록 신청을 받은 경우 서류를 <span class="highlight-purple">임대사업자 주소지</span> 관할 지자체장에게 지체 없이 <span class="highlight-purple">이송</span>하여야 함.</li>
+                <li>※ 참고: 임대차계약 신고 등 나머지 대다수 행정 신고의 주무 관청은 주택 '소재지' 관할 지자체장임.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M3 6h18"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+        3. 등록말소 사유 종합 및 법정 취득기간, 양도(신고 vs 허가) 완벽 비교
+    </h2>
+    <ul>
+        <li><strong>필요적 등록말소</strong>: 거짓이나 그 밖의 부정한 방법으로 등록한 경우 시장·군수·구청장은 <span class="highlight-red">반드시 등록을 말소</span>하여야 한다.</li>
+        <li><strong>임의적 등록말소 주요 사유</strong>:
+            <ul>
+                <li>법정 취득기간 내에 주택을 취득하지 못한 경우.</li>
+                <li>등록 후 <span class="highlight-blue">3개월 이내</span> 또는 <span class="highlight-blue">임대의무기간이 지난 후</span> 말소를 신청하는 경우.</li>
+                <li>등록 준주택을 <span class="highlight-purple">주거용이 아닌 용도로 사용</span>한 경우.</li>
+                <li>임차인이 보증금 반환 소송에서 승소 확정되거나 조정이 성립되었음에도 보증금을 미반환한 경우.</li>
+                <li>임대차계약 미신고 또는 거짓 보고에 대해 지자체장의 보고 명령에 <span class="highlight-red">3회 이상 불응</span>한 경우.</li>
+            </ul>
+        </li>
+        <li><strong>양도에 따른 등록말소 (신고 vs 허가 구조 비교★)</strong>:
+            <ul>
+                <li><span class="highlight-blue">다른 임대사업자에게 양도</span>: 지자체장에게 <span class="highlight-blue">신고</span> 후 양도하고 등록 말소 가능 (임차인 불이익 없음).</li>
+                <li><span class="highlight-red">부도·파산 등으로 임대사업자가 아닌 자(임차인 등)에게 양도</span>: 시장·군수·구청장의 <span class="highlight-red">허가</span>를 받아 양도 후 등록 말소 가능.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">구분 (등록 기준 취득 유형)</th>
+                <th style="width: 25%;">법정 소유권 취득기간</th>
+                <th style="width: 50%;">비고 및 핵심 특징</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>사업계획승인을 받은 주택</th>
+                <td class="highlight-red">6년 이내</td>
+                <td>대규모 건설 임대주택 취득 기한</td>
+            </tr>
+            <tr>
+                <th>건축허가를 받은 주택</th>
+                <td class="highlight-blue">4년 이내</td>
+                <td>소규모 건축 허가 주택 취득 기한</td>
+            </tr>
+            <tr>
+                <th>매매계약을 체결한 주택</th>
+                <td class="highlight-purple">3개월 이내</td>
+                <td>매매 잔금 지급 및 등기 완료 시한</td>
+            </tr>
+            <tr>
+                <th>분양계약을 체결한 주택</th>
+                <td class="highlight-green">1년 이내</td>
+                <td>분양계약서 잔금지급일 기준 완공 시한</td>
+            </tr>
+            <tr>
+                <th>기타 일반 취득</th>
+                <td>5년 이내</td>
+                <td>기타 유형 취득 기한</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        4. 민간임대주택 부기등기 의무 및 민간임대협동조합 모집 절차
+    </h2>
+    <ul>
+        <li><strong>부기등기 의무 (임차인 권리 보호★)</strong>:
+            <ul>
+                <li>임대사업자는 민간임대주택 등록 후 지체 없이 등기부에 해당 주택이 <span class="highlight-purple">임대의무기간 및 임대료 증액제한</span>을 받는 재산임을 <span class="highlight-blue">부기등기</span>하여야 함 (소유권보존등기 또는 소유권이전등기와 동시에 이행).</li>
+                <li>부기등기 의무 위반 시 제재: <span class="highlight-red">500만원 이하의 과태료</span> 부과.</li>
+            </ul>
+        </li>
+        <li><strong>민간임대협동조합 모집 요건 및 토지 사용권원 비율 (★주관식 단골)</strong>:
+            <ul>
+                <li>발기인 및 조합원 모집 기준: 단독주택 <span class="highlight-blue">30호</span>, 공동주택 <span class="highlight-blue">30세대</span>, 준주택 <span class="highlight-blue">30세대</span> 이상.</li>
+                <li><span class="highlight-red">토지 사용권원 80% 이상 확보 규정</span>: 민간임대협동조합의 발기인이 조합원 모집 신고를 하려는 경우 건설대지면적 <span class="highlight-red">80% 이상</span>에 해당하는 토지의 사용권원을 확보하여 시장·군수·구청장에게 <span class="highlight-blue">공개모집 신고</span>를 하여야 함. (※ 주택법상 일반 지역주택조합 모집신고 50% 수치와 엄격 구분!).</li>
+                <li>모집 신고 수리 후 <span class="highlight-purple">2년 이내</span>에 창립총회를 거쳐 설립인가를 받아야 함.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg>
+        5. 조합 가입 신청자의 청약철회 및 가입비 반환 절차 (기출 핵심 수치)
+    </h2>
+    <ul>
+        <li><strong>청약철회 기간 및 효력 발생 시기 (발송주의★)</strong>:
+            <ul>
+                <li>조합 가입 신청자는 <span class="highlight-purple">가입계약 체결일부터 30일 이내</span>에 민간임대협동조합 가입에 관한 청약을 철회할 수 있음.</li>
+                <li>청약철회 의사표시는 서면으로 하며, 서면을 <span class="highlight-red">발송한 날</span>에 효력이 발생함 (도달주의가 아닌 발송주의 특례).</li>
+            </ul>
+        </li>
+        <li><strong>가입비등 반환 요청 및 지급 시한 체계 (7일 vs 10일 규칙★)</strong>:
+            <ul>
+                <li>모집주체: 청약철회 의사가 도달한 날부터 <span class="highlight-blue">7일 이내</span>에 예치기관의 장에게 가입비등의 반환을 <span class="highlight-blue">요청</span>하여야 함.</li>
+                <li>예치기관의 장: 반환 요청을 받은 날부터 <span class="highlight-red">10일 이내</span>에 가입신청자에게 가입비등을 <span class="highlight-red">반환</span>하여야 함.</li>
+                <li>위약금 청구 금지: 모집주체는 청약철회를 이유로 가입신청자에게 <span class="highlight-purple">위약금이나 손해배상을 청구할 수 없다</span>.</li>
+            </ul>
+        </li>
+        <li><strong>모집주체의 설명 의무</strong>: 모집주체는 가입계약 체결 시 가입신청자에게 사업 개요, 토지 확보 현황, 청약철회 절차 등을 설명하고 확인을 받아야 함.</li>
+    </ul>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+            💡 [수험 핵심 팁] 주택법 vs 민간임대주택법 조합 가입 청약철회 규정 비교
+        </div>
+        <ul>
+            <li><strong>청약철회 기산일 비교</strong>: 주택법상 지역주택조합은 '가입비등을 예치한 날'부터 30일 이내인 반면, 민간임대협동조합은 <span class="highlight-purple">'가입계약 체결일'</span>부터 30일 이내임.</li>
+            <li><strong>토지 사용권원 비율 비교</strong>: 주택법상 일반 주택조합 모집신고 시에는 토지 사용권원 <span class="highlight-blue">50% 이상</span> 확보, 민간임대협동조합 모집신고 시에는 토지 사용권원 <span class="highlight-red">80% 이상</span> 확보가 필수임.</li>
+        </ul>
+    </div>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>주관식 단답형 및 빈칸 채우기 실전 훈련</h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡)에 들어갈 알맞은 핵심 용어나 법정 숫자를 아래 여유 공백에 직접 기재해 보십시오.</p>
+
+    <ol class="quiz-list" style="line-height: 2.1;">
+        <li>
+            민간임대주택법상 타인의 주택을 단순 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )한 자는 임대사업자 등록을 신청할 수 없다.
+        </li>
+        <li>
+            주택분양계약을 체결한 자가 임대사업자로 등록을 신청하려는 경우 등록신청일 기준으로 잔금지급기일이 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )개월 이내이어야 한다.
+        </li>
+        <li>
+            임대사업자로 등록을 신청하려는 자의 체납 국세 및 지방세 합계액이 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )억원 이상인 경우 지자체장은 등록을 거부하여야 한다.
+        </li>
+        <li>
+            임대사업자 등록의 결격사유는 과거 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년 이내에 임대사업을 하다가 부도를 낸 적이 있는 자이다.
+        </li>
+        <li>
+            임대사업자 등록사항 변경 시 사유 발생일부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이내에 시장·군수·구청장에게 신고하여야 한다.
+        </li>
+        <li>
+            임대주택 면적이 법정 규모 구간을 벗어나지 않는 범위에서 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )% 이하로 변경되는 경우에는 변경신고를 요하지 아니한다.
+        </li>
+        <li>
+            임대사업자 등록 업무의 주무 관청은 임대사업자의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 관할 시장·군수·구청장이다.
+        </li>
+        <li>
+            사업계획승인을 받은 주택을 등록한 임대사업자가 등록일부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년 이내에 주택을 취득하지 못한 경우 등록을 말소할 수 있다.
+        </li>
+        <li>
+            건축허가를 받은 주택을 등록한 임대사업자가 등록일부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년 이내에 주택을 취득하지 못한 경우 등록을 말소할 수 있다.
+        </li>
+        <li>
+            매매계약을 체결하여 등록한 임대사업자가 등록일부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )개월 이내에 주택을 취득하지 못한 경우 등록을 말소할 수 있다.
+        </li>
+        <li>
+            임대사업자가 등록 후 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )개월 이내에 등록말소를 신청하는 경우 지자체장은 등록을 말소할 수 있다.
+        </li>
+        <li>
+            임대사업자가 민간임대주택을 다른 임대사업자에게 양도하려는 경우에는 시장·군수·구청장에게 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )하여야 한다.
+        </li>
+        <li>
+            임대사업자가 부도 등의 사유로 민간임대주택을 임대사업자가 아닌 자에게 양도하려는 경우에는 시장·군수·구청장의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )를 받아야 한다.
+        </li>
+        <li>
+            임대사업자는 민간임대주택 등록 후 지체 없이 해당 주택이 임대의무기간 등을 적용받는 재산임을 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )하여야 한다.
+        </li>
+        <li>
+            민간임대협동조합의 발기인이 조합원 모집 신고를 하려는 경우 건설대지면적 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )% 이상의 토지 사용권원을 확보하여야 한다.
+        </li>
+        <li>
+            민간임대협동조합 가입 신청자는 가입계약 체결일부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이내에 청약을 철회할 수 있다.
+        </li>
+        <li>
+            민간임대협동조합 청약철회의 의사표시는 서면을 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )한 날에 효력이 발생한다.
+        </li>
+        <li>
+            모집주체는 청약철회 의사가 도달한 날부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이내에 예치기관의 장에게 가입비등의 반환을 요청하여야 한다.
+        </li>
+        <li>
+            예치기관의 장은 반환 요청을 받은 날부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이내에 가입신청자에게 가입비등을 반환하여야 한다.
+        </li>
+    </ol>
+
+    <div style="font-size: 9.5pt; color: #666666; margin-top: 30px; padding: 15px; border-top: 1px dashed #666666; line-height: 1.8;">
+        <strong style="display: block; margin-bottom: 10px; color: #333333;">[제36강 주관식 단답형 정답 리스트]</strong>
+        <div class="answer-grid">
+            <div><strong>1.</strong> ㉠ 임차</div>
+            <div><strong>2.</strong> ㉠ 3</div>
+            <div><strong>3.</strong> ㉠ 2</div>
+            <div><strong>4.</strong> ㉠ 5</div>
+            <div><strong>5.</strong> ㉠ 30</div>
+            <div><strong>6.</strong> ㉠ 10</div>
+            <div><strong>7.</strong> ㉠ 주소지</div>
+            <div><strong>8.</strong> ㉠ 6</div>
+            <div><strong>9.</strong> ㉠ 4</div>
+            <div><strong>10.</strong> ㉠ 3</div>
+            <div><strong>11.</strong> ㉠ 3</div>
+            <div><strong>12.</strong> ㉠ 신고</div>
+            <div><strong>13.</strong> ㉠ 허가</div>
+            <div><strong>14.</strong> ㉠ 부기등기</div>
+            <div><strong>15.</strong> ㉠ 80</div>
+            <div><strong>16.</strong> ㉠ 30</div>
+            <div><strong>17.</strong> ㉠ 발송</div>
+            <div><strong>18.</strong> ㉠ 7</div>
+            <div><strong>19.</strong> ㉠ 10</div>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 공동주택 관리실무 - 제10강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght=400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 25px;
+            padding: 0;
+            letter-spacing: -0.05em; /* 가독성을 위한 자간 최적화 */
+        }
+        
+        h1 {
+            font-size: 13pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 10px;
+            margin-top: 15px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        h2 {
+            font-size: 12pt;
+            font-weight: bold;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            padding-left: 10px;
+            border-left: 4px solid #1d4ed8; /* 신뢰감을 주는 딥블루 포인트 */
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h3 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 8px;
+            color: #111111;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+            margin-bottom: 25px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #111111;
+            padding: 10px 12px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: #f3f4f6;
+            font-weight: bold;
+        }
+        
+        /* 토너 절약 4색 강조 클래스 */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; /* 주요 수치 및 개념 */
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; /* 핵심 예외 및 주의사항 */
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #15803d; /* 학습 편의 및 공통 요소 */
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #7c3aed; /* 구조적 구분 및 비교 */
+        }
+        
+        /* 얇은 점선 형태의 토너 세이브 설명 상자 */
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #4b5563;
+            padding: 15px;
+            margin: 20px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+            border-radius: 4px;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        ul {
+            margin-top: 8px;
+            margin-bottom: 15px;
+            padding-left: 24px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        ol {
+            margin-top: 8px;
+            margin-bottom: 15px;
+            padding-left: 24px;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        /* 인쇄 최적화 설정 */
+        @media print {
+            body {
+                margin: 15mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+        제10강. 동대표 대리인 결격사유 전이, 임기·중임 제한 예외 및 임원·선관위 구성 실무
+    </h1>
+
+    <h2>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+        1. 대리자 결격사유의 효력 전이 및 공유 지분 판단 기준
+    </h2>
+    <ul>
+        <li><strong>대리자 결격사유 영향 여부 (<span class="highlight-red">★</span>초빈출 정답 포인트)</strong>: 공동주택의 소유자 또는 사용자가 가진 결격사유는 그를 대리하여 동대표로 입후보하거나 활동하는 자(배우자 또는 직계존비속)에게 <span class="highlight-red">반드시 미친다(영향을 준다)</span>.
+            <ul>
+                <li><strong>예시</strong>: 소유자 갑이 파산선고를 받고 복권되지 않은 결격사유자라면, 서면 대리권을 가진 그의 배우자 을 또한 동대표로 출마할 수 없다.</li>
+                <li><strong>연체 및 자격 상실 연동</strong>: 동대표 활동 중 소유자가 결격사유(예: 파산 등)나 당연퇴임 사유가 발생하면 대리자인 배우자 역시 <span class="highlight-blue">즉시 당연퇴임</span> 처리된다.</li>
+                <li><strong>오답 지문 예시</strong>: "공동주택 소유자의 결격사유는 그를 대리하는 자에게 미치지 아니한다." (<span class="highlight-red">X</span>)</li>
+            </ul>
+        </li>
+        <li><strong>공유 주택의 결격사유 기준 (<span class="highlight-red">★</span>'반수'와 '과반수' 구분)</strong>: 공동주택 소유권이 공유(공동명의)인 경우, 결격사유를 판단하는 대상은 지분의 <span class="highlight-blue">과반을 소유한 자</span>의 결격사유를 기준으로 한다.
+            <ul>
+                <li>소유 지분이 정확히 반수(50%)인 경우에는 과반 요건을 충족하지 않으므로 기준이 되지 않는다. (예: 51% 소유자 갑의 결격사유 여부가 기준이 됨)</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h3>[표 10-1] 대리인 피선거권 및 공유관계 판단 기준 요약</h3>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">구분</th>
+                <th style="width: 50%;">법정 기준 및 판단 요건</th>
+                <th style="width: 25%;">수험 핵심 포인트</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>결격사유의 승계</th>
+                <td>원 소유자(또는 사용자)의 결격사유는 대리인(배우자·직계존비속)에게 <span class="highlight-red">그대로 미친다</span>.</td>
+                <td class="highlight-red">미치지 아니한다(X)</td>
+            </tr>
+            <tr>
+                <th>공유주택 판단 기준</th>
+                <td>공동 소유일 때 결격사유 판단 기준은 지분의 <span class="highlight-blue">과반 소유자</span>를 기준으로 함.</td>
+                <td class="highlight-purple">반수(50%)는 기준 제외</td>
+            </tr>
+            <tr>
+                <th>대리인의 기본 전제</th>
+                <td class="highlight-green">동대표 출마 시 배우자 및 직계존비속은 반드시 '서면 대리권'을 보유해야 함.</td>
+                <td>대리권 없는 가족은 출마 불가</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            💡 [이해 도움 설명] 대리인 결격사유와 당연퇴임 메커니즘
+        </div>
+        <p style="margin: 0; font-size: 9.5pt;">
+            대리권은 본인의 자격을 전제로 발생하는 종속적인 권리입니다. 따라서 본인이 결격사유자가 되는 순간, 그를 대리하는 배우자나 직계존비속의 동대표 자격 역시 "뿌리가 뽑히는 것"과 같아 즉시 상실됩니다. 실무에서도 동대표 배우자 활동 중 본인(소유자)이 파산선고를 받으면 배우자는 별도 의결 없이 <strong>당연퇴임</strong>하게 됩니다.
+        </p>
+    </div>
+
+    <h2>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+        2. 동별 대표자 임기 및 중임 제한 예외 기준
+    </h2>
+    <ul>
+        <li><strong>동대표의 기본 임기 (<span class="highlight-red">★</span>초빈출 출제 유형)</strong>: 동별 대표자의 임기는 <span class="highlight-blue">2년</span>으로 한다.
+            <ul>
+                <li><strong>함정 차단</strong>: 과거 법령과 달리, 현재 동대표의 기본 임기는 <strong>관리규약으로 임의 설정할 수 없으며</strong> 시행령(법령)에서 '2년'으로 직접 강제 고정하고 있다.</li>
+                <li><strong>오답 지문 예시</strong>: "동별 대표자의 임기는 관리규약으로 정하는 바에 따른다." (<span class="highlight-red">X</span>)</li>
+            </ul>
+        </li>
+        <li><strong>임기 횟수 및 중임 제한</strong>: 동별 대표자는 딱 <span class="highlight-blue">한 번만 중임</span>할 수 있다. (기본 임기 2년 × 2회 = 평생 총 4년까지만 가능)
+            <ul>
+                <li><span class="highlight-purple">6개월 미만 단기 임기 배제</span>: 보궐선거 또는 재선거로 선출되었으나 그 임기가 <span class="highlight-red">6개월 미만</span>인 경우에는 중임 횟수(임기 횟수) 산정 시 포함하지 않는다. (6개월 이상인 보궐 임기는 1회 임기로 산정하여 추후 중임 제한에 걸림)</li>
+            </ul>
+        </li>
+        <li><strong>중임 제한자의 예외적 출마 허용 (<span class="highlight-red">★</span>고난도 핵심 개정)</strong>: 중임한 사람도 예외적으로 후보가 될 수 있는 요건은 다음과 같다.
+            <ol>
+                <li><strong>2회 선출공고 요건</strong>: 직전 선출공고일로부터 <span class="highlight-blue">2개월 이내에</span> 선출공고를 재차 실시하는 방식으로 총 <span class="highlight-blue">2회</span> 선출공고를 했음에도 후보자가 없거나 선출된 사람이 없는 선거구여야 한다.</li>
+                <li><strong>3회차 출마 조건 및 찬성 동의율</strong>: 3회차 선출공고(2개월 이내 시행) 시 중임 제한자도 입후보할 수 있으며, 이 경우 선출되기 위해서는 해당 선거구 입주자 등의 <span class="highlight-red">과반수의 찬성</span>을 얻어야 한다. (일반 후보의 '투표자 과반수 찬성'보다 엄격하게 전체 입주자 등 기준 과반 찬성이 요구됨)</li>
+                <li><strong>미중임자 경합 시 자격 상실</strong>: 중임 후보자 외에 중임하지 않은 일반 후보자가 3회차에 뒤늦게 등록할 경우, 중임 제한 후보자의 자격은 <span class="highlight-purple">즉시 상실</span>된다.</li>
+            </ol>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg>
+        3. 입주자대표회의 임원(회장·감사·이사) 구성 요건 및 피선거권 예외
+    </h2>
+    <ul>
+        <li><strong>입주자대표회의 임원 법정 인원 (<span class="highlight-red">★</span>단골 암기 수치)</strong>: 입주자대표회의에는 동대표 중에서 선출된 다음의 임원을 둔다.
+            <ul>
+                <li><strong>회장</strong>: <span class="highlight-blue">1명</span></li>
+                <li><strong>감사</strong>: <span class="highlight-red">2명 이상</span> (감사는 감사기구의 신뢰성을 위해 최소 2명 이상이어야 함)</li>
+                <li><strong>이사</strong>: <span class="highlight-purple">1명 이상</span></li>
+                <li><strong>오답 지문 예시</strong>: "입주자대표회의 임원은 회장 1명, 감사 1명 이상, 이사 2명 이상으로 구성한다." (<span class="highlight-red">X</span>)</li>
+            </ul>
+        </li>
+        <li><strong>사용자 동대표의 회장 피선거권 자격 특례 (<span class="highlight-red">★</span>최신 대세 출제 포인트)</strong>:
+            <ul>
+                <li><strong>원칙</strong>: 세입자인 사용자 동대표는 계약 및 자산권 처리를 대표하는 '회장'이 될 수 없다.</li>
+                <li><strong>예외 인정 3대 필수 연동 조건</strong>:
+                    <ol>
+                        <li>입주자(소유자) 동대표 중에서 회장 후보자가 <span class="highlight-red">한 명도 없는 경우</span>여야 한다.</li>
+                        <li>선출하기 전에 단지 전체 <span class="highlight-blue">입주자(입주자 등 X)의 과반수 서면동의</span>를 반드시 득해야 한다.</li>
+                    </ol>
+                </li>
+                <li><strong>수험 함정</strong>: 서면 동의의 대상은 세입자가 포함된 '입주자 등'이 아니라, 자산 권리를 지닌 오직 <span class="highlight-red">입주자(소유주)</span>만 해당된다.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h3>[표 10-2] 입주자대표회의 구성원 및 임원 자격 조건 비교</h3>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 20%;">구분</th>
+                <th style="width: 20%;">동대표 자격</th>
+                <th style="width: 35%;">임원(감사·이사) 자격</th>
+                <th style="width: 25%;">임원(회장) 자격</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>입주자 (소유자)</th>
+                <td class="highlight-blue">원칙적 피선거권 보유 (주민등록 3개월 거주)</td>
+                <td class="highlight-blue">제한 없이 출마 및 선출 가능</td>
+                <td class="highlight-blue">제한 없이 선출 가능</td>
+            </tr>
+            <tr>
+                <th>사용자 (세입자)</th>
+                <td class="highlight-purple">입주자 후보 없을 시 예외적 출마 가능 (2회 재공고 후)</td>
+                <td class="highlight-purple">동대표 자격 취득 시 감사·이사 선출 가능</td>
+                <td class="highlight-red">원칙 불가 / 입주자 후보가 없고 + 입주자 과반수 서면 동의 시에만 가능</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+        4. 임원 선출 방식 및 해임 절차 정밀 비교 (직선제 vs 간선제)
+    </h2>
+    <ul>
+        <li><strong>회장 및 감사의 선출 방식 (직선제 원칙)</strong>:
+            <ul>
+                <li><strong>선출 기준 투표율 (<span class="highlight-red">★</span>동대표와 비교 필수)</strong>: 회장과 감사는 입주자 등이 직접 선출하는 직선제가 원칙이며, 선출 투표율 기준은 전체 입주자 등의 <span class="highlight-red">10분의 1 이상</span>이다. (※ 동대표 선출 투표율은 과반수이나 임원은 10% 이상만 투표하면 성립함)</li>
+                <li><strong>간선제 예외</strong>: 후보자가 없거나 선출된 사람이 없을 때는 <span class="highlight-blue">입주자대표회의 구성원 과반수 찬성</span>으로 선출(간선제)할 수 있다.</li>
+                <li><strong>500세대 미만 특례</strong>: 단지 규모가 500세대 미만인 경우, 관리규약으로 정하는 바에 따라 처음부터 <span class="highlight-purple">간선제(입대의 구성원 과반 찬성)</span>로 회장과 감사를 선출할 수 한다.</li>
+                <li><strong>추가 선출 특례</strong>: 감사가 선출 필요 인원(최소 2명)에 미달하여 추가 선출하는 경우에는 직선제가 아니라 <span class="highlight-blue">간선제</span>로 선출한다.</li>
+            </ul>
+        </li>
+        <li><strong>이사의 선출 방식 (오직 간선제)</strong>:
+            <ul>
+                <li>이사는 입주자 등의 직접 선거 절차가 전혀 없으며, 오직 <span class="highlight-purple">입주자대표회의 구성원 과반수 찬성</span>으로만 선출한다.</li>
+                <li><strong>동수 특례 조항</strong>: 동대표 정원과 임원 정원(회장, 감사, 이사 수의 합)이 동일하게 설정된 단지에서 회장과 감사가 모두 선출되었다면, 남은 동대표들은 별도의 투표나 동의 절차 없이 <span class="highlight-green">자동으로 이사로 선출</span>된 것으로 본다.</li>
+            </ul>
+        </li>
+        <li><strong>임원 해임 절차의 연동 대칭성</strong>:
+            <ul>
+                <li>직선제로 선출된 임원(회장, 감사)의 해임은 입주자 등의 투표를 거쳐야 한다 (전체 입주자 등 10분의 1 이상 투표 + 투표자 과반수 찬성).</li>
+                <li>간선제(입대의 선출 또는 500세대 미만 관리규약 간선제)로 선출된 임원은 해당 선출 주체와 규정에 따라 해임한다. (이사는 무조건 관리규약이 정한 절차에 의해 해임함)</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        5. 입주자대표회의 임원의 업무 및 감사의 재심의 요청권
+    </h2>
+    <ul>
+        <li><strong>회장과 이사의 기본 직무</strong>:
+            <ul>
+                <li><strong>회장</strong>: 입주자대표회의를 대표하고, 회의의 <span class="highlight-blue">의장</span>이 된다.</li>
+                <li><strong>이사</strong>: 회장을 보좌하고, 회장이 부득이한 사유로 직무를 수행할 수 없을 때 <span class="highlight-purple">직무를 대행</span>한다.</li>
+            </ul>
+        </li>
+        <li><strong>감사의 감사 및 결과 보고서 공개 의무</strong>:
+            <ul>
+                <li>감사는 관리비, 사용료, 장기수선충당금 등의 부과·징수·지출·보관 등 회계관계 업무와 관리업무 전반에 대하여 <span class="highlight-blue">관리주체의 업무를 감사</span>한다.</li>
+                <li>감사를 실시한 경우에는 <span class="highlight-green">감사 보고서를 작성</span>하여 입주자대표회의와 관리주체에 제출하고 인터넷 홈페이지 및 동별 게시판에 의무적으로 공개하여야 한다.</li>
+                <li><strong>수험생 혼동 주의</strong>: 외부 회계법인이 수행하는 '외부 회계감사(감사인)'의 공개 체계와 입대의 임원인 '감사'의 자체 감사 보고서 제출 대상 및 루트는 완전히 구별되므로 섞이지 않도록 주의할 것.</li>
+            </ul>
+        </li>
+        <li><strong>감사의 안건 재심의 요청권 (<span class="highlight-red">★</span>면접 및 실무 단골 지문)</strong>:
+            <ul>
+                <li>감사는 입주자대표회의에서 의결한 안건이 관계 법령 또는 관리규약에 <span class="highlight-red">위반된다고 판단되면</span>, 입주자대표회의에 <span class="highlight-blue">재심의를 요청</span>할 수 있다.</li>
+                <li>재심의 요청을 받은 입주자대표회의는 <span class="highlight-purple">지체 없이 해당 안건을 다시 심의</span>하여 결정을 내려야 한다.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+        6. 선거관리위원회 구성 요건 및 세대수별 위원 수 기준
+    </h2>
+    <ul>
+        <li><strong>선거관리위원회 구성의 주체</strong>: 선거관리위원회는 관리사무소장이나 입대의가 구성하는 것이 아니라 법적으로 <span class="highlight-blue">입주자 등이 스스로 구성</span>한다. (투표권을 가진 입주민 직접 구성 원칙)</li>
+        <li><strong>선관위 위원의 결격사유 및 자격상실 기준</strong>:
+            <ul>
+                <li>동별 대표자 및 동대표 후보자(그들의 배우자 및 직계존비속 포함)는 선관위 위원이 될 수 없다. (<span class="highlight-red">선거 중립 의무</span>)</li>
+                <li>동대표 또는 선관위 위원을 사퇴하거나 해임된 사람으로서 <span class="highlight-purple">남은 임기 중에 있는 사람</span>은 결격된다. (임기가 종료되면 선관위 위원 피위촉 자격 회복)</li>
+                <li><strong>세입자 자격 인정</strong>: 세입자인 사용자는 선관위 결격사유에 해당하지 않으므로 선관위 위원이 정상적으로 될 수 있다.</li>
+                <li><strong>소유자 대리 특례</strong>: 동대표와 달리, 소유자의 배우자 및 직계존비속은 <span class="highlight-green">서면 대리권이 없어도</span> 구두 위임 등으로 소유자를 대리하여 선관위 위원이 될 수 있다.</li>
+            </ul>
+        </li>
+        <li><strong>단지 세대수 규모별 위원 수 구성 기준 (<span class="highlight-red">★</span>초빈출 가로 주관식)</strong>:
+            <ul>
+                <li>선거관리위원회는 위원장(의원들 중 호선)을 포함하여 구성하며 세대수 규모별 법정 인원은 다음과 같다.
+                    <ol>
+                        <li><strong>500세대 이상</strong> 단지: <span class="highlight-blue">5명 이상 9명 이하</span></li>
+                        <li><strong>500세대 미만</strong> 단지: <span class="highlight-purple">3명 이상 9명 이하</span></li>
+                    </ol>
+                </li>
+                <li><strong>교수님 전용 암기 꿀팁</strong>: 500세대 '이상'은 '이'쁘니까 앞 숫자가 5명이고, 500세대 '미만'은 '미'우니까 3명으로 낮춰서 시작하고, 최댓값은 둘 다 9명 이하로 동일하다.</li>
+            </ul>
+        </li>
+        <li><strong>500세대 이상 위촉 특례 및 선거 지원</strong>:
+            <ul>
+                <li><strong>외부 위원 위촉</strong>: 500세대 이상 단지는 선거관리위원회법에 따른 선관위 직원 등을 선관위 위원으로 <span class="highlight-green">위촉할 수 있다</span> (임의 규정이므로 '위촉하여야 한다'로 나오면 오답).</li>
+                <li><strong>선거 지원 요청</strong>: 세대수 규모와 관계없이 모든 공동주택의 선관위는 선거관리를 위해 관할 구·시·군 선관위에 투개표 등 선거지원 요청을 <span class="highlight-blue">할 수 있다</span>.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h3>[표 10-3] 선거관리위원회 세대수 규모별 운영 및 위촉 특례 비교</h3>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">비교 항목</th>
+                <th style="width: 38%;">500세대 이상 공동주택단지</th>
+                <th style="width: 37%;">500세대 미만 공동주택단지</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>법정 위원 수 범위</th>
+                <td class="highlight-blue">5명 이상 9명 이하</td>
+                <td class="highlight-purple">3명 이상 9명 이하</td>
+            </tr>
+            <tr>
+                <th>외부 공공선관위 위촉</th>
+                <td class="highlight-blue">관리규약에 따라 위원으로 위촉 가능 (임의)</td>
+                <td class="highlight-red">위촉 불가 (자체 구성원만 가능)</td>
+            </tr>
+            <tr>
+                <th>공공선관위 지원 요청</th>
+                <td colspan="2" class="highlight-green">세대수 제한 없이 모든 단지 투·개표 선거지원 요청 가능 (임의)</td>
+            </tr>
+            <tr>
+                <th>의사결정 의결정족수</th>
+                <td colspan="2" class="highlight-green">선거관리위원회 구성원 과반수의 찬성으로 의사결정</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr style="border: 0; border-top: 1px double #111111; margin: 30px 0;">
+
+    <h2>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><line x1="18" y1="2" x2="22" y2="6"></line><path d="M7.5 20.5L19 9l-4-4L3.5 16.5 2 22z"></path></svg>
+        7. 제10강 핵심 용어 리스트 및 빈칸 채우기 실전 훈련
+    </h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡, ㉢)에 들어갈 알맞은 핵심 용어나 법정 숫자를 직접 기재해 보십시오. (필기가 쉽도록 한글 4자 규격의 공간으로 구성되었습니다.)</p>
+    
+    <ol style="line-height: 2.1;">
+        <li>
+            공동주택 소유자나 사용자의 법정 결격사유는 그를 대리하여 활동하는 대리인에게 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )하므로, 본인이 파산선고를 받으면 대리 동대표도 당연퇴임한다.
+        </li>
+        <li>
+            공동주택 소유권이 공유인 경우 결격사유의 대상 유무는 소유 지분의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )을 소유한 사람을 기준으로 판단한다.
+        </li>
+        <li>
+            동별 대표자의 임기는 시행령에서 직접 법적으로 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년으로 정하고 있으며, ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )으로 임의 설정할 수 없다.
+        </li>
+        <li>
+            동별 대표자는 한 번만 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )할 수 있으나, 보궐선거 등으로 선출된 임기가 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 미만인 경우에는 중임 제한 산정 횟수에서 제외한다.
+        </li>
+        <li>
+            중임 제한자가 예외적으로 재출마하려면 2개월 이내에 재공고하는 방식으로 최소 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )회 이상 선출공고를 거쳤어야 하며, 선출을 위해서는 해당 선거구 입주자 등의 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )의 찬성을 얻어야 한다.
+        </li>
+        <li>
+            입주자대표회의의 임원은 동대표 중에서 선출하며, 회장 1명, 감사 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )명 이상, 이사 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )명 이상으로 구성하여야 한다.
+        </li>
+        <li>
+            사용자(세입자) 동대표가 회장 후보로 출마하기 위해서는 입주자 후보가 없어야 하고, 선출 전 전체 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )의 과반수 서면동의를 받아야 한다.
+        </li>
+        <li>
+            임원 중 회장과 감사를 입주자 등이 직접 선출할 때 선거가 성립하기 위한 투표율은 전체 입주자 등의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 이상이어야 한다.
+        </li>
+        <li>
+            이사는 무조건 입대의 구성원 과반수 찬성으로 선출하므로 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )를 통해 선출되는 규정이나 루트는 존재하지 않는다.
+        </li>
+        <li>
+            임대의 감사 임원이 입대의 의결 안건이 법령에 위반된다고 판단할 경우, 입대의에 공식적으로 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )를 요청할 수 있으며, 요청을 받으면 지체 없이 다시 심의해야 한다.
+        </li>
+        <li>
+            동대표, 임원 및 선관위 위원 선거를 총괄하기 위해 구성하는 선거관리위원회는 입대의가 아닌 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이 직접 스스로 구성한다.
+        </li>
+        <li>
+            선거관리위원회 법정 구성 인원은 500세대 이상 단지의 경우 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )명 이상 9명 이하이며, 500세대 미만 단지는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )명 이상 9명 이하로 구성한다.
+        </li>
+        <li>
+            선관위 공공위원을 외부에서 초빙 위촉할 수 있는 위촉 특례는 오직 세대수 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )세대 이상인 단지에 한하여 임의로 적용할 수 있다.
+        </li>
+    </ol>
+
+    <div style="font-size: 10.5pt; color: #a1a1aa; margin-top: 40px; padding: 15px; border-top: 1px dashed #cccccc; line-height: 1.8;">
+        <strong>[제10강 핵심 빈칸 채우기 정답 안내 - 인쇄 후 직접 맞춰보세요]</strong><br>
+        1. ㉠ 미친다(영향을 준다) <br>
+        2. ㉠ 과반수 <br>
+        3. ㉠ 2, &nbsp;&nbsp; ㉡ 관리규약 <br>
+        4. ㉠ 중임, &nbsp;&nbsp; ㉡ 6개월 <br>
+        5. ㉠ 2, &nbsp;&nbsp; ㉡ 과반수 <br>
+        6. ㉠ 2, &nbsp;&nbsp; ㉡ 1 <br>
+        7. ㉠ 입주자(소유주) <br>
+        8. ㉠ 10분의 1 <br>
+        9. ㉠ 직선제(직접 선거) <br>
+        10. ㉠ 재심의 <br>
+        11. ㉠ 입주자 등 <br>
+        12. ㉠ 5, &nbsp;&nbsp; ㉡ 3 <br>
+        13. ㉠ 500
+    </div>
+
+</body>
+</html>

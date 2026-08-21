@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 관계법규 - 제27강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght=400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+            letter-spacing: -0.05em;
+        }
+        
+        h1 {
+            font-size: 13pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        /* 토너 절약 4색 강조 클래스 */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #16803d; 
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #6d28d9; 
+        }
+        
+        /* 얇은 점선 형태의 토너 세이브 설명 상자 */
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        ol {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        /* 주관식 정답 가로 3열 배치 레이아웃 */
+        .answer-container {
+            margin-top: 30px;
+            padding: 15px;
+            border-top: 1px dashed #666666;
+            font-size: 10pt;
+            color: #777777;
+            line-height: 1.8;
+        }
+
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .answer-item {
+            border-bottom: 1px none #eeeeee;
+        }
+
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        제27강. 행위허가·신고 예외 및 하자담보책임 의무자·기산일·주택인도증서와 보수계획 통보 완벽 분석
+    </h1>
+    
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        1. 공동주택의 행위허가·신고 원칙 및 경미한 행위·세대구분형 행위허가 특례
+    </h2>
+    <ul>
+        <li><strong>행위허가 및 신고의 의의 (원칙)</strong>: 공동주택의 용도변경, 증축·개축·대수선, 파손·철거, 용도폐지 등의 행위를 하고자 하는 경우 시장·군수·구청장의 <span class="highlight-blue">허가를 받거나 신고</span>를 하여야 한다.</li>
+        <li><strong>경미한 행위의 허가·신고 면제 (★기출 포인트)</strong>:
+            <ul>
+                <li>국토교통부령으로 정하는 경미한 행위(장틀·문틀 교체, 창틀 교체, 단순 경미 수선 등)는 허가나 신고 대상에서 예외적으로 제외된다.</li>
+                <li>단, 행위절차는 면제되더라도 해당 동이나 단지 <span class="highlight-red">입주자등의 동의</span>는 반드시 확보하여야 수행할 수 있다.</li>
+            </ul>
+        </li>
+        <li><strong>기존 공동주택 내 세대구분형 공동주택 설치 (★행위허가 구별)</strong>:
+            <ul>
+                <li>신축 시 30세대 이상 대규모 설치는 주택법상 <span class="highlight-purple">사업계획승인</span> 대상이다.</li>
+                <li>반면, 이미 입주한 기존 아파트 세대의 일부 공간을 구획하여 세대구분형 공동주택을 설치·개량하는 행위는 사업계획승인이 아닌 공동주택관리법상 <span class="highlight-red">행위허가 또는 신고</span>를 받고 진행한다.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        2. 하자담보책임 의무자 구분, 책임의 2대 내용 및 공공임대주택 특례
+    </h2>
+    <ul>
+        <li><strong>하자담보책임의 2대 축</strong>: 하자담보책임은 단순히 하자를 고쳐주는 <span class="highlight-blue">① 하자보수 책임</span> 외에도, 하자 발생으로 입은 피해를 상쇄하는 <span class="highlight-red">② 손해배상 책임</span>이 결합된 종합적 책임 제도를 의미한다.</li>
+        <li><strong>법적 의무자 구분 (분양자 책임 vs 수급인 책임)</strong>:
+            <ul>
+                <li><strong>분양에 따른 담보책임</strong>: 주택법상 <span class="highlight-blue">사업주체</span> 및 건축법상 <span class="highlight-blue">건축주</span> (세대수 불문하고 10세대 소규모 건축주도 분양에 따른 책임을 짐).</li>
+                <li><strong>수급인의 담보책임 (★기출)</strong>: 건설 공사를 도급받아 시행한 <span class="highlight-purple">시공자</span> (증축·개축·대수선 및 리모델링을 수행한 시공자 포함).</li>
+            </ul>
+        </li>
+        <li><strong>공공임대주택사업자 담보책임 특례 (★출제 최다 빈출)</strong>:
+            <ul>
+                <li><strong>대상 및 시기</strong>: 분양전환을 목적으로 건설·공급한 공공임대주택의 <span class="highlight-red">공공주택사업자</span>는 <span class="highlight-purple">분양전환이 되기 전까지</span> 책임을 진다.</li>
+                <li><strong>책임 상대방 및 책임 범위</strong>: 실 거주자인 <span class="highlight-blue">임차인</span>에 대해서만 책임을 지며, 책임의 범위는 오직 <span class="highlight-red">하자보수 책임에 한정</span>된다. (★소유자가 아니므로 손해배상 책임은 부담하지 않음!)</li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">의무자 구분</th>
+                <th style="width: 30%;">분양 목적 사업주체·건축주</th>
+                <th style="width: 20%;">시공자 (수급인)</th>
+                <th style="width: 25%;">공공임대주택사업자</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th class="highlight-blue">책임 발생 근거</th>
+                <td>분양계약에 따른 담보책임</td>
+                <td>도급계약(수급인) 담보책임</td>
+                <td>공공주택특별법 특례 규정</td>
+            </tr>
+            <tr>
+                <th class="highlight-purple">책임 이행 상대방</th>
+                <td>입주자(소유자) 및 입대의 등</td>
+                <td>도급인 및 입주자등</td>
+                <td><span class="highlight-purple">임차인 및 임차인대표회의</span></td>
+            </tr>
+            <tr>
+                <th class="highlight-red">책임의 법적 범위</th>
+                <td><span class="highlight-red">하자보수 + 손해배상</span> 전채</td>
+                <td><span class="highlight-red">하자보수 + 손해배상</span> 전체</td>
+                <td><span class="highlight-red">오직 하자보수 책임만 짐</span><br>(손해배상책임 제외)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        3. 하자담보책임 기간의 법정 기산일 및 내력구조부 등 기간 체계
+    </h2>
+    <ul>
+        <li><strong>전유부분 vs 공용부분 기산일 구분 (★주관식 단답형 빈출)</strong>:
+            <ul>
+                <li><strong>전유부분</strong>: 해당 입주자(또는 공공임대주택의 임차인)에게 <span class="highlight-red">주택을 인도한 날</span>.</li>
+                <li><strong>공용부분</strong>: 해당 공동주택의 <span class="highlight-blue">사용검사일</span> (단, 분할사용검사일, 동별사용검사일, 건축법상 사용승인일, 공동주택 전부에 대한 임시사용승인일 포함).</li>
+            </ul>
+        </li>
+        <li><strong>임시사용승인일 기산일 특례 주의사항</strong>:
+            <ul>
+                <li>단지 일부 동에 대해서만 임시사용승인을 받은 날은 공용부분 기산일이 될 수 없으며, 반드시 단지 <span class="highlight-purple">"전부에 대해 임시사용승인을 받은 경우"</span>에만 그 임시사용승인일이 법정 기산일이 된다.</li>
+            </ul>
+        </li>
+        <li><strong>시설물별 담보책임 기간 (최대 10년 범위 내 대통령령)</strong>:
+            <ul>
+                <li><strong>10년 (내력구조부 및 기초)</strong>: 내력구조부별 주요구조부(내력벽, 기둥, 바닥, 보, 지붕틀) 및 <span class="highlight-red">지방공사(지반공사)</span>. (암기공식: '주지선임은 10년' -> 주요구조부 + 지정·지반공사)</li>
+                <li><strong>5년 (지붕 및 대형 공사)</strong>: 대지조성공사, 철근콘크리트공사, 철골공사, 조적공사, <span class="highlight-purple">지붕공사</span>, 방수공사 등. (암기공식: '대철철 조지방')</li>
+                <li><strong>2년·3년 (일반 시설공사)</strong>: 마감공사, 미장공사, 타일공사, 전기 및 마감 관련 시설공사 등.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+            💡 [핵심 정리] 하자담보책임기간 연수 암기 핵심 팁
+        </div>
+        <ul>
+            <li><strong>10년 보증 암기</strong>: 내력구조부의 주요구조부 + 지정 및 지반공사 = <span class="highlight-red">10년</span> ('주'요구조부 + '지'방공사 = 주지 10년)</li>
+            <li><strong>5년 보증 암기</strong>: 대지조성, 철근콘크리트, 철골, 조적, 지붕, 방수 = <span class="highlight-purple">5년</span> ('대철철 조지방')</li>
+        </ul>
+    </div>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        4. 주택인도증서 작성·인계 및 K-apt 공개 의무와 미분양 세대 15일 특례
+    </h2>
+    <ul>
+        <li><strong>주택인도증서의 목적 및 작성 주체</strong>: 전유부분의 인도일이 명확해야 하자담보책임 기산일 분쟁을 막을 수 있으므로, <span class="highlight-blue">사업주체(건축주 포함)</span>는 입주자에게 전유부분을 인도할 때 <span class="highlight-blue">주택인도증서</span>를 작성해야 한다.</li>
+        <li><strong>인계 및 K-apt 공개 프로세스 (30일의 법칙)</strong>:
+            <ul>
+                <li><strong>분양주택</strong>: 사업주체 -> 관리주체에게 인도증서 인계 -> <span class="highlight-red">관리주체</span>는 인계받은 날부터 <span class="highlight-purple">30일 이내</span>에 공동주택관리정보시스템(K-apt)에 공개하여야 한다. (비의무 단지는 '관리인'이 공개)</li>
+                <li><strong>공공임대주택</strong>: 공공주택사업자가 관리주체이므로 별도 인계 절차 없이 분양전환 전까지 보관하며, <span class="highlight-red">작성한 날부터 30일 이내</span>에 K-apt에 직접 공개한다.</li>
+            </ul>
+        </li>
+        <li><strong>미분양 세대 추후 인도 시 인계 특례 (★유일한 15일 규정)</strong>:
+            <ul>
+                <li>초기 관리인계 시 미분양으로 인계인수서의 인도일 현황에서 누락된 세대가 추후 분양·인도된 경우, 사업주체는 해당 주택의 인도일부터 <span class="highlight-red">15일 이내</span>에 인도일 현황을 관리주체에게 인계하여야 한다. (30일이 아님에 극도로 주의!)</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        5. 하자보수 청구, 하자보수계획 지자체장 통보 및 60일 이내 보수기간 신설 (★개정 핵심)
+    </h2>
+    <ul>
+        <li><strong>하자보수 청구권자 범위 (입대의 등 및 임차인 등)</strong>:
+            <ul>
+                <li><strong>분양주택 (입주자대표회의 등)</strong>: 입주자, 입주자대표회의, 관리주체, 집합건물법상 관리단.</li>
+                <li><strong>공공임대주택 (임차인 등)</strong>: 공공임대주택의 임차인, 임차인대표회의.</li>
+            </ul>
+        </li>
+        <li><strong>사업주체의 조치 의무 (15일 이내)</strong>: 하자보수 청구를 받은 사업주체는 청구받은 날부터 <span class="highlight-blue">15일 이내</span>에 하자를 보수하거나, 보수계획을 서면으로 통보하여야 한다.</li>
+        <li><strong>하자보수계획 통보 대상 확대 및 60일 제한 (★최신 개정 신설)</strong>:
+            <ul>
+                <li><strong>지자체장 통보 의무 추가</strong>: 사업주체가 하자보수계획을 제출할 때 과거에는 입대의 등(또는 임차인 등)에게만 주었으나, 개정법상 반드시 <span class="highlight-red">시장·군수·구청장에게도 함께 제출·통보</span>하여야 한다.</li>
+                <li><strong>보수기간 60일 한도 규정 신설</strong>: 사업주체가 수립하는 하자보수계획상의 보수기간은 반드시 청구받은 날로부터 <span class="highlight-red">60일 이내</span>로 명시하여 수립·이행하여야 한다. (무기한 보수 지연 방지)</li>
+                <li><strong>보수 결과 통보</strong>: 계획에 따라 하자보수를 완료한 사업주체는 즉시 그 결과를 <span class="highlight-purple">시장·군수·구청장 및 입주자대표회의 등</span>에게 서면 통보하여야 한다.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        6. 담보책임 종료확인서 작성 방식 (전유·공용 및 사용자 동대표 단지 예외)
+    </h2>
+    <ul>
+        <li><strong>담보책임 종료확인서의 의의</strong>: 하자보수보증금을 반환받거나 담보책임을 완전히 종결짓기 위해 사업주체와 당사자가 최종 작성하는 합의 서술 서식이다. (반드시 <span class="highlight-blue">공동으로 작성</span>해야 함)</li>
+        <li><strong>전유부분 vs 공용부분 작성 주체</strong>:
+            <ul>
+                <li><strong>전유부분</strong>: <span class="highlight-blue">사업주체 + 해당 입주자</span>가 공동 작성.</li>
+                <li><strong>공용부분 원칙</strong>: <span class="highlight-blue">사업주체 + 입주자대표회의 회장</span>(비의무 단지는 관리인)이 공동 작성. (단, 작성 전 반드시 <span class="highlight-purple">입주자대표회의의 의결</span>을 거쳐야 함)</li>
+            </ul>
+        </li>
+        <li><strong>사용자 동대표 과반수 단지의 공용부분 작성 예외 (★특례)</strong>:
+            <ul>
+                <li>입주자대표회의 구성원 중 사용자인 동별 대표자가 과반수인 경우, 소유자의 재산권 침해 방지를 위해 입대의 의결로 종료확인서를 작성할 수 없다.</li>
+                <li>이 경우 사업주체는 입대의 의결을 거치지 아니하고, 전체 <span class="highlight-red">입주자(소유자) 5분의 4 이상</span>과 개별적으로 서명·날인하여 종료확인서를 작성하여야 한다.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><line x1="18" y1="2" x2="22" y2="6"></line><path d="M7.5 20.5L19 9l-4-4L3.5 16.5 2 22z"></path></svg>
+        7. 주관식 단답형 및 다단 빈칸 채우기 완벽 대비 (실전 훈련)
+    </h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡)에 들어갈 알맞은 핵심 용어나 법정 숫자를 아래 여유 공백에 직접 기재해 보십시오.</p>
+    
+    <ol style="line-height: 2.1;">
+        <li>
+            공동주택의 창틀 교체 등 국토교통부령으로 정하는 경미한 행위는 허가나 신고 대상에서 제외되나, 수행을 위해 해당 동 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )의 동의는 확보하여야 한다.
+        </li>
+        <li>
+            기존 공동주택 세대의 일부를 구획하여 세대구분형 공동주택을 설치하고자 하는 경우에는 사업계획승인이 아닌 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 또는 신고를 받아야 한다.
+        </li>
+        <li>
+            공동주택 건설 공사를 도급받아 시공한 자가 부담하는 담보책임의 성격은 민법상 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )의 담보책임이다.
+        </li>
+        <li>
+            분양전환 공공임대주택의 공공주택사업자가 임차인에 대해 부담하는 담보책임의 범위는 오직 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 책임에 한정된다.
+        </li>
+        <li>
+            공동주택 전유부분의 하자담보책임 기간에 대한 법정 기산일은 입주자에게 주택을 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 날이다.
+        </li>
+        <li>
+            공용부분의 임시사용승인일이 하자담보책임 기산일이 되기 위해서는 공동주택 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )에 대하여 임시사용승인을 받은 경우이어야 한다.
+        </li>
+        <li>
+            내력구조부별 주요구조부 및 지정·지반공사 등 지방공사에 대한 법정 하자담보책임 기간은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년이다.
+        </li>
+        <li>
+            공동주택 지붕공사 및 방수공사, 대지조성공사에 적용되는 법정 하자담보책임 기간은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년이다.
+        </li>
+        <li>
+            관리주체가 사업주체로부터 주택인도증서를 인계받은 경우 인계받은 날부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이내에 공동주택관리정보시스템(K-apt)에 공개하여야 한다.
+        </li>
+        <li>
+            사업주체는 미분양으로 인계인수서에서 누락된 세대가 추후 인도된 경우 그 인도일부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이내에 관리주체에게 인도일 현황을 인계해야 한다.
+        </li>
+        <li>
+            하자보수 청구를 받은 사업주체는 청구받은 날부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이내에 하자를 보수하거나 보수계획을 서면으로 통보하여야 한다.
+        </li>
+        <li>
+            사업주체가 하자보수계획을 수립하여 제출할 때에는 입주자대표회의등 외에 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )에게도 함께 제출·통보하여야 한다.
+        </li>
+        <li>
+            사업주체가 수립하는 하자보수계획상의 보수기간은 청구받은 날부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이내이어야 한다.
+        </li>
+        <li>
+            공용부분의 담보책임 종료확인서를 작성하고자 할 때 입주자대표회의 회장은 사전에 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )의 의결을 거쳐야 한다.
+        </li>
+        <li>
+            사용자인 동별 대표자가 과반수인 입대의 단지에서 공용부분 담보책임 종료확인서를 작성하려면 전체 입주자의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 이상과 개별 서명·날인하여야 한다.
+        </li>
+        <li>
+            하자보수 청구 전 전문가에게 의뢰하여 실시하는 하자진단 비용은 법률 규정상 최종적으로 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )가 부담한다.
+        </li>
+    </ol>
+
+    <!-- 수험생 정답 확인용 하단 주르륵 배치 영역 (가로 3열 정렬 방식) -->
+    <div class="answer-container">
+        <strong>[제27강 주관식 단답형 정답 리스트]</strong> (가로 3열 정렬 방식)
+        <div class="answer-grid">
+            <div class="answer-item"><strong>1.</strong> ㉠ 입주자등</div>
+            <div class="answer-item"><strong>2.</strong> ㉠ 허가(또는 행위허가)</div>
+            <div class="answer-item"><strong>3.</strong> ㉠ 수급인</div>
+            
+            <div class="answer-item"><strong>4.</strong> ㉠ 하자보수</div>
+            <div class="answer-item"><strong>5.</strong> ㉠ 인도한</div>
+            <div class="answer-item"><strong>6.</strong> ㉠ 전부</div>
+            
+            <div class="answer-item"><strong>7.</strong> ㉠ 10(또는 십)</div>
+            <div class="answer-item"><strong>8.</strong> ㉠ 5(또는 오)</div>
+            <div class="answer-item"><strong>9.</strong> ㉠ 30(또는 삼십)</div>
+            
+            <div class="answer-item"><strong>10.</strong> ㉠ 15(또는 열다섯)</div>
+            <div class="answer-item"><strong>11.</strong> ㉠ 15(또는 열다섯)</div>
+            <div class="answer-item"><strong>12.</strong> ㉠ 시장·군수·구청장</div>
+            
+            <div class="answer-item"><strong>13.</strong> ㉠ 60(또는 육십)</div>
+            <div class="answer-item"><strong>14.</strong> ㉠ 입주자대표회의</div>
+            <div class="answer-item"><strong>15.</strong> ㉠ 5분의 4</div>
+            
+            <div class="answer-item"><strong>16.</strong> ㉠ 당사자</div>
+            <div class="answer-item"></div>
+            <div class="answer-item"></div>
+        </div>
+    </div>
+
+</body>
+</html>

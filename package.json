@@ -5,6 +5,7 @@
   "main": "app.js",
   "scripts": {
     "build": "node scripts/rename-notes.js && node scripts/build-data.js",
+    "sync:android": "node scripts/sync-android.js",
     "start": "python3 -m http.server 8085"
   },
   "keywords": ["주택관리사보", "관계법규", "관리실무"],

@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 관계법규 - 제22강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght=400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+            letter-spacing: -0.05em; /* 장평 및 자간 최적화 */
+        }
+        
+        h1 {
+            font-size: 13pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8; /* 프리미엄 블루 라인 */
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        /* 토너 절약 4색 강조 클래스 */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #16803d; /* 학습 편의 녹색 */
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #6d28d9; /* 구조 구분 보라색 */
+        }
+        
+        /* 얇은 점선 형태의 토너 세이브 설명 상자 */
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        ol {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        /* 주관식 정답 가로 3열 배치 레이아웃 */
+        .answer-container {
+            margin-top: 30px;
+            padding: 15px;
+            border-top: 1px dashed #666666;
+            font-size: 10pt;
+            color: #777777;
+            line-height: 1.8;
+        }
+
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .answer-item {
+            border-bottom: 1px none #eeeeee;
+        }
+
+        /* 인쇄 최적화 설정 */
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+        제22강. 동대표 결격사유·임기 규정 완화 및 선관위 구성·의결사항 및 교육체계 완전 비교
+    </h1>
+    
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        1. 동별 대표자 결격 및 자격상실 사유 (체납 결격 기간 제한 완화 적용)
+    </h2>
+    <ul>
+        <li><strong>원칙적 결격사유의 틀</strong>: 관련 법령 위반으로 금고 이상의 실형 선고를 받고 집행이 끝나거나 면제된 날부터 <span class="highlight-blue">2년이 경과하지 아니한 사람</span>은 동대표가 될 수 없다.</li>
+        <li><strong>관리비 체납 자격 결격 완화 (최신 법 개정 반영)</strong>:
+            <ul>
+                <li>관리비 등을 최근 <span class="highlight-red">3개월 이상 연속 체납</span>하여 동대표에서 당연퇴임된 자는 원칙적으로 남은 임기 동안 결격사유에 해당한다.</li>
+                <li><strong>과잉 제재 방지 예외 법칙 (★출제 유력)</strong>: 체납으로 퇴임된 자의 남은 임기가 <span class="highlight-purple">1년을 초과</span>하더라도, 체납 금액을 완납했다면 퇴임일로부터 딱 <span class="highlight-green">1년만 결격사유</span>로 보며 1년이 지나면 다시 출마할 수 있다.</li>
+            </ul>
+        </li>
+        <li><strong>대리권 제한의 범위</strong>: 소유자가 서면으로 위임한 대리권이 없는 배우자나 직계존비속은 동대표가 될 수 없다. 다만, 공동소유 주택의 지분을 <span class="highlight-blue">과반수 소유한 자</span>는 단독으로 자격을 인정받는다.</li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        2. 동대표 임기 및 중임 제한 완화 규칙 (과반수 찬성의 법칙)
+    </h2>
+    <ul>
+        <li><strong>임기 대원칙</strong>: 동대표 임기는 <span class="highlight-blue">2년</span>으로 하며, 단 한 번만 중임(연속 또는 불연속 불문)할 수 있다.</li>
+        <li><strong>보궐선거 특례 (6개월의 법칙)</strong>: 보궐선거 등으로 당선되어 수행한 임기가 <span class="highlight-purple">6개월 미만</span>인 경우에는 중임 제한을 적용할 때 선출 횟수에 포함하지 않는다.</li>
+        <li><strong>중임 제한 완화 절차 (★개정의 역사: 3분의 2 → 2분의 1 → 과반수)</strong>:
+            <ul>
+                <li>동대표 후보자가 없거나 당선인이 없는 선거구에서, 직전 선출공고일부터 <span class="highlight-red">2개월 이내</span>에 다시 선출공고를 올리는 경우 중임자도 입후보가 허용된다.</li>
+                <li><strong>선출 정족수 조건</strong>: 해당 선거구 입주자등 <span class="highlight-green">과반수의 찬성</span>을 얻어야만 동대표로 당선될 수 있다. (기존 비중임자 대비 검증 요건 대폭 강화)</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        3. 선거관리위원회 구성 및 대리권 없는 배우자 등의 위원 위촉 특례
+    </h2>
+    <ul>
+        <li><strong>의무 구성 주체</strong>: 선거관리위원회는 동대표 선거 업무를 위해 <span class="highlight-blue">입주자등이 자체적으로 구성</span>한다.</li>
+        <li><strong>조직 규모 및 규칙</strong>: 500세대 이상 단지는 <span class="highlight-purple">5명 이상 9명 이하</span>, 500세대 미만 단지는 <span class="highlight-purple">3명 이상 9명 이하</span>의 위원으로 구성한다.</li>
+        <li><strong>대리권 없는 배우자의 위원 자격 특례 (★동대표 자격 요건과 극적 대비)</strong>:
+            <ul>
+                <li>소유자의 서면 위임 대리권이 없는 배우자나 직계존비속은 자격 부족으로 동대표가 될 수 없다.</li>
+                <li>그러나, 선거관리위원회 위원은 관리규약상 <span class="highlight-red">입주자등의 범위에 포함</span>되므로 대리권이 없더라도 위원으로 합법 위촉될 수 있다. (남편 동의 없이도 부인의 위원 활동 가능)</li>
+            </ul>
+        </li>
+        <li><strong>의결 정족수 산정의 정직성 (★함정 대비)</strong>:
+            <ul>
+                <li>선관위 의결은 구성원 과반수 찬성으로 하되, 이때 '구성원'이란 오직 <span class="highlight-green">관리규약으로 정한 정원</span>만을 뜻한다. (선출 지연 시 '실제 선출된 구성원의 3분의 2 이상' 특례를 적용하는 입대의 법리가 선관위에는 절대 적용되지 않음)</li>
+            </ul>
+        </li>
+    </ul>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+            💡 [수험 팁] 선관위 구성원 확인 의무의 이원화 구조 및 지원 요청
+        </div>
+        <ul>
+            <li><strong>동대표 후보자 vs 동대표 자격 확인</strong>: 선거관리위원장은 동대표 <span class="highlight-blue">후보자</span>에 대해서는 자격요건 충족 여부를 반드시 <span class="highlight-red">확인하여야 한다(의무)</span>. 그러나 이미 선출된 동대표에 대해서는 자격을 <span class="highlight-purple">확인할 수 있다(재량)</span>로 이원화되어 있다. 단, 범죄경력 조회는 후보자와 동대표 모두 동의를 받아 반드시 조회하여야 한다.</li>
+            <li><strong>지자체 선관위 위탁</strong>: 500세대 이상 공동주택의 선관위는 투·개표 관리 업무를 구·시·군선거관리위원회에 지원 요청할 수 있다.</li>
+        </ul>
+    </div>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        4. 임원의 업무범위 및 감사의 감사보고서 제출·재심의 요청권
+    </h2>
+    <ul>
+        <li><strong>업무범위 규정 주체</strong>: 임원의 세부 업무 범위는 시끄러운 다툼을 방지하고자 개별 관리규약이 아닌 <span class="highlight-blue">국토교통부령</span>으로 일괄 규정한다.</li>
+        <li><strong>감사(Auditor)의 고유 권한 및 의무 (★시험 출제 최상위)</strong>:
+            <ul>
+                <li>감사는 관리비 등의 회계 관계 업무를 포함하여 회장의 업무가 아닌 <span class="highlight-red">관리주체의 업무</span> 전반을 감사한다.</li>
+                <li><strong>공개 및 보고 의무</strong>: 감사는 감사보고서를 작성하여 입대의와 관리주체에게 동시에 제출하고, 입주민들이 상시 볼 수 있도록 <span class="highlight-purple">인터넷 홈페이지 및 게시판</span>에 전면 공개하여야 한다.</li>
+                <li><strong>의결 안건 재심의 요청권 (신설)</strong>: 감사는 입대의에서 의결한 안건이 관계 법령이나 관리규약에 위반된다고 판단되면, 입대의에 공식적인 <span class="highlight-green">재심의를 요청</span>할 수 있으며 입대의는 이에 따라 재심의를 진행해야 한다.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M11 5H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-5"></path><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+        5. 입주자대표회의 의결사항 및 사용자가 과반수 점유 시 의결 특례
+    </h2>
+    <ul>
+        <li><strong>의결사항 핵심 요약</strong>:
+            <ul>
+                <li>관리방법의 결정 및 변경 <span class="highlight-blue">제안</span> (결정권자가 아님에 주의), 관리규약 개정안 <span class="highlight-blue">제안</span>.</li>
+                <li>예산안 및 결산 승인, 자치관리기구 직원 인면(자치관리만 해당), 어린이집 위탁운영 제안 등.</li>
+            </ul>
+        </li>
+        <li><strong>사용자 과반수 점유 단지의 특별 규정 (★매우 고난도 조문 분석)</strong>:
+            <ul>
+                <li>소유자들의 사유재산 및 장충금 등 중대한 재정적 이익을 대변하기 위해 일반 단지와 의결 구조를 차별화한다.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 20%;">해당 사안 항목</th>
+                <th style="width: 35%;">일반 단지 의결 방법 (구성원 과반수)</th>
+                <th style="width: 45%;">사용자 동대표 과반수 단지 의결 특례</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th class="highlight-blue">공용부분 담보책임<br>종료 확인 (하자)</th>
+                <td>입대의 의결을 거쳐 확인서 작성 수리</td>
+                <td>소유자 재산권 졸속 합의 차단을 위해 <span class="highlight-red">입대의 의결사항에서 전면 제외</span></td>
+            </tr>
+            <tr>
+                <th class="highlight-purple">장기수선계획 수립·조정<br>(비용 지출 수반 등)</th>
+                <td>입대의 구성원 과반수 찬성 의결</td>
+                <td>실제 비용을 납부하는 주체인 <span class="highlight-green">입주자(소유자) 과반수 서면동의</span>로 대체</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        6. 교육 체계 완전 비교 (동대표 입대의 운영교육 vs 주택관리업자 및 배치 소장 교육)
+    </h2>
+    <ul>
+        <li><strong>교육 체계의 성격 분석</strong>: 대상자의 전문성과 위상에 따라 실시권자와 소요 경비 처리 재원이 철저하게 분리되어 설계되어 있다.</li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 20%;">교육 구분</th>
+                <th style="width: 40%;">동대표 운영 교육 (입대의 구성원)</th>
+                <th style="width: 40%;">주택관리업자 및 소장 의무 교육</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th class="highlight-blue">실시권자(주체)</th>
+                <td>관할 관청의 <span class="highlight-blue">시장·군수·구청장</span></td>
+                <td>상위 광역 자치단체장인 <span class="highlight-red">시·도지사</span></td>
+            </tr>
+            <tr>
+                <th class="highlight-purple">교육 기간 및 시간</th>
+                <td>매년 <span class="highlight-purple">4시간</span> (10일 전까지 의무 공고)</td>
+                <td>신규 등록/배치 후 3개월 이내 <span class="highlight-purple">3일</span> (매 3년 주기)</td>
+            </tr>
+            <tr>
+                <th class="highlight-red">경비 부담 주체</th>
+                <td>입대의 <span class="highlight-red">운영 경비 (사용료 성격)</span>에서 집행</td>
+                <td>피교육자 본인 또는 고용한 주택관리업자 부담</td>
+            </tr>
+            <tr>
+                <th class="highlight-green">비의무 참여 허용</th>
+                <td>희망 입주자등 참여 가능 (단, <span class="highlight-green">본인 부담</span>)</td>
+                <td>배치예정자 신청 수강 가능 (경력 인정)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+            💡 [실무 고난도 조문] 5년 미종사(경력단절) 소장의 배치 전 필수 이수 조건
+        </div>
+        <ul>
+            <li><strong>5년 경력단절 복귀 자격 요건</strong>: 주택관리사 자격을 취득했더라도 직전 <span class="highlight-blue">5년 이내</span>에 관리업무 종사 경력이 단절된 경우에는 반드시 미리 배치 전 교육을 이수해야만 합법적 소장 배치가 가능하다.</li>
+            <li><strong>구분 실시의 원칙 (★차별화 방지)</strong>: 이 경우 무경력 합격자인 '주택관리사보'와 베테랑 경력단절 복귀자인 '주택관리사'의 교육은 성격이 다르므로 반드시 <span class="highlight-red">구분하여 실시</span>하여야 한다.</li>
+        </ul>
+    </div>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        7. 관리규약 준칙 제정·개정 신고 및 관리주체 동의 의무 사항 (실외기 설치 차단)
+    </h2>
+    <ul>
+        <li><strong>관리규약 준칙 및 신고</strong>: <span class="highlight-blue">시·도지사</span>가 준칙을 정하며, 입주자등은 이를 참조하여 자율 규약을 결정한다. 제정은 사업주체/관리인이 하고 개정은 입대의 회장이 <span class="highlight-purple">30일 이내에 시·군·구청장</span>에게 신고한다.</li>
+        <li><strong>관리주체 동의 의무 (허용 기준의 이중성)</strong>:
+            <ul>
+                <li><strong>가축 사육 동의</strong>: 가축 사육은 원칙적으로 관리주체의 동의가 필요하나, <span class="highlight-green">장애인 보조견</span>은 절대 동의 대상이 아니며 무조건 허용된다.</li>
+                <li><strong>발코니 난간 실외기 설치 금지 특례 (★초핵심 함정)</strong>: 발코니 외벽 돌출물 설치는 관리주체 동의 사항이다. 그러나 세대 내부에 배기장치를 배치할 수 있는 별도의 공간이 이미 설계되어 마련된 단지라면, 난간 밖 실외기 설치는 동의 대상이 아니라 아예 <span class="highlight-red">돌출물 설치 행위 자체가 전면 금지</span>된다.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><line x1="18" y1="2" x2="22" y2="6"></line><path d="M7.5 20.5L19 9l-4-4L3.5 16.5 2 22z"></path></svg>
+        8. 주관식 단답형 및 다단 빈칸 채우기 완벽 대비 (실전 훈련)
+    </h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡)에 들어갈 알맞은 핵심 용어나 법정 숫자를 아래 여유 공백에 직접 기재해 보십시오.</p>
+    
+    <ol style="line-height: 2.1;">
+        <li>
+            동대표로서 관리비 등을 최근 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )개월 이상 연속하여 체납하여 퇴임된 경우로서 남은 임기가 1년을 초과하더라도, 퇴임 후 완납 시 자격상실일부터 딱 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년만 결격사유로 본다.
+        </li>
+        <li>
+            보궐선거로 선출되어 당선된 동대표의 수행 임기가 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )개월 미만인 상황에서는, 향후 정식 임기 시작 시 중임 제한 규정의 횟수에 미포함 처리된다.
+        </li>
+        <li>
+            2회 선출공고를 거쳤음에도 당선자가 없을 시, 직전 선출공고일로부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )개월 이내에 다시 재선출공고를 올리면 중임자도 입주자등 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 찬성으로 선출될 수 있다.
+        </li>
+        <li>
+            대리권이 없는 소유자의 배우자나 직계존비속은 원칙적으로 동대표가 될 수 없으나, ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )의 위원은 될 수 있도록 자격을 보장하고 있다.
+        </li>
+        <li>
+            선거관리위원회 의결 정족수 계산 시 구성원의 기준은 입대의 특례(실제 선출된 인원)와 무관하게 오직 관리규약으로 고정하여 규정한 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )을 말한다.
+        </li>
+        <li>
+            동대표 임원의 회장, 감사, 이사 등의 법적 업무 범위는 개별 아파트 단지의 관리규약이 아닌 범용 규정인 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )령으로 정확히 명시되어 있다.
+        </li>
+        <li>
+            공동주택의 감사는 회장의 개인 비서가 아니며, 법정 관리단체의 수장인 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )의 집행 업무 전반을 감사하고 그 보고서를 제출 및 인터넷에 공개하여야 한다.
+        </li>
+        <li>
+            감사는 입대의에서 의결한 사안이 법령이나 관리규약에 정면으로 위반된다고 자체 판단하면, 지체 없이 입대의에 서면으로 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )을 정식 요청할 권한을 갖는다.
+        </li>
+        <li>
+            입주자대표회의는 아파트 단지의 관리방법을 단독 결정하는 기구가 아니며, 입주자등에게 결정에 필요한 방법을 공식적으로 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )하는 업무를 수행한다.
+        </li>
+        <li>
+            사용자(세입자)인 동대표가 전체 과반수를 점유한 아파트 단지에서, 공용부분 담보책임 종료 확인 업무는 임의 결정 부정을 막기 위해 입대의 의결사항에서 완전히 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )한다.
+        </li>
+        <li>
+            사용자가 과반수를 점유할 때 장기수선계획의 수립 및 조정 업무는 구성원 표결이 불가능하므로 반드시 비용 귀속 대상자인 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 과반수의 서면동의로 최종 확정한다.
+        </li>
+        <li>
+            시장·군수·구청장은 입대의 구성원에 대하여 매년 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )시간 이상 공동주택 관리에 필요한 운영 교육을 의무적으로 직접 실시하여야 한다.
+        </li>
+        <li>
+            동대표가 받아야 하는 운영 교육의 소요 경비는 개별 입주민 개인 주머니에서 나오는 것이 아니라 단지의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )에서 합법적으로 지출된다.
+        </li>
+        <li>
+            주택관리업자 및 배치 받은 소장 등의 실무 보수 교육은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )가 실시하며, 배치되거나 등록을 완료한 날로부터 반드시 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )개월 이내에 받아야 한다.
+        </li>
+        <li>
+            소장 배치 예정일 직전 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년 이내에 관리 업무 경력이 단절되었던 사람은 사전에 교육을 수강해야 하며, 이 교육은 주택관리사와 주택관리사보를 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )하여 교육을 실시한다.
+        </li>
+        <li>
+            세대 내 배기장치 공간이 마련되어 완공된 공동주택의 경우 발코니 돌출 실외기 설치 행위는 관리주체의 동의 여부와 일체 무관하게 전면적으로 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )된다.
+        </li>
+    </ol>
+
+    <!-- 수험생 정답 확인용 하단 주르륵 배치 영역 (가로 3열 정렬 방식) -->
+    <div class="answer-container">
+        <strong>[제22강 주관식 단답형 정답 리스트]</strong> (가로 3열 정렬 방식)
+        <div class="answer-grid">
+            <div class="answer-item"><strong>1.</strong> ㉠ 3(또는 세) | ㉡ 1(또는 한)</div>
+            <div class="answer-item"><strong>2.</strong> ㉠ 6(또는 여섯)</div>
+            <div class="answer-item"><strong>3.</strong> ㉠ 2(또는 두) | ㉡ 과반수</div>
+            
+            <div class="answer-item"><strong>4.</strong> ㉠ 선거관리위원회</div>
+            <div class="answer-item"><strong>5.</strong> ㉠ 정원</div>
+            <div class="answer-item"><strong>6.</strong> ㉠ 국토교통부</div>
+            
+            <div class="answer-item"><strong>7.</strong> ㉠ 관리주체</div>
+            <div class="answer-item"><strong>8.</strong> ㉠ 재심의(또는 재심의 요청)</div>
+            <div class="answer-item"><strong>9.</strong> ㉠ 제안</div>
+            
+            <div class="answer-item"><strong>10.</strong> ㉠ 제외</div>
+            <div class="answer-item"><strong>11.</strong> ㉠ 입주자</div>
+            <div class="answer-item"><strong>12.</strong> ㉠ 4(또는 네) | ㉡ 시장·군수·구청장</div>
+            
+            <div class="answer-item"><strong>13.</strong> ㉠ 운영 경비(또는 입대의 운영경비)</div>
+            <div class="answer-item"><strong>14.</strong> ㉠ 시·도지사 | ㉡ 3(또는 세)</div>
+            <div class="answer-item"><strong>15.</strong> ㉠ 5(또는 다섯) | ㉡ 구분</div>
+            
+            <div class="answer-item"><strong>16.</strong> ㉠ 금지</div>
+            <div class="answer-item"></div>
+            <div class="answer-item"></div>
+        </div>
+    </div>
+
+</body>
+</html>

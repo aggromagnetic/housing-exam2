@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 - 제58강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+            letter-spacing: -0.05em;
+        }
+        
+        h1 {
+            font-size: 12pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        /* 토너 절약 4색 시각 강조 클래스 */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #16803d; 
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #6d28d9; 
+        }
+        
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        ol.quiz-list {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+            line-height: 2.1;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        /* 정답 리스트 3열 격자 레이아웃 */
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px 15px;
+        }
+
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        제58강. 청소구(Clean Out), 발포존(Foam Zone), 배수 계통(종국유속·도수현상), 기구배수 부하단위(DFU), 대변기 세정방식 및 배관재료
+    </h1>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        1. 청소구(Clean Out / 소재구)의 필수 설치 위치 5가지 및 법정 간격 기준
+    </h2>
+    <ul>
+        <li><strong>청소구(Clean Out / 영업명: 클린아웃)의 설치 목적</strong>: 배수관 내부가 오물로 막혔을 때 캡(Cap)을 열고 이물질을 제거 및 점검하기 위해 배관 계통에 설치하는 점검 개구부.</li>
+        <li><strong>청소구의 법정 필수 설치 위치 5가지 (★단독 및 객관식 함정 정답 출제 빈도 최다)</strong>:
+            <ol>
+                <li><span class="highlight-blue">가옥배수관(배수수평주관)과 부지하수관(대지하수관)의 접속 장소</span>.</li>
+                <li><span class="highlight-red">배수수직관의 최하단부 근처</span>
+                    <br>&rarr; <span class="highlight-purple">핵심 출제 함정</span>: "배수수직관 최상단부" 또는 "배수수직관과 신정통기관 접속부"에 설치한다고 나오면 <span class="highlight-red">100% 오답!</span> (최상단부는 신정통기관으로 연장되므로 막히지 않아 청소구 설치 장소가 아님).</li>
+                <li><span class="highlight-purple">배수수평지관 및 배수수평주관의 기점 (시작점 / 상류측 / 최상단부)</span>
+                    <br>&rarr; <span class="highlight-purple">핵심 출제 함정</span>: 배수수평지관과 배수수직관의 접속점(최하류측/하단부)은 오물이 자유 낙하하므로 청소구 설치 장소가 <span class="highlight-red">아님!</span></li>
+                <li><span class="highlight-green">배관이 45도 이상의 각도로 방향을 바꾸는 굴곡부</span> (30도 X).</li>
+                <li><span class="highlight-red">배수관의 직선거리가 긴 경우 규정 간격 이내 (배수수평관 중간점)</span>:
+                    <br>&rarr; <span class="highlight-red">관경 100mm 이하</span>: 직선거리 <span class="highlight-red">15m 이내마다</span> 설치 (관경이 작을수록 잘 막히므로 15m).
+                    <br>&rarr; <span class="highlight-red">관경 100mm 초과</span>: 직선거리 <span class="highlight-red">30m 이내마다</span> 설치.</li>
+            </ol>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">배관 구분</th>
+                <th style="width: 45%;">청소구 설치 인정/금지 위치</th>
+                <th style="width: 30%;">수험 법정 기준 수치</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>배수수직관</th>
+                <td><span class="highlight-blue">최하단부 근처</span> (최상단부 설치 X)</td>
+                <td>하단 유속 정체 오물 제거</td>
+            </tr>
+            <tr>
+                <th>배수수평지관/주관</th>
+                <td><span class="highlight-purple">기점 (시작점 / 상류측)</span> (최하류 접속부 X)</td>
+                <td>상류 기점에서 청소 도구 삽입</td>
+            </tr>
+            <tr>
+                <th>굴곡부 & 직선거리</th>
+                <td><span class="highlight-red">45도 이상 굴곡 지점</span> 및 수평관 중간점</td>
+                <td><span class="highlight-red">100mm 이하: 15m 이내</span><br><span class="highlight-red">100mm 초과: 30m 이내</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        2. 발포존(Foam Zone / 거품 구역)의 발생 메커니즘, 피해 세대 및 3대 방지 대책
+    </h2>
+    <ul>
+        <li><strong>발포존(Foam Zone)의 정의 및 발생 메커니즘 (★단독 출제 3회)</strong>:
+            <ul>
+                <li>고층 공동주택 세탁기, 주방 싱크대 등에서 세제를 포함한 배수가 수직관을 타고 급격히 낙하할 때, 하부 굴곡부 및 배수수평주관에서 공기와 혼합되어 <span class="highlight-blue">다량의 세제 거품이 발생·충만해지는 구역</span>.</li>
+                <li>거품은 오수보다 가벼워 수평관에 오랫동안 머물게 되며, 상층부 오수 낙하 시 피스톤 작용에 의해 하층부 기구 트랩의 봉수를 파괴하고 <span class="highlight-red">세제 거품이 하층부 세대 실내로 역류·분출하는 현상</span>을 일으킴.</li>
+            </ul>
+        </li>
+        <li><strong>발포존 발생 위치</strong>: 배수관이 <span class="highlight-purple">45도 이상 꺾이는 굴곡부 상부측</span> 및 배수수평주관 접촉부 근처 (주로 <span class="highlight-purple">저층부/하층부 세대</span>에서 발생).</li>
+        <li><strong>★ 발포존 방지를 위한 3대 설계 및 배관 대책 (★지문 교체 출제 단골)</strong>:
+            <ol>
+                <li><span class="highlight-red">배수수평주관의 길이를 가급적 짧게 할 것</span> (길게 배관한다고 출제 시 <span class="highlight-red">100% 오답!</span> 짧아야 거품이 외부로 빨리 빠져나감).</li>
+                <li><span class="highlight-blue">저층부 세대와 고층부 세대의 배수계통을 별도로 분리하여 배관할 것</span> (연결·겸용 배관 시 오답!).</li>
+                <li><span class="highlight-green">수평관의 관경 및 간격을 통상의 간격보다 크게 잡을 것</span> (작게 잡을 경우 오답!).</li>
+            </ol>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        3. 통기관 및 배수설비 설치 주의·금지사항 5가지 & 배수 계통의 이상 현상(종국유속·도수현상)
+    </h2>
+    <ul>
+        <li><strong>통기관 및 배수관 설치 시 절대 금지 및 주의 지침 (★출제 최다)</strong>:
+            <ol>
+                <li><span class="highlight-blue">간접배수 통기관 (저수조/위생탱크 통기관)</span>: 반드시 <span class="highlight-blue">단독으로 대기 중에 개구</span>하여야 하며, 일반 배수통기관에 접속하여 배관할 수 <span class="highlight-red">없음!</span> (일반 통기관 접속 시 오염 가스 저수조 유입).</li>
+                <li><span class="highlight-purple">정화조 통기관</span>: 단독으로 대기 중에 개구하며, 실내 일반 통기관에 접속 수 <span class="highlight-red">없음!</span></li>
+                <li><span class="highlight-red">통기수직관과 빗물수직관(우수관)의 관계</span>: 어떠한 경우에도 <span class="highlight-red">겸용 또는 연결할 수 없음!</span> (우수 유입 시 통기 기능 완전 상실).</li>
+                <li><span class="highlight-green">이중 트랩 (Double Trap) 금지</span>: 트랩 2개 연속 설치 절대 금지 (배수 저항 극대화 및 오물 정체).</li>
+                <li><span class="highlight-blue">배수수직관 배치 위치</span>: 파이프샤프트(PS) <span class="highlight-blue">내부에 배관</span>하여 집중 유지관리가 용이하도록 함 (외부 배관 시 오답!).</li>
+            </ol>
+        </li>
+        <li><strong>배수 배관 계통의 순서</strong>:
+            <br>&rarr; <span class="highlight-purple">위생기구 &rarr; 기구배수관 &rarr; 배수수평지관 &rarr; 배수수직관 &rarr; 배수수평주관 &rarr; 공공하수도</span>
+            <br>&rarr; <span class="highlight-purple">기구배수관의 정의</span>: 트랩 유출부(이후)부터 배수수평지관 접속점까지의 배관 (트랩 자체는 포함되지 않음).</li>
+        <li><strong>배수 수직/수평관의 주요 이상 현상 비교 (★주관식 단답형 단골)</strong>:
+            <ul>
+                <li><span class="highlight-red">종국유속 (Terminal Velocity) (★수직관 현상)</span>:
+                    <br>&rarr; 배수수직관 내부에서 오수가 낙하할 때 중력가속도로 유속이 급격히 증가하다가, 배관 내벽의 마찰저항 및 관내 공기저항과 균형을 이루어 <span class="highlight-red">더 이상 증가하지 않고 일정하게 유지되는 유속</span>.
+                    <br>&rarr; 수직관 관경이 작을수록, 관내 마찰이 클수록 종국길이가 짧아짐. (수평관에서 발생하는 현상이 아님!).</li>
+                <li><span class="highlight-blue">도수현상 (수력도약 현상, Hydraulic Jump) (★수평관 현상)</span>:
+                    <br>&rarr; 배수수직관에서 가속된 빠른 유속의 오수가 배수수평주관 굴곡부로 들어오면서 유속이 급격히 느려지고, 뒤이어 흘러내리는 배수의 정체로 인해 <span class="highlight-blue">큰 물결 및 파동이 일어나는 현상</span>.
+                    <br>&rarr; <span class="highlight-purple">대책</span>: 도수현상 발생 부근에 배관 접속을 피하고, 통기관(도피통기관 등)을 설치하여 관내 압력 변화를 완화함.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">이상 현상 구분</th>
+                <th style="width: 25%;">발생 관로 위치</th>
+                <th style="width: 50%;">발생 원인 메커니즘 및 대책</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th><span class="highlight-red">종국유속</span></th>
+                <td><span class="highlight-red">배수수직관</span></td>
+                <td>중력가속도와 관내 마찰/공기저항의 균형으로 유속 일정 유지</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-blue">도수현상 (수력도약)</span></th>
+                <td><span class="highlight-blue">배수수평주관 / 굴곡부</span></td>
+                <td>수직관의 빠른 유속이 수평관에서 급감속하여 큰 물결 발생 (통기관 설치로 완화)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4 4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg>
+        4. 배수관 경사(구배), 기구배수 부하단위(DFU 수치·세면기 기준) 및 최소 관경 규정
+    </h2>
+    <ul>
+        <li><strong>배수관 경사(구배)의 원칙</strong>:
+            <ul>
+                <li>경사가 너무 완만하면 유속 부족으로 오물이 침전·정체됨.</li>
+                <li><span class="highlight-purple">핵심 시험 함정</span>: "배수관의 경사는 크면 클수록 배수 능력이 촉진되어 좋다"는 지문은 <span class="highlight-red">오답!</span> (경사가 너무 급하면 물만 먼저 흘러가고 중량 오물이 관내에 남게 됨). 따라서 적정 구배를 유지해야 함.</li>
+            </ul>
+        </li>
+        <li><strong>기구배수 부하단위 (DFU, Drainage Fixture Unit) (★기출 및 주관식 단골)</strong>:
+            <ul>
+                <li><span class="highlight-blue">표준 기준 기구</span>: <span class="highlight-blue">세면기</span> (※ 소변기나 대변기라 하면 100% 오답!).</li>
+                <li><span class="highlight-red">1 부하단위(1 DFU)의 정의</span>: 트랩 구경 <span class="highlight-red">32mm</span>를 갖는 세면기의 분당 배수량 <span class="highlight-red">28.5L (28.5 L/min)</span>를 1단위로 규정.</li>
+                <li><span class="highlight-purple">부하단위 크기 비교</span>: <span class="highlight-purple">대변기(가장 큼) &gt; 소변기 &gt; 욕조/싱크 &gt; 세면기(가장 작음)</span>.</li>
+            </ul>
+        </li>
+        <li><strong>배수관 최소 관경 및 관경 변경 수칙</strong>:
+            <ul>
+                <li><span class="highlight-green">배수관의 통상 최소 관경</span>: <span class="highlight-green">32mm</span> (세면기 트랩 기준).</li>
+                <li><span class="highlight-red">지중 매설 및 지하층 바닥 매설 배수관의 최소 관경</span>: <span class="highlight-red">50mm 이상</span> (매설관은 막힘 시 교체가 어려우므로 더 크게 설계).</li>
+                <li><span class="highlight-blue">관경 변경 원칙</span>: 오수 흐름 방향(하류 측)으로 갈수록 관경을 <span class="highlight-red">축소할 수 없음</span> (동일 관경 유지 또는 확대하여 배관).</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+        5. 위생기구 도기 특성, 대변기 세정 급수방식(로탱크·세정밸브·블로아웃식) 및 배관재료(주철관·강관·연관) 비교
+    </h2>
+    <ul>
+        <li><strong>위생기구 도기 제품의 구비조건</strong>: <span class="highlight-blue">흡수성(흡수율) 및 오염성이 작아야 함</span>. (흡수성이 크다고 출제 시 오답! 충격에는 약함).</li>
+        <li><strong>대변기 세정 급수 방식별 특성 비교 (★기출 및 족집게 비교)</strong>:
+            <ul>
+                <li><span class="highlight-blue">로탱크식 (Low Tank)</span>:
+                    <br>&rarr; 탱크 위치가 낮아 세정 소음이 작고 수압 영향이 없음. <span class="highlight-blue">일반 가정용</span>으로 가장 많이 사용됨.
+                    <br>&rarr; 세정 후 탱크에 물이 차는 시간이 필요하므로 <span class="highlight-red">연속 사용 불가능</span>.</li>
+                <li><span class="highlight-purple">세정밸브식 (Flush Valve / 플러시밸브식)</span>:
+                    <br>&rarr; 탱크가 없어 공간을 적게 차지하며, 급수관 직접 연결 방식으로 <span class="highlight-purple">연속 사용 가능</span> (공공건물, 상가용).
+                    <br>&rarr; <span class="highlight-red">필수 설치 조건</span>: 최소 급수압력 <span class="highlight-red">0.1MPa (100kPa) 이상</span>, 급수관경 <span class="highlight-red">25mm 이상</span> 확보 필요.
+                    <br>&rarr; <span class="highlight-red">역류 방지 장치</span>: 역사이폰 작용에 의한 오염 방지를 위해 <span class="highlight-red">버큠브레이크(Vacuum Breaker / 진공방지기)</span> 필수 설치.</li>
+                <li><span class="highlight-green">블로아웃식 (Blow-out)</span>:
+                    <br>&rarr; 세정밸브식 대변기의 일종으로, 수압을 이용해 오물을 강력히 씻어냄. 세정력이 매우 뛰어나나 <span class="highlight-green">세정 소음이 극심함</span> (가정용 부적합).</li>
+            </ul>
+        </li>
+        <li><strong>주요 배관 재료별 특성 비교 (주철관, 강관, 연관)</strong>:
+            <ul>
+                <li><span class="highlight-blue">주철관 (Cast Iron Pipe)</span>:
+                    <br>&rarr; 가마솥 재질. 내식성·내압성이 뛰어나 수명이 길고 가격이 싸나, <span class="highlight-blue">충격 및 인장강도에 약함</span> (차력사 솥뚜껑).
+                    <br>&rarr; 접합 방법 5가지: <span class="highlight-blue">소켓, 플랜지, 메카니컬, 빅통릭, 타이트 이음</span> (`소·플·메·빅·타`).</li>
+                <li><span class="highlight-purple">강관 (Steel Pipe)</span>:
+                    <br>&rarr; 인장강도 및 충격에 강함. 살두께(두께) 표시는 <span class="highlight-purple">스케줄 번호 (Schedule Number)</span>로 표기 (숫자가 클수록 두꺼움). 납땜 접합 불가.</li>
+                <li><span class="highlight-red">연관 (Lead Pipe)</span>:
+                    <br>&rarr; 납(Pb) 재질. 가공성과 유연성이 뛰어나고 산에 강하나, <span class="highlight-red">알칼리에 약함</span> (콘크리트 직매설 시 내알칼리성 방식도장 필수).
+                    <br>&rarr; <span class="highlight-red">치명적 단점</span>: 열에 매우 약해 융점이 낮으므로 <span class="highlight-red">급탕관(온수관) 및 난방관에는 절대 사용할 수 없음!</span></li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 20%;">배관 재료</th>
+                <th style="width: 30%;">주요 장점 및 두께/접합 표기</th>
+                <th style="width: 50%;">주요 단점 및 사용 금지 주의사항</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th><span class="highlight-blue">주철관</span></th>
+                <td>내식성·내구성 우수, 저렴함 (소·플·메·빅·타)</td>
+                <td><span class="highlight-blue">충격 및 인장강도에 매우 약함</span> (직매설에 주로 사용)</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-purple">강관</span></th>
+                <td>인장강도·충격에 강함, <span class="highlight-purple">스케줄 번호</span> 표기</td>
+                <td>내식성이 약해 부식 우려 (납땜 접합 불가)</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-red">연관</span></th>
+                <td>가공성 우수, 내산성 우수</td>
+                <td><span class="highlight-red">알칼리에 약함</span> (콘크리트 직매설 X), <span class="highlight-red">열에 약해 급탕·난방관 절대 불가</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+            💡 [수험 핵심 팁] 제58강 실전 출제 포인트 & 함정 방지 최종 체크
+        </div>
+        <ul>
+            <li><strong>청소구 수치 & 위치</strong>: 수직관 = <span class="highlight-red">최하단부</span> (상단부 X). 수평관 = <span class="highlight-blue">기점(상류측)</span> (최하류 X). 간격 = <span class="highlight-purple">100mm 이하 15m 이내 / 100mm 초과 30m 이내</span>. 굴곡부 = <span class="highlight-green">45도 이상</span>.</li>
+            <li><strong>발포존 방지 3대 수치</strong>: 수평주관 길이 = <span class="highlight-red">짧게</span>. 고/저층 배수 = <span class="highlight-blue">별도 분리</span>. 수평관 간격/관경 = <span class="highlight-purple">크게</span>.</li>
+            <li><strong>통기·배수 절대 금지 3가지</strong>: 간접배수/정화조 통기관 = <span class="highlight-red">단독 개구</span> (일반 통기관 접속 X). 빗물수직관(우수관) = <span class="highlight-red">통기수직관과 겸용 금지</span>. 이중 트랩 = <span class="highlight-red">설치 금지</span>.</li>
+            <li><strong>배수 현상 구분</strong>: <span class="highlight-blue">종국유속</span> = 수직관 발생 (유속 일정). <span class="highlight-purple">도수현상(수력도약)</span> = 수평관 발생 (급감속 파동).</li>
+            <li><strong>DFU & 관경</strong>: DFU 기준 = <span class="highlight-red">세면기</span> (32mm, 28.5 L/min). 최소 관경 = 일반 <span class="highlight-blue">32mm</span> / 매설관 <span class="highlight-purple">50mm 이상</span>.</li>
+            <li><strong>대변기 세정 & 재료</strong>: 로탱크 = 가정용 (연속사용 X). 세정밸브 = <span class="highlight-red">0.1MPa, 25mm, 버큠브레이크</span> 필수. 연관 = <span class="highlight-red">알칼리 약함, 급탕·난방관 절대 불가</span>. 강관 = <span class="highlight-purple">스케줄 번호</span>.</li>
+        </ul>
+    </div>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>주관식 단답형 및 빈칸 채우기 실전 훈련</h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡, ㉢)에 들어갈 알맞은 핵심 용어나 법정 수치, 단위를 아래 빈칸에 직접 작성해 보십시오.</p>
+
+    <ol class="quiz-list">
+        <li>
+            청소구(Clean Out)는 배수수직관의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 근처에 설치하며, 최상단부나 신정통기관 접속부는 설치 장소가 아니다.
+        </li>
+        <li>
+            배수수평지관 및 배수수평주관의 시작점인 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )부(상류측)에는 청소구를 설치하여야 한다.
+        </li>
+        <li>
+            배배관이 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )도 이상의 각도로 방향을 바꾸는 굴곡부에는 청소구를 설치하여야 한다.
+        </li>
+        <li>
+            배수관 관경이 100mm 이하인 경우 청소구 설치 간격은 직선거리 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )m 이내마다, 100mm 초과인 경우 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )m 이내마다 설치하여야 한다.
+        </li>
+        <li>
+            고층 세대의 세제 배수가 수평관 굴곡부에서 거품을 형성하여 하층부 트랩 봉수를 파괴하고 실내로 역류하는 현상을 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )(이라) 한다.
+        </li>
+        <li>
+            발포존 방지를 위해 배수수평주관의 길이는 가급적 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )게 하고, 저층부와 고층부 배수계통은 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 배관하여야 한다.
+        </li>
+        <li>
+            저수조 등 간접배수 통기관 및 정화조 통기관은 일반 배수통기관에 접속하지 않고 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )으로 대기 중에 개구하여야 한다.
+        </li>
+        <li>
+            통기수직관과 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )수직관(우수관)은 어떠한 경우에도 겸용하여 연결할 수 없다.
+        </li>
+        <li>
+            트랩 2개를 연속 설치하여 배수 저항을 극대화시키는 대표적인 금지 트랩은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이다.
+        </li>
+        <li>
+            배수수직관 내 오수 낙하 시 마찰저항과 공기저항이 균형을 이루어 일정하게 유지되는 유속을 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이라 한다.
+        </li>
+        <li>
+            배수수직관의 빠른 유속이 배수수평주관으로 유입될 때 급격히 감속하여 큰 물결 및 파동을 일으키는 현상을 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 현상(수력도약)이라 한다.
+        </li>
+        <li>
+            기구배수 부하단위(DFU) 산정 시 표준 기준이 되는 위생기구는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이다.
+        </li>
+        <li>
+            기구배수 부하단위 1단위(1 DFU)는 트랩 구경 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )mm를 갖는 세면기의 분당 배수량 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )L를 기준으로 한다.
+        </li>
+        <li>
+            배수관의 통상 최소 관경은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )mm이고, 지중 및 지하층 바닥에 매설되는 배수관의 최소 관경은 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )mm 이상이다.
+        </li>
+        <li>
+            대변기 세정방식 중 세정 소음이 작고 수압의 영향이 없어 일반 가정용으로 가장 많이 사용되는 방식은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )식이다.
+        </li>
+        <li>
+            탱크가 없어 연속 사용이 가능하나 0.1MPa 이상의 수압과 25mm 이상의 급수관경이 필요한 대변기 세정방식은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )식(플러시밸브식)이다.
+        </li>
+        <li>
+            세정밸브식 대변기에는 역사이폰 작용에 의한 오수 역류를 방지하기 위해 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )(진공방지기)를 반드시 설치해야 한다.
+        </li>
+        <li>
+            강관의 살두께(두께)를 나타내는 표기 번호는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 번호이며, 번호가 클수록 관의 두께가 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )다.
+        </li>
+        <li>
+            연관은 산에는 강하나 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )에 약하므로 콘크리트 직매설 시 내알칼리성 방식도장이 필요하다.
+        </li>
+        <li>
+            연관은 열에 매우 약해 융점이 낮으므로 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )관 및 난방관에는 절대 사용할 수 없다.
+        </li>
+    </ol>
+
+    <div style="font-size: 9.5pt; color: #666666; margin-top: 30px; padding: 15px; border-top: 1px dashed #666666; line-height: 1.8;">
+        <strong style="display: block; margin-bottom: 10px; color: #333333;">[제58강 주관식 단답형 정답 리스트]</strong>
+        <div class="answer-grid">
+            <div><strong>1.</strong> ㉠ 최하단부</div>
+            <div><strong>2.</strong> ㉠ 기점(시작점/상류측)</div>
+            <div><strong>3.</strong> ㉠ 45</div>
+            <div><strong>4.</strong> ㉠ 15, ㉡ 30</div>
+            <div><strong>5.</strong> ㉠ 발포존(Foam Zone)</div>
+            <div><strong>6.</strong> ㉠ 짧, ㉡ 별도로 분리(분리)</div>
+            <div><strong>7.</strong> ㉠ 단독</div>
+            <div><strong>8.</strong> ㉠ 빗물(우수)</div>
+            <div><strong>9.</strong> ㉠ 이중 트랩(Double Trap)</div>
+            <div><strong>10.</strong> ㉠ 종국유속</div>
+            <div><strong>11.</strong> ㉠ 도수(수력도약)</div>
+            <div><strong>12.</strong> ㉠ 세면기</div>
+            <div><strong>13.</strong> ㉠ 32, ㉡ 28.5</div>
+            <div><strong>14.</strong> ㉠ 32, ㉡ 50</div>
+            <div><strong>15.</strong> ㉠ 로탱크</div>
+            <div><strong>16.</strong> ㉠ 세정밸브(플러시밸브)</div>
+            <div><strong>17.</strong> ㉠ 버큠브레이크(Vacuum Breaker)</div>
+            <div><strong>18.</strong> ㉠ 스케줄(Schedule), ㉡ 두껍</div>
+            <div><strong>19.</strong> ㉠ 알칼리(강알칼리)</div>
+            <div><strong>20.</strong> ㉠ 급탕(온수)</div>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 공동주택관리실무 - 제25강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+            letter-spacing: -0.05em;
+        }
+        
+        h1 {
+            font-size: 13pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        /* 토너 절약 4색 강조 클래스 */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #16803d; 
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #6d28d9; 
+        }
+        
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        ol {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        /* 정답 리스트 3열 격자 레이아웃 */
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px 15px;
+        }
+
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        제25강. 남녀고용평등법상 직장 내 성희롱 조치·모성보호·육아휴직·근로시간 단축 및 가족돌봄 종합 정리
+    </h1>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        1. 직장 내 성희롱 발생 시 조치 절차 및 비밀누설 금지 의무
+    </h2>
+    <ul>
+        <li><strong>발생 사실의 신고 (★할 수 있다 규정)</strong>: 누구든지 직장 내 성희롱 발생 사실을 알게 된 경우 사업주에게 <span class="highlight-blue">신고할 수 있다</span> (의무사항인 '하여야 한다'로 출제 시 오답 처리).</li>
+        <li><strong>사실확인 조사 의무</strong>: 사업주는 신고를 받거나 직장 내 성희롱 발생 사실을 알게 된 경우(인지한 경우 포함) <span class="highlight-red">지체 없이</span> 사실확인을 위한 조사를 실시하여야 한다.</li>
+        <li><strong>조사 기간 중 피해근로자등의 보호 조치</strong>:
+            <ul>
+                <li>조사 기간 동안 피해근로자등을 보호하기 위하여 필요한 경우 <span class="highlight-purple">근무장소의 변경, 유급휴가 명령</span> 등 적절한 조치를 하여야 한다.</li>
+                <li>해당 조치는 피해근로자등의 의사에 반하여 하여서는 아니 되며, <span class="highlight-blue">피해근로자등에 대하여 수행</span>하는 조치이다 (행위자에 대한 조치가 아님에 유의).</li>
+            </ul>
+        </li>
+        <li><strong>성희롱 발생 확인 시 조치 (필수적 조치 의무)</strong>:
+            <ul>
+                <li>사업주는 조사 결과 성희롱 발생 사실이 확인된 때에는 행위자에 대하여 징계, 근무장소 변경 등의 조치를 <span class="highlight-red">하여야 한다</span> ('할 수 있다'로 기재 시 오답).</li>
+                <li>피해근로자가 요청하는 경우 근무장소 변경, 배치전환, 유급휴가 명령 등 적절한 조치를 하여야 한다.</li>
+            </ul>
+        </li>
+        <li><strong>비밀누설 금지 및 예외 규정</strong>:
+            <ul>
+                <li>조사자·보고받은 자·참여자는 조사 과정에서 알게 된 비밀을 피해근로자등의 의사에 반하여 누설하여서는 아니 된다.</li>
+                <li><strong>예외 사유</strong>: 조사 관련 내용을 <span class="highlight-blue">사업주에게 보고</span>하거나 <span class="highlight-blue">관계기관의 요청에 따라 정보를 제공</span>하는 경우에는 피해근로자의 의사에 반하더라도 누설 금지 위반에 해당하지 않는다.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        2. 배우자 출산전후휴가 · 난임치료휴가 · 배우자 유산·사산휴가 핵심 비교
+    </h2>
+    <ul>
+        <li><strong>배우자 출산전후휴가 (★최신 개정 사항 적용)</strong>:
+            <ul>
+                <li><strong>휴가 기간 및 성격</strong>: 사업주는 근로자가 배우자의 출산을 이유로 휴가를 신청하는 경우 <span class="highlight-red">20일</span>의 <span class="highlight-blue">유급휴가</span>를 부여하여야 한다.</li>
+                <li><strong>사용 가능 시기 및 기한</strong>: 배우자 출산예정일 <span class="highlight-purple">50일 전</span>부터 사용할 수 있으며, 배우자가 출산한 날부터 <span class="highlight-purple">120일</span>이 지나면 청구할 수 없다 (출산 전 50일, 출산 후 120일 규칙).</li>
+                <li><strong>분할 사용 횟수</strong>: <span class="highlight-blue">3회에 한정하여</span> 나누어 사용할 수 있다 (총 4회 사용 가능).</li>
+                <li><strong>지급책임의 면제</strong>: 고용보험법에 따라 출산전후휴가급여 등이 지급된 경우 그 금액의 한도에서 사업주의 지급책임이 면제된다 (전액 지급 의무가 아님).</li>
+            </ul>
+        </li>
+        <li><strong>난임치료휴가</strong>:
+            <ul>
+                <li>인공수정, 체외수정 등 난임치료를 받기 위해 신청하는 경우 연간 <span class="highlight-blue">6일 이내</span>의 휴가를 부여한다.</li>
+                <li>휴가 기간 중 최초 <span class="highlight-red">2일은 유급</span>으로 한다.</li>
+            </ul>
+        </li>
+        <li><strong>배우자 유산·사산휴가 (★신설 제도)</strong>:
+            <ul>
+                <li>근로자가 배우자의 유산 또는 사산을 이유로 휴가를 청구하는 경우 <span class="highlight-purple">5일의 범위</span>에서 휴가를 부여하여야 한다.</li>
+                <li>휴가 기간 중 최초 <span class="highlight-red">3일은 유급</span>으로 한다.</li>
+                <li>배우자가 유산 또는 사산한 날부터 <span class="highlight-blue">20일 이내</span>에 청구하여야 한다 (단, 인공임신중절수술에 따른 유산은 제외).</li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 22%;">구분</th>
+                <th style="width: 26%;">배우자 출산전후휴가</th>
+                <th style="width: 26%;">난임치료휴가</th>
+                <th style="width: 26%;">배우자 유산·사산휴가</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>휴가 기간</th>
+                <td class="highlight-red">20일 (전부 유급)</td>
+                <td>연간 6일 이내</td>
+                <td class="highlight-purple">5일 이내</td>
+            </tr>
+            <tr>
+                <th>유급 처리 범위</th>
+                <td>20일 전체 유급</td>
+                <td class="highlight-blue">최초 2일 유급</td>
+                <td class="highlight-red">최초 3일 유급</td>
+            </tr>
+            <tr>
+                <th>사용/청구 기한</th>
+                <td>출산예정일 <span class="highlight-blue">50일 전</span>부터<br>출산 후 <span class="highlight-blue">120일 이내</span></td>
+                <td>해당 연도 내</td>
+                <td>유산·사산일부터<br><span class="highlight-purple">20일 이내</span></td>
+            </tr>
+            <tr>
+                <th>분할 사용</th>
+                <td class="highlight-purple">3회 분할 가능</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+        3. 육아휴직 및 육아기 근로시간 단축 비교 (대상·기간·절차 완벽 정리)
+    </h2>
+    <ul>
+        <li><strong>육아휴직 요건 및 허용 예외</strong>:
+            <ul>
+                <li><strong>신청 대상</strong>: 만 <span class="highlight-red">8세 이하</span> 또는 초등학교 <span class="highlight-red">2학년 이하</span>의 자녀(입양한 자녀 <span class="highlight-blue">포함</span>)를 양육하기 위한 경우 또는 임신 중인 여성근로자의 모성보호.</li>
+                <li><strong>사업주의 허용 예외사유 (★단 1가지)</strong>: 해당 사업에서 계속 근로한 기간이 <span class="highlight-purple">6개월 미만</span>인 근로자가 신청한 경우에만 허용하지 아니할 수 있다 (대체인력 확보 불가나 사업운영 지장 등은 육아휴직 거절 사유가 아님).</li>
+                <li><strong>휴직 기간</strong>: 원칙적으로 <span class="highlight-blue">1년 이내</span> (부모 모두 3개월 이상 사용 등 요건 충족 시 6개월 추가 가능).</li>
+                <li><strong>신청 및 철회 시한 (시행령)</strong>: 휴직개시예정일 <span class="highlight-blue">30일 전</span>까지 신청 (유산·사산 위험 등은 <span class="highlight-red">7일 전</span>). 철회는 개시예정일 <span class="highlight-red">7일 전</span>까지 가능.</li>
+                <li><strong>영유아 사망 등 통보 및 복귀</strong>: 육아휴직 중 자녀 사망·유산 시 발생일부터 <span class="highlight-red">7일 이내</span> 통보, 통보받은 사업주는 <span class="highlight-blue">30일 이내</span> 근무개시일을 지정하여 알림.</li>
+            </ul>
+        </li>
+        <li><strong>육아기 근로시간 단축 요건 및 근로조건</strong>:
+            <ul>
+                <li><strong>신청 대상</strong>: 만 <span class="highlight-purple">12세 이하</span> 또는 초등학교 <span class="highlight-purple">6학년 이하</span>의 자녀를 양육하기 위한 경우 (육아휴직과 대상 연령·학년 차이 주의!).</li>
+                <li><strong>단축 후 주당 근로시간</strong>: 주당 <span class="highlight-red">15시간 이상 30시간 이내</span>이어야 한다 (15~30시간 규칙).</li>
+                <li><strong>연장근로 제한</strong>: 사업주는 단축된 근로시간 외에 연장근로를 요구할 수 없다. 단, 근로자가 <span class="highlight-blue">명시적으로 청구</span>하는 경우 주 <span class="highlight-purple">12시간 이내</span>에서 연장근로 가능.</li>
+                <li><strong>분할 사용</strong>: 분할하여 사용할 수 있으며, 나누어 사용하는 1회의 기간은 <span class="highlight-blue">1개월 이상</span>이 되어야 한다 (육아휴직은 3회 분할).</li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 20%;">구분</th>
+                <th style="width: 40%;">육아휴직</th>
+                <th style="width: 40%;">육아기 근로시간 단축</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>대상 자녀 기준</th>
+                <td class="highlight-red">만 8세 이하 또는 초등 2학년 이하</td>
+                <td class="highlight-purple">만 12세 이하 또는 초등 6학년 이하</td>
+            </tr>
+            <tr>
+                <th>사업주 거절 사유</th>
+                <td class="highlight-blue">계속 근로기간 6개월 미만인 경우 (단 1가지)</td>
+                <td>6개월 미만, 대체인력 불가, 사업지장 등</td>
+            </tr>
+            <tr>
+                <th>기간 / 단축시간</th>
+                <td>1년 이내 (완전 휴직)</td>
+                <td class="highlight-red">1년 이내 / 주당 15시간~30시간</td>
+            </tr>
+            <tr>
+                <th>신청 기한 / 철회</th>
+                <td>원칙 30일 전 (예외 7일 전) / 철회 7일 전</td>
+                <td>30일 전 신청</td>
+            </tr>
+            <tr>
+                <th>근속기간 / 평균임금</th>
+                <td colspan="2" class="highlight-green">근속기간에 전부 포함 / 평균임금 산정기간에서 전부 제외 (동일)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M11 5H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-5"></path><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+        4. 가족돌봄휴직 · 가족돌봄휴가 및 가족돌봄 등을 위한 근로시간 단축
+    </h2>
+    <ul>
+        <li><strong>가족돌봄휴직 vs 가족돌봄휴가 비교 (★기간 및 합산 관계)</strong>:
+            <ul>
+                <li><strong>가족돌봄휴직</strong>: 부모, 배우자, 자녀, 조부모 등의 질병·사고·노령으로 돌봄이 필요한 경우 신청. 연간 최장 <span class="highlight-red">90일</span>로 하되, 나누어 사용할 때 1회 기간은 <span class="highlight-blue">30일 이상</span>이어야 한다.</li>
+                <li><strong>가족돌봄휴가</strong>: 긴급하게 가족을 돌보기 위해 신청. 연간 최장 <span class="highlight-purple">10일</span>(일 단위 사용)로 부여한다.</li>
+                <li><strong>휴가 기간의 휴직 포함 관계 (★출제 핵심)</strong>: 가족돌봄휴가 기간은 <span class="highlight-red">가족돌봄휴직 기간(90일)에 포함</span>된다 (제외된다고 기재 시 오답).</li>
+            </ul>
+        </li>
+        <li><strong>가족돌봄 등을 위한 근로시간 단축 (4대 사유 및 연장 제한)</strong>:
+            <ul>
+                <li><strong>신청 사유 4가지</strong>: ① 가족의 질병·사고·노령 돌봄 ② 본인의 건강 돌봄 ③ 55세 이상 근로자의 은퇴 준비 ④ 근로자의 학업.</li>
+                <li><strong>단축 후 주당 근로시간</strong>: 주당 <span class="highlight-red">15시간 이상 30시간 이내</span> (육아기 근로시간 단축과 동일하게 15~30시간 적용).</li>
+                <li><strong>단축 기간 및 연장 특례 (★학업 사유 제외 법칙)</strong>:
+                    <ul>
+                        <li>원칙적으로 단축 기간은 <span class="highlight-blue">1년 이내</span>로 한다.</li>
+                        <li>합리적 이유가 있는 경우 추가로 <span class="highlight-purple">2년 범위</span>에서 연장할 수 있다.</li>
+                        <li><strong>단서 예외</strong>: 근로자의 <span class="highlight-red">'학업'을 사유로 한 근로시간 단축은 연장할 수 없다</span> (학업은 연장 포함 총 1년 이내만 가능).</li>
+                    </ul>
+                </li>
+                <li><strong>근로조건 서면 작성</strong>: 사업주와 해당 근로자는 근로시간 단축에 따른 근로조건을 <span class="highlight-blue">서면으로</span> 정하여야 한다 (구두 합의 불가).</li>
+            </ul>
+        </li>
+    </ul>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+            💡 [핵심 법적 효력] 근속기간 산정 포함 vs 평균임금 산정 제외 원칙
+        </div>
+        <ul>
+            <li><strong>근속기간 산정 시 포함</strong>: 육아휴직, 육아기 근로시간 단축, 가족돌봄휴직, 가족돌봄휴가, 가족돌봄 근로시간 단축 기간은 모두 <span class="highlight-blue">근속기간에 포함</span>한다 (퇴직금 산정, 승진 시 근로자에게 불이익 금지).</li>
+            <li><strong>평균임금 산정기준 계산 시 제외</strong>: 해당 휴직 및 단축기간은 근로자의 평균임금 산정 시 <span class="highlight-red">그 기간과 해당 기간 동안 받은 임금을 제외</span>하여 근로자에게 평균임금이 낮아지는 불이익이 발생하지 않도록 보호한다.</li>
+            <li><strong>기간제·파견근로자 특례</strong>: 육아휴직 및 육아기 근로시간 단축 기간은 기간제법상 <span class="highlight-purple">사용기간(2년) 및 파견법상 파견기간(2년) 산정 시 제외</span>한다.</li>
+        </ul>
+    </div>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        5. 남녀고용평등법상 핵심 수치 및 법정 절차 종합 비교표
+    </h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 22%;">제도 명칭</th>
+                <th style="width: 28%;">법정 기한 / 부여 기준</th>
+                <th style="width: 25%;">유급 / 무급 여부</th>
+                <th style="width: 25%;">분할 및 연장 규정</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>배우자 출산전후휴가</th>
+                <td class="highlight-red">20일 (출산 전 50일~후 120일)</td>
+                <td>유급 (고용보험 지원 한도 면제)</td>
+                <td class="highlight-purple">3회 분할 사용 가능</td>
+            </tr>
+            <tr>
+                <th>난임치료휴가</th>
+                <td>연간 6일 이내</td>
+                <td class="highlight-blue">최초 2일 유급 (나머지 무급)</td>
+                <td>연도 내 분할 사용</td>
+            </tr>
+            <tr>
+                <th>배우자 유산·사산휴가</th>
+                <td class="highlight-purple">5일 이내 (20일 이내 청구)</td>
+                <td class="highlight-red">최초 3일 유급 (나머지 무급)</td>
+                <td>단일 사용 (분할 없음)</td>
+            </tr>
+            <tr>
+                <th>육아휴직</th>
+                <td>1년 이내 (만 8세/초등2 이하)</td>
+                <td>무급 (고용보험 육아휴직수당)</td>
+                <td>3회 분할 가능 (모성보호 제외)</td>
+            </tr>
+            <tr>
+                <th>육아기 근로시간 단축</th>
+                <td>1년 이내 (만 12세/초등6 이하)</td>
+                <td>단축시간 비례 지급</td>
+                <td>1회 1개월 이상 분할 사용</td>
+            </tr>
+            <tr>
+                <th>가족돌봄휴직</th>
+                <td class="highlight-blue">연간 최장 90일</td>
+                <td>무급</td>
+                <td>1회 30일 이상 분할 사용</td>
+            </tr>
+            <tr>
+                <th>가족돌봄휴가</th>
+                <td class="highlight-purple">연간 최장 10일 (90일에 포함)</td>
+                <td>무급</td>
+                <td>1일 단위 분할 사용</td>
+            </tr>
+            <tr>
+                <th>가족돌봄 근로시간 단축</th>
+                <td>최초 1년 이내 (주 15~30시간)</td>
+                <td>단축시간 비례 지급</td>
+                <td class="highlight-red">2년 연장 가능 (학업 사유 연장 불가)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><line x1="18" y1="2" x2="22" y2="6"></line><path d="M7.5 20.5L19 9l-4-4L3.5 16.5 2 22z"></path></svg>
+        6. 주관식 단답형 및 다단 빈칸 채우기 완벽 대비 (실전 훈련)
+    </h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡)에 들어갈 알맞은 핵심 용어나 법정 숫자를 아래 여유 공백에 직접 기재해 보십시오.</p>
+
+    <ol style="line-height: 2.1;">
+        <li>
+            직장 내 성희롱 발생 사실을 알게 된 자는 해당 사실을 사업주에게 신고 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 수 있다.
+        </li>
+        <li>
+            사업주는 직장 내 성희롱 발생 사실이 확인된 때에는 지체 없이 행위자에 대하여 징계 등의 조치를 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 하여야 한다.
+        </li>
+        <li>
+            사업주는 근로자가 배우자의 출산을 이유로 휴가를 신청하는 경우 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일의 유급휴가를 주어야 한다.
+        </li>
+        <li>
+            배우자 출산전후휴가는 배우자 출산예정일 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 전부터 사용할 수 있으며, 출산한 날부터 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일이 지나면 청구할 수 없다.
+        </li>
+        <li>
+            배우자 출산전후휴가는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )회에 한정하여 나누어 사용할 수 있다.
+        </li>
+        <li>
+            근로자가 난임치료휴가를 청구하는 경우 사업주는 연간 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이내의 휴가를 주어야 하며, 최초 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일은 유급으로 한다.
+        </li>
+        <li>
+            배우자 유산·사산휴가는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일의 범위에서 주어야 하며, 최초 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일은 유급으로 하고 배우자가 유산·사산한 날부터 ( ㉢&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이내에 청구하여야 한다.
+        </li>
+        <li>
+            육아휴직은 만 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )세 이하 또는 초등학교 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )학년 이하의 자녀를 양육하기 위하여 신청할 수 있다.
+        </li>
+        <li>
+            사업주는 육아휴직 신청을 받은 경우 해당 사업에서 계속 근로한 기간이 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )개월 미만인 근로자에 대해서는 육아휴직을 허용하지 아니할 수 있다.
+        </li>
+        <li>
+            육아휴직을 신청하려는 근로자는 휴직개시예정일 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 전까지 신청하여야 하며, 신청의 철회는 휴직개시예정일 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 전까지 하여야 한다.
+        </li>
+        <li>
+            육아휴직 중인 근로자로부터 영유아 사망 등의 사실을 통보받은 사업주는 통보받은 날부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이내에 근무개시일을 지정하여 알려야 한다.
+        </li>
+        <li>
+            육아기 근로시간 단축 대상 자녀는 만 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )세 이하 또는 초등학교 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )학년 이하이다.
+        </li>
+        <li>
+            육아기 근로시간 단축을 허용하는 경우 단축 후 근로시간은 주당 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )시간 이상이어야 하고 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )시간을 넘어서는 아니 된다.
+        </li>
+        <li>
+            가족돌봄휴직 기간은 연간 최장 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일로 하되, 나누어 사용할 때 1회의 기간은 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이상이어야 한다.
+        </li>
+        <li>
+            가족돌봄휴가 기간은 연간 최장 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일로 하며, 해당 휴가 기간은 가족돌봄휴직 기간에 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )된다.
+        </li>
+        <li>
+            가족돌봄 등을 위한 근로시간 단축 사유 중 근로자의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )을(를) 이유로 한 근로시간 단축 기간은 추가 연장할 수 없다.
+        </li>
+        <li>
+            육아휴직 및 근로시간 단축 기간은 근속기간에 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )하고, 평균임금 산정기간에서 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )한다.
+        </li>
+    </ol>
+
+    <!-- 수험생 정답 확인용 하단 3열 배치 그리드 영역 -->
+    <div style="font-size: 9.5pt; color: #666666; margin-top: 30px; padding: 15px; border-top: 1px dashed #666666; line-height: 1.8;">
+        <strong style="display: block; margin-bottom: 10px; color: #333333;">[제25강 주관식 단답형 정답 리스트]</strong>
+        <div class="answer-grid">
+            <div>1. ㉠ 할</div>
+            <div>2. ㉠ 의무적으로(또는 하여야)</div>
+            <div>3. ㉠ 20</div>
+            <div>4. ㉠ 50, &nbsp; ㉡ 120</div>
+            <div>5. ㉠ 3</div>
+            <div>6. ㉠ 6, &nbsp; ㉡ 2</div>
+            <div>7. ㉠ 5, &nbsp; ㉡ 3, &nbsp; ㉢ 20</div>
+            <div>8. ㉠ 8, &nbsp; ㉡ 2</div>
+            <div>9. ㉠ 6</div>
+            <div>10. ㉠ 30, &nbsp; ㉡ 7</div>
+            <div>11. ㉠ 30</div>
+            <div>12. ㉠ 12, &nbsp; ㉡ 6</div>
+            <div>13. ㉠ 15, &nbsp; ㉡ 30</div>
+            <div>14. ㉠ 90, &nbsp; ㉡ 30</div>
+            <div>15. ㉠ 10, &nbsp; ㉡ 포함</div>
+            <div>16. ㉠ 학업</div>
+            <div>17. ㉠ 포함, &nbsp; ㉡ 제외</div>
+        </div>
+    </div>
+
+</body>
+</html>

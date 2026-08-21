@@ -1,0 +1,22 @@
+[
+    {
+        "merged": "com.housing.exam.app-debug-36:/xml_backup_rules.xml.flat",
+        "source": "com.housing.exam.app-main-38:/xml/backup_rules.xml"
+    },
+    {
+        "merged": "com.housing.exam.app-debug-36:/xml_data_extraction_rules.xml.flat",
+        "source": "com.housing.exam.app-main-38:/xml/data_extraction_rules.xml"
+    },
+    {
+        "merged": "com.housing.exam.app-debug-36:/drawable_ic_launcher_foreground.xml.flat",
+        "source": "com.housing.exam.app-main-38:/drawable/ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "com.housing.exam.app-debug-36:/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "com.housing.exam.app-main-38:/mipmap-anydpi-v26/ic_launcher.xml"
+    },
+    {
+        "merged": "com.housing.exam.app-debug-36:/drawable_ic_launcher_background.xml.flat",
+        "source": "com.housing.exam.app-main-38:/drawable/ic_launcher_background.xml"
+    }
+]
