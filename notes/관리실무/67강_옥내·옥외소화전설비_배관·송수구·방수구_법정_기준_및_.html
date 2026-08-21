@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 - 제67강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+            letter-spacing: -0.05em;
+        }
+        
+        h1 {
+            font-size: 12pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        /* 토너 절약 4색 시각 강조 클래스 (배경색 배제) */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #16803d; 
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #6d28d9; 
+        }
+        
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        ol.quiz-list {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+            line-height: 2.1;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        /* 정답 리스트 3열 격자 레이아웃 */
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px 15px;
+        }
+
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        제67강. 옥내·옥외소화전설비 배관·송수구·방수구 법정 기준 및 스프링클러설비 핵심 기술기준
+    </h1>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        1. 옥내소화전설비 배관 기술기준 및 송수구·방수구 법정 설치기준 (NFTC 102)
+    </h2>
+    <ul>
+        <li><strong>★ 옥내소화전 배관 구경 및 유속 법정 기술기준 (★주관식 최다 출제 수치)</strong>:
+            <ol>
+                <li><span class="highlight-red">주배관 유속 기준</span>: 펌프의 토출 측 주배관의 구경은 유속이 <span class="highlight-red">초속 4미터(4m/s) 이하</span>가 될 수 있는 크기 이상으로 할 것.</li>
+                <li><span class="highlight-blue">일반 옥내소화전 배관 구경</span>:
+                    <br>&rarr; 옥내소화전 방수구와 연결되는 <span class="highlight-blue">가지배관의 구경</span>: <span class="highlight-blue">40밀리미터(40mm) 이상</span>.
+                    <br>&rarr; 주배관 중 <span class="highlight-blue">수직 배관의 구경</span>: <span class="highlight-blue">50밀리미터(50mm) 이상</span>.</li>
+                <li><span class="highlight-purple">★ 호스릴 옥내소화전 배관 구경 (공동주택 아파트등 특례)</span>:
+                    <br>&rarr; 호스릴 옥내소화전설비의 <span class="highlight-purple">가지배관 구경</span>: <span class="highlight-purple">25밀리미터(25mm) 이상</span>.
+                    <br>&rarr; 호스릴 옥내소화전설비의 <span class="highlight-purple">수직 주배관 구경</span>: <span class="highlight-purple">32밀리미터(32mm) 이상</span>.</li>
+                <li><span class="highlight-red">★ 연결송수관설비 겸용 시 배관 구경 (★단독 주관식 기출)</span>:
+                    <br>&rarr; 연결송수관설비 배관과 겸용할 경우의 <span class="highlight-red">주배관 구경</span>: <span class="highlight-red">100밀리미터(100mm) 이상</span>.
+                    <br>&rarr; 연결송수관설비 배관과 겸용 시 <span class="highlight-red">방수구 연결 배관 구경</span>: <span class="highlight-red">65밀리미터(65mm) 이상</span>.</li>
+            </ol>
+        </li>
+        <li><strong>★ 옥외 송수구(소방차 연결구) 법정 설치기준 (★공통 수치)</strong>:
+            <ol>
+                <li><span class="highlight-blue">설치 장소</span>: 소방차가 쉽게 접근할 수 있고 노출된 장소로서, 화재 시 떨어지는 유리창 등에 지장을 받지 않는 안전한 장소에 설치할 것.</li>
+                <li><span class="highlight-red">★ 송수구 높이 공식 수치 (★모든 소방설비 공통)</span>: 지면으로부터 높이가 <span class="highlight-red">0.5미터(0.5m) 이상 1미터(1m) 이하</span>의 위치에 설치할 것.</li>
+                <li><span class="highlight-purple">★ 송수구 구경 및 형상</span>: 구경 <span class="highlight-purple">65밀리미터(65mm)의 쌍구형 또는 단구형</span>으로 설치할 것. (※ 겸용 시 주배관 100mm에는 쌍구형 권장).</li>
+                <li><span class="highlight-red">★ 밸브 설치 금지 및 부속 밸브 규정</span>:
+                    <br>&rarr; 송수구로부터 주배관에 이르는 연결배관에는 <span class="highlight-red">개폐밸브를 설치하지 아니할 것</span>. (개폐밸브 잠김 시 소화수 공급 불가!).
+                    <br>&rarr; 송수구에 가까운 부분에는 <span class="highlight-green">자동배수밸브 및 체크밸브</span>를 설치할 것.
+                    <br>&rarr; 송수구에는 이물질 유입을 막기 위해 <span class="highlight-blue">마개</span>를 씌울 것.</li>
+            </ol>
+        </li>
+        <li><strong>★ 방수구(실내 개폐밸브) 법정 설치기준 및 수평거리·높이</strong>:
+            <ol>
+                <li><span class="highlight-red">★ 방수구 수평거리 (★가장 중요)</span>: 특정소방대상물의 층마다 설치하되, 각 부분으로부터 하나의 방수구까지의 수평거리가 <span class="highlight-red">25미터(25m) 이하</span>가 되도록 할 것. (※ 복층형 구조 아파트등은 세대 출입구 층에만 설치 가능).</li>
+                <li><span class="highlight-purple">★ 방수구 설치 높이</span>: 바닥으로부터의 높이가 <span class="highlight-purple">1.5미터(1.5m) 이하</span>가 되도록 설치할 것.</li>
+                <li><span class="highlight-blue">방수구 및 호스 구경</span>: 호스는 구경 <span class="highlight-blue">40밀리미터(40mm) 이상</span> [호스릴은 <span class="highlight-blue">25밀리미터(25mm) 이상</span>].</li>
+                <li><span class="highlight-green">표시등 구분</span>:
+                    <br>&rarr; <span class="highlight-green">위치표시등</span>: 소화전함 상부에 설치하며, 상시 점등되는 <span class="highlight-green">적색등</span>.
+                    <br>&rarr; <span class="highlight-green">기동표시등</span>: 펌프 가동 시 적색으로 점등되는 <span class="highlight-green">기동 확인용 적색등</span>.</li>
+            </ol>
+        </li>
+        <li><strong>★ 비상전원 작동시간 기준 (NFTC 102)</strong>:
+            <ul>
+                <li><span class="highlight-blue">일반 건축물 (29층 이하)</span>: 옥내소화전설비를 유효하게 <span class="highlight-blue">20분 이상</span> 작동시킬 수 있을 것.</li>
+                <li><span class="highlight-purple">고층건축물 (30층~49층)</span>: <span class="highlight-purple">40분 이상</span> 작동시킬 수 있을 것.</li>
+                <li><span class="highlight-red">초고층건축물 (50층 이상)</span>: <span class="highlight-red">60분 이상</span> 작동시킬 수 있을 것.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">배관 및 설비 구분</th>
+                <th style="width: 45%;">법정 관경 및 기술기준 수치</th>
+                <th style="width: 30%;">수험 핵심 출제 포인트</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th><span class="highlight-blue">주배관 유속 / 가지배관</span></th>
+                <td>유속 <span class="highlight-red">4m/s 이하</span> / 가지관 <span class="highlight-blue">40mm</span> (호스릴 <span class="highlight-purple">25mm</span>)</td>
+                <td>수직 주배관 <span class="highlight-blue">50mm</span> (호스릴 <span class="highlight-purple">32mm</span>)</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-red">연결송수관 겸용 배관</span></th>
+                <td>주배관 <span class="highlight-red">100mm 이상</span> / 방수구 연결관 <span class="highlight-red">65mm 이상</span></td>
+                <td>단독 주관식 기출 수치</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-purple">송수구 (소방차용)</span></th>
+                <td>높이 지면 <span class="highlight-red">0.5m~1m 이하</span> / 구경 <span class="highlight-purple">65mm 쌍구/단구</span></td>
+                <td><span class="highlight-red">개폐밸브 설치 금지</span> (마개 부착)</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-green">방수구 (실내용)</span></th>
+                <td>수평거리 <span class="highlight-red">25m 이하</span> / 바닥 높이 <span class="highlight-purple">1.5m 이하</span></td>
+                <td>호스 <span class="highlight-blue">40mm</span> (호스릴 <span class="highlight-purple">25mm</span>)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+        2. 옥외소화전설비 수원 저수량, 방수압·방수량 및 부속설비 기술기준 (NFTC 109)
+    </h2>
+    <ul>
+        <li><strong>★ 옥외소화전 수원 저수량 산정 공식 (★계산 및 주관식 1순위)</strong>:
+            <ul>
+                <li><span class="highlight-red">산정 공식</span>: <span class="highlight-red">수원 저수량 (Q) = 설치개수 (N, 최대 2개) × 7m³</span></li>
+                <li><span class="highlight-purple">산출 근거</span>: 노즐선단 최소 방수량 350L/min × 20분 = 7,000L = <span class="highlight-purple">7m³</span>.</li>
+                <li><span class="highlight-blue">예시 산정</span>: 단지 내 옥외소화전이 5개 설치된 경우 &rarr; <span class="highlight-blue">2개(최대) × 7m³ = 14m³</span>.</li>
+            </ul>
+        </li>
+        <li><strong>★ 옥외소화전 방수압력 및 방수량 법정 기준 (★수치 정밀 암기)</strong>:
+            <ol>
+                <li><span class="highlight-red">노즐선단 방수압력</span>: 옥외소화전(2개 이상 시 2개)을 동시에 사용할 경우 각 노즐선단 방수압력이 <span class="highlight-red">0.25메가파스칼(0.25MPa) 이상 0.7메가파스칼(0.7MPa) 이하</span>일 것.
+                    <br>&rarr; 방수압력이 <span class="highlight-purple">0.7MPa을 초과</span>하는 경우 감압장치 설치.</li>
+                <li><span class="highlight-red">노즐선단 방수량</span>: 각 소화전 노즐선단 방수량이 <span class="highlight-red">분당 350리터(350L/min) 이상</span>일 것. (옥내소화전 130L/min과 철저히 비교!).</li>
+            </ol>
+        </li>
+        <li><strong>★ 옥외소화전 호스접결구 및 소화전함 설치기준</strong>:
+            <ol>
+                <li><span class="highlight-blue">호스접결구 설치 높이 및 수평거리</span>:
+                    <br>&rarr; 지면으로부터 높이 <span class="highlight-blue">0.5미터(0.5m) 이상 1미터(1m) 이하</span>의 위치에 설치할 것.
+                    <br>&rarr; 특정소방대상물의 각 부분으로부터 하나의 호스접결구까지의 수평거리가 <span class="highlight-blue">40미터(40m) 이하</span>일 것.
+                    <br>&rarr; 호스 구경은 <span class="highlight-purple">65밀리미터(65mm)</span>의 것으로 할 것.</li>
+                <li><span class="highlight-red">★ 소화전함 설치거리 수치 (★주관식 단골)</span>:
+                    <br>&rarr; 옥외소화전마다 그로부터 <span class="highlight-red">5미터(5m) 이내</span>의 장소에 소화전함을 설치할 것.
+                    <br>&rarr; 옥외소화전이 10개 이하 설치된 경우 옥외소화전마다 <span class="highlight-red">5미터 이내</span> 장소에 1개 이상의 소화전함 설치.</li>
+            </ol>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">소화전 구분</th>
+                <th style="width: 25%;">노즐 방수압력</th>
+                <th style="width: 25%;">최소 방수량 (L/min)</th>
+                <th style="width: 25%;">수원 산정 공식 (N = 최대 2개)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th><span class="highlight-blue">옥내소화전설비</span></th>
+                <td><span class="highlight-blue">0.17MPa ~ 0.7MPa</span></td>
+                <td><span class="highlight-blue">130 L/min 이상</span></td>
+                <td><span class="highlight-blue">N × 2.6 m³</span></td>
+            </tr>
+            <tr>
+                <th><span class="highlight-red">옥외소화전설비</span></th>
+                <td><span class="highlight-red">0.25MPa ~ 0.7MPa</span></td>
+                <td><span class="highlight-red">350 L/min 이상</span></td>
+                <td><span class="highlight-red">N × 7.0 m³</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M3 3h18v18H3z"></path><path d="M8 12h8"></path></svg>
+        3. 스프링클러설비 핵심 용어, 헤드 및 배관 분류, 5대 가동 방식 정밀 비교 (NFTC 103)
+    </h2>
+    <ul>
+        <li><strong>스프링클러설비 (Sprinkler System)의 개요</strong>: 화재 발생 시 열에 의해 헤드가 자동 개방되거나 감지기 연동으로 소화수를 즉시 살수하는 자동식 물소화설비. (초기화재 진압에 가장 절대적 역할).</li>
+        <li><strong>★ 스프링클러헤드 세부 종류 및 용어 정의 (★주관식/객관식 매해 출제)</strong>:
+            <ol>
+                <li><span class="highlight-blue">개방형 스프링클러헤드</span>: <span class="highlight-blue">감열체 없이 방수구가 항상 열려 있는</span> 헤드. (일제살수식에 사용).</li>
+                <li><span class="highlight-red">폐쇄형 스프링클러헤드</span>: 정상상태에서 방수구가 막혀 있고 감열체가 일정 온도에서 자동 파괴·용해·이탈되어 개방되는 헤드. (습식, 건식, 준비작동식, 부압식에 사용).</li>
+                <li><span class="highlight-purple">측벽형 스프링클러헤드</span>: 가압수가 분사될 때 헤드 축심을 중심으로 한 <span class="highlight-purple">반원상에 균일하게 분산</span>시키는 헤드.</li>
+                <li><span class="highlight-green">★ 조기반응형 스프링클러헤드 (★공동주택 세대 적용)</span>: 표준형 스프링클러헤드보다 <span class="highlight-green">기류온도 및 기류속도에 조기 반응</span>하는 헤드. (아파트등 거실 필수).</li>
+                <li><span class="highlight-blue">건식형(드라이 펜던트) 헤드</span>: 물과 오리피스가 분리되어 배관 내 동파를 방지할 수 있는 헤드.</li>
+            </ol>
+        </li>
+        <li><strong>★ 배관 세부 분류 및 용어 정의 (★짝짓기 오답 방지)</strong>:
+            <ol>
+                <li><span class="highlight-red">가지배관</span>: <span class="highlight-red">스프링클러헤드가 직접 설치되어 있는</span> 배관.</li>
+                <li><span class="highlight-blue">교차배관</span>: <span class="highlight-blue">가지배관에 소화수를 급수하는</span> 배관.</li>
+                <li><span class="highlight-purple">주배관</span>: 가압송수장치 또는 송수구 등과 직접 연결되어 소화수를 이송하는 <span class="highlight-purple">주된 배관 (수직 배관)</span>.</li>
+                <li><span class="highlight-green">신축배관</span>: 가지배관과 스프링클러헤드를 연결하는 <span class="highlight-green">구부림이 용이하고 유연성을 가진</span> 배관.</li>
+                <li><span class="highlight-blue">급수배관</span>: 수원 및 송수구로부터 헤드에 급수하는 모든 배관.</li>
+            </ol>
+        </li>
+        <li><strong>★ 스프링클러설비 5대 가동 방식 정밀 비교 (★최다 출제 1순위)</strong>:
+            <ol>
+                <li><span class="highlight-blue">1. 습식 (Wet Pipe System)</span>:
+                    <br>&rarr; <span class="highlight-blue">1차측 가압수 / 2차측 가압수 (폐쇄형 헤드)</span>.
+                    <br>&rarr; 헤드가 열에 의해 개방되면 유수가 발생하여 습식유수검지장치(알람밸브)가 작동함.
+                    <br>&rarr; 장점: 소화작동 속도가 가장 신속함 / 단점: 겨울철 동파 위험 및 오작동 시 수손(물) 피해가 큼.</li>
+                <li><span class="highlight-purple">2. 부압식 (Negative Pressure System)</span>:
+                    <br>&rarr; <span class="highlight-purple">1차측 정압 가압수 / 2차측 부압(대기압 이하) 소화수 (폐쇄형 헤드)</span>.
+                    <br>&rarr; 화재 발생 시 감지기가 감지하여 부압을 정압으로 변환시켜 방수함.
+                    <br>&rarr; 장점: 평상시 2차측이 부압 상태이므로 헤드 파손 시에도 물이 누수되지 않아 습식의 오작동 수손 피해를 완전 차단함.</li>
+                <li><span class="highlight-green">3. 준비작동식 (Pre-Action System)</span>:
+                    <br>&rarr; <span class="highlight-green">1차측 가압수 / 2차측 대기압 또는 저압 (폐쇄형 헤드)</span>.
+                    <br>&rarr; 화재 감지기가 화재를 감지하면 준비작동식유수검지장치(프리액션밸브)가 개방되어 2차측 배관에 소화수가 채워지고, 헤드가 개방되면 방수됨. (동파 방지 목적).</li>
+                <li><span class="highlight-red">4. 건식 (Dry Pipe System)</span>:
+                    <br>&rarr; <span class="highlight-red">1차측 가압수 / 2차측 압축공기 또는 질소 기체 (폐쇄형 헤드)</span>.
+                    <br>&rarr; 헤드가 개방되어 2차측 압축공기가 배출되면 건식유수검지장치 1차측 수압에 의해 밸브가 열림.
+                    <br>&rarr; 단점: 2차측 기체가 완전히 배출된 후 소화수가 방출되므로 습식에 비해 소화 지연이 발생함.</li>
+                <li><span class="highlight-purple">5. 일제살수식 (Deluge System)</span>:
+                    <br>&rarr; <span class="highlight-purple">1차측 가압수 / 2차측 대기압 (개방형 헤드)</span>.
+                    <br>&rarr; 화재 감지기 또는 수동기동장치 작동으로 일제개방밸브가 열리면 해당 구역 전 헤드에서 동시에 대량 살수됨.</li>
+            </ol>
+        </li>
+        <li><strong>★ 부속 장치 및 특징</strong>:
+            <ul>
+                <li><span class="highlight-red">반사판 (디플렉터, Deflector)</span>: 헤드 방수구에서 유출되는 물을 세분(분산)시켜 넓은 방호 면적에 균일하게 분사하는 장치.</li>
+                <li><span class="highlight-purple">수손 피해 및 살수 특성</span>: 초기 화재 진압에 가장 효과적이나, <span class="highlight-purple">소화 완료 후 살수가 자동으로 멈추지 아니하므로</span> 사람이 직접 밸브를 닫아야 함 (2차 수손 피해 발생 가능). 소화기능과 경보기능을 동시에 보유함.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 20%;">가동 방식</th>
+                <th style="width: 25%;">1차측 배관 상태</th>
+                <th style="width: 25%;">2차측 배관 상태</th>
+                <th style="width: 15%;">헤드 종류</th>
+                <th style="width: 15%;">주요 특징</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th><span class="highlight-blue">습식</span></th>
+                <td>가압수 (정압)</td>
+                <td><span class="highlight-blue">가압수 (정압)</span></td>
+                <td>폐쇄형</td>
+                <td>가장 신속, 동파/수손 위험</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-purple">부압식</span></th>
+                <td>가압수 (정압)</td>
+                <td><span class="highlight-purple">부압 소화수</span></td>
+                <td>폐쇄형</td>
+                <td>감지기 연동, 누수/수손 차단</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-green">준비작동식</span></th>
+                <td>가압수 (정압)</td>
+                <td><span class="highlight-green">대기압 / 저압</span></td>
+                <td>폐쇄형</td>
+                <td>프리액션밸브, 동파 방지</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-red">건식</span></th>
+                <td>가압수 (정압)</td>
+                <td><span class="highlight-red">압축공기 / 질소</span></td>
+                <td>폐쇄형</td>
+                <td>동파 방지, 소화 지연 발생</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-purple">일제살수식</span></th>
+                <td>가압수 (정압)</td>
+                <td><span class="highlight-purple">대기압 (공기)</span></td>
+                <td><span class="highlight-red">개방형</span></td>
+                <td>일제개방밸브, 동시 대량 살수</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+            💡 [수험 핵심 팁] 제67강 실전 출제 포인트 & 함정 방지 최종 체크
+        </div>
+        <ul>
+            <li><strong>옥내소화전 배관 수치</strong>: 펌프 토출 주배관 유속 = <span class="highlight-red">4m/s 이하</span>. 가지관 = <span class="highlight-blue">40mm</span>(호스릴 <span class="highlight-purple">25mm</span>) / 수직 주배관 = <span class="highlight-blue">50mm</span>(호스릴 <span class="highlight-purple">32mm</span>). 연결송수관 겸용 = 주배관 <span class="highlight-red">100mm</span>, 방수구 연결관 <span class="highlight-red">65mm</span>.</li>
+            <li><strong>송수구 vs 방수구 수치 정밀 비교</strong>:
+                <br>&rarr; 송수구(소방차용) = 지면 높이 <span class="highlight-red">0.5m~1m 이하</span>, 구경 <span class="highlight-purple">65mm</span>, <span class="highlight-red">개폐밸브 설치 금지</span>(자동배수/체크밸브 및 마개).
+                <br>&rarr; 방수구(실내용) = 수평거리 <span class="highlight-red">25m 이하</span>, 바닥 높이 <span class="highlight-purple">1.5m 이하</span>, 호스 <span class="highlight-blue">40mm</span>(호스릴 <span class="highlight-purple">25mm</span>).</li>
+            <li><strong>옥외소화전 3대 수치</strong>: 저수량 = <span class="highlight-red">N(최대 2개) × 7m³</span>. 방수압력 = <span class="highlight-red">0.25~0.7MPa</span> / 방수량 = <span class="highlight-red">350L/min 이상</span>. 접결구 높이 = <span class="highlight-blue">0.5~1m 이하</span>, 수평거리 = <span class="highlight-blue">40m 이하</span>, 호스 <span class="highlight-purple">65mm</span>, 소화전함 = <span class="highlight-green">5m 이내</span>.</li>
+            <li><strong>스프링클러 5대 방식구분</strong>: 2차측 기준 &rarr; 가압수 = <span class="highlight-blue">습식</span> / 부압수 = <span class="highlight-purple">부압식</span> / 대기압(폐쇄형) = <span class="highlight-green">준비작동식</span> / 압축공기 = <span class="highlight-red">건식</span> / 대기압(개방형) = <span class="highlight-purple">일제살수식</span>. 물 세분 장치 = <span class="highlight-red">반사판(디플렉터)</span>. 살수는 자동 정지되지 않음!</li>
+        </ul>
+    </div>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>주관식 단답형 및 빈칸 채우기 실전 훈련</h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡, ㉢)에 들어갈 알맞은 핵심 용어나 법정 수치, 단위를 아래 빈칸에 직접 작성해 보십시오.</p>
+
+    <ol class="quiz-list">
+        <li>
+            옥내소화전 펌프의 토출 측 주배관 구경은 유속이 초속 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이하가 될 수 있는 크기 이상이어야 한다.
+        </li>
+        <li>
+            옥내소화전방수구와 연결되는 가지배관의 구경은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )밀리미터 이상, 수직 주배관의 구경은 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )밀리미터 이상이어야 한다.
+        </li>
+        <li>
+            아파트에 주로 설치되는 호스릴 옥내소화전의 가지배관 구경은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )밀리미터 이상, 수직 주배관 구경은 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )밀리미터 이상이어야 한다.
+        </li>
+        <li>
+            옥내소화전 배관을 연결송수관설비 배관과 겸용할 경우 주배관 구경은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )밀리미터 이상, 방수구 연결 배관 구경은 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )밀리미터 이상이어야 한다.
+        </li>
+        <li>
+            옥내소화전 송수구는 지면으로부터 높이가 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이상 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이하에 설치하고, 구경 ( ㉢&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )밀리미터의 쌍구형 또는 단구형으로 하여야 한다.
+        </li>
+        <li>
+            옥내소화전 송수구로부터 주배관에 이르는 연결배관에는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )밸브를 설치해서는 아니 되며, 송수구 가까운 부분에 자동배수밸브 및 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )밸브를 설치하여야 한다.
+        </li>
+        <li>
+            옥내소화전 방수구는 특정소방대상물의 각 부분으로부터 수평거리가 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이하가 되도록 설치하고, 바닥으로부터 높이는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이하이어야 한다.
+        </li>
+        <li>
+            옥내소화전설비의 비상전원은 자가발전설비등으로서 유효하게 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )분 이상 작동할 수 있어야 한다.
+        </li>
+        <li>
+            옥외소화전설비의 수원은 저수량이 옥외소화전 설치개수[최대 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )개]에 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )세제곱미터를 곱한 양 이상이어야 한다.
+        </li>
+        <li>
+            옥외소화전 노즐선단에서의 방수압력은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )MPa 이상 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )MPa 이하이어야 하고, 최소 방수량은 분당 ( ㉢&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )리터 이상이어야 한다.
+        </li>
+        <li>
+            옥외소화전 호스접결구는 지면으로부터 높이 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이상 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이하에 설치하고, 수평거리는 ( ㉢&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이하가 되도록 설치하여야 한다.
+        </li>
+        <li>
+            옥외소화전설비에는 옥외소화전마다 그로부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이내의 장소에 소화전함을 설치하여야 한다.
+        </li>
+        <li>
+            스프링클러헤드 중 감열체 없이 방수구가 항상 열려 있는 헤드를 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )헤드라 하고, 정상상태에서 방수구를 막는 감열체가 일정 온도에서 개방되는 헤드를 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )헤드라 한다.
+        </li>
+        <li>
+            스프링클러헤드 중 물과 오리피스가 분리되어 동파를 방지하는 헤드를 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )헤드라 하고, 공동주택 거실 등에 설치하여 표준형보다 기류 온도/속도에 빠르게 반응하는 헤드를 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )헤드라 한다.
+        </li>
+        <li>
+            스프링클러 배관 중 헤드가 설치되어 있는 배관을 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )(이라) 하고, 가지배관에 급수하는 배관을 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )(이라) 한다.
+        </li>
+        <li>
+            스프링클러헤드의 방수구에서 유출되는 물을 세분시키는 작용을 하는 부품을 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )(이라) 한다.
+        </li>
+        <li>
+            1차측과 2차측 배관 내에 모두 가압수가 충전되어 있으며 폐쇄형헤드를 사용하는 방식을 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 스프링클러설비라 한다.
+        </li>
+        <li>
+            1차측에 정압의 가압수가 충전되고, 2차측 배관 내에 대기압 이하의 부압 소화수가 충전되어 있는 방식을 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 스프링클러설비라 한다.
+        </li>
+        <li>
+            1차측에 가압수가 충전되고 2차측에 대기압 또는 저압 상태로 있다가 화재 감지기 작동으로 프리액션밸브가 개방되는 방식을 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 스프링클러설비라 한다.
+        </li>
+        <li>
+            2차측 배관에 압축공기나 질소 등 기체가 충전되어 있다가 헤드 개방 시 기체가 배출된 후 소화수가 방사되는 방식을 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 스프링클러설비라 한다.
+        </li>
+    </ol>
+
+    <div style="font-size: 9.5pt; color: #666666; margin-top: 30px; padding: 15px; border-top: 1px dashed #666666; line-height: 1.8;">
+        <strong style="display: block; margin-bottom: 10px; color: #333333;">[제67강 주관식 단답형 정답 리스트]</strong>
+        <div class="answer-grid">
+            <div><strong>1.</strong> ㉠ 4</div>
+            <div><strong>2.</strong> ㉠ 40, ㉡ 50</div>
+            <div><strong>3.</strong> ㉠ 25, ㉡ 32</div>
+            <div><strong>4.</strong> ㉠ 100, ㉡ 65</div>
+            <div><strong>5.</strong> ㉠ 0.5, ㉡ 1, ㉢ 65</div>
+            <div><strong>6.</strong> ㉠ 개폐, ㉡ 체크</div>
+            <div><strong>7.</strong> ㉠ 25, ㉡ 1.5</div>
+            <div><strong>8.</strong> ㉠ 20</div>
+            <div><strong>9.</strong> ㉠ 2, ㉡ 7</div>
+            <div><strong>10.</strong> ㉠ 0.25, ㉡ 0.7, ㉢ 350</div>
+            <div><strong>11.</strong> ㉠ 0.5, ㉡ 1, ㉢ 40</div>
+            <div><strong>12.</strong> ㉠ 5</div>
+            <div><strong>13.</strong> ㉠ 개방형, ㉡ 폐쇄형</div>
+            <div><strong>14.</strong> ㉠ 건식형(드라이 펜던트), ㉡ 조기반응형</div>
+            <div><strong>15.</strong> ㉠ 가지배관, ㉡ 교차배관</div>
+            <div><strong>16.</strong> ㉠ 반사판(디플렉터)</div>
+            <div><strong>17.</strong> ㉠ 습식</div>
+            <div><strong>18.</strong> ㉠ 부압식</div>
+            <div><strong>19.</strong> ㉠ 준비작동식</div>
+            <div><strong>20.</strong> ㉠ 건식</div>
+        </div>
+    </div>
+
+</body>
+</html>

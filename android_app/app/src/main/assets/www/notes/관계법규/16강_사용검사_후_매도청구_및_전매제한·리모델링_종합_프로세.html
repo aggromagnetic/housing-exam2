@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 관계법규 - 제16강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght=400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+            letter-spacing: -0.05em; /* 장평 및 자간 최적화 */
+        }
+        
+        h1 {
+            font-size: 13pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8; /* 프리미엄 블루 라인 */
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        /* 토너 절약 4색 강조 클래스 */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #16803d; /* 학습 편의 녹색 */
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #6d28d9; /* 구조 구분 보라색 */
+        }
+        
+        /* 얇은 점선 형태의 토너 세이브 설명 상자 */
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        ol {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        /* 인쇄 최적화 설정 */
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+        제16강. 사용검사 후 매도청구 및 전매제한·리모델링 종합 프로세스
+    </h1>
+    
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        1. 사용검사 후 매도청구의 법적 성격 및 유기적 흐름
+    </h2>
+    <ul>
+        <li><strong>제도의 도입 배경</strong>: 아파트 단지가 정상 완공되어 사용검사 및 수분양자 명의의 보존·이전등기까지 마쳤으나, 과거 거래 서류 위조 등의 사유로 원소유자가 소유권 이전등기 말소 소송에서 승소하여 대지의 일부 소유권을 회복하는 경우(실소유자 발생), 선의의 입주민들을 보호하고 단지 보존을 위해 <span class="highlight-blue">실소유자에게 대지를 시가로 매도할 것을 청구</span>할 수 있는 강행 장치이다.</li>
+        <li><strong>매도청구의 주체 (★초빈출 출제 함정)</strong>: 매도청구권은 오직 해당 주택단지의 <span class="highlight-red">주택 소유자들</span>이 행사한다. 
+            <ul>
+                <li><span class="highlight-purple">의무관리대상 아파트</span>의 위탁관리 계약 관계인 <strong>'주택관리업자'는 소송의 주체가 될 수 없다</strong>.</li>
+            </ul>
+        </li>
+        <li><strong>소송 대행 및 의사 결정 요건</strong>: 소송에 따르는 번거로움을 해결하기 위해 대표자를 선정할 수 있으며, 이 경우 주택 소유자 전체의 <span class="highlight-blue">4분의 3 (75%) 이상</span>의 동의를 얻어야 한다. 대표자 선정에 의한 법원의 판결 효력은 동의하지 않은 자를 포함한 <span class="highlight-purple">소유자 전체</span>에 미친다.</li>
+        <li><strong>청구 대상 면적의 물리적 제한</strong>: 실소유자 대지의 지분 면적이 주택단지 전체 대지면적의 <span class="highlight-red">5% 미만</span>인 경우에 한하여 매도청구가 가능하다 (5% 이상인 경우에는 입주민 보호보다 원소유자의 사유재산권 침해 방지를 우선하여 매도청구가 불가함).</li>
+        <li><strong>매도청구권의 소멸 시효 (2년 규칙)</strong>: 실소유자가 대지 소유권을 회복한 날부터 <span class="highlight-red">2년 이내</span>에 매도청구의 의사표시가 실소유자에게 송달되어야 소송 적격 요건을 충족한다.</li>
+        <li><strong>소송 비용 구상 특례</strong>: 주택 소유자들은 매도청구 소송에 소요된 비용 전액을 원래의 원인 유발자인 <span class="highlight-blue">사업주체에게 전부 구상</span>할 수 있다.</li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M11 5H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-5"></path><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+        2. 사용검사 후 매도청구 핵심 요건 요약표
+    </h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">구분</th>
+                <th style="width: 50%;">법정 세부 기준</th>
+                <th style="width: 25%;">수험 핵심 포인트</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>소송 청구권자</th>
+                <td class="highlight-blue">주택단지의 주택 소유자들</td>
+                <td class="highlight-red">주택관리업자 대행 불가</td>
+            </tr>
+            <tr>
+                <th>매도 가액 기준</th>
+                <td class="highlight-purple">감정가나 공시지가가 아닌 '시가(市價)'</td>
+                <td>매도청구는 예외 없이 시가 기준</td>
+            </tr>
+            <tr>
+                <th>대행 소송 동의율</th>
+                <td>주택 소유자 전체의 <span class="highlight-red">4분의 3 (75%) 이상</span> 동의</td>
+                <td>판결 효력은 소유자 전체에 귀속</td>
+            </tr>
+            <tr>
+                <th>대상 토지 면적 한도</th>
+                <td>주택단지 전체 대지면적의 <span class="highlight-green">5% 미만</span>일 것</td>
+                <td class="highlight-red">이상(X) / 미만(O) 출제 유의</td>
+            </tr>
+            <tr>
+                <th>송달 제척 기한</th>
+                <td>실소유자가 소유권을 회복한 날부터 <span class="highlight-blue">2년 이내</span> 송달</td>
+                <td>2년 경과 시 매도청구권 소멸</td>
+            </tr>
+            <tr>
+                <th>최종 비용 정산</th>
+                <td>매도청구 비용 <span class="highlight-purple">전액을 사업주체에게 구상</span></td>
+                <td>구상권 청구 금액 비율 제한 없음</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#b91c1c" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+            💡 [기출 핵심 비교] 주택법상 매도청구 3형제 비교 정돈
+        </div>
+        <ul>
+            <li><strong>알박기 대비 매도청구</strong>: 사업계획승인 단계에서 대지 소유권을 80%~95% 미만 확보 시 미확보 대지에 대해 소송 제기(대지 95% 이상 취득 시 전체 대지 소유자 대상 매도청구 가능).</li>
+            <li><strong>리모델링 반대자 매도청구</strong>: 조합 설립에 찬성하지 아니한 자의 토지 및 건축물에 대해 시가로 매도청구 가능.</li>
+            <li><strong>사용검사 후 매도청구</strong>: 사용검사가 다 마쳐진 뒤 등기까지 완료된 정상적인 주택단지에서 대지 일부 지분(5% 미만)의 실소유자가 나타났을 때 작동.</li>
+        </ul>
+    </div>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+        3. 주택의 전매제한 6대 대상 및 법정 기산일 특례
+    </h2>
+    <ul>
+        <li><strong>전매제한 대상 주택 6종</strong>: 다음의 주택 또는 그 입주자 지위는 법률이 정하는 기간 동안 전매(매매, 증여 및 이를 알선하는 행위 포함 / 상속은 제외)가 금지된다.
+            <ul>
+                <li>① 투기과열지구 내 건설·공급 주택</li>
+                <li>② 조정대상지역 내 건설·공급 주택</li>
+                <li>③ 분양가상한제 적용주택</li>
+                <li>④ 공공택지 외의 택지(민간택지)에서 공급하는 주택</li>
+                <li>⑤ 공공재개발사업에서 건설·공급하는 공동주택</li>
+                <li>⑥ <span class="highlight-red">토지임대부 분양주택</span> (법률상 거주의무와 함께 가장 엄격히 통제, 최장 10년 규정)</li>
+            </ul>
+        </li>
+        <li><strong>전매제한 기산일 설정의 함정 (★개정 수험 포인트)</strong>: 전매제한 기간의 기산점은 최초 계약체결일이 아니라, <span class="highlight-red">해당 주택의 입주자로 선정된 날(당첨자 발표일)</span>부터 계산한다. 선정일과 실제 분양계약서 작성일 사이의 미등기 불법 전매를 완벽히 통제하기 위한 강력한 차단책이다.</li>
+        <li><strong>전매제한 조기 졸업 단축 특례 (★극빈출)</strong>: 
+            <ul>
+                <li>주택의 전매제한 기간이 아직 남아있다 하더라도, 제한 기간 이내에 주택에 대한 <span class="highlight-blue">소유권 이전등기를 완료한 경우</span>에는 소유권 이전등기를 완료한 때에 <strong>전매제한 기간이 지난 것으로 본다(점유제한 전면 해제)</strong>.</li>
+                <li>따라서 등기를 마치면 제한 기간과 상관없이 합법 전매가 가능해진다 (단, 토지임대부 분양주택 등 개별 법령에 엄격한 하한선을 설정한 경우는 예외).</li>
+            </ul>
+        </li>
+        <li><strong>두 개 이상 제한 중첩 시 해결</strong>: 주택이 투기과열지구이면서 분양가상한제에도 해당하여 전매기간이 중복 적용될 때에는 <span class="highlight-purple">그 중 가장 긴 전매제한 기간</span>을 적용한다. 단, 조정대상지역의 <span class="highlight-green">위축지역</span>에 중복 적용되는 사안은 <span class="highlight-purple">가장 짧은 기간</span>을 적용한다.</li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        4. 전매제한 예외 적용이 인정되는 불가피한 사유 및 범위
+    </h2>
+    <ul>
+        <li><strong>전매 허용 원칙</strong>: 전매제한 대상 주택이라도 다음 사유에 해당하여 사업주체(LH 등 공공기관 주체 포함)의 <span class="highlight-blue">동의</span>를 받은 경우 전매제한 규정을 배제하고 합법 전매를 허용한다.</li>
+        <li><strong>전원 이동의 대원칙</strong>: 근무, 생업, 상속 등의 사유로 이전할 때는 반드시 세대주를 포함한 <span class="highlight-red">세대원 전원</span>이 이동하여야 한다 (일부만 잔류 시 불인정).</li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 30%;">인정 사유 분류</th>
+                <th style="width: 45%;">세부 면제 충족 요건</th>
+                <th style="width: 25%;">암기 및 시험 주의사항</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>근무·생업·질병치료</th>
+                <td>세대원 전원이 다른 광역시, 특별자치시, 특별자치도 또는 시·군 지역으로 이전하는 경우</td>
+                <td class="highlight-red">가로 함정: 수도권(서울특별시·인천광역시·경기도) 내부로의 이주는 제외</td>
+            </tr>
+            <tr>
+                <th>상속 주택 취득</th>
+                <td>상속에 의하여 취득한 주택으로 세대원 전원이 이전하는 경우</td>
+                <td>상속으로 집이 생겨 이사하는 정당성 인정</td>
+            </tr>
+            <tr>
+                <th>해외 이주 및 체류</th>
+                <td>세대원 전원이 해외로 이주하거나 <span class="highlight-blue">2년 이상</span>의 기간 동안 해외에 체류하고자 하는 경우</td>
+                <td class="highlight-purple">1년 체류(X) / 2년 이상 체류(O)</td>
+            </tr>
+            <tr>
+                <th>이혼 및 가사 분할</th>
+                <td>이혼으로 인하여 입주자로 선정된 지위 또는 주택을 배우자에게 이전하는 경우</td>
+                <td class="highlight-green">분양이 완료된 건물 주택도 동일 적용</td>
+            </tr>
+            <tr>
+                <th>배우자 증여 (부부 공유)</th>
+                <td>입주자로 선정된 지위 또는 주택의 <span class="highlight-purple">일부</span>를 배우자에게 증여하는 경우</td>
+                <td class="highlight-red">일부(O) / 전부(X) 증여 시 탈루 우려로 전면 금지</td>
+            </tr>
+            <tr>
+                <th>경제적 빈곤 (신설)</th>
+                <td>사업주체의 실직, 파산, 신용불량 등 불가피한 경제적 어려움이 발생한 경우</td>
+                <td>최근 코로나 등 서민 경기 악화 반영 완화책</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+            💡 [비교 및 판례 확인] 전매행위 제한 위반의 부기등기 효력
+        </div>
+        <ul>
+            <li><strong>저당권 등 부기등기 위반</strong>: 대지 저당권 제한 기간 위반 등의 부기등기 위반은 계약 자체가 원천 <span class="highlight-red">무효(無效)</span>가 됩니다.</li>
+            <li><strong>전매제한 부기등기 위반</strong>: 주택법상 전매 금지 위반이나 이에 저촉되는 전매 행위는 행벌적 형사 처벌(3년 이하 징역 또는 3천만원 이하 벌금 / 3배 가중 처벌 동일 적용)을 받는 것은 별론으로 하더라도, 사법상 거래 당사자 간의 계약 자체가 원천 <span class="highlight-blue">무효가 되는 규정은 없음</span>에 극히 주의해야 합니다 (사법상 계약 유효성 유지).</li>
+        </ul>
+    </div>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+        5. 리모델링 유형별 법정 연한 및 수직증축형 완벽 구조
+    </h2>
+    <ul>
+        <li><strong>리모델링 기본 3대 유형 비교</strong>:
+            <ul>
+                <li><strong>대수선형 리모델링</strong>: 건축물의 노후화 억제 또는 기능 향상을 위해 대수선하는 행위로, 준공 또는 사용검사일로부터 <span class="highlight-blue">10년</span>이 경과되어야 가능하다.</li>
+                <li><strong>증축형 리모델링</strong>: 전유부분 면적을 넓히는 방식으로, 사용검사일로부터 <span class="highlight-purple">15년</span>(시·도 조례로 15년 이상 20년 미만으로 정한 경우 그 기간)이 경과되어야 가능하다. 각 세대 주거전용면적의 <span class="highlight-red">30% 이내</span>(전유면적 85㎡ 미만은 40% 이내)까지 증축이 허용된다.</li>
+                <li><strong>세대수 증가형 리모델링</strong>: 기존 세대수의 <span class="highlight-green">15% 이내</span> 범위에서 세대수를 늘리는 방식으로, 일반 분양을 통해 분담금을 저감할 수 있는 혜택이 있다.</li>
+            </ul>
+        </li>
+        <li><strong>수직증축형 리모델링 구조적 상한선 (★빈출 계산 영역)</strong>:
+            <ul>
+                <li>기존 건축물의 최상층 위로 청수를 수직으로 올려 짓는 방식으로 구조적 하중 설계가 극도로 위험하다. 이에 따라 기존 층수가 <span class="highlight-red">15층 이상인 경우 최대 3개 층</span>까지, 기존 층수가 <span class="highlight-purple">14층 이하인 경우 최대 2개 층</span>까지만 수직 증축할 수 있도록 엄격히 제한한다 (3-15-2-14 공식).</li>
+                <li>수직증축형 리모델링을 하려는 자는 설계 시 반드시 주택의 구조 도면인 <span class="highlight-blue">구조설계도서</span>를 갖추어 행위허가 절차를 밟아야 한다.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        6. 세대수 증가형 리모델링 수립 계획 및 안전진단 이원화
+    </h2>
+    <ul>
+        <li><strong>세대수 증가형 리모델링 필수 수립 수단</strong>:
+            <ul>
+                <li><strong>권리변동계획 수립의 의무</strong>: 세대수가 증가하면 대지 지분이 분할되므로, 리모델링 조합은 반드시 조합원 권리 변동을 확정하는 <span class="highlight-purple">권리변동계획</span>을 수립하여 사업계획승인(증가 세대수 30세대 이상) 또는 행위허가(30세대 미만)를 받아야 한다.</li>
+                <li><strong>도시계획위원회 심의 (50세대 법칙)</strong>: 세대수 증가형 리모델링을 통해 증가하는 세대수가 <span class="highlight-red">50세대 이상</span>인 경우에는 지자체 산하의 <span class="highlight-blue">시·군·구 도시계획위원회 심의</span>를 의무적으로 거쳐야 가구 유입에 따른 공공시설 부담을 차단할 수 있다.</li>
+            </ul>
+        </li>
+        <li><strong>리모델링 기본계획의 수립 주체와 주기 (★주관식 대비)</strong>:
+            <ul>
+                <li>세대수 증가에 따른 일시적 이주 수요 폭발과 도시 과밀화를 관리하기 위해 <span class="highlight-blue">특별시장, 광역시장, 대도시 시장(특광대)</span>이 수립 주체가 된다. (※ 대도시가 아닌 시장은 도지사가 수립할 필요가 있다고 인정하는 경우에 한해 의무화된다).</li>
+                <li><strong>수립 단위 및 재검토</strong>: 리모델링 기본계획은 <span class="highlight-purple">10년 단위</span>로 수립하고, 매 <span class="highlight-red">5년마다</span> 타당성을 검토하여 결과를 계획에 반영하여야 한다.</li>
+                <li><strong>[특자시 예외]</strong>: 세종특별자치시(특자시)는 주택법상 시·도지사 급에 해당하지만, 도시 신설 연한이 15년에 미치지 못하므로 리모델링 기본계획 수립 대상에서 현실적으로 <span class="highlight-purple">배제</span>된다.</li>
+            </ul>
+        </li>
+        <li><strong>리모델링 안전진단 알파(α)와 베타(β)의 완벽 구분</strong>:</li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">안전진단 구분</th>
+                <th style="width: 45%;">진단 시점 및 핵심 수립 목적</th>
+                <th style="width: 30%;">수행 및 참여 제한 특례 요건</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>안전진단 알파 (α)<br>[ extension ]</th>
+                <td>
+                    - 리모델링 <span class="highlight-blue">허가 신청 전</span>에 의무적으로 실시<br>
+                    - 목적: 증축형 리모델링의 <span class="highlight-purple">정축 가능 여부</span>를 공식 확인하기 위함
+                </td>
+                <td rowspan="2" style="text-align: left; padding-left: 15px;">
+                    - 진단의 객관성을 확보하기 위해 안전진단 알파(α)를 실시한 <span class="highlight-red">안전진단 전문기관</span>은 수직증축의 안전진단 베타(β)를 추가 의무적으로 수행할 수 없다 (교차 참여 전면 제한).<br>
+                    - 단, 국교부 산하 <span class="highlight-green">국토안전관리원</span> 및 <span class="highlight-green">한국건설기술연구원</span>은 공공성 신뢰도가 높으므로 알파, 베타 중복 진단 수행이 가능하다.
+                </td>
+            </tr>
+            <tr>
+                <th>안전진단 베타 (β)<br>[ structure ]</th>
+                <td>
+                    - 수직증축형 리모델링 <span class="highlight-purple">허가를 득한 후</span>에 별도 실시<br>
+                    - 목적: 수직 증축 설계 및 시공 보강을 위한 <span class="highlight-red">구조 안전성의 상세 확인</span> 목적
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#b91c1c" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+            💡 [안전진단 미달 시 사후 대책] 정축 불허와 재건축 강제 전환
+        </div>
+        <ul>
+            <li>시장·군수·구청장은 안전진단 알파(α) 결과, 구조안전에 심각한 결함이 있어 건축물 전체의 위험도가 높다고 판단하는 경우, 증축형 리모델링을 전면 <span class="highlight-red">불허</span>하여야 한다. </li>
+            <li>대신 이 경우에는 노후 건축물 붕괴 예방을 유도하기 위해 도시정비법상 <span class="highlight-blue">재건축사업</span>이나 소규모정비법상 <span class="highlight-blue">소규모재건축사업</span>으로 강제 전환하여 건물을 다시 짓도록 관리해야 한다.</li>
+        </ul>
+    </div>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><line x1="18" y1="2" x2="22" y2="6"></line><path d="M7.5 20.5L19 9l-4-4L3.5 16.5 2 22z"></path></svg>
+        7. 주관식 단답형 및 다단 빈칸 채우기 완벽 대비 (실전 훈련)
+    </h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡, ㉢)에 들어갈 알맞은 핵심 용어나 법정 숫자를 아래 여유 공백에 직접 기재해 보십시오. (필기가 쉽도록 한글 4자 규격의 공간으로 구성되었습니다.)</p>
+    
+    <ol style="line-height: 2.1;">
+        <li>
+            사용검사 완료 후 등기가 마쳐진 단지에 회복된 대지 소유권 말소 소송에서 승소한 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )가 나타났을 때, 주택 소유자들은 그 대지를 감정가가 아닌 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )로 매도할 것을 청구할 수 있다.
+        </li>
+        <li>
+            사용검사 후 매도청구 소송이 유효하기 위해서는 청구 대상이 되는 대지 지분 면적이 주택단지 전체 대지면적의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )% 미만이어야 하며, 매도청구의 의사표시는 해당 소유권이 회복된 날부터 최대 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년 이내에 송달되어야 효력이 인정된다.
+        </li>
+        <li>
+            사용검사 후 매도청구 소송을 위해 대표자를 선정하는 경우 소유자 전체의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 이상의 동의를 받아야 한다. 한편 의무관리단지의 관리를 책임지는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )는 법리상 매도청구 소송의 주체적 제기권자가 될 수 없다.
+        </li>
+        <li>
+            대지 소유권 매도 소송에 따른 비용을 먼저 정산한 주택 소유자들은 그 소송 비용의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )을 귀책 주체인 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )에게 전액 구상할 권리를 가진다.
+        </li>
+        <li>
+            주택 전매제한 기간의 기산일은 분양 계약일이 아니라, 해당 주택의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )부터 적용하며, 전매제한 대상 주택이라도 제한 기간 내에 주택에 대한 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 등기를 완료하면 그 제한 기간을 경과한 것으로 본다.
+        </li>
+        <li>
+            세대원 전원이 근무, 생업, 질병 치료 등의 정당한 사유로 이전할 때는 원칙적으로 전매가 허용되나, 세대원이 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 지역으로 이주하는 경우는 승인 대상에서 명시적으로 제외되며, 해외 체류를 이유로 전매하려면 해외 체류 기간이 최소 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년 이상이어야 한다.
+        </li>
+        <li>
+            소유주의 사생활 및 가사 보전을 위해 배우자에게 전유 지위를 무상 증여하는 경우, ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )으로 지위가 이전될 때는 전부 전매가 인정되나 일반적인 부부 증여의 경우에는 입주권의 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 증여에 한하여 전매를 부분 허용한다.
+        </li>
+        <li>
+            리모델링을 허가받기 위해 충족해야 하는 경과연수는, 건축물의 뼈대와 기둥 등을 수선하는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 리모델링은 10년이며, 주거전용면적을 인위적으로 확장하는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 리모델링은 15년이다.
+        </li>
+        <li>
+            수직증축형 리모델링 시 기존 아파트가 15층 이상인 경우 최대 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )개 층까지 증축할 수 있으며, 구조안전성 유지를 위해 설계 단계에서 반드시 주택의 구조 설계도를 담은 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )를 제출하여야 한다.
+        </li>
+        <li>
+            세대수 증가형 리모델링 사업을 진행할 때 조합은 세대 지분 분할에 따른 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )을 반드시 사전에 수립하여야 하며, 리모델링으로 인해 증가하는 전체 가구가 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )세대 이상인 경우에는 도시계획위원회 심의를 거쳐야 한다.
+        </li>
+        <li>
+            이주 수요 조절을 목적으로 수립하는 리모델링 기본계획의 수립권자는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이며, 이 계획은 법정 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년 단위로 설계되고, 매 ( ㉢&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년마다 의무적 타당성 여부를 재검토하여야 한다.
+        </li>
+        <li>
+            리모델링 안전진단 프로세스 중 행위허가 승인 신청 전에 하는 예비 진단은 안전진단 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이고, 수직증축 허가를 득한 후 시공 보수 도면 수정을 위해 수행하는 상세 진단은 안전진단 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이다.
+        </li>
+        <li>
+            정밀 안전진단을 수행하는 모든 법정 외부 검사원들은 필수적으로 전문 기술자인 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )와 의무적으로 조를 구성해 진단해야 하며, 안전진단 결과 구조체 전체 노후화가 심한 상태이면 정축 리모델링을 불허하고 대신 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )사업으로 유도 전환해야 한다.
+        </li>
+        <li>
+            동일한 대지 조건에서 진단의 신뢰성 결탁을 방지하고자 1차 안전진단을 행한 일반 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )은 2차 수직 안전진단에 참여할 수 없다. 단, 공인된 공공기관인 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 또는 한국건설기술연구원은 공익 신뢰가 있어 중복 교차 진단이 합법 허용된다.
+        </li>
+    </ol>
+
+    <!-- 수험생 정답 확인용 하단 주르륵 배치 영역 -->
+    <div style="font-size: 10pt; color: #777777; margin-top: 30px; padding: 15px; border-top: 1px dashed #666666; line-height: 1.8;">
+        <strong>[제16강 주관식 단답형 정답 리스트]</strong><br>
+        1. ㉠ 실소유자, &nbsp;&nbsp; ㉡ 시가 <br>
+        2. ㉠ 5, &nbsp;&nbsp; ㉡ 2 <br>
+        3. ㉠ 4분의 3(또는 75%), &nbsp;&nbsp; ㉡ 주택관리업자 <br>
+        4. ㉠ 전부(또는 전액), &nbsp;&nbsp; ㉡ 사업주체 <br>
+        5. ㉠ 입주자로 선정된 날, &nbsp;&nbsp; ㉡ 소유권 이전등기 <br>
+        6. ㉠ 수도권, &nbsp;&nbsp; ㉡ 2 <br>
+        7. ㉠ 이혼, &nbsp;&nbsp; ㉡ 일부 <br>
+        8. ㉠ 대수선, &nbsp;&nbsp; ㉡ 증축 <br>
+        9. ㉠ 3, &nbsp;&nbsp; ㉡ 구조설계도서 <br>
+        10. ㉠ 권리변동계획, &nbsp;&nbsp; ㉡ 50 <br>
+        11. ㉠ 특별시장·광역시장·대도시 시장(또는 특광대도시장), &nbsp;&nbsp; ㉡ 10, &nbsp;&nbsp; ㉢ 5 <br>
+        12. ㉠ 알파(또는 α / 정축 가능 여부 확인), &nbsp;&nbsp; ㉡ 베타(또는 β / 구조 안전성 상세 확인) <br>
+        13. ㉠ 건축구조기술사, &nbsp;&nbsp; ㉡ 재건축(또는 소규모재건축) <br>
+        14. ㉠ 안전진단 전문기관, &nbsp;&nbsp; ㉡ 국토안전관리원
+    </div>
+
+</body>
+</html>

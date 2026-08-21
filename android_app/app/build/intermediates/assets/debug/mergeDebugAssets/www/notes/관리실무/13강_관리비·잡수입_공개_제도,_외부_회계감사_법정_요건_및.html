@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 공동주택 관리실무 - 제13강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght=400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 25px;
+            padding: 0;
+            letter-spacing: -0.05em; /* 자간 최적화로 가독성 극대화 및 오른쪽 쏠림 방지 */
+        }
+        
+        h1 {
+            font-size: 13pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 10px;
+            margin-top: 15px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        h2 {
+            font-size: 12pt;
+            font-weight: bold;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            padding-left: 10px;
+            border-left: 4px solid #1d4ed8; /* 프리미엄 딥블루 포인트 */
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h3 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 8px;
+            color: #111111;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+            margin-bottom: 25px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #111111;
+            padding: 10px 12px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: #f3f4f6;
+            font-weight: bold;
+        }
+        
+        /* 토너 절약 4색 강조 클래스 */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; /* 주요 수치 및 법정 기준 */
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; /* 핵심 예외, 주의사항, 오답 포인트 및 별표 */
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #15803d; /* 운영 보완 및 공통 행정 요소 */
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #7c3aed; /* 주체 비교 및 개념적 이원화 */
+        }
+        
+        /* 얇은 점선 형태의 토너 세이브 설명 상자 */
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #4b5563;
+            padding: 15px;
+            margin: 20px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+            border-radius: 4px;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        ul {
+            margin-top: 8px;
+            margin-bottom: 15px;
+            padding-left: 24px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        ol {
+            margin-top: 8px;
+            margin-bottom: 15px;
+            padding-left: 24px;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        /* 인쇄 최적화 설정 */
+        @media print {
+            body {
+                margin: 15mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+        제13강. 관리비·잡수입 공개 제도, 외부 회계감사 법정 요건 및 입주자 행위 동의 실무
+    </h1>
+
+    <h2>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+        1. 관리비 및 잡수입 등 내역 공개 의무 (항목별 산출내역 vs 세대별 부과액)
+    </h2>
+    <ul>
+        <li><strong>공개 의무의 대원칙 및 범위 (<span class="highlight-red">★</span>초빈출 정답 포인트)</strong>: 관리주체는 관리비, 사용료, 장기수선충당금, <span class="highlight-green">잡수입</span> 등의 내역을 매월 공개하여야 한다.
+            <ul>
+                <li><strong>공개 정보의 핵심 한계</strong>: 공개하는 정보는 반드시 <span class="highlight-blue">항목별 산출내역</span>이어야 하며, 개인정보 보호를 위해 <span class="highlight-red">세대별 부과액은 공개할 수 없다</span>. (세대별 부과내역을 포함하여 공개해야 한다고 출제 시 X).</li>
+                <li><strong>잡수입의 중요성</strong>: 재활용품 매각 수입, 복리시설 이용료 등 부수로 발생하는 <span class="highlight-green">잡수입도 동일하게 공개 대상</span>에 포함된다. (잡수입은 공개 대상에서 제외된다고 출제 시 X).</li>
+            </ul>
+        </li>
+        <li><strong>의무·비의무 단지의 공개 비교 (<span class="highlight-blue">★</span>50세대 및 100세대 기준)</strong>: 
+            <ul>
+                <li><strong>의무관리대상 단지</strong>: <span class="highlight-purple">관리주체</span>가 다음 세 곳에 상시 의무 공개하여야 한다. 
+                    <ol>
+                        <li>공동주택단지 <span class="highlight-blue">인터넷 홈페이지</span></li>
+                        <li>단지 내 <span class="highlight-blue">동별 게시판</span></li>
+                        <li>국토교통부장관이 구축·운영하는 <span class="highlight-blue">공동주택관리정보시스템(K-APT)</span></li>
+                    </ol>
+                </li>
+                <li><strong>비의무관리대상 단지</strong>: 대통령령으로 정하는 <span class="highlight-blue">50세대 이상</span> 공동주택의 <span class="highlight-purple">관리인</span>은 관리비 내역을 공개하여야 한다. 단, <span class="highlight-red">100세대 미만</span>인 공동주택의 관리인은 공동주택관리정보시스템(K-APT) 공개를 <span class="highlight-green">생략할 수 있으며</span>, 이 경우 홈페이지 및 동별 게시판에만 공개한다.</li>
+            </ul>
+        </li>
+        <li><strong>법정 공개 시점 기한</strong>: 매월 부과되는 관리비 등의 명세는 해당 월의 <span class="highlight-red">다음 달 말일까지</span> 공개하여야 한다. (당해 월 말일까지 공개해야 한다 X).</li>
+    </ul>
+
+    <h2>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        2. 지방자치단체장의 관리비 적정성 점검 및 위탁 수행기관 (★최신 제정)
+    </h2>
+    <ul>
+        <li><strong>제도 취지</strong>: 지방자치단체장은 K-APT에 공개된 관리비 및 사용료 등의 적정성을 확인하기 위해 필요 시 적정성 점검 및 실태 조사를 외부 전문기관에 위탁하여 수행할 수 있다.</li>
+        <li><strong>법정 점검 위탁 기관 (<span class="highlight-red">★</span>주관식 대비 단골 후보)</strong>:
+            <ol>
+                <li>공동주택관리법에 따른 <span class="highlight-purple">공동주택지원기구</span></li>
+                <li>지자체가 직접 설치·운영하는 <span class="highlight-purple">지역공동주택관리지원센터</span></li>
+                <li>한국부동산원법에 따른 <span class="highlight-green">한국부동산원</span></li>
+            </ol>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+        3. 외부 회계감사 수감 의무 및 세대별 서면동의 기준 이원화 (★초빈출)
+    </h2>
+    <ul>
+        <li><strong>회계감사 기본 원칙</strong>: 의무관리대상 공동주택의 관리주체는 <span class="highlight-blue">매년 1회 이상</span> 주식회사 등의 외부감사에 관한 법률에 따른 감사인의 회계감사를 의무적으로 받아야 한다.</li>
+        <li><strong>수감 면제를 위한 입주민 서면동의 비율 이원화 (<span class="highlight-red">★</span>최대 정답 빈출 처)</strong>:
+            <ul>
+                <li><strong><span class="highlight-blue">300세대 이상</span> 단지</strong>: 해당 회계연도에 회계감사를 받지 아니하기로 입주자 등의 <span class="highlight-red">3분의 2 이상 서면동의</span>를 받은 경우에만 당해 연도 감사 면제 가능.</li>
+                <li><strong><span class="highlight-blue">300세대 미만</span> 단지</strong>: 해당 회계연도에 회계감사를 받지 아니하기로 입주자 등의 <span class="highlight-red">과반수 서면동의</span>를 받은 경우에 한해 당해 연도 감사 면제 가능.</li>
+                <li><strong>수험 오답 차단</strong>: 서면동의를 받아야 하는 주체는 '입주자대표회의 구성원'이 아니라 실제 단지에 거주하고 권리를 가진 <span class="highlight-purple">입주자 등</span>이다.</li>
+            </ul>
+        </li>
+        <li><strong>법정 감사 수감 기한</strong>: 매 회계연도 종료 후 <span class="highlight-blue">9개월 이내</span>에 재무제표에 대한 회계감사를 완료하고 보고서를 수령해야 한다. (9개월 숫자는 주관식 괄호 넣기로 무수히 출제됨).</li>
+        <li><strong>회계감사 대상 재무제표 범위 (<span class="highlight-red">★</span>현금흐름표 제외 함정 차단)</strong>:
+            <ul>
+                <li>감사 대상인 법정 재무제표는 ① <span class="highlight-purple">재무상태표</span>, ② <span class="highlight-purple">운영성과표</span>, ③ <span class="highlight-purple">이익잉여금처분계산서</span>(또는 결손금처리계산서), ④ <span class="highlight-purple">주석</span>으로 한정한다.</li>
+                <li><strong>초고난도 함정</strong>: 비영리 단지 특성상 자본변동표나 <span class="highlight-red">현금흐름표는 법정 감사 대상 재무제표가 아니다</span>. (시험에서 교묘히 현금흐름표를 끼워 넣을 시 무조건 오답 배제할 것).</li>
+            </ul>
+        </li>
+        <li><strong>기준 고시권자</strong>: 회계처리 및 작성 기준은 오직 <span class="highlight-red">국토교통부장관</span>이 정하여 고시하며, 회계감사 세부 기준은 한국공인회계사회가 정하되 국토교통부장관의 승인을 얻는다. (기획재정부 장관이나 재정경제부 장관 고시라고 출제 시 X).</li>
+    </ul>
+
+    <h3>[표 13-1] 세대수 기준 회계감사 면제 동의 및 재무제표 범위 요약</h3>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">구분 기준</th>
+                <th style="width: 40%;">법정 기준 및 세부 내용</th>
+                <th style="width: 35%;">수험 주의 사항 및 함정 요인</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>300세대 이상 단지</th>
+                <td class="highlight-blue">입주자 등 <span class="highlight-red">3분의 2 이상</span> 서면동의 시 면제</td>
+                <td rowspan="2">동의 주체는 '입대의 구성원'이 아닌 <span class="highlight-red">'입주자 등'</span>임.</td>
+            </tr>
+            <tr>
+                <th>300세대 미만 단지</th>
+                <td class="highlight-blue">입주자 등 <span class="highlight-red">과반수</span> 서면동의 시 면제</td>
+            </tr>
+            <tr>
+                <th>감사 대상 재무제표</th>
+                <td>재무상태표, 운영성과표, 이익(결손)처분계산서, 주석</td>
+                <td class="highlight-red">자본변동표, 현금흐름표는 대상에서 제외됨</td>
+            </tr>
+            <tr>
+                <th>감사 수감 법정 기한</th>
+                <td class="highlight-blue">매 회계연도 종료 후 <span class="highlight-blue">9개월 이내</span></td>
+                <td>종료 후 6개월 또는 1년 이내로 숫자 조작 주의</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+        4. 회계감사 결과의 보고·공개 이원화 및 감사인 선정 권한
+    </h2>
+    <ul>
+        <li><strong>감사인의 결과 보고서 제출 (<span class="highlight-blue">★</span>1개월 이내 완료)</strong>: 감사인은 회계감사를 완료한 날부터 <span class="highlight-blue">1개월 이내</span>에 감사보고서를 <span class="highlight-purple">관리주체</span>와 관할 <span class="highlight-purple">시장·군수·구청장</span>에게 각각 제출해야 한다.
+            <ul>
+                <li><strong>함정 제거</strong>: 감사인은 <span class="highlight-red">입주자대표회의에 보고서를 직접 제출하지 않는다</span>. (입대의에 직접 제출 의무가 있다고 유도할 경우 무조건 X).</li>
+            </ul>
+        </li>
+        <li><strong>관리주체의 보고 및 단지 공개 의무</strong>: 
+            <ul>
+                <li>감사보고서를 제출받은 <span class="highlight-purple">관리주체</span>는 제출받은 날부터 <span class="highlight-blue">1개월 이내</span>에 해당 보고서를 <span class="highlight-purple">입주자대표회의에 보고</span>하여야 한다.</li>
+                <li>동시에 해당 보고서를 단지 홈페이지 및 동별 게시판에 상시 공개하여야 한다. (K-APT 시스템의 감사결과 등록은 감사인이 직접 수행하며, 관리주체는 단지 내부 공개를 담당한다).</li>
+            </ul>
+        </li>
+        <li><strong>감사인 선정 주체와 주민 추천 연서권 (<span class="highlight-red">★</span>입대의 선정 대원칙)</strong>:
+            <ul>
+                <li><strong>선정 주체</strong>: 회계감사인은 의결 기구인 <span class="highlight-purple">입주자대표회의가 선정</span>한다. (감사인 선정은 실무 집행 기구인 관리주체의 업무가 아니므로 오답 주의).</li>
+                <li><strong>주민 연서 요구권</strong>: 입주자 등의 <span class="highlight-blue">10분의 1 이상이 연서</span>하여 시장·군수·구청장 또는 한국공인회계사회에 감사인 추천을 요구하는 경우, 입대의는 반드시 추천받은 자 중에서 감사인을 선정하여야 한다.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg>
+        5. 주민공동시설 위탁 운영 및 인근 단지 개방 실무 (★임대단지 특별 관계)
+    </h2>
+    <ul>
+        <li><strong>위탁 운영 및 개방 결정 주체</strong>: 주민공동시설(헬스장, 독서실 등)을 외부 전문업자에게 위탁하여 운영하거나, 인근 아파트 단지 입주민들이 이용하도록 허용하는 계약 행위는 모두 <span class="highlight-purple">관리주체</span>가 수행한다. (입주자대표회의가 직접 허용·계약한다고 지문을 유도하면 X).</li>
+        <li><strong>임대주택단지의 특수성 및 의사결정권 (<span class="highlight-red">★</span>기출 킬러 조항)</strong>:
+            <ul>
+                <li>임대단지 주민공동시설의 위탁 제안권은 오직 <span class="highlight-red">임대사업자</span>에게만 있으며, 임차인대표회의는 제안 및 의사결정 권한이 전혀 없다. (임차인대표회의가 위탁 운영을 결정하거나 제안한다고 서술되면 무조건 X).</li>
+                <li>최종 결정은 전체 임차인 <span class="highlight-blue">과반수 동의</span> 또는 규약으로 정한 비율상의 동의를 얻어 임대사업자 명의로 확정한다.</li>
+            </ul>
+        </li>
+        <li><strong>금지 원칙</strong>: 인근 주민의 이용을 허용하여 단지 수익을 올릴 수 있으나, 주민공동시설을 <span class="highlight-red">영리 목적으로 운영해서는 절대 안 된다</span>. (실비 수준의 이용료 부과만 가능).</li>
+    </ul>
+
+    <h2>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        6. 입주자 등의 행위에 대한 관리주체 동의 기준 및 실외기 설치 제한 규칙
+    </h2>
+    <ul>
+        <li><strong>허가·신고 사항 vs 관리주체 동의 사항 구별 (<span class="highlight-red">★</span>최대 기출 변별력)</strong>: 공동주택 내부 구조를 파손·철거하는 행위는 관할 시구청장의 허가·신고 대상이지만, 법령에서 규정한 <span class="highlight-green">경미한 주택 내부 개선 행위</span>는 <span class="highlight-purple">관리주체의 사전 동의</span>만으로 가능하다.
+            <ul>
+                <li><strong>관리주체 동의로 가능한 주택 내부 행위 (A~D군)</strong>:
+                    <ol>
+                        <li>세대 안의 <span class="highlight-blue">창틀 및 문틀 교체</span> 행위</li>
+                        <li>세대 내 천장, 벽, 바닥의 마감재 교체 행위</li>
+                        <li>세대 내 급수관·배수관 등 <span class="highlight-green">배관설비 교체</span> 행위</li>
+                        <li>세대 내 난방설비 교체 행위 (단, 시설물의 <span class="highlight-red">파손을 제외</span>하고 교체하는 경우에 한함. 파손을 동반하는 난방관 전면 교체 등은 시구청 허가·신고 대상임).</li>
+                    </ol>
+                </li>
+            </ul>
+        </li>
+        <li><strong>기타 공용부 및 세대 간 행위에 대한 동의 기준</strong>:
+            <ul>
+                <li><strong>복도 및 계단 물건 적치</strong>: 피난·소방 방해 및 소방법에 <span class="highlight-blue">위배되지 아니하는 범위</span> 내에서 공용부에 물건을 적치하는 행위는 관리주체의 동의 대상이다. (소방법에 위배되는 통로 적치 행위는 동의 대상이 아니라 절대 금지 사항이다).</li>
+                <li><strong>가축 사육 권한과 장애인 보조견 예외</strong>: 가축을 사육하여 공동주거생활에 피해를 미치는 행위는 동의를 받아야 하지만, <span class="highlight-red">장애인 보조견 사육은 피해 유무와 상관없이 동의 대상에서 원천 배제</span>된다.</li>
+                <li><strong>돌출물 설치 제한 (에어컨 실외기 공간 규칙)</strong>: 세대 내부 또는 발코니 등에 냉방설비 배기장치(에어컨 실외기)를 설치할 수 있는 <span class="highlight-blue">고정 공간이 마련된 아파트의 경우</span>, 입주민은 발코니 난간 등 외벽에 실외기를 설치하기 위한 <span class="highlight-red">돌출물 설치 행위를 할 수 없다</span>. (실외기 설치 공간이 확보된 신축 아파트는 돌출 실외기 설치 자체가 불가능하므로 동의 신청 대상도 아님).</li>
+            </ul>
+        </li>
+        <li><strong>지하층 유지관리 의무</strong>: 아파트 지하층은 법적으로 주민공동시설로 활용할 수 있으나, 비상시를 대비하여 <span class="highlight-purple">대피소로 사용하는데 지장이 없도록</span> 상시 유지관리해야 할 책임은 <span class="highlight-purple">관리주체</span>에게 있다.</li>
+    </ul>
+
+    <h3>[표 13-2] 주요 행위별 규제 방식 및 권한 주체 총정리</h3>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 35%;">행위 종류</th>
+                <th style="width: 30%;">적용 법정 절차 및 요건</th>
+                <th style="width: 35%;">수험 핵심 맥락 (함정 방지)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>창틀·문틀·마감재 교체</th>
+                <td class="highlight-purple">관리주체 동의</td>
+                <td>시구청장 허가·신고 대상 아님</td>
+            </tr>
+            <tr>
+                <th>난방설비 교체 (파손 제외)</th>
+                <td class="highlight-purple">관리주체 동의</td>
+                <td class="highlight-red">파손을 수반할 경우 허가·신고로 전환</td>
+            </tr>
+            <tr>
+                <th>장애인 보조견 사육</th>
+                <td class="highlight-green">동의 불필요 (자유 권리)</td>
+                <td>주민 불편을 유발하더라도 동의 비대상</td>
+            </tr>
+            <tr>
+                <th>에어컨 실외기 외부 돌출 설치</th>
+                <td class="highlight-red">내부 전용공간 있을 시 절대 금지</td>
+                <td>전용 공간이 없을 때만 관리주체 동의 후 설치</td>
+            </tr>
+            <tr>
+                <th>지하층 활용 및 관리</th>
+                <td>주민공동시설 활용 가능</td>
+                <td class="highlight-blue">대피소 성능 유지 관리는 관리주체 의무</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr style="border: 0; border-top: 1px double #111111; margin: 30px 0;">
+
+    <h2>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><line x1="18" y1="2" x2="22" y2="6"></line><path d="M7.5 20.5L19 9l-4-4L3.5 16.5 2 22z"></path></svg>
+        7. 제13강 핵심 용어 리스트 및 빈칸 채우기 실전 훈련
+    </h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡, ㉢)에 들어갈 알맞은 핵심 용어나 법정 숫자를 직접 기재해 보십시오. (필기가 쉽도록 한글 4자 규격의 공간으로 구성되었습니다.)</p>
+    
+    <ol style="line-height: 2.1;">
+        <li>
+            관리비, 사용료, 잡수입 등의 내역을 공개할 때에는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 내역은 상세히 공개할 수 있으나, 사생활 침해 우려가 있는 각 세대별 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )은 절대로 공개해서는 안 된다.
+        </li>
+        <li>
+            의무관리대상이 아닌 비의무 아파트라도 최소 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )세대 이상인 경우에는 관리비 내역을 의무적으로 공개해야 하나, 세대수가 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )세대 미만인 경우에는 공동주택관리정보시스템(K-APT) 공개 의무를 생략할 수 있다.
+        </li>
+        <li>
+            관리비 내역의 공개 시점은 매월 정해진 날이 아니라, 관리비가 부과된 해당 월의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )까지로 제한되어 강행 규정화되어 있다.
+        </li>
+        <li>
+            지자체장이 K-APT에 등록된 관리비 적정성을 검증하고 실태조사를 외부에 의뢰할 수 있는 법정 전문 위탁기관에는 공동주택 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )와 지방자치단체의 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 등이 있다.
+        </li>
+        <li>
+            의무관리대상 공동주택은 원칙적으로 매년 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )회 이상 외부 회계감사를 받아야 하나, 세대수가 300세대 이상인 대단지는 입주자 등의 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 이상의 서면동의를 받아 당해 연도의 수감을 면제받을 수 있다.
+        </li>
+        <li>
+            세대수가 300세대 미만인 의무관리대상 공동주택이 당해 회계연도 회계감사를 면제받기 위해서는 입주자 등의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 서면동의를 확보하여야 한다.
+        </li>
+        <li>
+            관리주체는 회계연도가 마감되면 해당 회계연도 종료 후 반드시 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 이내에 규정된 재무제표에 대하여 감사를 받아야 한다.
+        </li>
+        <li>
+            공동주택 회계감사 법정 재무제표는 재무상태표, 운영성과표, 이익잉여금처분계산서 및 주석으로 구성되며, 기업 회계와 달리 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )표나 자본변동표는 감사 대상 재무제표에서 제외된다.
+        </li>
+        <li>
+            감사인은 감사를 마친 후 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 이내에 보고서를 관리주체와 시장·군수·구청장에게 송부해야 하며, 관리주체는 이를 송부받은 후 다시 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 이내에 입주자대표회의에 최종 보고 및 게시판에 공개하여야 한다.
+        </li>
+        <li>
+            외부 회계감사 대상이 되는 감사인을 법적으로 선정하고 최종 계약을 체결하는 주체 권한은 실 실무 담당인 관리주체가 아니라 의결 기구인 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )에게 있다.
+        </li>
+        <li>
+            임대주택단지의 주민공동시설 위탁 계약에 있어 임차인대표회의는 법정 제안 권한이 전혀 없으며, 모든 위탁 제안 권한은 소유권자인 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )에게 전적으로 부여된다.
+        </li>
+        <li>
+            입주민이 세대 내부의 창틀이나 문틀을 새것으로 전면 교체하고자 할 경우, 지자체의 허가나 신고를 얻을 필요는 없으나 사전 수립 절차로서 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )의 동의는 반드시 받아야 한다.
+        </li>
+        <li>
+            가축을 사육하여 생활에 큰 피해를 미치는 것은 동의 사항이지만, 장애인의 원활한 활동을 돕는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )의 사육 및 동반 행위는 주거 생활의 피해 여부와 관계없이 관리주체 동의 범위에서 완전히 제외된다.
+        </li>
+        <li>
+            냉방설비 배기장치를 내부에 설치할 수 있는 전용 공간이 설계에 반영되어 마련된 아파트 세대에서는, 발코니 바깥 난간 등에 실외기를 거치하기 위한 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )를 임의로 설치하는 행위가 전면 금지된다.
+        </li>
+    </ol>
+
+    <div style="font-size: 10.5pt; color: #a1a1aa; margin-top: 40px; padding: 15px; border-top: 1px dashed #cccccc; line-height: 1.8;">
+        <strong>[제13강 핵심 빈칸 채우기 정답 안내 - 인쇄 후 직접 맞춰보세요]</strong><br>
+        1. ㉠ 항목별 산출, &nbsp;&nbsp; ㉡ 세대별 부과액 <br>
+        2. ㉠ 50, &nbsp;&nbsp; ㉡ 100 <br>
+        3. ㉠ 다음 달 말일까지 <br>
+        4. ㉠ 지원기구, &nbsp;&nbsp; ㉡ 지원센터 <br>
+        5. ㉠ 1, &nbsp;&nbsp; ㉡ 3분의 2 <br>
+        6. ㉠ 과반수 <br>
+        7. ㉠ 9개월 이내 <br>
+        8. ㉠ 현금흐름 <br>
+        9. ㉠ 1개월 이내, &nbsp;&nbsp; ㉡ 1개월 이내 <br>
+        10. ㉠ 입주자대표회의 <br>
+        11. ㉠ 임대사업자 <br>
+        12. ㉠ 관리주체 <br>
+        13. ㉠ 장애인 보조견 <br>
+        14. ㉠ 돌출물
+    </div>
+
+</body>
+</html>

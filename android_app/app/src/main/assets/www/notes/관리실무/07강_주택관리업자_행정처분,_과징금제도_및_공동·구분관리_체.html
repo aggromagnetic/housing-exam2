@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 공동주택 관리실무 - 제7강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        
+        * {
+            box-sizing: border-box;
+            letter-spacing: -0.06em; /* 장평 90% 수준의 자간 효과 */
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.5;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+        }
+        
+        h1 {
+            font-size: 12pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 6px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 8px;
+            padding-left: 6px;
+            border-left: 3px solid #1d4ed8; /* 프리미엄 블루 라인 */
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 8px;
+            margin-bottom: 15px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #111111;
+            padding: 6px 8px;
+            text-align: center;
+            line-height: 1.4;
+        }
+        
+        th {
+            background-color: #f3f4f6; /* 토너 절약형 미세 회색 */
+            font-weight: bold;
+        }
+        
+        /* 2색 프리미엄 텍스트 강조 (인쇄 토너 절약형) */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+        
+        /* 얇은 점선 형태의 토너 세이브 설명 상자 */
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #4b5563;
+            padding: 10px;
+            margin: 12px 0;
+            background-color: #ffffff;
+            line-height: 1.5;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 4px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* 자가 진단 및 인쇄용 정답 처리 */
+        .blank-answer {
+            color: #e5e7eb; /* 인쇄 시 거의 보이지 않는 옅은 회색 */
+            font-weight: bold;
+            border-bottom: 1px dashed #4b5563;
+            padding: 0 4px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        
+        .blank-answer:hover {
+            color: #1d4ed8; /* 마우스 호버 시 파란색으로 정답 노출 */
+        }
+
+        ul, ol {
+            margin-top: 4px;
+            margin-bottom: 8px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 4px;
+        }
+
+        /* 인쇄 최적화 설정 */
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .blank-answer {
+                color: #e5e7eb !important;
+                border-bottom: 1px dashed #111111 !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block; vertical-align:middle;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+        [7강] 주택관리업자 행정처분, 과징금제도 및 공동·구분관리 체계
+    </h1>
+    
+    <h2>1. 주택관리업자 행정처분의 분류 및 핵심 암기 공식</h2>
+    <p>행정처분 사유는 성격에 따라 세 가지로 엄격히 구분됩니다. 시험에서는 특정 사유를 주고 <strong>'반드시 등록을 말소하여야 하는 사유'</strong>인지 또는 <strong>'과징금 처분으로 갈음할 수 있는 사유'</strong>인지를 골라내는 형태로 출제되므로 아래 공식을 통째로 외워야 합니다.</p>
+    <ul>
+        <li><strong>필수적 등록말소 (등록을 말소하여야 한다)</strong>: <span class="highlight-red font-bold">"거·지·대·합"</span>
+            <ul>
+                <li><span class="bold">거</span>: <span class="highlight-blue">거</span>짓이나 그 밖의 부정한 방법으로 등록한 경우</li>
+                <li><span class="bold">지</span>: 영업정<span class="highlight-blue">지</span>기간 중에 공동주택관리업무를 수행한 경우</li>
+                <li><span class="bold">대</span>: 등록증을 <span class="highlight-blue">대</span>여하거나 성명·상호를 대여하여 업무를 수행하게 한 경우</li>
+                <li><span class="bold">합</span>: 최근 3년간 2회 이상의 영업정지처분을 받은 자로서 그 처분기간이 <span class="highlight-blue">합</span>산하여 <span class="highlight-red font-bold">12개월을 초과</span>한 경우</li>
+            </ul>
+        </li>
+        <li><strong>필수적 영업정지 (1년 이내 기간의 영업정지를 명하여야 한다)</strong>: <span class="highlight-red font-bold">"외·부"</span>
+            <ul>
+                <li><span class="bold">외</span>: 관리비·사용료·장기수선충당금을 공동주택관리법에 따른 용도 <span class="highlight-blue">외</span>의 목적으로 사용한 경우</li>
+                <li><span class="bold">부</span>: <span class="highlight-blue">부</span>정하게 재물이나 재산상의 이익을 취득하거나 제공한 경우</li>
+            </ul>
+        </li>
+        <li><strong>임의적 등록말소 또는 영업정지 (선택적 재량 처분)</strong>: 위 두 가지 공식을 제외한 나머지 일반 사유(등록기준 미달, 하자로 인한 재산상 손해 유발 등)는 등록말소 또는 영업정지 중 선택하여 처분할 수 있습니다.</li>
+    </ul>
+
+    <div class="explanation">
+        <div class="explanation-title">⚠️ [초강조] "거·지·대·합"과 "외·부"의 법적 효력 차이 (과징금 연계 함정)</div>
+        <p>시험에서 가장 고난도로 출제되는 행정처분 연계 논리입니다.</p>
+        <ul>
+            <li><strong>"거·지·대·합" (필수적 등록말소)</strong>: 위반 시 <span class="highlight-red font-bold">무조건 등록이 취소</span>되므로, 어떠한 경우에도 행정처분의 감경 규정을 적용받아 <strong>영업정지로 감경될 수 없고</strong>, 영업정지를 전제로 하는 <strong>과징금 부과 대상도 될 수 없습니다.</strong></li>
+            <li><strong>"외·부" (필수적 영업정지)</strong>: 위반 시 <span class="highlight-red font-bold">무조건 실제 영업정지</span>가 들어가야 하므로, 영업정지에 갈음하여 돈으로 때우는 <strong>과징금을 부과할 수 없습니다.</strong></li>
+            <li><strong>과징금 부과 가능 사유</strong>: 영업정지에 갈음하는 과징금은 오직 <span class="highlight-blue font-bold">임의적 등록말소 사유에 해당하여 영업정지 처분을 받게 되는 경우</span>에만 예외적으로 허용됩니다.</li>
+        </ul>
+    </div>
+
+    <h2>2. 행정처분의 주요 세부 기준 및 가중·감경 사유</h2>
+    <ul>
+        <li><strong>처분기준의 누적 기산점</strong>: 위반행위의 횟수에 따른 행정처분 기준은 최근 <span class="highlight-blue">1년간</span> 같은 위반행위로 처분을 받은 경우에 적용합니다. (기산일은 최초 처분일과 다시 위반행위를 적발한 날을 기준으로 산정)</li>
+        <li><strong>둘 이상의 위반행위 경합 시 처리 기준 (병합 처분)</strong>:</li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">경합 사유 구분</th>
+                <th style="width: 45%;">행정처분 결정 방식</th>
+                <th style="width: 30%;">제한 범위 및 함정 대비</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th class="bold">등록말소 사유가<br>포함된 경우</th>
+                <td>가장 무거운 위반행위의 기준에 따라 <span class="highlight-red font-bold">등록말소 처분</span>을 내린다.</td>
+                <td>- 다른 영업정지 사유가 섞여 있어도 감경 없이 즉시 등록 말소함.</td>
+            </tr>
+            <tr>
+                <th class="bold">모두 영업정지<br>사유인 경우</th>
+                <td>가장 무거운 위반행위 처분기준에 다른 처분기준의 <span class="highlight-red font-bold">2분의 1</span>을 더하여 가중한다.</td>
+                <td>
+                    - 가중하더라도 각 위반행위의 <span class="highlight-blue">합산기간을 초과할 수 없다.</span><br>
+                    - 영업정지 기간은 <span class="highlight-blue">1년을 초과할 수 없다.</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li><strong>행정처분의 가중 및 감경 비율</strong>: 동기나 피해 정도를 고려하여 가중하거나 감경할 때도 그 범위는 처분기준의 <span class="highlight-red font-bold">2분의 1</span> 이내여야 합니다.</li>
+        <li><strong>감경 사유 요건 (주관식/객관식 빈출)</strong>:
+            <ul>
+                <li>검사로부터 <span class="highlight-blue">기소유예</span> 처분을 받거나 법원으로부터 금고 이상의 형에 대한 <span class="highlight-blue font-bold">선고유예</span> 판결을 받은 경우 (※ '집행유예'는 감경 사유가 아님에 극도로 주의할 것!)</li>
+                <li>사소한 부주의나 오류로 인정되는 경우 또는 피해 정도가 경미하여 입주자등에게 미친 영향이 적은 경우</li>
+                <li>최초 위반행위로서 <span class="highlight-red font-bold">3년 이상</span> 해당 주택관리업을 모범적으로 영위해 온 사실이 인정되는 경우</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>3. 행정처분의 입주자대표회의 사전 통보 의무</h2>
+    <p>주택관리업자가 갑자기 문을 닫거나 영업이 정지되면 단지 관리에 막대한 공백이 생기므로 법은 사전에 계약 당사자인 입대의에 이를 알리도록 강제하고 있습니다.</p>
+    <ul>
+        <li><strong>통보 주체 및 대상</strong>: 시장·군수·구청장은 주택관리업자에게 등록말소 또는 영업정지 처분을 하려는 경우에 통보하여야 한다.</li>
+        <li><strong>법정 통보 기한</strong>: <span class="highlight-red font-bold">처분일 1개월 전까지</span> 그 사실을 통보하여야 한다.</li>
+        <li><strong>통보 상대방</strong>: 해당 주택관리업자가 관리하고 있는 공동주택의 <span class="highlight-red font-bold">입주자대표회의</span></li>
+        <li><span class="highlight-red">시험 함정</span>: "처분일 15일 전까지 주택건설협회에 통보한다" 또는 "처분 즉시 해당 주택관리업자에게만 송달한다"는 지문은 무조건 오답이다. (<strong>처분일 1개월 전</strong>, <strong>입주자대표회의</strong>가 핵심 키워드임)</li>
+    </ul>
+
+    <h2>4. 영업정지 갈음 과징금 부과 및 납부 기준</h2>
+    <p>실제 영업정지 시 입주민들이 겪을 혼란과 피해를 막기 위해 시장·군수·구청장이 영업정지에 갈음하여 과징금을 부과하는 제도입니다.</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 20%;">과징금 한도액</th>
+                <th style="width: 25%;">과징금 산정 기준</th>
+                <th style="width: 25%;">납부 기한 및 예외</th>
+                <th style="width: 30%;">적용 불가능 대상 (암기 필수!)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="highlight-red font-bold">2천만 원 이하</td>
+                <td>
+                    영업정지 기간<br>
+                    <span class="highlight-blue font-bold">1일당 3만 원</span><br>
+                    (1개월은 <span class="highlight-blue">30일</span> 기준)
+                </td>
+                <td>
+                    통지받은 날부터<br>
+                    <span class="highlight-red font-bold">30일 이내</span> 납부<br>
+                    (천재지변 시 사유가 없어진 날부터 7일 이내)
+                </td>
+                <td style="text-align: left;">
+                    1. 필수적 등록말소<br>
+                    <span class="highlight-red font-bold">(거·지·대·합)</span><br>
+                    2. 필수적 영업정지<br>
+                    <span class="highlight-red font-bold">(외·부)</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="explanation">
+        <div class="explanation-title">📝 [과징금 계산 기출 사례 대입 연습]</div>
+        <p>시험에서 주택관리업자가 <strong>영업정지 3개월</strong>의 처분을 받았을 때 갈음하여 부과받을 수 있는 과징금의 최대 액수를 구하라는 계산 문제가 출제됩니다.</p>
+        <ul>
+            <li><strong>법정 일수 환산</strong>: 1개월은 무조건 30일로 고정하므로 3개월 = <span class="highlight-blue font-bold">90일</span></li>
+            <li><strong>금액 계산</strong>: 90일 &times; 30,000원(1일당 기준액) = <span class="highlight-red font-bold">270만 원</span></li>
+            <li><strong>정리</strong>: 만약 계산된 금액이 한도액인 2천만 원을 초과하는 경우에는 한도액인 2천만 원을 과징금으로 부과합니다.</li>
+        </ul>
+    </div>
+
+    <h2>5. 공동주택의 공동관리 및 구분관리 체계</h2>
+    <p>관리의 효율성을 높이기 위해 여러 단지를 묶어서 관리(공동관리)하거나, 대단지를 나누어 관리(구분관리)하는 방식입니다.</p>
+    <ul>
+        <li><strong>의사결정 주체</strong>: 관할 지자체장이 직접 명령하는 것이 아니며, 오직 <span class="highlight-blue font-bold">입주자대표회의</span>가 필요하다고 인정하는 경우에 자체적으로 추진합니다. (지자체장 주도라고 쓰면 오답)</li>
+        <li><strong>구분관리의 요건 (세대 수 제한)</strong>: 하나의 공동주택단지를 나누어 구분관리하고자 할 때에는 분할된 관리단위별 세대수가 각각 <span class="highlight-red font-bold">500세대 이상</span>이어야 합니다.</li>
+        <li><strong>공동관리 및 구분관리 의결 동의 비율</strong>:</li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">행위 구분</th>
+                <th style="width: 40%;">입주자등 서면동의 필수 요건</th>
+                <th style="width: 35%;">핵심 예외 및 임대주택 동의</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th class="bold">공동관리</th>
+                <td>공동관리 대상 <span class="highlight-blue font-bold">단지별</span> 입주자등의 <span class="highlight-red font-bold">과반수 찬성</span></td>
+                <td rowspan="2">
+                    - 임대주택단지가 포함된 경우:<br>
+                    <span class="highlight-blue">임대사업자</span> 및 <span class="highlight-blue">임차인대표회의</span>의 서면동의로 갈음함.
+                </td>
+            </tr>
+            <tr>
+                <th class="bold">구분관리</th>
+                <td>구분관리 대상 <span class="highlight-blue font-bold">단위별</span> 입주자등의 <span class="highlight-red font-bold">과반수 찬성</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>6. 공동관리의 면적 한계 및 물리적 장벽 요건</h2>
+    <ul>
+        <li><strong>세대 수 상한 원칙</strong>: 공동관리하는 전체 단지의 총 세대수는 <span class="highlight-red font-bold">1,500세대 이하</span>여야 합니다.</li>
+        <li><strong>세대 수 제한의 중대한 예외 (단골 출제)</strong>: 의무관리대상 공동주택단지와 인접한 <span class="highlight-blue font-bold">300세대 미만</span>의 공동주택단지(임의관리단지)를 공동으로 관리하는 경우에는 <strong>총 세대수 제한(1,500세대 이하 규정)을 적용하지 않습니다.</strong></li>
+        <li><strong>단지 사이의 도로 장벽 금지 요건 (이해 및 암기 필수)</strong>: 공동관리하고자 하는 단지들 사이에 다음 중 어느 하나에 해당하는 시설이 있으면 공동관리할 수 없습니다. (단지 간 단절 방지 목적)
+            <ol>
+                <li>철도, 고속도로, 자동차전용도로</li>
+                <li>폭 <span class="highlight-red font-bold">20m 이상</span>인 일반도로</li>
+                <li>폭 <span class="highlight-red font-bold">8m 이상</span>인 도시계획예정도로</li>
+                <li><strong>예외</strong>: 위 시설이 단지 사이에 있더라도 <span class="highlight-blue">지하도, 육교, 횡단보도</span> 등이 설치되어 보행자의 동행 안전성이 확보되었다고 시장·군수·구청장이 인정하는 경우에는 공동관리가 허용됩니다.</li>
+            </ol>
+        </li>
+    </ul>
+
+    <h2>7. 관리기구 설치 방식 및 결정 시 통보 기한</h2>
+    <ul>
+        <li><strong>관리기구 구성 방식 (단위별 구성 의무)</strong>: 공동관리 또는 구분관리를 수행할 때, 관리사무소장 배치 등의 공동주택 관리기구는 단지별이 아니라 관리 <span class="highlight-red font-bold">단위별로 구성</span>하여야 합니다.
+            <ul>
+                <li><span class="highlight-red">시험 함정</span>: "공동관리 및 구분관리의 관리기구는 단지별로 각각 구성하여 운영하여야 한다"는 지문은 무조건 오답입니다. (비용 낭비 방지 및 관리 실효성을 위해 <strong>단위별로 구성</strong>하는 것임)</li>
+            </ul>
+        </li>
+        <li><strong>결정 시 최종 통보 요건</strong>: 입주자대표회의는 공동관리 또는 구분관리를 하기로 최종 결정한 때에는 <span class="highlight-red font-bold">지체 없이</span> 그 내용을 관할 <span class="highlight-blue font-bold">시장·군수·구청장</span>에게 <span class="highlight-red font-bold">통보</span>하여야 합니다.</li>
+        <li><span class="highlight-red">시험 함정</span>: "결정한 날부터 15일 이내에 시장·군수·구청장에게 신고하여야 한다"로 속여서 자주 출제합니다. (<strong>기간 규정 없음/지체 없이</strong>, <strong>신고가 아니라 통보</strong>임)</li>
+    </ul>
+
+    <hr style="border: 0; border-top: 1px double #111111; margin: 20px 0;">
+
+    <h2>8. 주관식 단답형 대비 핵심 용어 리스트 (빈칸 채우기)</h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 10px;">* 괄호 안의 연한 영역을 마우스 드래그로 긁거나 인쇄하여 정답을 확인하며 암기하세요.</p>
+    
+    <ol>
+        <li>주택관리업자가 거짓이나 부정한 방법으로 등록을 하였을 때 등록관청이 내려야 하는 행정처분 요건은 필수적 <span class="blank-answer">( 등록말소 )</span>이다.</li>
+        <li>최근 3년간 2회 이상의 영업정지처분을 받은 자로서 그 처분기간이 합산하여 <span class="blank-answer">( 12개월 )</span>을 초과한 주택관리업자는 등록이 말소된다.</li>
+        <li>공동주택의 관리비, 사용료, 장기수선충당금을 법정 용도 외의 목적으로 사용한 주택관리업자에게 처분하는 행정제재 요건은 필수적 <span class="blank-answer">( 영업정지 )</span>이다.</li>
+        <li>임의적 등록말소에 해당하는 처분으로서 영업정지를 하려는 경우, 시장·군수·구청장은 영업정지에 갈음하여 <span class="blank-answer">( 2천만 )</span>원 이하의 과징금을 부과할 수 있다.</li>
+        <li>과징금의 세부 산정 기준은 영업정지 기간 1일당 <span class="blank-answer">( 3만 )</span>원으로 규정되어 있다.</li>
+        <li>과징금 부과 대상자가 납부 통지를 받은 경우, 천재지변 등 부득이한 사유가 없는 한 통지를 받은 날부터 <span class="blank-answer">( 30일 )</span> 이내에 과징금을 납부해야 한다.</li>
+        <li>시장·군수·구청장이 주택관리업자에게 등록말소 또는 영업정지 처분을 내리고자 할 때에는 처분일 <span class="blank-answer">( 1개월 )</span> 전까지 입주자대표회의에 그 사실을 사전 통보하여야 한다.</li>
+        <li>공동주택을 나누어 구분관리하고자 할 때 분할된 각각의 관리단위별 세대수는 최소 <span class="blank-answer">( 500세대 )</span> 이상이어야 한다.</li>
+        <li>공동관리를 하기 위해 받아야 하는 단지별 입주자등의 서면의결 요건은 <span class="blank-answer">( 과반수 )</span> 찬성이다.</li>
+        <li>공동관리하는 전체 단지의 총 세대수는 최대 <span class="blank-answer">( 1500세대 )</span> 이하여야 한다.</li>
+        <li>의무관리대상 공동주택단지와 인접한 <span class="blank-answer">( 300세대 )</span> 미만의 단지를 공동으로 관리하는 경우에는 전체 세대수 제한 상한 규정을 적용하지 않는다.</li>
+        <li>단지 간의 보행자 안전성이 확보되더라도 단지 사이에 폭 <span class="blank-answer">( 20미터 )</span> 이상인 일반도로가 있으면 원칙적으로 공동관리를 허용하지 않는다.</li>
+        <li>공동관리 및 구분관리를 하기 위해 배치하는 관리사무소장 등의 기구는 단지별이 아닌 관리 <span class="blank-answer">( 단위별 )</span>로 설치하여야 한다.</li>
+        <li>입주자대표회의가 공동관리 또는 구분관리를 실시하기로 결정한 때에는 <span class="blank-answer">( 지체 없이 )</span> 시장·군수·구청장에게 통보하여야 한다.</li>
+    </ol>
+
+</body>
+</html>

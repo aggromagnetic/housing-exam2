@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 관계법규 - 제9강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght=400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 25px;
+            padding: 0;
+            letter-spacing: -0.05em; /* 자간 95% 수준 최적화 */
+            transform: scaleX(0.95); /* 장평 95% 조정으로 출력 가독성 향상 */
+            transform-origin: top left;
+        }
+        
+        h1 {
+            font-size: 13pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 10px;
+            margin-top: 15px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        h2 {
+            font-size: 12pt;
+            font-weight: bold;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            padding-left: 10px;
+            border-left: 4px solid #1d4ed8; /* 신뢰감을 주는 딥블루 포인트 */
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h3 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 8px;
+            color: #111111;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+            margin-bottom: 25px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #111111;
+            padding: 10px 12px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: #f3f4f6;
+            font-weight: bold;
+        }
+        
+        /* 토너 절약 4색 강조 클래스 */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; /* 주요 수치 및 개념 */
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; /* 핵심 예외 및 주의사항 */
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #15803d; /* 학습 편의 및 공통 요소 */
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #7c3aed; /* 구조적 구분 및 비교 */
+        }
+        
+        /* 얇은 점선 형태의 토너 세이브 설명 상자 */
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #4b5563;
+            padding: 15px;
+            margin: 20px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+            border-radius: 4px;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        ul {
+            margin-top: 8px;
+            margin-bottom: 15px;
+            padding-left: 24px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        ol {
+            margin-top: 8px;
+            margin-bottom: 15px;
+            padding-left: 24px;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        /* 인쇄 최적화 설정 */
+        @media print {
+            body {
+                margin: 15mm;
+                transform: scaleX(0.9); /* 인쇄 시 장평 90% 효과 모사 */
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+        제9강. 주택임대관리업 실무 및 입주자대표회의 구성 요건
+    </h1>
+
+    <h2>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        1. 주택임대관리업의 종류 및 위수탁계약서 작성 실무
+    </h2>
+    <ul>
+        <li><strong>주택임대관리업의 개념</strong>: 임대주택의 원활한 관리를 위해 소유자로부터 업무를 위탁받아 임대관리 등을 대행하는 업을 의미하며, 출제 빈도가 매우 높은 중요 단원이다.</li>
+        <li><strong>주택임대관리업의 2가지 핵심 종류</strong>:
+            <ul>
+                <li><span class="highlight-blue">자기관리형 주택임대관리업</span>: 주택의 공실 및 임대료 체납 위험을 주택임대관리업자가 <strong>스스로 부담(자기책임)</strong>하고, 소유자에게 매월 약정된 고정 임대료를 지급한 후 직접 전대하는 형태.</li>
+                <li><span class="highlight-purple">위탁관리형 주택임대관리업</span>: 주택 소유자로부터 일정한 <strong>수수료를 받고</strong> 임대료 부과, 수납, 입주자 관리 등을 대행하며 위험은 소유자가 부담하는 형태.</li>
+            </ul>
+        </li>
+        <li><strong>위수탁계약서 작성 및 교부 의무</strong>: 주택임대관리업자가 소유자로부터 업무를 위탁받았을 때는 반드시 <span class="highlight-blue">위수탁계약서를 작성</span>하여 주택 소유자에게 교부하고 사본을 보관하여야 한다.</li>
+    </ul>
+
+    <h3>[표 9-1] 위수탁계약서 기재사항 비교 (공통사항 및 개별 분리사항)</h3>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 20%;">구분</th>
+                <th style="width: 45%;">자기관리형 전용 기재사항</th>
+                <th style="width: 35%;">위탁관리형 전용 기재사항</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>핵심 기재 사항</th>
+                <td>
+                    - <span class="highlight-blue">임대료 및 전대료</span> 지불 약정<br>
+                    - <span class="highlight-blue">전대보증금</span>의 반환 및 관리 사항
+                </td>
+                <td>
+                    - <span class="highlight-purple">관리 수수료</span>의 산정 및 지급 방법
+                </td>
+            </tr>
+            <tr>
+                <th>공통 필수 사항</th>
+                <td colspan="2" class="highlight-green">
+                    계약 기간 / 주택임대관리업자 및 임대인의 권리·의무에 관한 사항 / <br>임대인 및 임차인의 편의를 위하여 추가적으로 제공하는 서비스 및 업무 범위
+                </td>
+            </tr>
+            <tr>
+                <th>출제 정답 포인트</th>
+                <td>'관리수수료'가 포함된다고 출제되면 <span class="highlight-red">오답(X)</span></td>
+                <td>'임대료, 전대료, 전대보증금'이 포함되면 <span class="highlight-red">오답(X)</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            💡 [이해 도움 설명] 수수료와 임대료 구분을 통한 정답 도출법
+        </div>
+        <p style="margin: 0; font-size: 9.5pt;">
+            자기관리형은 자기가 임차인이 되어 다시 전대(Sublease)를 주기 때문에 계약서에 <strong>임대료, 전대료, 전대보증금</strong>이 반드시 명시되어야 합니다. 반면, 위탁관리형은 단순 대행 수수료만 받기 때문에 <strong>관리수수료</strong>만 적으면 됩니다. 기출문제에서 둘을 섞어 오답 지문을 만드니 확실히 개념으로 접근하십시오.
+        </p>
+    </div>
+
+    <h2>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        2. 임대인·임차인 보호를 위한 보증상품 가입 의무
+    </h2>
+    <ul>
+        <li><strong>보증상품 가입 대상자 (<span class="highlight-red">★</span>단골 출제 함정)</strong>: 오직 <span class="highlight-red">자기관리형 주택임대관리업자만</span> 보증상품에 가입할 의무가 있다.
+            <ul>
+                <li><span class="highlight-purple">위탁관리형 주택임대관리업자는 가입 의무가 없다</span>. (소유자의 돈을 떼어먹을 위험성이 없기 때문)</li>
+                <li><strong>오답 지문 예시</strong>: "위탁관리형 주택임대관리업자는 임대인의 권리보호를 위해 보증상품에 가입해야 한다" (<span class="highlight-red">X</span>)</li>
+            </ul>
+        </li>
+        <li><strong>임대인 권리 보호를 위한 보증 범위 (<span class="highlight-red">★</span>주관식 수치 출제 유력)</strong>:
+            <ul>
+                <li>임대인에게 약정한 임대료를 제때 지급하지 못할 경우를 대비하여, 약정한 임대료의 <span class="highlight-blue">3개월분 이상</span>의 지불을 책임지는 보증상품에 가입해야 한다.</li>
+                </ul>
+        </li>
+        <li><strong>임차인 권리 보호를 위한 보증 범위</strong>: 임대 기간 종료 후 전대보증금을 반환하지 못하는 경우를 대비하여 전대보증금 반환을 책임지는 보증상품에 가입해야 한다.</li>
+    </ul>
+
+    <h2>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="9" y1="15" x2="15" y2="15"></line></svg>
+        3. 주택임대관리업자 행정처분 및 통보·과징금 기준
+    </h2>
+    <ul>
+        <li><strong>필요적 등록말소 사유 (<span class="highlight-red">★</span>공식 암기: 거·지·대·합)</strong>: 시장·군수·구청장은 주택임대관리업자가 다음에 해당하는 경우 <span class="highlight-red">반드시 등록을 말소하여야 한다</span> (선택의 여지가 없으며 감경 처분 불가능).
+            <ol>
+                <li><strong>거</strong>: <span class="highlight-blue">거짓</span>이나 그 밖의 부정한 방법으로 등록한 경우</li>
+                <li><strong>지</strong>: 영업정지 기간 중에 주택임대관리업 업무를 영위한 경우</li>
+                <li><strong>대</strong>: 등록증을 다른 사람에게 <span class="highlight-blue">대여</span>한 경우</li>
+                <li><strong>합</strong>: 최근 3년간 2회 이상의 영업정지 처분을 받은 자로서 그 처분 기간을 합산하여 <span class="highlight-blue">12개월을 초과</span>한 경우</li>
+            </ol>
+        </li>
+        <li><strong>임의적 등록말소 사유</strong>: 필요적 사유(거·지·대·합) 이외의 위법 사항에 대해서는 등록을 말소하거나 1년 이내의 기간을 정하여 영업의 전부 또는 일부의 정지를 명할 수 있다 (선택 가능).</li>
+        <li><strong>행정처분 예정 통보 의무</strong>: 시장·군수·구청장이 등록말소나 영업정지 처분을 내리려는 경우, 처분 예정일 <span class="highlight-blue">1개월 전까지</span> 임대인 및 임차인에게 그 사실을 의무적으로 통보해야 한다.</li>
+    </ul>
+
+    <h3>[표 9-2] 주택임대관리업과 주택관리업의 과징금(영업정지 갈음) 정밀 비교</h3>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">비교 항목</th>
+                <th style="width: 38%;">주택임대관리업 (본 강의 범위)</th>
+                <th style="width: 37%;">주택관리업 (공동주택관리법)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>과징금 부과 대상</th>
+                <td colspan="2" class="highlight-green">임의적 영업정지 처분에 갈음하여 부과 (필요적 등록말소 대상은 부과 불가)</td>
+            </tr>
+            <tr>
+                <th>최대 한도 금액</th>
+                <td class="highlight-red">1천만 원 이하</td>
+                <td class="highlight-purple">2천만 원 이하</td>
+            </tr>
+            <tr>
+                <th>영업정지 1일당 금액</th>
+                <td class="highlight-blue">3만 원</td>
+                <td class="highlight-blue">3만 원</td>
+            </tr>
+            <tr>
+                <th>과징금 납부 기한</th>
+                <td class="highlight-green">부과 통지를 받은 날부터 30일 이내</td>
+                <td class="highlight-green">부과 통지를 받은 날부터 30일 이내</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#b91c1c" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+            ⚠️ [수험생 혼동 주의] 과징금 한도 액수 비교
+        </div>
+        <p style="margin: 0; font-size: 9.5pt;">
+            시험 문제에서 두 업종의 과징금 한도를 섞어서 출제하는 경향이 매우 강합니다. <strong>주택관리업자는 2천만 원</strong>이고, <strong>주택임대관리업자는 1천만 원</strong>입니다. 하루 부과액(3만 원)과 납부기한(30일)은 동일하므로 오직 '한도 금액'의 차이를 확실하게 외워두셔야 득점할 수 있습니다.
+        </p>
+    </div>
+
+    <h2>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+        4. 공동주택 관리기구 및 입주자대표회의 기본 구조
+    </h2>
+    <ul>
+        <li><strong>관리체계의 이원화 구조</strong>:
+            <ul>
+                <li><span class="highlight-blue">의결기구</span>: 입주자대표회의 (동별 대표자로 구성되어 단지 내 주요 의사결정 수행).</li>
+                <li><span class="highlight-purple">집행기구</span>: 관리주체 (의결된 사항을 현장에서 직접 집행하며 관리사무소장이 포함됨).</li>
+            </ul>
+        </li>
+        <li><strong>입주자대표회의 최초 구성 시기 (<span class="highlight-red">★</span>빈출 법정 기한)</strong>:
+            <ul>
+                <li>입주자 등은 사업주체로부터 관리 요구를 받았을 때, 요구를 받은 날부터 <span class="highlight-red">3개월 이내에</span> 입주자대표회의를 최초 구성하여야 한다.</li>
+            </ul>
+        </li>
+        <li><strong>입주자대표회의 최소 인원 조건</strong>: 아파트 단지의 규모와 상관없이 의무관리대상 공동주택은 최소 <span class="highlight-blue">4명 이상</span>의 동별 대표자로 구성되어야 유효하게 성립한다. 3명 이하로 구성 시 의결 권한이 박탈된다.</li>
+        <li><strong>선거구 지정 및 획정의 기준</strong>: 동별 대표자를 선출하기 위한 선거구는 시·군·구청장이 정하는 것이 아니라 법적으로 <span class="highlight-red">관리규약으로 정한다</span>.
+            <ul>
+                <li>선거구는 2개동 이상을 묶거나 통로별, 층별로 구획하여 정할 수 있다.</li>
+            </ul>
+        </li>
+        <li><strong>순차적 건설 시 구성 특례</strong>: 하나의 주택단지를 공구별로 나누어 순차적으로 건설하여 먼저 입주한 공구의 입주자 등이 입대의를 우선 구성할 수 있다. 다만, 다음 공구의 입주예정자 <span class="highlight-blue">과반수가 입주한 때</span>에는 입주자대표회의를 <span class="highlight-purple">재구성</span>하여야 한다.</li>
+    </ul>
+
+    <h2>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg>
+        5. 동별 대표자 피선거권 요건 및 선거 기준
+    </h2>
+    <ul>
+        <li><strong>자격 요건 판단의 기준 시점 (<span class="highlight-red">★</span>출제 함정)</strong>: 모든 선거권 및 피선거권 자격 판단은 '선거일'이나 '투표일'이 아니라 오직 <span class="highlight-red">서류제출 마감일</span>을 기준으로 판단한다.</li>
+        <li><strong>동별 대표자 자격 기준 (거주 조건)</strong>:
+            <ul>
+                <li>해당 공동주택단지 안에서 주민등록을 마친 후 계속하여 <span class="highlight-blue">3개월 이상 거주</span>하고 있어야 한다.</li>
+                <li>단, 최초 구성 시 또는 순차적 구성 시에는 이 3개월 거주 요건을 <span class="highlight-purple">적용하지 아니한다(거주 기간 무관하게 선출 가능)</span>.</li>
+            </ul>
+        </li>
+        <li><strong>사용자(세입자)의 피선거권 인정 예외 조항 (<span class="highlight-red">★</span>최신 개정 핵심)</strong>:
+            <ul>
+                <li>원칙적으로 피선거권은 소유자(입주자)만 가질 수 있으나, 입주자인 후보자가 <span class="highlight-red">없는 선거구</span>에 한하여 세입자인 사용자도 동대표가 될 수 있다.</li>
+                <li><strong>2회 선출공고 요건</strong>: 직전 선출공고일로부터 <span class="highlight-blue">2개월 이내에</span> 선출공고를 다시 하는 방식으로 총 <span class="highlight-blue">2회</span> 선출공고를 했음에도 소유자 후보자가 없을 때에만 사용자가 출마할 수 있다.</li>
+                <li><strong>경합 시 상실 원칙</strong>: 3회차 공고에 사용자 후보가 나왔더라도, 소유자(입주자) 후보가 뒤늦게 입후보하여 경합하게 되면 <strong>사용자의 후보 자격은 즉시 상실</strong>된다.</li>
+            </ul>
+        </li>
+        <li><strong>동별 대표자 선출 방법</strong>:
+            <ul>
+                <li><strong>후보자가 2명 이상인 경우</strong>: 선거구 전체 입주자 등의 <span class="highlight-green">과반수가 투표</span>하고, 투표자 중 <span class="highlight-blue">최다득표자</span>를 선출한다.</li>
+                <li><strong>후보자가 1명인 경우</strong>: 선거구 전체 입주자 등의 <span class="highlight-green">과반수가 투표</span>하고, 투표자 <span class="highlight-blue">과반수의 찬성</span>을 얻어야 선출된다.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+        6. 동별 대표자 결격사유 및 당연퇴임 요건 (<span class="highlight-red">★</span>매년 단독 출제)
+    </h2>
+    <ul>
+        <li>동별 대표자로 선출될 수 없으며, 기존 동대표가 이에 해당하게 되면 <span class="highlight-red">당연히 퇴임</span>하는 법정 사유이다. (별도의 해임 절차 및 투표 불요)</li>
+    </ul>
+
+    <h3>[표 9-3] 동별 대표자 주요 결격사유 및 판단 기준 일람표</h3>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">유형구분</th>
+                <th style="width: 50%;">상세 법정 결격사유 기준</th>
+                <th style="width: 25%;">수험생 암기 공식</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>행위능력 제한자</th>
+                <td>미성년자, 피성년후견인, 피한정후견인</td>
+                <td class="highlight-purple">투표일 기준 성년이 되어도 서류마감일 기준 미성년이면 탈락</td>
+            </tr>
+            <tr>
+                <th>파산 및 회생</th>
+                <td>파산선고를 받고 복권되지 아니한 사람</td>
+                <td class="highlight-red">복권되면 즉시 자격 회복 (2년 대기 없음)</td>
+            </tr>
+            <tr>
+                <th>금고 이상의 실형</th>
+                <td>공동주택관리법령 위반으로 금고 이상의 실형을 선고받고 그 집행이 끝나거나 면제된 날부터 <span class="highlight-blue">2년</span>이 지나지 않은 사람</td>
+                <td class="highlight-purple">공주법 실형/벌금형은 무조건 2년 제한</td>
+            </tr>
+            <tr>
+                <th>집행유예 처분</th>
+                <td>금고 이상의 형의 집행유예 선고를 받고 그 <span class="highlight-red">유예기간 중에 있는 사람</span></td>
+                <td class="highlight-red">유예기간이 만료되면 즉시 자격 인정 (만료 후 1년 대기 없음)</td>
+            </tr>
+            <tr>
+                <th>벌금형 선고</th>
+                <td>공동주택관리법령 위반으로 벌금형을 선고받은 후 <span class="highlight-blue">2년</span>이 지나지 않은 사람</td>
+                <td class="highlight-purple">금액 불문 (50만 원 벌금도 2년간 결격) / 과태료 처분은 결격사유 아님!</td>
+            </tr>
+            <tr>
+                <th>선거관리위원</th>
+                <td>해당 공동주택의 선거관리위원회 위원 (사퇴·해임되더라도 남은 임기 동안 자격 제한)</td>
+                <td class="highlight-red">선관위 사퇴 시 남은 선관위 임기 중에는 동대표 출마 불가</td>
+            </tr>
+            <tr>
+                <th>대리권 없는 배우자 등</th>
+                <td>소유자의 서면 대리권이 없는 소유자의 배우자 및 직계존비속</td>
+                <td class="highlight-red">며느리, 사위, 조카 등 반계혈족 및 인척은 서면 대리권이 있어도 출마 불가</td>
+            </tr>
+            <tr>
+                <th>사퇴 및 해임자</th>
+                <td>
+                    - 동대표를 <span class="highlight-blue">사퇴한 날부터 1년</span>이 지나지 않은 사람<br>
+                    - <span class="highlight-red">해임요구 후 사퇴</span>하거나 <span class="highlight-red">해임된 날부터 2년</span>이 지나지 않은 사람
+                </td>
+                <td class="highlight-purple">단순 사퇴: 1년 제한<br>해임요구후 사퇴/해임: 2년 제한</td>
+            </tr>
+            <tr>
+                <th>연체 체납자</th>
+                <td>관리비 등을 <span class="highlight-blue">3개월 이상 연속하여</span> 체납한 사람</td>
+                <td class="highlight-purple">당연퇴임 사유 (3개월 연속 연체 시 그 순간 자동 자격 상실)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#15803d" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            💡 [실무 상식과 시험의 연결] 당연퇴임과 해임의 구별
+        </div>
+        <p style="margin: 0; font-size: 9.5pt;">
+            관리비 3개월 연속 연체, 주민등록 퇴거, 결격사유 발생 등은 선출된 동대표가 <strong>'당연퇴임'</strong>되는 사유입니다. 이는 별도의 입주민 투표나 선관위의 의결을 거치지 않고 그 행위 발생 시점에 즉시 당연 박탈되는 것입니다. 시험에서 "관리비 3개월 연체 시 입주민 투표를 통해 해임한다"라고 출제하면 오답(<span class="highlight-red">X</span>)처리 하셔야 합니다.
+        </p>
+    </div>
+
+    <hr style="border: 0; border-top: 1px double #111111; margin: 30px 0;">
+
+    <h2>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><line x1="18" y1="2" x2="22" y2="6"></line><path d="M7.5 20.5L19 9l-4-4L3.5 16.5 2 22z"></path></svg>
+        7. 제9강 핵심 용어 리스트 및 빈칸 채우기 실전 훈련
+    </h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡, ㉢)에 들어갈 알맞은 핵심 용어나 법정 숫자를 직접 기재해 보십시오. (필기가 쉽도록 한글 4자 규격의 공간으로 구성되었습니다.)</p>
+    
+    <ol style="line-height: 2.1;">
+        <li>
+            주택임대관리업은 공실 위험을 직접 부담하는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )과 수수료만 받고 업무를 대행하는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )으로 구분된다.
+        </li>
+        <li>
+            위수탁계약서 작성 시 관리수수료는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 계약서에만 포함되며, 임대료·전대료 및 전대보증금에 관한 사항은 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 계약서에만 기재되어야 한다.
+        </li>
+        <li>
+            임대인 및 임차인을 보호하기 위한 보증상품 가입 의무는 오직 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 주택임대관리업자에게만 적용되며, 임대인의 권리 보호를 위해서는 약정한 임대료의 최소 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )분 이상을 보증하는 상품이어야 한다.
+        </li>
+        <li>
+            주택임대관리업자의 필요적 등록말소 사유는 '거·지·대·합'으로 요약되며, 이 중 '합'은 최근 3년간 2회 이상의 영업정지 처분을 받은 자로서 합산 처분 기간이 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )을 초과한 경우에 적용된다.
+        </li>
+        <li>
+            시장·군수·구청장이 주택임대관리업자에게 행정처분을 내리려는 경우, 처분 예정일 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 전까지 임대인 및 임차인에게 이를 사전 통보하여야 한다.
+        </li>
+        <li>
+            임업정지에 갈음하여 부과되는 과징금의 최대 한도액은 주택관리업자의 경우 2천만 원이지만, 주택임대관리업자의 경우 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )원이며, 영업정지 1일당 산정 금액은 양측 모두 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )원이다. 과징금 부과 통지를 받으면 ( ㉢&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 이내에 납부하여야 한다.
+        </li>
+        <li>
+            입주자 등은 사업주체로부터 관리 요구를 받은 날부터 최소 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 이내에 입주자대표회의를 구성하여야 하며, 입대의 구성을 위한 법정 최소 인원은 단지 규모와 무관하게 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 이상이어야 한다.
+        </li>
+        <li>
+            동별 대표자 선출을 위한 선거구는 시·군·구청장이 지정하지 않고 단지 자체의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )으로 정하며, 순차 건설 중인 단지에서 다음 공구 입주예정자의 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )가 입주하면 입대의를 다시 구성하여야 한다.
+        </li>
+        <li>
+            동별 대표자 후보 등록을 위한 자격 요건은 모두 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )을 기준으로 판단하며, 단지 내 주민등록을 마친 후 계속해서 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 이상 거주하여야 하는 것이 원칙이나 최초 구성 시에는 이 기간을 제한받지 아니한다.
+        </li>
+        <li>
+            사용자(세입자)가 동대표로 선출되기 위해서는 소유자 후보가 없어야 하며, 직전 선출공고일부터 2개월 이내에 재공고하는 방식으로 최소 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )회 이상 선출공고를 거쳤음에도 불구하고 소유자 후보가 없어야 출마가 가능하다.
+        </li>
+        <li>
+            단일 후보로 출마한 동대표는 선거구 입주자 등 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )가 투표하고, 투표자 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )의 찬성을 얻어 당선된다.
+        </li>
+        <li>
+            공동주택관리법령을 위반하여 금고 이상의 실형이나 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )형을 선고받은 자는 처분일로부터 각각 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년이 지나지 않으면 동대표 결격사유에 해당된다.
+        </li>
+        <li>
+            동별 대표자가 임기 중 관리비 등을 연속하여 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 이상 연체·체납한 경우, 선거를 거치지 않고 그 시점에 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )하게 된다.
+        </li>
+        <li>
+            임기 중 단순 자격 미달로 동대표를 사퇴한 자는 사퇴한 날부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 동안 결격되나, 해임이 요구된 후 사퇴하거나 해임이 확정된 자는 사퇴·해임일로부터 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 동안 동대표 결격사유가 발생한다.
+        </li>
+    </ol>
+
+    <div style="font-size: 10.5pt; color: #a1a1aa; margin-top: 40px; padding: 15px; border-top: 1px dashed #cccccc; line-height: 1.8;">
+        <strong>[제9강 핵심 빈칸 채우기 정답 안내 - 인쇄 후 직접 맞춰보세요]</strong><br>
+        1. ㉠ 자기관리형, &nbsp;&nbsp; ㉡ 위탁관리형 <br>
+        2. ㉠ 위탁관리형, &nbsp;&nbsp; ㉡ 자기관리형 <br>
+        3. ㉠ 자기관리형, &nbsp;&nbsp; ㉡ 3개월 <br>
+        4. ㉠ 12개월 <br>
+        5. ㉠ 1개월 <br>
+        6. ㉠ 1천만, &nbsp;&nbsp; ㉡ 3만, &nbsp;&nbsp; ㉢ 30일 <br>
+        7. ㉠ 3개월, &nbsp;&nbsp; ㉡ 4명 <br>
+        8. ㉠ 관리규약, &nbsp;&nbsp; ㉡ 과반수 <br>
+        9. ㉠ 서류제출 마감일, &nbsp;&nbsp; ㉡ 3개월 <br>
+        10. ㉠ 2 <br>
+        11. ㉠ 과반수, &nbsp;&nbsp; ㉡ 과반수 <br>
+        12. ㉠ 벌금, &nbsp;&nbsp; ㉡ 2 <br>
+        13. ㉠ 3개월, &nbsp;&nbsp; ㉡ 당연퇴임 <br>
+        14. ㉠ 1년, &nbsp;&nbsp; ㉡ 2년
+    </div>
+
+</body>
+</html>

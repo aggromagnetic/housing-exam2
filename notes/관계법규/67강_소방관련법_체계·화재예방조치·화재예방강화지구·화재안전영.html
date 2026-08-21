@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 관계법규 - 제67강 학습 노트 (소방관련법 체계 및 화재예방법)</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+            letter-spacing: -0.05em;
+        }
+        
+        h1 {
+            font-size: 12pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #16803d;
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #6d28d9;
+        }
+        
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        ol {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        .quiz-list li {
+            margin-bottom: 8px;
+        }
+
+        .answer-container {
+            margin-top: 30px;
+            padding: 15px;
+            border-top: 1px dashed #666666;
+            font-size: 9.5pt;
+            color: #666666;
+            line-height: 1.8;
+        }
+
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px 15px;
+            margin-top: 10px;
+        }
+
+        .answer-grid div {
+            border-bottom: 1px none #eeeeee;
+        }
+
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        제67강. 소방관련법 체계·화재예방조치·화재예방강화지구·화재안전영향평가 및 소방안전관리자 선임·등급 비교
+    </h1>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        1. 소방관련 3대 법률 체계 및 대상물 개념 단계적 구분 (소방·특정·소방안전관리대상물)
+    </h2>
+    <ul>
+        <li><strong>소방관련 3대 법률의 유기적 상호관계</strong>:
+            <ul>
+                <li><span class="highlight-blue">소방기본법</span>: 화재의 예방·경계·진압 및 구조·구급 활동의 기본적 사항 규정.</li>
+                <li><span class="highlight-purple">소방시설 설치 및 관리에 관한 법률 (소방시설법)</span>: 소방대상물 중 소방시설을 설치·관리하여야 하는 <span class="highlight-purple">특정소방대상물</span> 및 소방시설 종류 규정.</li>
+                <li><span class="highlight-red">화재의 예방 및 안전관리에 관한 법률 (화재예방법)</span>: 화재예방조치, 화재예방강화지구, <span class="highlight-red">소방안전관리대상물</span> 및 <span class="highlight-red">소방안전관리자 선임·업무</span> 규정.</li>
+            </ul>
+        </li>
+        <li><strong>대상물 범주의 단계적 축소 구조 (★출제 핵심)</strong>:
+            <ul>
+                <li><span class="highlight-blue">소방대상물</span>: 건축물, 차량, 항구에 매어둔 선박, 산림, 그 밖의 인공 구조물 또는 물건 (가장 넓은 개념. 단, <span class="highlight-red">항해 중인 선박은 제외</span>).</li>
+                <li><span class="highlight-purple">특정소방대상물</span>: 소방대상물 중 대통령령으로 정하는 소방시설을 설치하여야 하는 대상물 (주관식 단답형 기출).</li>
+                <li><span class="highlight-red">소방안전관리대상물</span>: 특정소방대상물 중 전문적인 안전관리가 필요하여 <span class="highlight-red">소방안전관리자를 선임하여야 하는 특정소방대상물</span> (특급, 1급, 2급, 3급으로 구분).</li>
+            </ul>
+        </li>
+        <li><strong>★ [출제 빈출 3회] 주택 종류별 소방시설 설치 규정 특칙 비교</strong>:
+            <ul>
+                <li><span class="highlight-blue">단독주택 (건축법상 모든 단독주택)</span>: 특정소방대상물은 아니지만, 의무적으로 <span class="highlight-red">주택용 소방시설(소화기 및 단독경보형 감지기)</span>을 설치하여야 함.</li>
+                <li><span class="highlight-purple">연립주택 및 다세대주택</span>: 특정소방대상물에 해당함과 동시에 <span class="highlight-red">주택용 소방시설(소화기 및 단독경보형 감지기)</span> 설치 대상임.</li>
+                <li><span class="highlight-green">아파트 등 및 기숙사</span>: 특정소방대상물 및 소방안전관리대상물에 해당하며, 수준 높은 경보설비인 <span class="highlight-green">자동화재탐지설비</span>를 설치하여야 함 (주택용 소방시설 설치 대상이 아님!).</li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 20%;">구분</th>
+                <th style="width: 30%;">대상 범위</th>
+                <th style="width: 25%;">소방시설 및 설치 특칙</th>
+                <th style="width: 25%;">소방안전관리자 선임 여부</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>단독주택</th>
+                <td>건축법상 모든 단독주택</td>
+                <td><span class="highlight-red">주택용 소방시설</span><br>(소화기 + 단독경보형감지기)</td>
+                <td>선임 의무 없음 (특정 대상물 X)</td>
+            </tr>
+            <tr>
+                <th>연립·다세대주택</th>
+                <td>공동주택 중 연립 및 다세대</td>
+                <td><span class="highlight-red">주택용 소방시설</span><br>(소화기 + 단독경보형감지기)</td>
+                <td>규모에 따라 3급 등 적용 가능</td>
+            </tr>
+            <tr>
+                <th>아파트 등·기숙사</th>
+                <td>5층 이상 아파트 등 및 기숙사</td>
+                <td><span class="highlight-green">자동화재탐지설비</span> 등<br>(고도화된 경보설비)</td>
+                <td><span class="highlight-red">특급·1급·2급·3급</span><br>반드시 선임 대상</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 3-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+        2. 화재예방조치 명령, 옮긴 물건 보관·매각 절차 및 화재예방강화지구 (법 제17조·제18조)
+    </h2>
+    <ul>
+        <li><strong>화재예방 조치 명령 및 위험물 이동·보관 절차 (법 제17조)</strong>:
+            <ul>
+                <li><span class="highlight-blue">소방관서장의 금지·제한 명령</span>: 모닥불, 흡연 등 화기 취급 행위, 풍등 등 소형 열기구 날리기, 용접·절단 등 불꽃을 일으키는 행위 제한.</li>
+                <li><strong>★[출제 빈출 8회] 옮긴 물건의 보관·공고 및 매각 기한 (법 제17조, 영 제17조)</strong>:
+                    <ul>
+                        <li>공고: 소방관서장은 옮긴 물건 등을 보관하는 경우 <span class="highlight-red">14일 동안</span> 인터넷 홈페이지에 공고하여야 함.</li>
+                        <li>보관 기간: 공고 기간이 끝난 날의 다음 날부터 <span class="highlight-red">7일까지</span> 보관하여야 함.</li>
+                        <li>매각·폐기: 보관 기간이 경과한 후 소유자가 권리를 주장하지 아니하면 매각(매각대금 세입 조치)하거나, 부패·변질 우려 시 폐기 처리함.</li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li><strong>★[출제 1순위] 화재예방강화지구의 지정 및 안전관리 특칙 (법 제18조)</strong>:
+            <ul>
+                <li>지정권자: <span class="highlight-red">시·도지사</span> (소방청장은 시·도지사가 미지정 시 지정을 요청할 수 있음).</li>
+                <li>지정 대상: 시장 지역, 공장·창고 밀집 지역, 목조건물 밀집 지역, 위험물 저장·처리 시설 밀집 지역, 산업단지 등 화재 발생 우려가 높은 지역.</li>
+                <li><strong>소방대상물에 대한 화재안전조사 의무 (법 제18조제3항)</strong>: 소방관서장은 화재예방강화지구 안의 소방대상물에 대하여 <span class="highlight-red">화재안전조사를 실시하여야 함</span> (강제 의무사항!).</li>
+                <li>관계인에 대한 교육·훈련: 소방관서장은 관계인에 대하여 소방상 필요한 교육 및 훈련을 <span class="highlight-blue">실시할 수 있음</span>.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            💡 [수험 핵심 비교] 화재예방강화지구 안에서의 '화재안전조사' vs '교육·훈련'
+        </div>
+        <ul>
+            <li><strong>화재안전조사 (소방대상물 대상)</strong>: <span class="highlight-red">실시하여야 한다</span> (강제 의무 규정).</li>
+            <li><strong>소방교육 및 훈련 (관계인 대상)</strong>: <span class="highlight-blue">실시할 수 있다</span> (임의 재량 규정).</li>
+            <li><strong>위험물 등 옮긴 물건 보관 기간</strong>: 공고 <span class="highlight-purple">14일</span> 동안 진행 후 공고 종료 다음 날부터 <span class="highlight-purple">7일까지</span> 보관.</li>
+        </ul>
+    </div>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M19 21V5a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v16"></path><polyline points="1 21 23 21"></polyline><polyline points="9 10 9 10 10 11 10 10 9 10"></polyline></svg>
+        3. 화재안전영향평가 및 화재안전취약자 지원 제도 (법 제21조·제23조)
+    </h2>
+    <ul>
+        <li><strong>화재안전영향평가 제도 (법 제21조)</strong>:
+            <ul>
+                <li>실시 주체: <span class="highlight-blue">소방청장</span>.</li>
+                <li>평가 대상 및 목적: 화재 발생 원인 및 연소 과정 조사·분석 결과, 화재 위험성을 유발하는 <span class="highlight-red">법령이나 정책</span>에 대하여 화재 위험성 유발 요인 평가 및 완화 방안에 대한 평가(화재안전영향평가)를 실시하고 법령·정책 개선 추진.</li>
+            </ul>
+        </li>
+        <li><strong>★[법조문 엄격 반영] 화재안전취약자에 대한 지원 주체 및 내용 (법 제23조)</strong>:
+            <ul>
+                <li>지원 주체: <span class="highlight-red">국가 및 지방자치단체</span> (소방관서장이 아닌 국가·지자체).</li>
+                <li>지원 대상: 어린이, 노인, 장애인 등 화재의 예방 및 안전관리에 취약한 자(<span class="highlight-red">화재안전취약자</span>).</li>
+                <li>지원 내용: 안전한 생활환경 조성을 위해 소방용품 제공 및 소방시설 개선 등 필요한 <span class="highlight-purple">행정적·재정적 지원</span> 제공.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+        4. 소방안전관리대상물의 등급별 구분 기준 (특급·1급·2급·3급 정밀 종합 비교)
+    </h2>
+    <ul>
+        <li><strong>공동주택(아파트) vs 비공동주택 등급 구분 핵심 수칙</strong>:
+            <ul>
+                <li>아파트의 층수 계산 시 <span class="highlight-red">지하층은 무조건 제외</span>함.</li>
+                <li>아파트 이외의 특정소방대상물의 특급 지정 시에는 <span class="highlight-purple">지하층을 포함</span>하여 30층 이상인 경우 적용됨.</li>
+                <li>아파트는 연면적이 아무리 넓어도 연면적 기준(10만제곱미터, 1만5천제곱미터)에 따라 특급이나 1급이 되지 아니하고, <span class="highlight-blue">층수나 높이 기준</span>으로만 판정함.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 15%;">등급 구분</th>
+                <th style="width: 40%;">아파트 (공동주택) 기준</th>
+                <th style="width: 45%;">아파트 외 특정소방대상물 기준</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th><span class="highlight-red">특급</span></th>
+                <td>50층 이상(<span class="highlight-red">지하층 제외</span>) 또는<br>높이 200미터 이상인 아파트</td>
+                <td>30층 이상(<span class="highlight-purple">지하층 포함</span>) 또는 높이 120미터 이상,<br>연면적 10만제곱미터 이상 (아파트 제외)</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-purple">1급</span></th>
+                <td>30층 이상(<span class="highlight-red">지하층 제외</span>) 또는<br>높이 120미터 이상인 아파트</td>
+                <td>연면적 1만5천제곱미터 이상 (아파트·연립 제외),<br>지상층 층수 11층 이상 (아파트 제외), 가연성 가스 1천톤 이상</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-blue">2급</span></th>
+                <td><span class="highlight-blue">옥내소화전설비 또는 스프링클러설비</span>가<br>설치된 공동주택</td>
+                <td>옥내소화전·스프링클러·물분무등소화설비 설치 대상,<br>가연성 가스 100톤~1천톤 미만, 지하구, 보물·국보 목조건축물</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-green">3급</span></th>
+                <td><span class="highlight-green">자동화재탐지설비</span>가 설치된 공동주택</td>
+                <td>자동화재탐지설비 설치 대상,<br>간이스프링클러설비 설치 대상 (주택전용 간이 제외)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        5. 소방안전관리자·보조자 선임, 업무대행 예외, 선임신고 및 실무교육 기한 (법 제24조·제25조·제26조)
+    </h2>
+    <ul>
+        <li><strong>선임 의무자 및 자격자 원칙과 업무대행 예외</strong>:
+            <ul>
+                <li>선임 의무자: 소방안전관리대상물의 <span class="highlight-blue">관계인</span> (소유자, 관리자, 점유자).</li>
+                <li>원칙적 선임 자격: 소방안전관리자 <span class="highlight-purple">자격증을 발급받은 사람</span>을 선임함.</li>
+                <li><strong>★[출제 핵심] 업무대행 및 감독자 지정 선임 예외 (법 제25조, 영 제28조)</strong>:
+                    <ul>
+                        <li>대상 범위: <span class="highlight-red">3급, 2급, 1급 중 지상층 층수 11층 이상인 특정소방대상물</span> (단, 특급 및 연면적 1만5천제곱미터 이상 1급 제외).</li>
+                        <li>내용: 관리업자에게 소방안전관리 업무를 대행하게 하고, 해당 <span class="highlight-red">대행 관리업자의 업무 수행을 감독할 수 있는 사람</span>을 소방안전관리자로 선임할 수 있음.</li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li><strong>★[출제 빈출 2회] 소방안전관리 보조자 추가 선임 기준 (법 제26조, 영 별표 5)</strong>:
+            <ul>
+                <li>아파트: <span class="highlight-red">300세대 이상</span>인 아파트는 기본 1명 선임 + 초과하는 <span class="highlight-red">300세대마다 1명 이상</span>을 추가로 선임하여야 함.</li>
+                <li>아파트 외: 연면적 1만5천제곱미터 이상인 특정소방대상물 (기숙사, 노유자시설, 의료시설, 숙박시설 등 포함).</li>
+            </ul>
+        </li>
+        <li><strong>★[주관식 다출제 4회] 선임 기간, 선임신고 기한 및 실무교육 특칙</strong>:
+            <ul>
+                <li>선임 기한: 선임 사유가 발생한 날부터 <span class="highlight-purple">30일 이내</span>에 선임함.</li>
+                <li>선임신고 기한: 소방안전관리자/보조자를 선임한 날부터 <span class="highlight-red">14일 이내</span>에 소방본부장 또는 소방서장에게 신고하여야 함.</li>
+                <li><strong>실무교육 기한 비교</strong>:
+                    <ul>
+                        <li>원칙: 선임된 날부터 <span class="highlight-blue">6개월 이내</span>에 실무교육 이수 (이후 2년마다 1회 이상).</li>
+                        <li>업무대행 감독자로 선임된 자: 업무대행 관련 안내 및 감독 교육 체계에 따라 교육 이수.</li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+    </ul>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>주관식 단답형 및 빈칸 채우기 실전 훈련</h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡, ㉢)에 들어갈 알맞은 핵심 용어나 법정 숫자를 작성해 보십시오.</p>
+
+    <ol class="quiz-list" style="line-height: 2.1;">
+        <li>
+            소방대상물 중 대통령령으로 정하는 소방시설을 설치하여야 하는 대상물을 ( ㉠ )이라 한다.
+        </li>
+        <li>
+            건축법상 모든 단독주택과 연립·다세대주택의 소유자는 소화기 및 단독경보형 감지기로 구성된 ( ㉠ )을(를) 의무적으로 설치하여야 한다.
+        </li>
+        <li>
+            아파트 등 및 기숙사는 주택용 소방시설 설치 대상이 아니라, 경보설비로서 ( ㉠ )을(를) 설치하여야 한다.
+        </li>
+        <li>
+            소방관서장은 화재예방 조치에 따라 옮긴 물건 등을 보관하는 경우 ( ㉠ )일 동안 인터넷 홈페이지에 공고하여야 한다.
+        </li>
+        <li>
+            소방관서장은 위험물 등 옮긴 물건에 대해 공고 기간이 끝난 날의 다음 날부터 ( ㉠ )일까지 보관하여야 한다.
+        </li>
+        <li>
+            화재예방강화지구의 지정권자는 ( ㉠ )이며, 지정 지구 내 소방대상물에 대하여 ( ㉡ )조사를 실시하여야 한다.
+        </li>
+        <li>
+            소방관서장은 화재예방강화지구 안의 관계인에 대하여 소방상 필요한 훈련 및 교육을 ( ㉠ )할 수 있다.
+        </li>
+        <li>
+            소방청장은 화재 조사 결과 법령이나 정책에 화재 위험성 유발 요인이 있는 경우 ( ㉠ )평가를 실시할 수 있다.
+        </li>
+        <li>
+            국가 및 지방자치단체는 어린이, 노인, 장애인 등 ( ㉠ )에 대하여 행정적·재정적 지원을 할 수 있다.
+        </li>
+        <li>
+            아파트 중 층수가 ( ㉠ )층 이상(지하층 제외)이거나 높이가 ( ㉡ )미터 이상인 아파트는 특급 소방안전관리대상물에 해당한다.
+        </li>
+        <li>
+            아파트 외의 특정소방대상물로서 지하층을 ( ㉠ )한 층수가 30층 이상이거나 연면적이 ( ㉡ )만제곱미터 이상인 것은 특급 소방안전관리대상물이다.
+        </li>
+        <li>
+            아파트 중 층수가 ( ㉠ )층 이상(지하층 제외)이거나 높이가 ( ㉡ )미터 이상인 아파트는 1급 소방안전관리대상물에 해당한다.
+        </li>
+        <li>
+            아파트 외 특정소방대상물로서 연면적 ( ㉠ )만( ㉡ )천제곱미터 이상이거나 지상층 층수가 ( ㉢ )층 이상인 것은 1급 소방안전관리대상물이다.
+        </li>
+        <li>
+            공동주택 중 ( ㉠ )설비 또는 ( ㉡ )설비가 설치된 공동주택은 2급 소방안전관리대상물에 해당한다.
+        </li>
+        <li>
+            공동주택 중 ( ㉠ )설비가 설치된 공동주택은 3급 소방안전관리대상물에 해당한다.
+        </li>
+        <li>
+            소방안전관리대상물의 소방안전관리자는 소방안전관리자 자격증을 발급받은 사람으로 선임하여야 하나, 3급·2급 및 1급 중 지상층 층수가 ( ㉠ )층 이상인 특정소방대상물은 대행 관리업자의 업무 수행을 ( ㉡ )할 수 있는 자를 선임할 수 있다.
+        </li>
+        <li>
+            아파트의 경우 ( ㉠ )세대 이상인 경우 소방안전관리 보조자를 선임하여야 하며, 초과하는 ( ㉡ )세대마다 1명 이상을 추가하여야 한다.
+        </li>
+        <li>
+            소방안전관리자 또는 소방안전관리 보조자를 선임한 경우 선임한 날부터 ( ㉠ )일 이내에 소방본부장 또는 소방서장에게 신고하여야 한다.
+        </li>
+        <li>
+            소방안전관리자로 선임된 자는 선임된 날부터 ( ㉠ )개월 이내에 실무교육을 받아야 한다.
+        </li>
+        <li>
+            소방안전관리자를 선임하여야 하는 사유가 발생한 경우 사유 발생일부터 ( ㉠ )일 이내에 선임하여야 한다.
+        </li>
+    </ol>
+
+    <div class="answer-container">
+        <strong>[제67강 주관식 단답형 정답 리스트]</strong>
+        <div class="answer-grid">
+            <div><strong>1.</strong> ㉠ 특정소방대상물</div>
+            <div><strong>2.</strong> ㉠ 주택용 소방시설</div>
+            <div><strong>3.</strong> ㉠ 자동화재탐지설비</div>
+
+            <div><strong>4.</strong> ㉠ 14</div>
+            <div><strong>5.</strong> ㉠ 7</div>
+            <div><strong>6.</strong> ㉠ 시·도지사 | ㉡ 화재안전</div>
+
+            <div><strong>7.</strong> ㉠ 실시</div>
+            <div><strong>8.</strong> ㉠ 화재안전영향</div>
+            <div><strong>9.</strong> ㉠ 화재안전취약자</div>
+
+            <div><strong>10.</strong> ㉠ 50 | ㉡ 200</div>
+            <div><strong>11.</strong> ㉠ 포함 | ㉡ 10</div>
+            <div><strong>12.</strong> ㉠ 30 | ㉡ 120</div>
+
+            <div><strong>13.</strong> ㉠ 1 | ㉡ 5 | ㉢ 11</div>
+            <div><strong>14.</strong> ㉠ 옥내소화전 | ㉡ 스프링클러</div>
+            <div><strong>15.</strong> ㉠ 자동화재탐지</div>
+
+            <div><strong>16.</strong> ㉠ 11 | ㉡ 감독</div>
+            <div><strong>17.</strong> ㉠ 300 | ㉡ 300</div>
+            <div><strong>18.</strong> ㉠ 14</div>
+
+            <div><strong>19.</strong> ㉠ 6</div>
+            <div><strong>20.</strong> ㉠ 30</div>
+            <div></div>
+        </div>
+    </div>
+
+</body>
+</html>

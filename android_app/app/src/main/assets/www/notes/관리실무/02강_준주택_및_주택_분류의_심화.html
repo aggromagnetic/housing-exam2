@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 관리실무 - 제2강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.6;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+        }
+        
+        /* 대제목을 생략하고 1강 서식 그대로 매칭 */
+        h1 {
+            font-size: 12pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 5px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 8px;
+            padding-left: 5px;
+            border-left: 3px solid #111111;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 6px 8px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        /* 파란색 글자 색상만 강조로 적용 (피드백 반영) */
+        .highlight {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        /* 토너 절약형 이해 도움 설명 상자 */
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 10px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.5;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333333;
+        }
+
+        /* 인쇄 대비 연한 회색 정답 처리 */
+        .blank-answer {
+            color: #e5e7eb; 
+            font-weight: bold;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 5px;
+        }
+
+        /* 인쇄 최적화 설정 */
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1강과 동일한 형태의 상단 헤더 구성 -->
+    <div style="text-align: center; margin-bottom: 30px;">
+        <span style="font-size: 14pt; font-weight: bold; border-bottom: 1px solid #111111; padding-bottom: 5px;">주택관리사보 2차 공동주택관리실무 단권화 노트</span>
+    </div>
+
+    <h1>제2강. 준주택 및 주택 분류의 심화</h1>
+    
+    <h2>1. 준주택 (Semi-Residential Housing)의 정의 및 범위</h2>
+    <ul>
+        <li><strong>정의:</strong> 주택 외의 건축물과 그 부속토지로서 주거시설로 이용 가능한 시설을 말합니다.</li>
+        <li><strong>법적 성격:</strong> 준주택은 주택법상 주택에 해당하지 않으나 사실상 주거로 이용되므로 <span class="highlight">주택 외의 건축물</span>이라는 요건이 주관식 단답형의 핵심 포인트입니다.</li>
+    </ul>
+
+    <h2>2. 준주택의 종류별 특징 (건축법 시행령 기준 준용)</h2>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">종류</th>
+                <th style="width: 50%;">세부 요건 및 특징</th>
+                <th style="width: 25%;">출제 및 오답 포인트</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>기숙사</th>
+                <td>학생·종업원 등을 위한 공동취사시설 이용 세대수 비율 <span class="highlight">50% 이상</span>인 시설</td>
+                <td><span class="highlight">건축법상 공동주택</span>이나,<br><span class="highlight">주택법상 준주택</span>으로 분류</td>
+            </tr>
+            <tr>
+                <th>다중생활시설</th>
+                <td>고시원업 등의 시설로서 제2종 근린생활시설 또는 숙박시설에 해당</td>
+                <td>종류에 관계없이 명칭에 다중생활시설이 붙으면 준주택</td>
+            </tr>
+            <tr>
+                <th>노인복지주택</th>
+                <td>노인복지법에 따른 노인복지시설 중 주거 편의를 제공하는 시설</td>
+                <td>명칭에 '주택'이 들어가나<br>법적 분류는 <span class="highlight">준주택</span>에 해당</td>
+            </tr>
+            <tr>
+                <th>오피스텔</th>
+                <td>본래 건축법상 업무시설이나 주거로 사용 가능한 시설</td>
+                <td>준주택 4종 핵심 암기 대상</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="explanation">
+        <div class="explanation-title">💡 준주택 암기 공식 및 출제 트렌드</div>
+        <ul>
+            <li><strong>두문자 암기법:</strong> 준주택의 네 가지 종류는 앞 글자를 따서 <span class="highlight">기·다·노·오</span>(기숙사, 다중생활시설, 노인복지주택, 오피스텔)로 단순 암기해 둡니다.</li>
+            <li><strong>함정 유형:</strong> 다가구주택, 다세대주택 등과 혼동을 유도하는 객관식 묶음 문제가 빈번히 출제됩니다. 준주택 4종 외에는 절대 준주택에 포함되지 않습니다.</li>
+        </ul>
+    </div>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>3. 국민주택(National Housing)과 민영주택의 요건</h2>
+    <ul>
+        <li><strong>국민주택의 정의:</strong> 다음 중 어느 하나에 해당하는 주택으로서 <span class="highlight">국민주택규모 이하</span>인 주택을 말합니다.</li>
+        <li><strong>건설 주체 요건:</strong> 국가, 지방자치단체, 한국토지주택공사(LH) 또는 지방공사(<span class="highlight">국·지·주·지</span>)가 직접 건설하는 주택</li>
+        <li><strong>재원 요건:</strong> 국가·지방자치단체의 재정이나 <span class="highlight">주택도시기금</span>으로부터 자금을 지원받아 건설되거나 개량되는 주택</li>
+    </ul>
+
+    <h2>4. 국민주택규모의 주거전용면적 기준</h2>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 30%;">구분</th>
+                <th style="width: 45%;">면적 기준</th>
+                <th style="width: 25%;">해당 지역 조건</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>원칙</th>
+                <td>1호(세대)당 <span class="highlight">85m² 이하</span></td>
+                <td>수도권 및 도시지역 등 일반 지역</td>
+            </tr>
+            <tr>
+                <th>예외 (확장 기준)</th>
+                <td>1호(세대)당 <span class="highlight">100m² 이하</span></td>
+                <td><span class="highlight">수도권을 제외한</span> 도시지역이 아닌 읍 또는 면 지역</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="explanation">
+        <div class="explanation-title">💡 주택 건설 재원과 규모 오답 해킹</div>
+        <ul>
+            <li>지방공사가 건설하거나 주택도시기금의 자금을 임의로 일부 지원받았다고 해서 무조건 국민주택이 되는 것은 아닙니다. 반드시 <span class="highlight">국민주택규모 이하(85m² 이하 또는 100m² 이하)</span> 요건이 동시 충족되어야 합니다.</li>
+            <li><strong>민영주택의 정의:</strong> 주택법상 민영주택이란 <span class="highlight">국민주택을 제외한 주택</span>을 말합니다. 임대주택을 제외한 주택이 아님에 각별히 유의해야 합니다.</li>
+        </ul>
+    </div>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>5. 세대구분형 공동주택의 법적 건설·설치 기준</h2>
+    <ul>
+        <li><strong>정의:</strong> 공동주택 주택 내부 공간의 일부를 세대별로 구분하여 생활이 가능하도록 하되, 구분된 공간의 일부에 대해 <span class="highlight">구분소유를 할 수 없는</span> 공동주택을 뜻합니다.</li>
+    </ul>
+
+    <h2>6. 승인 시(건설) vs 행위허가 시(설치) 정밀 비교</h2>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 20%;">비교 항목</th>
+                <th style="width: 40%;">사업계획승인 건설 기준 (신축)</th>
+                <th style="width: 40%;">행위허가·신고 설치 기준 (기존 주택 개조)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>세대 구분 한도</th>
+                <td>특별한 세대수 규정 없음</td>
+                <td>기존 세대를 포함하여 <span class="highlight">2세대 이하</span>로만 구분</td>
+            </tr>
+            <tr>
+                <th>독립공간 필수 시설</th>
+                <td>공간마다 별도의 욕실, 부엌, <span class="highlight">현관</span> 설치</td>
+                <td>공간마다 별도의 욕실, 부엌, <span class="highlight">구분된 출입문</span> 설치</td>
+            </tr>
+            <tr>
+                <th>경계 및 벽체 요건</th>
+                <td>통합 가능하도록 연결문 또는 <span class="highlight">경량구조</span> 경계벽 설치</td>
+                <td>구조, 화재, 소방, 피난 안전기준 충족 필수</td>
+            </tr>
+            <tr>
+                <th>세대수 제한 기준</th>
+                <td>단지 전체 공동주택 세대수의 <span class="highlight">3분의 1</span> 이하</td>
+                <td>단지 전체 세대수의 <span class="highlight">10분의 1</span> 및 해당 동 세대수의 <span class="highlight">3분의 1</span> 이하</td>
+            </tr>
+            <tr>
+                <th>면적 제한 기준</th>
+                <td>구분 공간들의 전용면적 합계가 단지 전체 전용면적 합계의 <span class="highlight">3분의 1</span> 이하</td>
+                <td>별도의 면적 비율 제한 없음 (안전기준 적합 우선)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="explanation">
+        <div class="explanation-title">💡 주택건설기준 적용 시 세대수 산정 요령</div>
+        <ul>
+            <li>세대구분형 공동주택의 실제 살고 있는 내부 구분 세대수 규모가 어떠하든 간에, 주택건설기준 등을 적용하여 부대·복리시설(예: 관리사무소 크기, 주차장 면적 등)을 산정할 때는 언제나 <span class="highlight">하나의 세대(1세대)</span>로 계산합니다.</li>
+        </ul>
+    </div>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>7. 도시형 생활주택의 특징 및 복합건축 규제</h2>
+    <ul>
+        <li><strong>정의:</strong> 도시지역에 건설하는 <span class="highlight">300세대 미만</span>의 국민주택규모에 해당하는 주택입니다.</li>
+        <li><strong>핵심 종류:</strong> 아파트형 주택(구 소형주택 - 독립된 욕실 및 부엌 설치 필수, <span class="highlight">지하층 세대 설치 금지</span>), 단지형 연립주택(심의 시 5층까지 완화), 단지형 다세대주택(심의 시 5층까지 완화)</li>
+    </ul>
+
+    <h2>8. 한 건축물 내 중복 건축 제한 및 예외 규정</h2>
+    <ul>
+        <li><strong>원칙:</strong> 하나의 건축물에는 도시형 생활주택과 그 밖의 주택을 함께 건축할 수 없습니다. 또한 단지형 연립·다세대주택과 아파트형 주택을 함께 건축할 수 없습니다.</li>
+        <li><strong>예외 1 (면적 특례):</strong> 아파트형 주택과 <span class="highlight">주거전용면적이 85m²를 초과하는 주택 1세대</span>를 함께 건축하는 경우는 가능합니다 (주인 세대 거주 목적).</li>
+        <li><strong>예외 2 (지역 특례):</strong> <span class="highlight">준주거지역 또는 상업지역</span>에서는 아파트형 주택과 도시형 생활주택 외의 주택(85m² 초과 일반 공동주택 등)을 함께 건축할 수 있도록 허용합니다.</li>
+    </ul>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>9. 친환경 및 기술적 성능에 따른 주택 분류</h2>
+    <ul>
+        <li><strong>에너지절약형 친환경 주택:</strong> 에너지 사용량을 저감하거나 <span class="highlight">이산화탄소 배출량을 저감</span>할 수 있도록 건설된 주택을 말합니다. (오답 방지 지문: 배출량 '증대'로 변경 시 오답)</li>
+        <li><strong>건강친화형 주택:</strong> 오염물질 방출이 적은 자재를 사용하여 <span class="highlight">실내공기 오염물질을 최소화</span>하고 새집증후군 문제를 개선하기 위해 일정 수준 이상의 환기 성능을 확보한 주택을 말합니다.</li>
+        <li><strong>장수명 주택:</strong> 구조적으로 오랫동안 유지·관리될 수 있는 내구성을 갖추고, 내부 구조를 쉽게 변경할 수 있는 <span class="highlight">가변성</span>과 <span class="highlight">수리 용이성</span>이 우수한 주택을 말합니다.</li>
+    </ul>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>10. 주관식 단답형 대비 핵심 용어 리스트 (빈칸 채우기)</h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 괄호 안의 연한 영역을 마우스 드래그로 긁거나 인쇄하여 정답을 직접 적어보며 회독하십시오.</p>
+    
+    <ol>
+        <li>주택법령상 주택 외의 건축물과 그 부속토지로서 주거시설로 이용 가능한 시설을 <span class="blank-answer">( 준주택 )</span>이라 한다.</li>
+        <li>명칭에 주택이 들어가 혼동하기 쉬우나 주택법령상 준주택 종류에 해당되는 대표적인 노인복지시설은 <span class="blank-answer">( 노인복지주택 )</span>이다.</li>
+        <li>국민주택 규모란 1호 또는 1세대당 주거전용면적이 <span class="blank-answer">( 85 )</span>제곱미터 이하인 주택을 말한다. (수도권 정비계획법에 따른 수도권을 제외한 도시지역이 아닌 읍 또는 면 지역은 <span class="blank-answer">( 100 )</span>제곱미터 이하)</li>
+        <li>주택법상 민영주택이란 <span class="blank-answer">( 국민주택 )</span>을 제외한 주택을 의미한다.</li>
+        <li>세대구분형 공동주택은 세대별로 구분하여 생활이 가능하되 그 구분된 공간의 일부에 대해 <span class="blank-answer">( 구분소유 )</span>를 할 수 없는 주택을 뜻한다.</li>
+        <li>기존의 일반 공동주택을 행위허가나 신고를 거쳐 세대구분형 공동주택으로 설치하는 경우, 단지 전체 세대수의 <span class="blank-answer">( 10분의 1 )</span> 및 해당 동 세대수의 <span class="blank-answer">( 3분의 1 )</span>을 각각 넘지 않아야 한다.</li>
+        <li>세대구분형 공동주택의 실제 세대수 산정 시 주택건설기준 등을 적용할 때는 그 구분된 공간의 세대수와 관계없이 <span class="blank-answer">( 하나의 세대 )</span>로 적용한다.</li>
+        <li>도시형 생활주택이란 도시지역에 건설하는 <span class="blank-answer">( 300 )</span>세대 미만의 국민주택규모에 해당하는 주택이다.</li>
+        <li>도시형 생활주택의 한 종류인 아파트형 주택은 쾌적한 주거 보호를 위해 <span class="blank-answer">( 지하층 )</span>에는 세대를 설치할 수 없다.</li>
+        <li>오랫동안 유지·관리될 수 있는 우수한 내구성과 내부 구조의 쉽게 변경할 수 있는 가변성, 그리고 <span class="blank-answer">( 수리 용이성 )</span>이 결합된 주택을 장수명 주택이라 한다.</li>
+    </ol>
+
+</body>
+</html>

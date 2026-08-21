@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 관계법규 - 제71강 학습 노트 (전기설비 공사계획 및 승강기 안전관리법 체계)</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+            letter-spacing: -0.05em;
+        }
+        
+        h1 {
+            font-size: 12pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #16803d;
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #6d28d9;
+        }
+        
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        ol {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        .quiz-list li {
+            margin-bottom: 8px;
+        }
+
+        .answer-container {
+            margin-top: 30px;
+            padding: 15px;
+            border-top: 1px dashed #666666;
+            font-size: 9.5pt;
+            color: #666666;
+            line-height: 1.8;
+        }
+
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px 15px;
+            margin-top: 10px;
+        }
+
+        .answer-grid div {
+            border-bottom: 1px none #eeeeee;
+        }
+
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        제71강. 전기사업법(공사계획·사용전검사·토지사용) 및 승강기 안전관리법 총론(용어·사업자·자체점검·안전검사)
+    </h1>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        1. 사업용 전기설비 공사계획 인가·신고 절차, 사용전검사 및 임시사용 (전기사업법 제61조~제64조)
+    </h2>
+    <ul>
+        <li><strong>공사계획의 인가 vs 신고 구분 (★단독 출제 2회)</strong>:
+            <ul>
+                <li><span class="highlight-red">인가 원칙</span>: 전기사업용 전기설비의 설치·변경공사는 주무부장관(<span class="highlight-red">기후에너지환경부장관</span>)의 <span class="highlight-red">인가</span>를 받아야 함.</li>
+                <li><span class="highlight-blue">신고 예외</span>: 인가 대상 외의 공사는 <span class="highlight-blue">공사를 시작하기 전</span>에 허가권자(시·도지사 등)에게 <span class="highlight-blue">신고</span>하여야 함.</li>
+                <li><span class="highlight-purple">비상사태 사후신고 특칙</span>: 전시·사변, 천재지변, 멸실·파손 등 비상사태로 부득이하게 공사를 한 경우 <span class="highlight-purple">공사를 시작한 후 지체 없이</span> 신고하여야 함.</li>
+            </ul>
+        </li>
+        <li><strong>★ [주관식 빈출] 사용전검사 및 임시사용 허가 기준 (제63조, 제64조)</strong>:
+            <ul>
+                <li>사용전검사: 공사를 마친 자는 허가권자(한국전기안전공사 대행)의 <span class="highlight-blue">사용전검사에 합격한 후</span> 사용하여야 함.</li>
+                <li><strong>임시사용 기간 수치</strong>: 불합격하더라도 안전상 지장이 없고 임시사용이 필요한 경우 <span class="highlight-red">3개월 이내</span>의 범위에서 임시사용 허용, 연장 시 <span class="highlight-red">전체 1년을 초과하지 않는 범위</span>에서 연장 가능.</li>
+            </ul>
+        </li>
+        <li><strong>타인 토지 일시사용 및 출입 (제87조~제89조)</strong>:
+            <ul>
+                <li>타인 토지 일시사용: 무한정 불가하며 <span class="highlight-purple">15일 이내</span>로 제한 (주거용 토지는 사전 거주자 협의 필요).</li>
+                <li>협의 불성립 시: 토지 출입 협의가 안 되는 경우 관할 <span class="highlight-green">시·군·구청장의 허가</span>를 받아 출입 가능.</li>
+                <li>공공용 토지 전선로 설치: <span class="highlight-blue">해당 토지 관리자의 허가</span>를 받아 사용함.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">구분</th>
+                <th style="width: 45%;">공사계획 제출 주체 및 시기</th>
+                <th style="width: 30%;">주요 인허가 관청</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>사업용 주요 설비 공사</th>
+                <td>공사 시행 전 <span class="highlight-red">인가</span> 수령</td>
+                <td><span class="highlight-red">기후에너지환경부장관</span></td>
+            </tr>
+            <tr>
+                <th>일반 신고 대상 공사</th>
+                <td><span class="highlight-blue">공사 시작 전</span> 신고 제출</td>
+                <td>허가권자 (시·도지사 등)</td>
+            </tr>
+            <tr>
+                <th>비상사태 멸실·파손 공사</th>
+                <td><span class="highlight-purple">공사 시작 후 지체 없이</span> 신고</td>
+                <td>허가권자</td>
+            </tr>
+            <tr>
+                <th>임시사용 기간</th>
+                <td>기본 <span class="highlight-red">3개월 이내</span> (전체 연장 포함 <span class="highlight-red">최대 1년 초과 불가</span>)</td>
+                <td>허가권자 (한국전기안전공사)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 3-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+        2. 승강기 안전관리법 - 정의, 용도별 세부 종류 및 제외 대상 (법 제2조, 시행령 제3조)
+    </h2>
+    <ul>
+        <li><strong>승강기의 법정 정의 및 3가지 구분 (법 제2조)</strong>:
+            <ul>
+                <li>정의: 건축물이나 고정된 시설물에 설치되어 일정 경로(수직로·경사로·수평로)에 따라 사람이나 화물을 승강장으로 옮기는 시설.</li>
+                <li>3대 설치 형태: <span class="highlight-blue">엘리베이터</span>(수직·경사로, 운반구 O), <span class="highlight-purple">에스컬레이터</span>(경사·수평로, 디딤판 O, 무빙워크 포함), <span class="highlight-green">휠체어리프트</span>(수직·경사로, 운반구 O).</li>
+            </ul>
+        </li>
+        <li><strong>★ [주관식 다출제] 용도별 세부 종류 및 수치 한도 (영 별표 1)</strong>:
+            <ul>
+                <li><span class="highlight-red">피난용 엘리베이터</span>: 화재 등 재난 발생 시 거주자의 피난활동에 적합하게 제조·설치된 엘리베이터 (평상시 승객용 사용).</li>
+                <li><span class="highlight-purple">주택용 엘리베이터</span>: <span class="highlight-purple">단독주택</span> 거주자 운송용 (※ 공동주택은 제외!), 편도운행거리 <span class="highlight-red">12미터 이하</span>.</li>
+                <li><span class="highlight-blue">소형화물용 엘리베이터 (덤웨이터, Dumbwaiter)</span>: 음식물·서적 등 소형 화물 운반용, <span class="highlight-red">사람 탑승 절대 금지</span>. (단, 바닥면적이 <span class="highlight-red">0.5제곱미터 이하</span>이고 높이가 <span class="highlight-red">0.6미터 이하</span>인 것은 제외).</li>
+                <li>화물용 엘리베이터: 적재용량이 <span class="highlight-blue">300킬로그램 미만은 제외</span>.</li>
+            </ul>
+        </li>
+        <li><strong>승강기법 적용 제외 대상 (시행령 제2조)</strong>:
+            <ul>
+                <li>기계식 주차장치(주차장법), 광산·탄광용 건양장치, 150kg 이상 동력 사용 건양장치 등 타 법률 규제 대상.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M19 21V5a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v16"></path><polyline points="1 21 23 21"></polyline><polyline points="9 10 9 11 10 11 10 10 9 10"></polyline></svg>
+        3. 승강기 사업자 3종, 자본금 요건, 사후관리 의무 및 설치신고 (법 제6조·제21조·제39조)
+    </h2>
+    <ul>
+        <li><strong>승강기 사업자 종류 및 자본금 등록기준 (★단독 출제)</strong>:
+            <ul>
+                <li><span class="highlight-red">제조업 및 수입업</span>: 자본금 <span class="highlight-red">2억원 이상</span> (시·도지사 등록).</li>
+                <li><span class="highlight-purple">승강기 유지관리업</span>: 자본금 <span class="highlight-purple">1억원 이상</span> (시·도지사 등록).</li>
+                <li>설치공사업: 다른 법률(건설산업기본법)에 따라 등록.</li>
+                <li>등록사항 변경, 휴업·폐업·재개업: 변경·사유 발생일부터 <span class="highlight-blue">30일 이내</span> 신고.</li>
+            </ul>
+        </li>
+        <li><strong>★ [출제 1순위] 제조·수입업자의 사후관리 법정 의무 수치 (법 제11조)</strong>:
+            <ul>
+                <li>유지관리용 부품 제공: 관리주체 등의 요청을 받은 날부터 <span class="highlight-red">2일 이내</span>에 유상/무상으로 부품 제공.</li>
+                <li>품질보증기간: 무상 수리 품질보증기간은 <span class="highlight-purple">3년 이상</span>으로 함.</li>
+                <li>부품 제공 및 가격·교체주기 공개: 부품을 지속 제공하고 권장 교체주기·가격을 <span class="highlight-red">10년 이상</span> 인터넷 홈페이지에 공개.</li>
+            </ul>
+        </li>
+        <li><strong>★ [주관식 빈출] 설치신고 기한 (법 제21조)</strong>:
+            <ul>
+                <li>의무자 및 기한: <span class="highlight-blue">설치공사업자</span>가 승강기 설치를 끝냈을 때에는 설치를 끝낸 날부터 <span class="highlight-red">10일 이내</span>에 시·도지사(<span class="highlight-purple">한국승강기안전공단</span>)에게 설치신고 제출.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+        4. 승강기 안전관리자 선임 통보 및 관리주체의 자체점검 (법 제29조·제31조)
+    </h2>
+    <ul>
+        <li><strong>승강기 안전관리자 선임·변경 통보 기한 (법 제29조, 시행규칙 제48조)</strong>:
+            <ul>
+                <li>관리주체는 승강기 안전관리자를 선임하거나 변경한 경우 선임·변경한 날부터 <span class="highlight-red">30일 이내</span>에 한국승강기안전공단에 통보하여야 함.</li>
+            </ul>
+        </li>
+        <li><strong>★ [출제 최다] 승강기 자체점검 주기, 결과 구분 및 입력 기한 (법 제31조)</strong>:
+            <ul>
+                <li>점검 주기: 관리주체(또는 대행 유지관리업자)가 <span class="highlight-blue">월 1회 이상</span> 실시.</li>
+                <li>점검자 실무경력 자격 요건: 일반 승강기 <span class="highlight-purple">3년 이상</span> (학사 6개월, 전문학사 1년, 고교 1.5년), 고속승강기(초당 4m 초과) <span class="highlight-red">12년 이상</span> (학사 5년, 전문학사 7년, 고교 9년).</li>
+                <li>점검 결과 3가지 구분 통보: <span class="highlight-red">양호</span>, <span class="highlight-purple">주의관찰</span>, <span class="highlight-blue">긴급수리</span> (관리주체에 즉시 통보).</li>
+                <li><strong>★[주관식 수치 다출제] 정보망 입력 기한</strong>: 관리주체는 자체점검 실시일부터 <span class="highlight-red">10일 이내</span>에 <span class="highlight-red">승강기안전종합정보망</span>에 입력하여야 함.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            💡 [수험 핵심 비교] 승강기 점검·신고 관련 주요 법정 기한 수치
+        </div>
+        <ul>
+            <li><strong>설치신고 기한</strong>: 설치 완료일부터 <span class="highlight-red">10일 이내</span> (설치공사업자 → 공단)</li>
+            <li><strong>안전관리자 선임·변경 통보 기한</strong>: 선임·변경일부터 <span class="highlight-blue">30일 이내</span> (관리주체 → 공단)</li>
+            <li><strong>자체점검 실시 주기</strong>: <span class="highlight-purple">월 1회 이상</span> (실시 후 <span class="highlight-purple">10일 이내</span> 종합정보망 입력)</li>
+            <li><strong>유지관리 부품 제공 기한</strong>: 요청일부터 <span class="highlight-green">2일 이내</span> (제조·수입업자)</li>
+        </ul>
+    </div>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        5. 안전검사(정기·수시·정밀안전검사), 면제 특칙, 하도급 비율 및 유지관리 상한 대수 (법 제32조~제48조)
+    </h2>
+    <ul>
+        <li><strong>★ [출제 1순위] 안전검사의 3가지 종류 및 검사주기 특칙 (법 제32조, 시행규칙 제54조)</strong>:
+            <ul>
+                <li>실시 주체 및 대상: 행정안전부장관이 실시하며, <span class="highlight-blue">관리주체</span>가 받음.</li>
+                <li><strong>1) 정기검사 (검사주기 원칙: 매 1년 / 법률상 2년 이하)</strong>:
+                    <ul>
+                        <li><span class="highlight-purple">2년 연장 대상</span>: 단독주택 설치 승강기, 화물용·자동차용·소형화물용(덤웨이터) 엘리베이터.</li>
+                        <li><span class="highlight-red">6개월 단축 대상</span>: 설치검사 후 <span class="highlight-red">25년이 지난 승강기</span>, 중대사고·고장 발생 후 2년 지나지 않은 승강기.</li>
+                        <li>수시/정밀검사 수검 시: 정기검사 전 수시·정밀검사를 받은 경우 직후 정기검사는 <span class="highlight-blue">1년</span>으로 적용.</li>
+                        <li>검사 신청 기간: 검사주기 도래일 <span class="highlight-purple">전후 각각 30일 이내</span>.</li>
+                    </ul>
+                </li>
+                <li><strong>2) 수시검사</strong>: 제어방식, 정격속도 변경, 세대 교체, 사고 수리 시 실시.</li>
+                <li><strong>3) 정밀안전검사 (★주관식 다출제)</strong>:
+                    <ul>
+                        <li>대상: 설치검사를 받은 날부터 <span class="highlight-red">15년이 지난 경우</span> 등.</li>
+                        <li>주기: 최초 정밀안전검사를 받고, 그 후 <span class="highlight-red">3년마다 정기적으로</span> 정밀안전검사를 받아야 함.</li>
+                    </ul>
+                </li>
+                <li>재검사 기한: 불합격한 날부터 <span class="highlight-purple">4개월 이내</span> 재검사 받음.</li>
+            </ul>
+        </li>
+        <li><strong>★[면제 특칙] 검사 및 자체점검 면제 범위 (법 제31조, 제33조)</strong>:
+            <ul>
+                <li><span class="highlight-blue">연구·개발 목적 승강기안전인증 면제 승강기</span>: 안전검사, 자체점검, 설치검사 <span class="highlight-blue">모두 면제</span>.</li>
+                <li><span class="highlight-purple">정밀안전검사 이수 승강기</span>: 정밀안전검사를 받았거나 받아야 하는 해의 <span class="highlight-purple">해당 연도 정기검사 면제</span>.</li>
+            </ul>
+        </li>
+        <li><strong>유지관리 하도급 비율 및 월간 대수 상한 (법 제42조, 영 제38조, 규칙 제62조)</strong>:
+            <ul>
+                <li>하도급 한도: 유지관리 <span class="highlight-red">1/2 이하</span>, 부품교체 <span class="highlight-red">1/2 이하</span>, 자체점검 <span class="highlight-red">2/3 이하</span> (관리주체 서면 동의 필수).</li>
+                <li>월간 유지관리 대수 상한: 주된 사무소 시·도 <span class="highlight-blue">기술인력 수 $\times$ 100대</span>, 타 시·도 <span class="highlight-blue">90대</span>, 공동 유지관리 <span class="highlight-blue">50%</span>.</li>
+                <li><span class="highlight-purple">표준유지관리비</span>: 행정안전부장관이 전문기관을 지정하여 표준 금액을 정하여 공표하고 계약당사자에게 활용 권고.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>주관식 단답형 및 빈칸 채우기 실전 훈련</h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡, ㉢)에 들어갈 알맞은 핵심 용어나 법정 숫자를 작성해 보십시오.</p>
+
+    <ol class="quiz-list" style="line-height: 2.1;">
+        <li>
+            전기사업자는 사업용전기설비의 설치·변경 공사계획에 대하여 ( ㉠ )장관의 ( ㉡ )을(를) 받아야 하나, 신고 대상 공사는 공사를 시작하기 전에 허가권자에게 신고하여야 한다.
+        </li>
+        <li>
+            허가권자는 사용전검사에 불합격한 전기설비에 대하여 ( ㉠ )개월 이내의 범위에서 임시사용을 허용할 수 있으며, 연장 시 전체 임시사용기간은 ( ㉡ )년을 초과할 수 없다.
+        </li>
+        <li>
+            전기사업자가 타인의 토지를 일시 사용할 수 있는 기간은 ( ㉠ )일 이내로 한다.
+        </li>
+        <li>
+            화재 등 재난 발생 시 거주자의 피난활동에 적합하도록 제조된 엘리베이터를 ( ㉠ ) 엘리베이터라 하며, 주택용 엘리베이터는 ( ㉡ )주택에 설치되고 편도운행거리가 ( ㉢ )미터 이하이어야 한다.
+        </li>
+        <li>
+            사람의 탑승을 금지하는 ( ㉠ ) 엘리베이터(덤웨이터)는 바닥면적이 ( ㉡ )제곱미터 이하이고 높이가 ( ㉢ )미터 이하인 것은 제외한다.
+        </li>
+        <li>
+            승강기 제조업 또는 수입업 등록을 하려는 자는 자본금이 ( ㉠ )억원 이상이어야 하고, 유지관리업 등록을 하려는 자는 자본금이 ( ㉡ )억원 이상이어야 한다.
+        </li>
+        <li>
+            승강기 제조·수입업자는 부품 제공 요청을 받은 날부터 ( ㉠ )일 이내에 제공하여야 하며, 품질보증기간은 ( ㉡ )년 이상, 부품 및 가격 정보는 ( ㉢ )년 이상 홈페이지에 공개하여야 한다.
+        </li>
+        <li>
+            설치공사업자는 승강기 설치를 끝냈을 때에는 설치를 끝낸 날부터 ( ㉠ )일 이내에 관할 시·도지사(공단)에게 승강기 설치신고를 하여야 한다.
+        </li>
+        <li>
+            관리주체는 승강기 안전관리자를 선임하거나 변경한 경우 선임·변경한 날부터 ( ㉠ )일 이내에 한국승강기안전공단에 통보하여야 한다.
+        </li>
+        <li>
+            관리주체는 승강기 자체점검을 월 ( ㉠ )회 이상 실시하고, 점검자는 결과를 양호, ( ㉡ ), 긴급수리로 구분하여 관리주체에 통보하여야 한다.
+        </li>
+        <li>
+            관리주체는 자체점검 결과를 자체점검 실시일부터 ( ㉠ )일 이내에 ( ㉡ )에 입력하여야 한다.
+        </li>
+        <li>
+            자체점검을 담당하는 자의 승강기 실무경력 요건은 일반 승강기의 경우 ( ㉠ )년 이상이며, 정격속도가 초당 ( ㉡ )미터를 초과하는 고속 승강기는 ( ㉢ )년 이상이어야 한다.
+        </li>
+        <li>
+            승강기 정기검사 검사주기는 원칙적으로 1년(2년 이하)이나, 단독주택 설치 승강기 및 화물용 엘리베이터는 ( ㉠ )년이며, 설치 후 ( ㉡ )년이 경과한 승강기는 ( ㉢ )개월이다.
+        </li>
+        <li>
+            관리주체는 안전검사에 불합격한 승강기에 대하여 불합격한 날부터 ( ㉠ )개월 이내에 안전검사를 다시 받아야 한다.
+        </li>
+        <li>
+            승강기 정밀안전검사는 설치검사를 받은 날부터 ( ㉠ )년이 지난 경우에 받으며, 최초 검사 후 ( ㉡ )년마다 정기적으로 받아야 한다.
+        </li>
+        <li>
+            ( ㉠ ) 목적으로 승강기안전인증을 면제받은 승강기는 자체점검 및 안전검사가 면제되며, 정밀안전검사를 받은 승강기는 해당 연도의 ( ㉡ )이(가) 면제된다.
+        </li>
+        <li>
+            유지관리업자는 하도급 시 유지관리 업무의 ( ㉠ ) 이하, 자체점검 업무의 ( ㉡ ) 이하의 범위에서 하도급할 수 있다.
+        </li>
+        <li>
+            유지관리업자가 유지관리할 수 있는 월간 승강기 대수는 주된 사업장 시·도 기술인력 수에 ( ㉠ )을(를) 곱한 대수, 타 시·도는 ( ㉡ )을(를) 곱한 대수, 공동 유지관리는 ( ㉢ )퍼센트를 곱한 대수이다.
+        </li>
+        <li>
+            ( ㉠ )은(는) 승강기 전문기관을 지정하여 관리주체가 부담하여야 할 ( ㉡ )을(를) 정하여 공표하도록 하고 활용을 권고할 수 있다.
+        </li>
+        <li>
+            승강기 정기검사의 신청 및 검사 기간은 정기검사의 검사주기 도래일 전후 각각 ( ㉠ )일 이내로 한다.
+        </li>
+    </ol>
+
+    <div class="answer-container">
+        <strong>[제71강 주관식 단답형 정답 리스트]</strong>
+        <div class="answer-grid">
+            <div><strong>1.</strong> ㉠ 기후에너지환경부 | ㉡ 인가</div>
+            <div><strong>2.</strong> ㉠ 3 | ㉡ 1</div>
+            <div><strong>3.</strong> ㉠ 15</div>
+
+            <div><strong>4.</strong> ㉠ 피난용 | ㉡ 단독 | ㉢ 12</div>
+            <div><strong>5.</strong> ㉠ 소형화물용 | ㉡ 0.5 | ㉢ 0.6</div>
+            <div><strong>6.</strong> ㉠ 2 | ㉡ 1</div>
+
+            <div><strong>7.</strong> ㉠ 2 | ㉡ 3 | ㉢ 10</div>
+            <div><strong>8.</strong> ㉠ 10</div>
+            <div><strong>9.</strong> ㉠ 30</div>
+
+            <div><strong>10.</strong> ㉠ 1 | ㉡ 주의관찰</div>
+            <div><strong>11.</strong> ㉠ 10 | ㉡ 승강기안전종합정보망</div>
+            <div><strong>12.</strong> ㉠ 3 | ㉡ 4 | ㉢ 12</div>
+
+            <div><strong>13.</strong> ㉠ 2 | ㉡ 25 | ㉢ 6</div>
+            <div><strong>14.</strong> ㉠ 4</div>
+            <div><strong>15.</strong> ㉠ 15 | ㉡ 3</div>
+
+            <div><strong>16.</strong> ㉠ 연구·개발 | ㉡ 정기검사</div>
+            <div><strong>17.</strong> ㉠ 1/2 | ㉡ 2/3</div>
+            <div><strong>18.</strong> ㉠ 100 | ㉡ 90 | ㉢ 50</div>
+
+            <div><strong>19.</strong> ㉠ 행정안전부장관 | ㉡ 표준유지관리비</div>
+            <div><strong>20.</strong> ㉠ 30</div>
+            <div></div>
+        </div>
+    </div>
+
+</body>
+</html>

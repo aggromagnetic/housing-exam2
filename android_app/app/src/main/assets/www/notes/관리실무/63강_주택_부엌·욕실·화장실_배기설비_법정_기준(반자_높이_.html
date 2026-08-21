@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 - 제63강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+            letter-spacing: -0.05em;
+        }
+        
+        h1 {
+            font-size: 12pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        /* 토너 절약 4색 시각 강조 클래스 */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #16803d; 
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #6d28d9; 
+        }
+        
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        ol.quiz-list {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+            line-height: 2.1;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        /* 정답 리스트 3열 격자 레이아웃 */
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px 15px;
+        }
+
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        제63강. 주택 부엌·욕실·화장실 배기설비 법정 기준(반자 높이 80cm·전동환기설비·자동역류방지댐퍼), 건축물 배기구 높이(2m), 화재 대비 배연설비(배연창 1개소/1m²/100분의 1·0.9m·2.1m), 특별피난계단 배연 구조(불연재료·굴뚝), 환기설비(환기횟수 산정식·0.5회/h·채광 1/10·환기 1/20), 굴뚝효과(양압) 및 기계환기 3대 방식(제1·2·3종)
+    </h1>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        1. 주택 부엌·욕실·화장실 배기설비 법정 설치기준 (주택건설기준 등에 관한 규칙 제11조) 및 건축물 배기구 높이
+    </h2>
+    <ul>
+        <li><strong>주택 배기설비 설치 대상 및 기본 원칙</strong>:
+            <ul>
+                <li>주택의 부엌, 욕실 및 화장실에는 외부 공기에 접하는 창문을 설치하거나, 창문이 없는 경우 법정 기준에 적합한 <span class="highlight-blue">배기설비</span>를 설치해야 함.</li>
+            </ul>
+        </li>
+        <li><strong>★ 주택 배기설비 세부 법정 설치기준 6가지 (★주관식 및 객관식 단골 1순위)</strong>:
+            <ol>
+                <li><span class="highlight-red">배기구 설치 높이 (★법정 원문 수치)</span>:
+                    <br>&rarr; 배기구는 <span class="highlight-red">반자 또는 반자 아래 80센티미터(80cm / 0.8m) 이내의 높이</span>에 설치하고, <span class="highlight-red">항상 개방될 수 있는 구조</span>로 할 것.
+                    <br>&rarr; <span class="highlight-purple">수험 출제 함정</span>: '반자 아래 1미터 이내'나 '항상 닫혀있는 구조'로 변경 출제 시 <span class="highlight-red">100% 오답!</span> (강의 중 구두 서술된 8cm는 80cm의 표현이며, 법정 원문 표기는 정확히 <span class="highlight-red">80센티미터 이내</span>임!).</li>
+                <li><span class="highlight-blue">기류 지장 방지 구조</span>: 배기통 및 배기구는 외기의 기류에 의하여 배기에 지장이 생기지 아니하는 구조로 할 것.</li>
+                <li><span class="highlight-purple">개구부 설치 금지</span>: 배기통에는 그 최상부 및 배기구를 제외하고는 <span class="highlight-purple">개구부를 두지 아니할 것</span>. (중간 개구부 설치 시 악취 실내 유입).</li>
+                <li><span class="highlight-green">최상부 개방 및 빗물 방지</span>: 배기통의 최상부는 직접 외기에 개방되게 하되, 빗물 등을 막을 수 있는 설비를 할 것.</li>
+                <li><span class="highlight-red">부엌 배기구 특례 (★용어 주관식 단골)</span>:
+                    <br>&rarr; 부엌에 설치하는 배기구에는 <span class="highlight-red">전동환기설비 (급속환기설비 / 레인지 후드)</span>를 설치할 것.</li>
+                <li><span class="highlight-red">★ 역류 방지 2대 구조 (★주관식 최다 출제)</span>:
+                    <br>&rarr; 가. 세대 안의 배기통에 <span class="highlight-red">자동역류방지댐퍼 (자동역류방지덤퍼)</span> 또는 이와 동일한 기능의 배기설비 장치를 설치할 것.
+                    <br>&rarr; 나. 세대 간 배기통이 <span class="highlight-purple">서로 연결되지 아니하고 직접 외기에 개방되도록</span> 설치할 것.
+                    <br>&rarr; <span class="highlight-purple">핵심 시험 함정</span>: "세대 간 배기통을 서로 연결하여 설치할 것"이라고 출제 시 <span class="highlight-red">100% 오답!</span> (세대 간 연결 금지!).</li>
+            </ol>
+        </li>
+        <li><strong>건축물 냉방·환기설비 배기구 도로면 이격 높이 (건축물의 설비기준 등에 관한 규칙 제23조제3항)</strong>:
+            <ul>
+                <li>상업지역 및 주거지역의 건축물에 설치하는 배기구 및 배기장치는 도로면으로부터 <span class="highlight-red">2미터(2m) 이상의 높이</span>에 설치해야 하며, 열기가 보행자나 인접 건축물 거주자에게 직접 닿지 않도록 설치할 것.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">배기설비 구성 요소</th>
+                <th style="width: 45%;">법정 설치 기준 및 세부 구조</th>
+                <th style="width: 30%;">수험 핵심 출제 포인트</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>배기구 위치 및 높이</th>
+                <td>반자 또는 <span class="highlight-red">반자 아래 80cm 이내</span> 높이</td>
+                <td><span class="highlight-red">항상 개방 구조</span> (닫힘 X)</td>
+            </tr>
+            <tr>
+                <th>부엌 배기구</th>
+                <td><span class="highlight-blue">전동환기설비</span> 설치 필수</td>
+                <td>가스레인지 상부 후드 환기</td>
+            </tr>
+            <tr>
+                <th>역류 방지 장치</th>
+                <td><span class="highlight-red">자동역류방지댐퍼</span> 설치 또는 세대 간 직접 분리</td>
+                <td><span class="highlight-purple">세대 간 배기통 연결 금지</span></td>
+            </tr>
+            <tr>
+                <th>도로면 이격 높이</th>
+                <td>상업·주거지역 배기구 <span class="highlight-red">도로면 2m 이상</span> 높이</td>
+                <td>보행자 열기 직접 닿음 방지</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        2. 화재 대비 배연설비 법정 설치기준 (배연창 1개소/1m²/100분의 1·0.9m·2.1m) 및 특별피난계단·승강장 배연 구조
+    </h2>
+    <ul>
+        <li><strong>배연설비 (Smoke Control Facility)의 정의</strong>: 화재 발생 시 발생하는 연기와 유해가스를 건축물 외부로 신속히 배출하여 거주자의 피난 안전을 확보하는 설비.</li>
+        <li><strong>★ 일반 건축물 배연설비 설치기준 (건축물의 설비기준 등에 관한 규칙 제14조제1항) (★수치 주관식 최다)</strong>:
+            <ol>
+                <li><span class="highlight-blue">구획당 배연창 개수</span>: 방화구획으로 구획된 경우에는 그 구획마다 <span class="highlight-blue">1개소 이상의 배연창</span>을 설치할 것. (2개소 이상으로 교체 시 오답!).</li>
+                <li><span class="highlight-red">배연창 유효면적 수치 규정 (★가장 중요)</span>:
+                    <br>&rarr; 배연창의 유효면적은 <span class="highlight-red">1제곱미터(1m²) 이상</span>으로서, 그 면적의 합계가 해당 방화구획 바닥면적의 <span class="highlight-red">100분의 1(1%) 이상</span>일 것.
+                    <br>&rarr; <span class="highlight-purple">산입 제외 예외 조항</span>: 거실 바닥면적의 <span class="highlight-purple">20분의 1(5%) 이상</span>으로 환기창을 설치한 거실 면적은 바닥면적 산정에서 제외함.</li>
+                <li><span class="highlight-red">배연창 설치 위치 수치 규정 (상변 및 하변 한계선)</span>:
+                    <br>&rarr; <span class="highlight-red">상변 한계선</span>: 배연창의 상변과 천장 또는 반자로부터의 수직거리가 <span class="highlight-red">0.9미터(0.9m) 이내</span>일 것.
+                    <br>&rarr; <span class="highlight-purple">하변 한계선 (반자높이 3m 이상 시)</span>: 반자높이가 바닥으로부터 3미터 이상인 경우에는 배연창의 하변이 바닥으로부터 <span class="highlight-purple">2.1미터(2.1m) 이상의 위치</span>에 놓이도록 설치할 것.</li>
+                <li><span class="highlight-green">개방 구조 및 예비전원</span>: 배연구는 연기/열감지기에 의해 자동으로 열리는 구조로 하되 <span class="highlight-green">손으로도 열고 닫을 수 있어야</span> 하며, <span class="highlight-green">예비전원</span>에 의해 열 수 있을 것.</li>
+            </ol>
+        </li>
+        <li><strong>★ 특별피난계단 및 비상용승강기 승강장 배연설비 구조 (제14조제2항) (★기출 및 용어 정밀)</strong>:
+            <ul>
+                <li><span class="highlight-red">재료 규정</span>: 배연구 및 배연풍도는 반드시 <span class="highlight-red">불연재료</span>로 설치할 것. (난연재료, 준불연재료, 내화구조로 출제 시 <span class="highlight-red">100% 오답!</span>).</li>
+                <li><span class="highlight-blue">연결 굴뚝 규정</span>: 외기 또는 <span class="highlight-blue">평상시에 사용하지 아니하는 굴뚝</span>에 연결할 것. (평상시 사용하는 굴뚝에 연결 시 오답!).</li>
+                <li><span class="highlight-purple">기류 내력 닫힘 방지</span>: 배연구는 평상시 <span class="highlight-purple">닫힌 상태</span>를 유지하고, 열린 경우에는 배연에 의한 <span class="highlight-purple">기류로 인하여 닫히지 아니하는 구조</span>일 것.</li>
+                <li><span class="highlight-green">배연기 연동 작동</span>: 배연구가 외기에 접하지 않는 경우 배연기를 설치하며, 배연기는 <span class="highlight-green">배연구의 열림에 따라 자동적으로 작동</span>하고 <span class="highlight-green">예비전원</span>을 설치할 것.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">배연설비 구획 수치</th>
+                <th style="width: 45%;">법정 설치 기준 및 제어 수치</th>
+                <th style="width: 30%;">수험 정밀 암기 포인트</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>구획당 배연창 개수</th>
+                <td>방화구획마다 <span class="highlight-blue">1개소 이상</span> 설치</td>
+                <td>2개소 교체 오답 주의</td>
+            </tr>
+            <tr>
+                <th>배연창 유효면적</th>
+                <td>최소 <span class="highlight-red">1m² 이상</span> & 바닥면적의 <span class="highlight-red">100분의 1 이상</span></td>
+                <td>환기창 1/20 설치 시 산입 제외</td>
+            </tr>
+            <tr>
+                <th>배연창 설치 높이</th>
+                <td>상변 수직거리 <span class="highlight-red">0.9m 이내</span> (3m 이상 시 하변 <span class="highlight-purple">2.1m 이상</span>)</td>
+                <td><span class="highlight-red">0.9m, 2.1m</span> 수치 주관식</td>
+            </tr>
+            <tr>
+                <th>승강장 배연구 재료</th>
+                <td>배연구 및 배연풍도는 <span class="highlight-red">불연재료</span>로 설치</td>
+                <td>난연재료 X, 준불연재료 X</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        3. 환기설비 메커니즘, 환기횟수 산정식(0.5회/h), 창문 법정 면적(채광 1/10, 환기 1/20) 및 굴뚝효과(양압)
+    </h2>
+    <ul>
+        <li><strong>환기량 및 환기횟수 (Ventilation Rate & Exchange Frequency) 공식 및 법정 기준</strong>:
+            <ul>
+                <li><span class="highlight-blue">환기량 (m³/h)</span>: 시간당 실내로 도입되는 외부 순수 공기량.</li>
+                <li><span class="highlight-red">★ 환기횟수 (회/h, N) 산정 공식 (★계산 및 주관식)</span>:
+                    <br>&rarr; <span class="highlight-red">환기횟수 (회/h) = 시간당 환기량 (m³/h) / 실내 체적 (m³)</span>
+                    <br>&rarr; <span class="highlight-purple">공식 변형 (환기량 구하기)</span>: <span class="highlight-purple">시간당 환기량 (m³/h) = 환기횟수 (회/h) × 실내 체적 (m³)</span>
+                    <br>&rarr; <span class="highlight-red">신축 공동주택 법정 환기횟수 기준</span>: <span class="highlight-red">시간당 0.5회 이상</span>. (창문을 열고 닫는 횟수가 아니라, 실내 공기 체적이 교환되는 비율임!).</li>
+            </ul>
+        </li>
+        <li><strong>거실 창문 법정 면적 기준 정밀 비교 (건축법 시행령 및 피난·방화구획 기준)</strong>:
+            <ul>
+                <li><span class="highlight-blue">채광 목적 창문 면적</span>: 거실 바닥면적의 <span class="highlight-blue">10분의 1 (1/10, 10%) 이상</span>.</li>
+                <li><span class="highlight-purple">환기 목적 창문 면적</span>: 거실 바닥면적의 <span class="highlight-purple">20분의 1 (1/20, 5%) 이상</span>.</li>
+            </ul>
+        </li>
+        <li><strong>자연환기 (Natural Ventilation) 원리 및 건물 구조적 영향</strong>:
+            <ul>
+                <li><span class="highlight-blue">풍력환기</span>: 외부 바람의 압력차(풍압차)에 의해 발생하는 환기.</li>
+                <li><span class="highlight-green">부력환기 (중력환기)</span>: 실내외 온도차 및 공기 밀도차(대류작용)에 의해 발생하는 환기.</li>
+                <li><span class="highlight-purple">환기량 비교</span>: 일반적으로 <span class="highlight-purple">풍력환기량이 부력환기량보다 큼</span>.</li>
+                <li><span class="highlight-red">건물 구조별 영향</span>:
+                    <br>&rarr; 철근콘크리트 등 고단열·고기밀 건축물: 기밀성이 높아 <span class="highlight-red">자연환기에 매우 불리함</span> (기계환기 필수!).
+                    <br>&rarr; 목조주택: 기밀성이 낮아 상대적으로 자연환기에 유리함.</li>
+            </ul>
+        </li>
+        <li><strong>★ 실내외 온도차에 따른 부력환기 유입·유출 위치 (중성대, Neutral Zone)</strong>:
+            <ul>
+                <li><span class="highlight-blue">겨울철 (실내온도 > 실외온도)</span>: 상부 공기 팽창·상승 &rarr; 중성대 <span class="highlight-blue">하부 유입 (급기)</span>, 중성대 <span class="highlight-blue">상부 유출 (배기)</span>.</li>
+                <li><span class="highlight-purple">여름철 (실내온도 < 실외온도)</span>: 상부 외기 밀림 &rarr; 중성대 <span class="highlight-purple">상부 유입 (급기)</span>, 중성대 <span class="highlight-purple">하부 유출 (배기)</span>.</li>
+            </ul>
+        </li>
+        <li><strong>★ 굴뚝효과 (연돌효과, Stack Effect) 메커니즘 및 방지 대책 (★주관식 단골)</strong>:
+            <ul>
+                <li><span class="highlight-red">발생 메커니즘</span>: 겨울철 실내외 큰 온도차로 인해 초고층 건물 하부(피난층, 출입구)로부터 찬 외기가 강하게 유입되어, 계단실 및 승강로(파이프샤프트)를 통해 상층부로 기류가 급격히 상승하는 현상.</li>
+                <li><span class="highlight-purple">악영향</span>: 화재 시 화염 및 연기의 수직 확산 속도 급증, 승강기 도어 작동 장애 및 소음 발생.</li>
+                <li><span class="highlight-green">방지 대책</span>: 건물 실내 압력을 대기압보다 높게 <span class="highlight-green">양압 (Positive Pressure)으로 유지</span>할 것. (※ 음압이나 부압으로 유지한다고 출제 시 <span class="highlight-red">100% 오답!</span>).</li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">구분</th>
+                <th style="width: 40%;">법정 기준 및 산정 공식</th>
+                <th style="width: 35%;">수험 핵심 출제 수치</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>공동주택 환기횟수</th>
+                <td><span class="highlight-red">시간당 환기량 (m³/h) / 실내 체적 (m³)</span></td>
+                <td><span class="highlight-red">시간당 0.5회 이상</span></td>
+            </tr>
+            <tr>
+                <th>거실 창문 면적</th>
+                <td>채광 = <span class="highlight-blue">바닥면적의 1/10 이상</span><br>환기 = <span class="highlight-purple">바닥면적의 1/20 이상</span></td>
+                <td>채광(10분의 1) vs 환기(20분의 1)</td>
+            </tr>
+            <tr>
+                <th>부력환기 (겨울철)</th>
+                <td>실내온도 > 실외온도 (대류작용)</td>
+                <td><span class="highlight-blue">하부 급기(유입) / 상부 배기(유출)</span></td>
+            </tr>
+            <tr>
+                <th>굴뚝효과 방지</th>
+                <td>겨울철 초고층 건물 하부 외기 상승 현상</td>
+                <td>실내 압력을 <span class="highlight-green">양압으로 유지</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4 4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg>
+        4. 기계환기 3대 방식(제1종·제2종·제3종) 및 공간별 실내 압력 제어 (정압 vs 부압)
+    </h2>
+    <ul>
+        <li><strong>기계환기 방식 3종류 정밀 비교 (★매해 단독 및 짝짓기 출제)</strong>:
+            <ol>
+                <li><span class="highlight-blue">제1종 환기방식 (급기 기계 + 배기 기계)</span>:
+                    <br>&rarr; 급기팬(송풍기)과 배기팬(송풍기)을 모두 기계식으로 구동하는 방식.
+                    <br>&rarr; 가장 확실하고 안전한 환기 방식으로, 필요에 따라 실내 압력을 정압 또는 부압으로 자유롭게 조절 가능 (극장, 병원, 일반 세대 열회수환기장치).</li>
+                <li><span class="highlight-purple">제2종 환기방식 (급기 기계 + 배기 자연) &rarr; 실내 '정압' 형성</span>:
+                    <br>&rarr; 급기만 기계(송풍기)로 강제 유입시키고 배기는 자연 배출시키는 방식.
+                    <br>&rarr; 유입량이 배출량보다 많아 실내 압력이 대기압보다 높은 <span class="highlight-purple">정압 (Positive Pressure)</span> 상태가 됨.
+                    <br>&rarr; <span class="highlight-purple">주요 적용 장소</span>: 외부 오염물질 및 먼지 침입을 철저히 차단해야 하는 <span class="highlight-purple">클린룸, 무균실, 수술실, 특별피난계단 부속실/승강장(급기가압 제연설비)</span>.</li>
+                <li><span class="highlight-red">제3종 환기방식 (급기 자연 + 배기 기계) &rarr; 실내 '부압' 형성</span>:
+                    <br>&rarr; 급기는 자연 유입시키고 배기만 기계(송풍기)로 강제 배출시키는 방식.
+                    <br>&rarr; 배출량이 유입량보다 많아 실내 압력이 대기압보다 낮은 <span class="highlight-red">부압 (Negative Pressure)</span> 상태가 됨.
+                    <br>&rarr; <span class="highlight-red">주요 적용 장소</span>: 실내 발생 악취 및 유해가스가 타 구역으로 확산·유출되는 것을 방지해야 하는 <span class="highlight-red">주방, 화장실, 욕실, 쓰레기 처리장</span>.</li>
+            </ol>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 20%;">환기 방식</th>
+                <th style="width: 25%;">급기 / 배기 구동 수단</th>
+                <th style="width: 25%;">실내 형성 압력</th>
+                <th style="width: 30%;">대표적 적용 장소 및 목적</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th><span class="highlight-blue">제1종 환기</span></th>
+                <td>급기 <span class="highlight-blue">기계</span> / 배기 <span class="highlight-blue">기계</span></td>
+                <td>자유 조절 (정압/부압)</td>
+                <td>가장 확실한 환기 (극장, 병원, 세대)</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-purple">제2종 환기</span></th>
+                <td>급기 <span class="highlight-purple">기계</span> / 배기 <span class="highlight-purple">자연</span></td>
+                <td><span class="highlight-purple">정압</span> (대기압보다 높음)</td>
+                <td><span class="highlight-purple">클린룸, 수술실, 승강장 급기가압</span> (먼지 침입 방지)</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-red">제3종 환기</span></th>
+                <td>급기 <span class="highlight-red">자연</span> / 배기 <span class="highlight-red">기계</span></td>
+                <td><span class="highlight-red">부압</span> (대기압보다 낮음)</td>
+                <td><span class="highlight-red">주방, 화장실, 욕실</span> (악취·유해가스 유출 방지)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+            💡 [수험 핵심 팁] 제63강 실전 출제 포인트 & 함정 방지 최종 체크
+        </div>
+        <ul>
+            <li><strong>주택 배기설비 수치</strong>: 반자 또는 반자 아래 <span class="highlight-red">80cm 이내</span> 높이 (항상 개방 구조). 부엌 = <span class="highlight-blue">전동환기설비</span>. 역류 방지 = <span class="highlight-red">자동역류방지댐퍼</span> 설치 (세대 간 배기통 연결 금지!). 도로면 배기구 높이 = <span class="highlight-purple">2m 이상</span>.</li>
+            <li><strong>배연설비 핵심 수치</strong>: 방화구획당 <span class="highlight-blue">1개소 이상</span> 배연창. 유효면적 = <span class="highlight-red">1m² 이상 & 바닥면적의 100분의 1 이상</span> (환기창 1/20 설치 시 산입 제외). 위치 = 상변 <span class="highlight-red">0.9m 이내</span> / 반자 3m 이상 시 하변 <span class="highlight-purple">2.1m 이상</span>. 승강장 배연구 재료 = <span class="highlight-red">불연재료</span> (굴뚝 연결).</li>
+            <li><strong>환기 공식 & 창문 면적</strong>: 환기횟수 = <span class="highlight-red">시간당 환기량 / 실내 체적</span> (신축 공동주택 = <span class="highlight-red">시간당 0.5회 이상</span>). 창문 면적 = 채광 <span class="highlight-blue">10분의 1 이상</span> / 환기 <span class="highlight-purple">20분의 1 이상</span>.</li>
+            <li><strong>굴뚝효과 대책</strong>: 겨울철 초고층 건물 하부 외기 유입 상승 현상 &rarr; 실내 압력을 <span class="highlight-green">양압으로 유지</span>.</li>
+            <li><strong>기계환기 3종 구분</strong>: 제2종(급기 기계) = <span class="highlight-purple">정압 (클린룸, 수술실, 승강장 가압)</span> / 제3종(배기 기계) = <span class="highlight-red">부압 (주방, 화장실, 욕실)</span>.</li>
+        </ul>
+    </div>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>주관식 단답형 및 빈칸 채우기 실전 훈련</h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡, ㉢)에 들어갈 알맞은 핵심 용어나 법정 수치, 단위를 아래 빈칸에 직접 작성해 보십시오.</p>
+
+    <ol class="quiz-list">
+        <li>
+            주택건설기준상 배기구는 반자 또는 반자아래 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )센티미터 이내의 높이에 설치하고 항상 개방될 수 있는 구조이어야 한다.
+        </li>
+        <li>
+            주택의 부엌에 설치하는 배기구에는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )설비를 설치하여야 한다.
+        </li>
+        <li>
+            주택 배기통의 연기·냄새 역류 방지를 위해 세대 안의 배기통에는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )(을)를 설치하거나, 세대 간 배기통이 서로 연결되지 않고 직접 외기에 개방되도록 하여야 한다.
+        </li>
+        <li>
+            상업지역 및 주거지역의 건축물에 설치하는 에어컨 및 환기시설 배기구는 도로면으로부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이상의 높이에 설치하여야 한다.
+        </li>
+        <li>
+            건축물 배연설비 설치 시 방화구획으로 구획된 경우에는 그 구획마다 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )개소 이상의 배연창을 설치하여야 한다.
+        </li>
+        <li>
+            배연창의 유효면적은 최소 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )제곱미터 이상으로서 그 면적의 합계가 해당 방화구획 바닥면적의 100분의 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 이상이어야 한다.
+        </li>
+        <li>
+            배연창 유효면적 산정 시 거실 바닥면적의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )분의 1 이상으로 환기창을 설치한 거실 면적은 바닥면적 산정에 산입하지 아니한다.
+        </li>
+        <li>
+            배연창의 상변과 천장 또는 반자로부터의 수직거리는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이내이어야 하며, 반자높이가 3미터 이상인 경우 배연창 하변은 바닥으로부터 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이상의 위치에 놓여야 한다.
+        </li>
+        <li>
+            특별피난계단 및 비상용승강기 승강장에 설치하는 배연설비의 배연구 및 배연풍도는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )재료로 하고, 외기 또는 평상시에 사용하지 아니하는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )에 연결하여야 한다.
+        </li>
+        <li>
+            특별피난계단 배연설비의 배연기는 배연구의 열림에 따라 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )적으로 작동하여야 하며, ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )전원을 설치하여야 한다.
+        </li>
+        <li>
+            시간당 실내로 도입되는 외기 공기량을 실내 체적(용적)으로 나눈 값을 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )(이라) 한다.
+        </li>
+        <li>
+            신축 공동주택 및 다중이용시설의 환기설비는 시간당 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )회 이상의 환기가 이루어질 수 있도록 설치하여야 한다.
+        </li>
+        <li>
+            건축물 거실에 설치하는 창문 면적 기준상 채광 목적 창문은 거실 바닥면적의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )분의 1 이상이어야 하고, 환기 목적 창문은 거실 바닥면적의 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )분의 1 이상이어야 한다.
+        </li>
+        <li>
+            자연환기 중 바람의 압력차에 의한 환기를 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )환기라 하고, 실내외 온도차 및 밀도차에 의한 환기를 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )환기라 한다.
+        </li>
+        <li>
+            겨울철 실내온도가 실외온도보다 높을 때 중성대를 기준하여 공기는 중성대 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )부로 유입되고, 중성대 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )부로 유출된다.
+        </li>
+        <li>
+            겨울철 초고층 건물 하부로부터 찬 외기가 유입되어 계단실이나 승강로를 통해 상층부로 상승하는 현상을 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )효과(연돌효과)라 한다.
+        </li>
+        <li>
+            굴뚝효과(연돌효과)를 방지하기 위해서는 건물 실내 압력을 대기압보다 높은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )(으)로 유지하여야 한다.
+        </li>
+        <li>
+            급기 및 배기를 모두 기계(송풍기)로 행하여 가장 안전하고 확실하게 압력을 조절할 수 있는 환기방식은 제( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )종 기계환기방식이다.
+        </li>
+        <li>
+            급기는 기계로 하고 배기는 자연 배출시켜 실내에 정압을 형성함으로써 외부 먼지 침입을 차단하는 방식은 제( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )종 기계환기방식으로 클린룸이나 수술실, 승강장 급기가압에 적용된다.
+        </li>
+        <li>
+            급기는 자연 유입시키고 배기는 기계로 강제 배출시켜 실내에 부압을 형성함으로써 악취 확산을 방지하는 방식은 제( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )종 기계환기방식으로 주방, 화장실, 욕실에 적용된다.
+        </li>
+    </ol>
+
+    <div style="font-size: 9.5pt; color: #666666; margin-top: 30px; padding: 15px; border-top: 1px dashed #666666; line-height: 1.8;">
+        <strong style="display: block; margin-bottom: 10px; color: #333333;">[제63강 주관식 단답형 정답 리스트]</strong>
+        <div class="answer-grid">
+            <div><strong>1.</strong> ㉠ 80</div>
+            <div><strong>2.</strong> ㉠ 전동환기</div>
+            <div><strong>3.</strong> ㉠ 자동역류방지댐퍼(덤퍼)</div>
+            <div><strong>4.</strong> ㉠ 2</div>
+            <div><strong>5.</strong> ㉠ 1</div>
+            <div><strong>6.</strong> ㉠ 1, ㉡ 1(100분의 1)</div>
+            <div><strong>7.</strong> ㉠ 20</div>
+            <div><strong>8.</strong> ㉠ 0.9, ㉡ 2.1</div>
+            <div><strong>9.</strong> ㉠ 불연, ㉡ 굴뚝</div>
+            <div><strong>10.</strong> ㉠ 자동, ㉡ 예비</div>
+            <div><strong>11.</strong> ㉠ 환기횟수</div>
+            <div><strong>12.</strong> ㉠ 0.5</div>
+            <div><strong>13.</strong> ㉠ 10, ㉡ 20</div>
+            <div><strong>14.</strong> ㉠ 풍력, ㉡ 부력(중력)</div>
+            <div><strong>15.</strong> ㉠ 하, ㉡ 상</div>
+            <div><strong>16.</strong> ㉠ 굴뚝(연돌)</div>
+            <div><strong>17.</strong> ㉠ 양압</div>
+            <div><strong>18.</strong> ㉠ 1</div>
+            <div><strong>19.</strong> ㉠ 2</div>
+            <div><strong>20.</strong> ㉠ 3</div>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,1525 @@
+<!DOCTYPE html>
+<html lang="ko" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 시험 단원별 실전 모의고사 - 일타강사 파이널</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0284c7',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        },
+                        accent: {
+                            gold: '#f59e0b',
+                            emerald: '#10b981',
+                            rose: '#f43f5e'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Pretendard', 'Inter', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Roboto', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+        .badge-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .5; }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col bg-slate-950 text-slate-100 antialiased selection:bg-sky-500 selection:text-white">
+
+    <!-- Top Navigation Header -->
+    <header class="sticky top-0 z-50 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Brand Title -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center text-white font-black text-xl shadow-md shadow-sky-500/20">
+                        Pass
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-bold bg-gradient-to-r from-sky-400 via-indigo-300 to-amber-300 bg-clip-text text-transparent">
+                            주택관리사보 2차 합격 일타강사
+                        </h1>
+                        <p class="text-xs text-slate-400 flex items-center gap-1">
+                            <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 badge-pulse"></span>
+                            최신 법령 개정 및 판례 실시간 점검 완료
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Stats Summary Header -->
+                <div class="hidden md:flex items-center space-x-6 text-sm">
+                    <div class="flex items-center space-x-2 bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700">
+                        <i class="fa-solid fa-layer-group text-sky-400"></i>
+                        <span class="text-slate-400">전체 문항:</span>
+                        <span class="font-bold text-slate-100">40문항</span>
+                    </div>
+                    <div class="flex items-center space-x-2 bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700">
+                        <i class="fa-solid fa-bullseye text-emerald-400"></i>
+                        <span class="text-slate-400">현재 점수:</span>
+                        <span id="header-score" class="font-bold text-emerald-400">0 / 100점</span>
+                    </div>
+                    <button id="quick-reset-btn" onclick="resetQuiz()" class="text-slate-400 hover:text-rose-400 transition-colors text-xs flex items-center gap-1">
+                        <i class="fa-solid fa-rotate-right"></i> 처음부터
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Global Progress Bar -->
+        <div class="w-full bg-slate-800 h-1.5">
+            <div id="progress-bar" class="bg-gradient-to-r from-sky-500 to-emerald-400 h-1.5 transition-all duration-300 w-0"></div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow max-w-5xl w-full mx-auto px-4 py-6 sm:px-6 lg:px-8">
+
+        <!-- Persona Banner Section -->
+        <div class="mb-6 p-4 rounded-2xl bg-gradient-to-r from-slate-900 via-indigo-950/40 to-slate-900 border border-indigo-500/20 shadow-xl flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="relative shrink-0">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-slate-950 font-black text-xl shadow-lg">
+                        <i class="fa-solid fa-user-graduate"></i>
+                    </div>
+                    <span class="absolute -bottom-1 -right-1 flex h-4 w-4">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-4 w-4 bg-emerald-500"></span>
+                    </span>
+                </div>
+                <div>
+                    <h2 class="text-sm font-bold text-amber-300 flex items-center gap-1.5">
+                        일타강사의 합격 레슨
+                        <span class="text-[10px] bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded-full">정밀 검수 완료</span>
+                    </h2>
+                    <p id="instructor-quote" class="text-xs text-slate-300 mt-0.5">
+                        "실제 시험과 동일한 고난도 40문항입니다. 정답 여부와 근거 법조문을 완벽히 숙지하여 합격을 완성하세요!"
+                    </p>
+                </div>
+            </div>
+
+            <div class="shrink-0 flex items-center gap-2">
+                <button onclick="toggleQuickJumpModal()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs rounded-lg border border-slate-700 transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-list-ol text-sky-400"></i> 문항 목록
+                </button>
+            </div>
+        </div>
+
+        <!-- Quiz Container View -->
+        <div id="quiz-view" class="space-y-6">
+            <!-- Problem Header Info -->
+            <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-900 p-4 rounded-xl border border-slate-800 shadow-sm">
+                <div class="flex items-center space-x-2">
+                    <span id="chapter-badge" class="px-3 py-1 rounded-full text-xs font-semibold bg-sky-500/10 text-sky-400 border border-sky-500/20">
+                        [제1장: 주택의 정의 및 종류]
+                    </span>
+                    <span id="type-badge" class="px-2.5 py-1 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                        객관식 (5지선다)
+                    </span>
+                </div>
+                <div class="text-sm font-bold text-slate-400 flex items-center gap-2">
+                    <span>문제</span>
+                    <span id="current-q-num" class="text-sky-400 text-lg">1</span>
+                    <span class="text-slate-600">/</span>
+                    <span>40</span>
+                </div>
+            </div>
+
+            <!-- Problem Card -->
+            <div class="bg-slate-900 rounded-2xl border border-slate-800 p-6 sm:p-8 shadow-xl relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-sky-500/5 rounded-full blur-3xl pointer-events-none"></div>
+
+                <!-- Question Text -->
+                <h3 id="question-text" class="text-base sm:text-lg font-bold text-slate-100 leading-relaxed mb-4">
+                    <!-- Dynamic Question Text -->
+                </h3>
+
+                <!-- Optional Box Material (㉠, ㉡, ㉢, ㉣) -->
+                <div id="box-container" class="hidden my-4 p-4 sm:p-5 rounded-xl bg-slate-950/80 border border-slate-800 text-sm leading-relaxed font-mono text-slate-300 space-y-1.5 shadow-inner">
+                    <!-- Dynamic Box Material -->
+                </div>
+
+                <!-- Answer Input Area (Dynamic for MCQ or Subjective) -->
+                <div id="answer-interactive-area" class="mt-6 space-y-3">
+                </div>
+
+                <!-- Action Button Container -->
+                <div class="mt-8 pt-4 border-t border-slate-800 flex items-center justify-between">
+                    <button id="prev-btn" onclick="prevQuestion()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 disabled:opacity-30 disabled:cursor-not-allowed text-slate-300 text-sm font-medium rounded-xl transition flex items-center gap-2">
+                        <i class="fa-solid fa-arrow-left"></i> 이전 문제
+                    </button>
+
+                    <button id="submit-btn" onclick="submitAnswer()" class="px-6 py-2.5 bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-bold text-sm rounded-xl shadow-lg shadow-sky-500/25 transition transform active:scale-95 flex items-center gap-2">
+                        <i class="fa-solid fa-check"></i> 정답 확인하기
+                    </button>
+
+                    <button id="next-btn" onclick="nextQuestion()" class="hidden px-6 py-2.5 bg-slate-800 hover:bg-slate-700 text-sky-400 font-bold text-sm rounded-xl border border-sky-500/30 transition flex items-center gap-2">
+                        다음 문제 <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Explanation Feedback Card -->
+            <div id="explanation-card" class="hidden bg-slate-900 rounded-2xl border p-6 sm:p-8 shadow-2xl transition-all duration-300">
+                <!-- Status Banner -->
+                <div id="feedback-status-banner" class="flex items-center gap-3 p-4 rounded-xl mb-6 font-bold text-base">
+                    <!-- Dynamic Status Banner -->
+                </div>
+
+                <!-- Legal Citations & Key Instructor Analysis -->
+                <div class="space-y-4">
+                    <div class="flex items-center gap-2 text-amber-400 font-bold text-sm uppercase tracking-wider">
+                        <i class="fa-solid fa-scale-balanced"></i> 일타강사 법률 및 논리 해설
+                    </div>
+
+                    <div id="explanation-text" class="text-sm leading-relaxed text-slate-200 bg-slate-950/60 p-4 rounded-xl border border-slate-800">
+                        <!-- Dynamic Detailed Explanation -->
+                    </div>
+
+                    <!-- Key Points & Wrong Statements Correction Table -->
+                    <div id="key-points-box" class="mt-4 p-4 rounded-xl bg-indigo-950/20 border border-indigo-500/20">
+                        <h4 class="text-xs font-bold text-indigo-300 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                            <i class="fa-solid fa-highlighter"></i> 핵심 요약 및 지문 바로잡기
+                        </h4>
+                        <ul id="key-points-list" class="space-y-1.5 text-xs text-slate-300 list-disc list-inside">
+                            <!-- Dynamic Key Points -->
+                        </ul>
+                    </div>
+
+                    <!-- Legal Ground Tag -->
+                    <div class="pt-2 flex items-center justify-end">
+                        <span id="legal-ground-tag" class="text-[11px] text-slate-400 bg-slate-800 px-3 py-1 rounded-md border border-slate-700">
+                            <!-- Dynamic Legal Ground -->
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Result Dashboard View (Hidden by default) -->
+        <div id="result-view" class="hidden space-y-8">
+            <!-- Overall Summary Banner -->
+            <div class="bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950/60 rounded-3xl border border-slate-800 p-8 text-center shadow-2xl relative overflow-hidden">
+                <div class="inline-flex items-center justify-center p-3 bg-sky-500/10 text-sky-400 rounded-2xl mb-4 border border-sky-500/20">
+                    <i class="fa-solid fa-award text-3xl"></i>
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-white mb-2">실전 모의고사 최종 결과</h2>
+                <p class="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto mb-6">
+                    수고하셨습니다! 수험생님의 최종 점수와 오답을 바탕으로 취약 단원을 보완하세요.
+                </p>
+
+                <!-- Big Score Gauge -->
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-6 my-6">
+                    <div class="bg-slate-950/80 px-8 py-6 rounded-2xl border border-slate-800 min-w-[200px]">
+                        <span class="block text-xs text-slate-400 font-semibold mb-1">최종 점수</span>
+                        <span id="final-score" class="text-4xl sm:text-5xl font-black text-sky-400">0</span>
+                        <span class="text-slate-500 font-bold"> / 100점</span>
+                    </div>
+
+                    <div class="bg-slate-950/80 px-8 py-6 rounded-2xl border border-slate-800 min-w-[200px]">
+                        <span class="block text-xs text-slate-400 font-semibold mb-1">합격 여부</span>
+                        <span id="final-pass-status" class="text-2xl font-black">판정 중</span>
+                        <p class="text-[10px] text-slate-500 mt-1">기준: 60점 이상 합격</p>
+                    </div>
+
+                    <div class="bg-slate-950/80 px-8 py-6 rounded-2xl border border-slate-800 min-w-[200px]">
+                        <span class="block text-xs text-slate-400 font-semibold mb-1">정답률</span>
+                        <span id="final-accuracy" class="text-2xl sm:text-3xl font-black text-emerald-400">0%</span>
+                        <p id="final-counts" class="text-[10px] text-slate-400 mt-1">맞음 0 / 틀림 0</p>
+                    </div>
+                </div>
+
+                <div class="flex justify-center gap-4 mt-6">
+                    <button onclick="resetQuiz()" class="px-6 py-3 bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-bold text-sm rounded-xl shadow-lg transition">
+                        <i class="fa-solid fa-rotate-right mr-1.5"></i> 다시 풀기
+                    </button>
+                    <a href="#wrong-notes-section" class="px-6 py-3 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-sm rounded-xl border border-slate-700 transition">
+                        <i class="fa-solid fa-book-open mr-1.5"></i> 오답노트 보기
+                    </a>
+                </div>
+            </div>
+
+            <!-- Chapter Analysis -->
+            <div class="bg-slate-900 rounded-2xl border border-slate-800 p-6 shadow-xl">
+                <h3 class="text-base font-bold text-slate-200 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-chart-pie text-sky-400"></i> 단원별 성취도 분석
+                </h3>
+                <div id="chapter-breakdown-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Dynamic Chapter Progress Cards -->
+                </div>
+            </div>
+
+            <!-- Incorrect Notes Section -->
+            <div id="wrong-notes-section" class="bg-slate-900 rounded-2xl border border-slate-800 p-6 shadow-xl">
+                <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-100 flex items-center gap-2">
+                            <i class="fa-solid fa-notes-medical text-rose-400"></i> 명품 일타강사 오답 노트
+                        </h3>
+                        <p class="text-xs text-slate-400 mt-0.5">틀린 문제의 정답, 선택지 및 핵심 개념을 복습하세요.</p>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <button onclick="filterWrongNotes('all')" id="filter-all-btn" class="px-3 py-1.5 bg-sky-500 text-white text-xs font-bold rounded-lg transition">
+                            전체 문항
+                        </button>
+                        <button onclick="filterWrongNotes('wrong')" id="filter-wrong-btn" class="px-3 py-1.5 bg-slate-800 text-slate-400 hover:bg-slate-700 text-xs font-bold rounded-lg border border-slate-700 transition">
+                            오답만 보기
+                        </button>
+                    </div>
+                </div>
+
+                <div id="wrong-notes-list" class="space-y-4">
+                    <!-- Dynamic Wrong Note Items -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Quick Navigation Modal -->
+    <div id="quick-jump-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-xl w-full p-6 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <h3 class="text-base font-bold text-slate-100 flex items-center gap-2">
+                    <i class="fa-solid fa-th-large text-sky-400"></i> 전체 문항 바로가기
+                </h3>
+                <button onclick="toggleQuickJumpModal()" class="text-slate-400 hover:text-white text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div id="quick-jump-grid" class="grid grid-cols-5 sm:grid-cols-8 gap-2 max-h-80 overflow-y-auto custom-scrollbar p-1">
+                <!-- Dynamic Quick Buttons -->
+            </div>
+            <div class="pt-2 flex justify-end">
+                <button onclick="toggleQuickJumpModal()" class="px-4 py-2 bg-slate-800 text-slate-300 text-xs rounded-lg hover:bg-slate-700">
+                    닫기
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Data and Controller Logic -->
+    <script>
+        const quizData = [
+            {
+                id: 1,
+                chapter: "제1장: 주택의 정의 및 종류",
+                type: "mcq",
+                question: "주택법령상 용어의 뜻에 의할 때 ‘주택’에 해당하지 않는 것을 모두 고른 것은?",
+                box: "㉠ 「건축법 시행령」상 용도별 건축물의 종류에 따른 다중주택\n㉡ 「건축법 시행령」상 용도별 건축물의 종류에 따른 기숙사\n㉢ 「건축법 시행령」상 용도별 건축물의 종류에 따른 오피스텔\n㉣ 「노인복지법」상 노인복지주택",
+                options: [
+                    "① ㉠, ㉢",
+                    "② ㉡, ㉢",
+                    "③ ㉡, ㉣",
+                    "④ ㉠, ㉡, ㉣",
+                    "⑤ ㉡, ㉢, ㉣"
+                ],
+                answer: 4, // ⑤ ㉡, ㉢, ㉣
+                explanation: "「주택법」 제2조 제1호 및 제4호, 동법 시행령 제2조·제4조에 따라 '기숙사', '오피스텔', '노인복지주택', '다중생활시설'은 모두 '준주택'에 해당하며 주택에는 포함되지 않습니다. 반면 '다중주택'은 「건축법 시행령」 별표1 및 「주택법」상 단독주택의 한 종류로 '주택'에 해당합니다.",
+                keyPoints: [
+                    "다중주택 ➔ 주택법상 '단독주택'의 종류 (주택에 해당)",
+                    "기숙사, 오피스텔, 노인복지주택 ➔ 주택법상 '준주택'에 해당 (주택 제외)"
+                ],
+                legalGround: "「주택법」 제2조 제1호, 제4호 및 동법 시행령 제2조, 제4조"
+            },
+            {
+                id: 2,
+                chapter: "제2장: 공동주택관리법의 총칙 및 관리규약",
+                type: "mcq",
+                question: "공동주택관리법상 의무관리대상 공동주택으로 옳지 않은 것은? (단, 입주자등이 대통령령으로 정하는 기준에 따라 동의하여 정하는 공동주택이 아닌 경우)",
+                box: "",
+                options: [
+                    "① 승강기가 설치된 290세대 연립주택",
+                    "② 중앙집중식 난방방식인 300세대 다세대주택",
+                    "③ 지역난방방식인 290세대 아파트",
+                    "④ 승강기가 설치되어 있지 않고 지역난방방식을 포함하여 중앙집중식 난방방식이 아닌 150세대 아파트",
+                    "⑤ 「건축법」에 따른 건축허가를 받아 주택 외의 시설과 주택을 동일 건축물로 건축한 건축물로서 주택이 290세대인 건축물"
+                ],
+                answer: 3, // ④
+                explanation: "승강기가 설치되지 않고 개별난방 방식인 공동주택(아파트 등)은 300세대 이상이어야 의무관리대상 공동주택이 됩니다. 150세대 개별난방 아파트는 의무관리대상에 해당하지 않습니다.",
+                keyPoints: [
+                    "300세대 이상 공동주택 ➔ 의무관리대상",
+                    "150세대 이상 + (승강기 설치 OR 중앙/지역난방 OR 주상복합주택) ➔ 의무관리대상",
+                    "150세대 승강기 미설치 + 개별난방 ➔ 임의관리대상"
+                ],
+                legalGround: "「공동주택관리법」 제2조 제1항 제2호 및 동법 시행령 제2조"
+            },
+            {
+                id: 3,
+                chapter: "제2장: 공동주택관리법의 총칙 및 관리규약",
+                type: "mcq",
+                question: "공동주택관리법령상 관리규약의 준칙에 관한 설명으로 옳지 않은 것은?",
+                box: "",
+                options: [
+                    "① 국토교통부장관은 공동주택의 입주자등의 보호와 주거생활의 질서를 유지하기 위하여 관리규약의 준칙을 정하여야 한다.",
+                    "② 입주자등은 관리규약의 준칙을 참조하여 관리규약을 정한다.",
+                    "③ 관리규약은 입주자등의 지위를 승계한 사람에 대하여도 그 효력이 있다.",
+                    "④ 관리규약의 준칙에는 선거관리위원회의 구성, 경비, 위원의 선임·운영·업무·해임 및 임기 등에 관한 사항도 포함되어야 한다.",
+                    "⑤ 관리규약의 준칙에는 공동주택의 입주자등 외의 자의 기본적인 권리를 침해하는 사항이 포함되어서는 아니 된다."
+                ],
+                answer: 0, // ①
+                explanation: "공동주택 관리규약의 준칙을 정하는 주체는 국토교통부장관이 아니라 '특별시장·광역시장·특별자치시장·도지사 또는 특별자치도지사(시·도지사)'입니다.",
+                keyPoints: [
+                    "관리규약의 준칙 제정권자 ➔ 시·도지사 (국토교통부장관 X)",
+                    "입주자등은 준칙을 참조하여 자체 관리규약을 제정/개정함"
+                ],
+                legalGround: "「공동주택관리법」 제18조 제1항"
+            },
+            {
+                id: 4,
+                chapter: "제2장: 공동주택관리법의 총칙 및 관리규약",
+                type: "mcq",
+                question: "공동주택관리법령상 관리규약에 관한 설명으로 옳지 않은 것을 모두 고른 것은?",
+                box: "㉠ 입주자등은 관리규약의 준칙을 정한다.\n㉡ 장기수선충당금의 요율 및 사용절차는 장기수선계획에서 규정하고 있기 때문에 관리규약의 준칙에는 포함되지 않아도 된다.\n㉢ 공동주택 분양 후 최초의 관리규약은 사업주체가 제안한 내용을 해당 입주예정자의 과반수가 서면동의하는 방법으로 이를 결정한다.\n㉣ 사업주체가 입주자대표회의가 구성되기 전에 어린이집·다함께돌봄센터·공동육아나눔터의 임대계약을 체결하려는 경우에는 입주개시일 3개월 전부터 관리규약 제정안을 제안할 수 있다.\n㉤ 입주자대표회의 회장은 관리규약의 개정 사항을 대통령령으로 정하는 바에 따라 시·도지사에게 신고하여야 한다.",
+                options: [
+                    "① ㉠, ㉡, ㉤",
+                    "② ㉠, ㉢, ㉤",
+                    "③ ㉡, ㉢, ㉤",
+                    "④ ㉡, ㉣, ㉤",
+                    "⑤ ㉢, ㉣, ㉤"
+                ],
+                answer: 0, // ① (㉠, ㉡, ㉤)
+                explanation: "㉠ 관리규약 준칙은 시·도지사가 정합니다.\n㉡ 장기수선충당금의 요율 및 사용절차는 관리규약 준칙에 반드시 포함되어야 합니다(시행령 제19조 제1항 제14호).\n㉤ 관리규약의 제정·개정 신고는 시·도지사가 아닌 '시장·군수·구청장'에게 하여야 합니다.",
+                keyPoints: [
+                    "㉠ (오답) 준칙 제정 ➔ 시·도지사",
+                    "㉡ (오답) 장충금 요율/사용절차 ➔ 관리규약 준칙 필수 포함사항",
+                    "㉤ (오답) 관리규약 제·개정 신고 ➔ 시장·군수·구청장"
+                ],
+                legalGround: "「공동주택관리법」 제18조, 제19조 및 동법 시행령 제19조, 제20조"
+            },
+            {
+                id: 5,
+                chapter: "제2장: 공동주택관리법의 총칙 및 관리규약",
+                type: "subjective",
+                question: "공동주택관리법 제2조 정의 규정의 일부이다. ( )에 들어갈 용어를 쓰시오.",
+                box: "‘혼합주택단지’란 분양을 목적으로 한 공동주택과 ( ㉠ )이(가) 함께 있는 공동주택단지를 말한다.",
+                inputs: [
+                    { id: "ans_5_1", label: "㉠", correct: ["임대주택"] }
+                ],
+                explanation: "'혼합주택단지'란 분양을 목적으로 한 공동주택과 「민간임대주택에 관한 특별법」 또는 「공공주택 특별법」에 따른 '임대주택'이 함께 있는 공동주택단지를 말합니다.",
+                keyPoints: [
+                    "혼합주택단지 = 분양 공동주택 + 임대주택"
+                ],
+                legalGround: "「공동주택관리법」 제2조 제1항 제5호"
+            },
+            {
+                id: 6,
+                chapter: "제2장: 공동주택관리법의 총칙 및 관리규약",
+                type: "subjective",
+                question: "공동주택관리법령상 관리규약의 제정 및 개정 등 신고에 관한 설명이다. ( )에 들어갈 아라비아 숫자를 쓰시오.",
+                box: "법 제19조 제1항에 따른 신고를 하려는 입주자대표회의의 회장은 관리규약이 제정·개정되거나 입주자대표회의가 구성·변경된 날부터 ( ㉠ )일 이내에 신고서를 시장·군수·구청장에게 제출해야 한다.",
+                inputs: [
+                    { id: "ans_6_1", label: "㉠", correct: ["30", "30일"] }
+                ],
+                explanation: "입주자대표회의 회장은 관리규약이 제정·개정되거나 입주자대표회의가 구성 또는 변경된 날부터 30일 이내에 시장·군수·구청장에게 신고하여야 합니다.",
+                keyPoints: [
+                    "관리규약 제정·개정 / 입대위 구성·변경 신고기한 ➔ 30일 이내"
+                ],
+                legalGround: "「공동주택관리법 시행령」 제19조 제1항"
+            },
+            {
+                id: 7,
+                chapter: "제3장: 공동주택의 관리방법",
+                type: "mcq",
+                question: "공동주택관리법령상 의무관리대상 전환 공동주택에 관한 설명으로 옳지 않은 것을 모두 고른 것은?",
+                box: "㉠ 의무관리대상 전환 신고를 관리인이 하지 않는 경우 입주자등의 10분의 1 이상이 연서하여 신고할 수 있다.\n㉡ 의무관리대상 전환 공동주택의 입주자등은 관리규약의 제정 신고가 수리된 날부터 3개월 이내에 입주자대표회의를 구성하여야 한다.\n㉢ 전환 공동주택의 입주자등은 입주자대표회의의 구성 신고가 수리된 날부터 6개월 이내에 공동주택의 관리 방법을 결정하여야 한다.\n㉣ 위탁관리하기로 결정한 경우, 구성 신고가 수리된 날부터 3개월 이내에 주택관리업자를 선정하여야 한다.\n㉤ 공동주택을 제외할 것을 정한 경우 시장·군수·구청장에게 의무관리대상 제외 신고를 해야 한다.",
+                options: [
+                    "① ㉠, ㉡, ㉢",
+                    "② ㉠, ㉣, ㉤",
+                    "③ ㉢, ㉣",
+                    "④ ㉡, ㉣, ㉤",
+                    "⑤ ㉢, ㉣, ㉤"
+                ],
+                answer: 2, // ③ (㉢, ㉣)
+                explanation: "㉢ 구성 신고가 수리된 날부터 '3개월 이내'에 관리방법을 결정하여야 합니다(시행령 제6조의2 제4항).\n㉣ 위탁관리 결정 시 구성 신고 수리일이 아니라 '관리방법이 결정된 날부터 6개월 이내'에 주택관리업자를 선정하여야 합니다(시행령 제6조의2 제5항).\n따라서 옳지 않은 지문은 ㉢, ㉣입니다.",
+                keyPoints: [
+                    "㉡ (올바름) 제정신고 수리 후 3개월 이내 입대위 구성",
+                    "㉢ (오답) 구성신고 수리 후 3개월 이내 관리방법 결정",
+                    "㉣ (오답) 관리방법 결정일로부터 6개월 이내 주택관리업자 선정"
+                ],
+                legalGround: "「공동주택관리법」 제10조의2 및 동법 시행령 제6조의2"
+            },
+            {
+                id: 8,
+                chapter: "제3장: 공동주택의 관리방법",
+                type: "mcq",
+                question: "공동주택관리법령상 공동주택관리에 관한 내용으로 옳은 것은?",
+                box: "",
+                options: [
+                    "① 사업주체는 회장으로부터 주택관리업자 선정을 통지받은 날부터 3개월 이내에 관리주체에게 인계하여야 한다.",
+                    "② 입주자대표회의의 회장은 관리방법을 결정한 경우 이를 사업주체에게 통지하고, 관할 시·도지사에게 신고하여야 한다.",
+                    "③ 공동주택을 공동관리할 것을 결정한 때에는 10일 이내에 그 내용을 시·도지사에게 신고해야 한다.",
+                    "④ 공동주택 관리방법 결정은 입주자대표회의의 10분의 1 이상이 서면제안하고 3분의 1 이상의 동의가 있어야 한다.",
+                    "⑤ 관리방법을 위탁관리로 결정하여 주택관리업자를 선정하는 경우에는 그 계약기간은 장기수선계획의 조정주기를 고려하여야 한다."
+                ],
+                answer: 4, // ⑤
+                explanation: "① 사업주체는 관리주체에게 통지일로부터 '1개월 이내'에 인계하여야 합니다.\n②, ③ 신고는 시·도지사가 아닌 '시장·군수·구청장'에게 합니다.\n④ 관리방법 결정은 전체 입주자등의 과반수 찬성(동의)으로 의결합니다.\n⑤ 주택관리업자 선정 시 계약기간은 장기수선계획 조정주기(3년)를 고려하여 정합니다.",
+                keyPoints: [
+                    "사업주체의 관리인계 ➔ 통지받은 날부터 1개월 이내",
+                    "주택관리업자 계약기간 ➔ 장기수선계획 조정주기(3년) 고려"
+                ],
+                legalGround: "「공동주택관리법 시행령」 제5조 제2항, 제10조"
+            },
+            {
+                id: 9,
+                chapter: "제3장: 공동주택의 관리방법",
+                type: "mcq",
+                question: "공동주택관리법령상 자치관리에 관한 설명으로 옳지 않은 것을 모두 고른 것은?",
+                box: "㉠ 자치관리할 것을 정한 경우, 회장을 자치관리기구 대표자로 선임하고 자치관리기구를 구성하여야 한다.\n㉡ 자치관리로 변경하는 경우 그 위탁관리 종료일 다음 날부터 6개월 이내에 장비를 갖춘 자치관리기구를 구성해야 한다.\n㉢ 자치관리기구 관리사무소장은 입주자등 과반수 찬성으로 선임한다.\n㉣ 관리주체가 입주자대표회의의 동의를 받아 전문용역업체에 용역하는 경우 해당 기술인력을 갖추지 않을 수 있다.\n㉤ 자치관리기구는 입주자대표회의 감독을 받지 않는다.",
+                options: [
+                    "① ㉠",
+                    "② ㉠, ㉡",
+                    "③ ㉠, ㉡, ㉢",
+                    "④ ㉠, ㉡, ㉢, ㉣",
+                    "⑤ ㉠, ㉡, ㉢, ㉣, ㉤"
+                ],
+                answer: 4, // ⑤ (전부 오류)
+                explanation: "㉠ 관리사무소장을 자치관리기구 대표자로 선임합니다.\n㉡ 자치관리 변경 시 위탁관리 종료일까지 자치관리기구를 구성해야 합니다.\n㉢ 자치관리기구 소장은 입주자대표회의 구성원 과반수 찬성으로 선임합니다.\n㉣ 기술인력 용역 시 '기술인력을 갖춘 것으로 본다' 규정입니다.\n㉤ 자치관리기구는 입주자대표회의의 감독을 받습니다.",
+                keyPoints: [
+                    "자치관리기구 대표자 ➔ 관리사무소장",
+                    "소장 선임 ➔ 입주자대표회의 구성원 과반수 찬성",
+                    "입주자대표회의의 감독을 받음"
+                ],
+                legalGround: "「공동주택관리법」 제13조 제1항 내지 제4항"
+            },
+            {
+                id: 10,
+                chapter: "제3장: 공동주택의 관리방법",
+                type: "mcq",
+                question: "공동주택관리법령상 위탁관리에 관한 설명으로 옳지 않은 것을 모두 고른 것은?",
+                box: "㉠ 10분의 1 이상이 서면요구하는 신규업체가 있으면 수의계약으로 선정할 수 있다.\n㉡ 수의계약 시 계약조건 등에 대하여 입주자등의 3분의 2 이상 동의를 얻어야 한다.\n㉢ 주택관리업자 선정 시 입주자대표회의 감사는 입찰과정에 참관하여야 한다.\n㉣ 계약기간은 하자담보책임기간을 고려하여야 한다.\n㉤ 기존 주택관리업자 참가를 제한 요구하려면 입주자대표회의 구성원 과반수 서면동의가 있어야 한다.",
+                options: [
+                    "① ㉠",
+                    "② ㉠, ㉡",
+                    "③ ㉠, ㉡, ㉢",
+                    "④ ㉠, ㉡, ㉢, ㉣",
+                    "⑤ ㉠, ㉡, ㉢, ㉣, ㉤"
+                ],
+                answer: 4, // ⑤ (모두 규정과 다름)
+                explanation: "㉠ 신규업체 서면요구 수의계약 규정은 없음.\n㉡ 기존 주택관리업자 수의계약 재계약 시 입주자등 과반수 동의 필요.\n㉢ 입대위 감사는 참관할 수 있다(선택/의무X).\n㉣ 계약기간은 '장기수선계획 조정주기'를 고려하여 정함.\n㉤ 기존 업자의 경쟁입찰 참가 제한은 '전체 입주자등 과반수 서면동의'로 요구함.",
+                keyPoints: [
+                    "기존업자 입찰참가 제한 요구 ➔ 전체 입주자등 과반수 서면동의",
+                    "계약기간 ➔ 장기수선계획 조정주기 고려"
+                ],
+                legalGround: "「공동주택관리법 시행령」 제5조 제2항"
+            },
+            {
+                id: 11,
+                chapter: "제3장: 공동주택의 관리방법",
+                type: "mcq",
+                question: "공동주택관리법령상 시장·군수·구청장이 주택관리업자의 등록을 반드시 말소하여야 하는 사유(필요적 말소)로 옳은 것은?",
+                box: "",
+                options: [
+                    "① 등록요건에 미달하게 된 경우",
+                    "② 고의로 공동주택을 잘못 관리하여 소유자 및 사용자에게 재산상의 손해를 입힌 경우",
+                    "③ 매년 12월 31일을 기준으로 최근 3년간 공동주택 관리 실적이 없는 경우",
+                    "④ 입주자등의 감사요청에 의한 지방자치단체의 감사를 거부·방해 또는 기피한 경우",
+                    "⑤ 최근 3년간 2회 이상의 영업정지처분을 받은 자로서 그 정지처분 기간이 합산하여 12개월을 초과한 경우"
+                ],
+                answer: 4, // ⑤
+                explanation: "공동주택관리법 제53조 제1항 단서에 따라 '최근 3년간 2회 이상의 영업정지처분을 받은 자로서 그 정지처분을 받은 기간이 합산하여 12개월을 초과한 경우'에는 등록을 반드시 말소하여야 하는 필요적 말소 사유에 해당합니다.",
+                keyPoints: [
+                    "필요적 말소 사유: 거짓/부정 등록, 명의대여, 영업정지 기간 중 영업, 3년간 2회 이상 영업정지 합산 12개월 초과"
+                ],
+                legalGround: "「공동주택관리법」 제53조 제1항 단서"
+            },
+            {
+                id: 12,
+                chapter: "제3장: 공동주택의 관리방법",
+                type: "mcq",
+                question: "공동주택의 입주자대표회의에서 인접한 공동주택단지와 공동관리하거나 500세대 이상의 단위로 구분관리하고자 하는 경우에 관한 설명으로 틀린 것은?",
+                box: "",
+                options: [
+                    "① 공동관리의 경우에는 단지별로 입주자등의 과반수 서면동의를 얻어야 한다.",
+                    "② 서면동의를 얻을 때에는 필요성 등에 대해 통지해야 한다.",
+                    "③ 공동관리하거나 구분관리할 것을 결정한 때에는 지체 없이 그 내용을 사업주체에게 통보하여야 한다.",
+                    "④ 구분관리의 경우 단위별 입주자등의 과반수 서면동의를 얻어야 하나 관리규약으로 달리 정할 수 있다.",
+                    "⑤ 서면동의를 얻을 때에는 비용변동의 추정치에 대해 통지해야 한다."
+                ],
+                answer: 2, // ③
+                explanation: "공동관리 또는 구분관리를 결정한 경우에는 사업주체가 아니라 '시장·군수·구청장'에게 통보(신고)하여야 합니다.",
+                keyPoints: [
+                    "공동관리/구분관리 결정 통보 대상 ➔ 시장·군수·구청장 (사업주체 X)"
+                ],
+                legalGround: "「공동주택관리법 시행령」 제9조"
+            },
+            {
+                id: 13,
+                chapter: "제3장: 공동주택의 관리방법",
+                type: "mcq",
+                question: "공동주택관리법령상 혼합주택단지에서 입주자대표회의와 임대사업자가 공동으로 결정하지 않고 각자 결정할 수 있는 사항은? (단, 분양 공동주택과 임대주택이 별도 동 배치, 각자 결정하기로 합의한 경우)",
+                box: "",
+                options: [
+                    "① 공동주택 관리방법의 결정",
+                    "② 공동주택 관리방법의 변경",
+                    "③ 장기수선계획의 조정",
+                    "④ 주택관리업자의 선정",
+                    "⑤ 장기수선충당금을 사용하는 주요 시설의 교체"
+                ],
+                answer: 4, // ⑤
+                explanation: "동별로 구분 배치되고 각자 결정하기로 합의한 경우, '장기수선충당금 및 특별수선충당금을 사용하는 주요 시설의 교체 및 보수'는 각자 결정할 수 있습니다.",
+                keyPoints: [
+                    "원칙: 혼합주택단지 관리방법, 주택관리업자 선정, 장기수선계획 조정 등 ➔ 공동 결정",
+                    "예외: 동별 구분 배치 + 합의 완료 시 ➔ 장충금/특충금 사용 주요시설 교체·보수 각자 결정 가능"
+                ],
+                legalGround: "「공동주택관리법」 제10조 제3항 및 동법 시행령 제8조"
+            },
+            {
+                id: 14,
+                chapter: "제3장: 공동주택의 관리방법",
+                type: "mcq",
+                question: "민간임대주택에 관한 특별법령상 주택임대관리업의 결격사유에 해당하지 않는 것은?",
+                box: "",
+                options: [
+                    "① 피성년후견인",
+                    "② 파산선고를 받고 복권되지 아니한 자",
+                    "③ 특별법을 위반하여 형의 집행유예를 선고받고 그 유예기간 중에 있는 사람",
+                    "④ 특별법에 따라 등록이 말소된 후 2년이 지나지 아니한 자",
+                    "⑤ 금고 이상의 실형을 선고받고 그 집행이 종료되거나 면제된 날부터 3년이 지난 사람"
+                ],
+                answer: 4, // ⑤
+                explanation: "금고 이상의 실형을 선고받고 그 집행이 종료되거나 면제된 날부터 '3년이 지난 사람'은 결격사유에서 벗어납니다(3년이 지나지 아니한 사람만 결격사유). 반면 ③의 '집행유예 선고 후 유예기간 중에 있는 사람'은 결격사유에 해당합니다.",
+                keyPoints: [
+                    "실형 집행종료/면제 후 3년 경과시 결격사유 해제 (3년 경과자는 결격자 아님)",
+                    "집행유예 기간 중인 사람은 결격사유에 해당"
+                ],
+                legalGround: "「민간임대주택에 관한 특별법」 제9조"
+            },
+            {
+                id: 15,
+                chapter: "제3장: 공동주택의 관리방법",
+                type: "mcq",
+                question: "민간임대주택에 관한 특별법령상 주택임대관리업에 관한 설명으로 옳은 것은?",
+                box: "",
+                options: [
+                    "① 위탁관리형 주택임대관리업은 소유자로부터 주택을 임차하여 자기책임으로 전대하는 형태이다.",
+                    "② 위탁관리형을 등록한 경우 자기관리형도 등록한 것으로 본다.",
+                    "③ 주택임대관리업 등록기준 자본금은 자기관리형 1억원, 위탁관리형 2억원이다.",
+                    "④ 주택임대관리업 등록기준 전문인력은 자기관리형 1명, 위탁관리형 2명이다.",
+                    "⑤ 주택임대관리업자는 등록사항이 변경된 경우 변경사유 발생일부터 15일 이내에 신고하여야 하며, 폐업하려면 폐업일 30일 이전에 말소신고를 하여야 한다."
+                ],
+                answer: 4, // ⑤
+                explanation: "① 자기관리형이 전대하는 방식임.\n② 자기관리형을 등록하면 위탁관리형도 등록된 것으로 봄.\n③ 자본금: 자기관리형 1.5억원 이상, 위탁관리형 5천만원 이상.\n④ 전문인력: 자기관리형 2명 이상, 위탁관리형 1명 이상.",
+                keyPoints: [
+                    "변경신고 ➔ 발생일부터 15일 이내",
+                    "폐업신고 ➔ 폐업일 30일 이전까지"
+                ],
+                legalGround: "「민간임대주택에 관한 특별법」 제6조, 제7조 및 동법 시행령 제4조"
+            },
+            {
+                id: 16,
+                chapter: "제3장: 공동주택의 관리방법",
+                type: "subjective",
+                question: "공동주택관리법령상 공동주택의 관리방법에 관한 설명이다. ( )에 들어갈 용어를 쓰시오.",
+                box: "입주자등은 의무관리대상 공동주택을 자치관리하거나 주택관리업자에게 ( ㉡ )하여 관리하여야 한다.",
+                inputs: [
+                    { id: "ans_16_1", label: "㉡", correct: ["위탁"] }
+                ],
+                explanation: "의무관리대상 공동주택의 입주자등은 해당 공동주택을 자치관리하거나 주택관리업자에게 위탁하여 관리하여야 합니다.",
+                keyPoints: [
+                    "의무관리대상 관리방법 = 자치관리 OR 위탁관리"
+                ],
+                legalGround: "「공동주택관리법」 제5조 제1항"
+            },
+            {
+                id: 17,
+                chapter: "제3장: 공동주택의 관리방법",
+                type: "subjective",
+                question: "공동주택관리법상 주택관리업의 등록에 관한 일부 규정이다. ( )에 들어갈 아라비아 숫자를 쓰시오.",
+                box: "주택관리업을 등록하려는 자는 자본금이 ( ㉠ )억원 이상으로서 대통령령으로 정하는 금액 이상일 것.",
+                inputs: [
+                    { id: "ans_17_1", label: "㉠", correct: ["2", "2억"] }
+                ],
+                explanation: "주택관리업을 등록하려는 자는 자본금이 2억원 이상이어야 합니다.",
+                keyPoints: [
+                    "주택관리업 등록 자본금 요건 ➔ 2억원 이상"
+                ],
+                legalGround: "「공동주택관리법」 제52조 제1항 제1호"
+            },
+            {
+                id: 18,
+                chapter: "제3장: 공동주택의 관리방법",
+                type: "subjective",
+                question: "공동주택관리법령상 주택관리업자에 대한 행정처분의 내용이다. ( )에 들어갈 숫자를 쓰시오.",
+                box: "주택관리업자가 고의 또는 과실로 공동주택을 잘못 관리하여 손해를 입힌 경우 영업정지를 갈음하여 ( ㉡ )천만원 이하의 과징금을 부과할 수 있다.",
+                inputs: [
+                    { id: "ans_18_1", label: "㉡", correct: ["2", "2천"] }
+                ],
+                explanation: "영업정지처분을 갈음하여 부과할 수 있는 과징금의 상한액은 2천만원 이하입니다.",
+                keyPoints: [
+                    "주택관리업자 영업정지 대체 과징금 ➔ 2천만원 이하"
+                ],
+                legalGround: "「공동주택관리법」 제54조 제1항"
+            },
+            {
+                id: 19,
+                chapter: "제4장: 공동주택의 관리조직",
+                type: "mcq",
+                question: "공동주택관리법상 입주자대표회의의 구성 및 운영에 관한 설명으로 옳지 않은 것은?",
+                box: "",
+                options: [
+                    "① 입주자대표회의는 4명 이상으로 구성하되 동별 세대수에 비례하여 선거구에 따라 선출된 대표자로 구성한다.",
+                    "② 사용자는 입주자인 동별 대표자 후보자가 있는 선거구라도 해당 단지 안에서 계속하여 3개월 이상 거주하고 있으면 선출될 수 있다.",
+                    "③ 사용자인 동별 대표자는 입주자 후보자가 없는 경우로서 서면동의를 얻으면 회장이 될 수 있다.",
+                    "④ 공동체 생활의 활성화 사항은 입주자대표회의 구성원 과반수 찬성으로 의결한다.",
+                    "⑤ 주택관리업자가 관리하는 경우 주택관리업자의 직원인사 및 노무관리에 부당하게 간섭해서는 안 된다."
+                ],
+                answer: 1, // ②
+                explanation: "사용자(임차인 등)는 입주자인 후보자가 '없는' 선거구에서만 요건(3개월 이상 계속 거주 등)을 갖추어 동별 대표자로 선출될 수 있습니다. 후보자가 '있는' 선거구에서는 사용자가 선출될 수 없습니다.",
+                keyPoints: [
+                    "사용자의 동대표 선출 조건 ➔ 입주자인 후보자가 '없는' 선거구에 한함"
+                ],
+                legalGround: "「공동주택관리법」 제14조 제3항"
+            },
+            {
+                id: 20,
+                chapter: "제4장: 공동주택의 관리조직",
+                type: "mcq",
+                question: "공동주택관리법령상 입주자대표회의의 구성원인 동별 대표자가 될 수 없는 사람(결격자)을 모두 고른 것은?",
+                box: "㉠ 제출 마감일 기준 2개월째 계속 거주 중인 소유자 (최초 입주자대표회의 구성 시)\n㉡ 제출 마감일 기준 1개월 전 복권된 소유자\n㉢ 소유자의 3촌 조카로서 서면 위임받아 대리권이 있는 자\n㉣ 주택법 위반 징역 1년, 집행유예 2년 선고받고 유예기간 중인 소유자",
+                options: [
+                    "① ㉠, ㉢",
+                    "② ㉡, ㉣",
+                    "③ ㉢, ㉣",
+                    "④ ㉠, ㉢, ㉣",
+                    "⑤ ㉠, ㉡, ㉢, ㉣"
+                ],
+                answer: 2, // ③ (㉢, ㉣)
+                explanation: "㉠ 최초 입주자대표회의 구성 시에는 거주기간 요건(6개월) 미적용되므로 선출 가능.\n㉡ 복권되었으므로 결격사유 해제됨.\n㉢ 소유자를 대리할 수 있는 자는 배우자 또는 직계존비속에 한합니다. 3촌 조카는 대리 불가이므로 결격자.\n㉣ 집행유예 기간 중인 자는 결격자.",
+                keyPoints: [
+                    "소유자 대리 가능 범위 ➔ 배우자 및 직계존비속에 한함 (조카 X)",
+                    "집행유예 기간 중 ➔ 결격사유"
+                ],
+                legalGround: "「공동주택관리법」 제14조 제3항 및 동법 시행령 제11조 제4항"
+            },
+            {
+                id: 21,
+                chapter: "제4장: 공동주택의 관리조직",
+                type: "mcq",
+                question: "공동주택관리법령상 입주자대표회의 구성에 관한 설명으로 옳은 것은?",
+                box: "",
+                options: [
+                    "① 선거구는 2개 동 이상 묶어서 정할 수 있으나, 층별로 구획할 수는 없다.",
+                    "② 선거관리위원 사퇴자로서 마감일 기준 남은 임기 중인 사람은 동별 대표자가 될 수 있다.",
+                    "③ 임기 중 관리비를 3개월 이상 연속 체납한 경우 과반수 찬성으로 해임한다.",
+                    "④ 500세대 미만 공동주택의 회장은 관리규약으로 정한 바가 있으면 과반수 찬성으로 선출하며, 최다득표자가 2인 이상이면 추첨으로 선출한다.",
+                    "⑤ 사용자의 결격사유는 대리하는 자에게 미치지 않는다."
+                ],
+                answer: 3, // ④
+                explanation: "① 선거구는 2개 동 이상 묶거나 층별로 구획하여 정할 수 있습니다.\n② 선관위원 사퇴 후 남은 임기 중 동대표 불가능.\n③ 3개월 연속 체납은 당연퇴임 사유.\n④ 500세대 미만 입대위 회장은 관리규약으로 정한 바에 따라 구성원 과반수 찬성으로 선출 가능하며 동수시 추첨.\n⑤ 소유자/사용자의 결격사유는 대리자에게도 미칩니다.",
+                keyPoints: [
+                    "500세대 미만 회장 선출 ➔ 관리규약 정한 바에 따라 구성원 과반수 찬성 선출 가능"
+                ],
+                legalGround: "「공동주택관리법 시행령」 제12조 제2항"
+            },
+            {
+                id: 22,
+                chapter: "제4장: 공동주택의 관리조직",
+                type: "mcq",
+                question: "공동주택관리법령상 선거관리위원회 위원이 될 수 없는 사람을 모두 고른 것은?",
+                box: "㉠ 피성년후견인 또는 피한정후견인\n㉡ 동별 대표자 후보자의 직계존비속\n㉢ 동별 대표자에서 퇴임한 자로서 그 남은 임기 중에 있는 사람\n㉣ 선거관리위원회 위원에서 해임된 사람으로서 남은 임기 중에 있는 사람",
+                options: [
+                    "① ㉠",
+                    "② ㉠, ㉡",
+                    "③ ㉠, ㉡, ㉢",
+                    "④ ㉡, ㉢, ㉣",
+                    "⑤ ㉠, ㉡, ㉢, ㉣"
+                ],
+                answer: 4, // ⑤
+                explanation: "보기 ㉠, ㉡, ㉢, ㉣ 모두 「공동주택관리법 시행령」 제15조 제2항에 명시된 선거관리위원회 위원의 결격사유에 해당합니다.",
+                keyPoints: [
+                    "동대표 후보자의 배우자 및 직계존비속 ➔ 선관위원 결격",
+                    "퇴임/해임되어 남은 임기 중인 사람 ➔ 선관위원 결격"
+                ],
+                legalGround: "「공동주택관리법 시행령」 제15조 제2항"
+            },
+            {
+                id: 23,
+                chapter: "제4장: 공동주택의 관리조직",
+                type: "mcq",
+                question: "공동주택관리법령상 입주자대표회의의 권한 및 의결사항에 관한 설명으로 옳은 것은?",
+                box: "",
+                options: [
+                    "① 입주자대표회의는 공동주택관리규약 제정안을 제안한다.",
+                    "② 위탁관리를 하는 경우 위탁관리기구 직원의 임면에 관한 사항을 결정한다.",
+                    "③ 관리규약 위임 사항 제정·개정 및 폐지를 구성원 3분의 2 찬성으로 의결한다.",
+                    "④ 전유부분 보수·교체·개량은 의결사항에 포함된다.",
+                    "⑤ 입주자대표회의는 공용시설물의 이용료 부과기준을 결정한다."
+                ],
+                answer: 4, // ⑤
+                explanation: "공용시설물의 이용료 부과기준 결정은 입주자대표회의의 의결사항에 해당합니다.\n① 관리규약 제정안 제안은 사업주체 또는 입주자등 10분의 1 이상.\n② 위탁관리 직원의 임면은 주택관리업자가 함.\n③ 관리규약 위임사항은 구성원 과반수 찬성 의결.\n④ 전유부분 보수는 소유자 개인 영역임.",
+                keyPoints: [
+                    "공용시설물 이용료 부과기준 결정 ➔ 입주자대표회의 의결사항"
+                ],
+                legalGround: "「공동주택관리법 시행령」 제14조 제2항 제8호"
+            },
+            {
+                id: 24,
+                chapter: "제4장: 공동주택의 관리조직",
+                type: "mcq",
+                question: "공동주택관리법령상 입주자대표회의 구성원 과반수 찬성으로 의결하는 사항을 모두 고른 것은?",
+                box: "㉠ 선출절차를 정한 관리규약 개정의 확정\n㉡ 관리방법 변경의 확정\n㉢ 관리비등 집행을 위한 사업계획 및 예산의 승인\n㉣ 주민공동시설(어린이집 등 제외) 위탁운영의 제안\n㉤ 지방자치단체의 조례로 정하는 사항",
+                options: [
+                    "① ㉠, ㉡",
+                    "② ㉡, ㉢",
+                    "③ ㉡, ㉤",
+                    "④ ㉢, ㉣",
+                    "⑤ ㉣, ㉤"
+                ],
+                answer: 3, // ④ (㉢, ㉣)
+                explanation: "㉠, ㉡은 전체 입주자등 과반수의 찬성(동의)으로 결정합니다.\n㉢ 사업계획 및 예산 승인, ㉣ 주민공동시설 위탁운영 제안은 입주자대표회의 구성원 과반수 찬성으로 의결합니다.",
+                keyPoints: [
+                    "관리비 집행 사업계획/예산 승인 ➔ 입대위 구성원 과반수 찬성",
+                    "관리규약 개정/관리방법 변경 ➔ 전체 입주자등 과반수 찬성"
+                ],
+                legalGround: "「공동주택관리법 시행령」 제14조 제2항"
+            },
+            {
+                id: 25,
+                chapter: "제4장: 공동주택의 관리조직",
+                type: "mcq",
+                question: "공동주택관리법령상 입주자대표회의에 관한 설명으로 옳은 것은?",
+                box: "",
+                options: [
+                    "① 사용자인 동별 대표자가 과반수인 경우 비용지출을 수반하는 장기수선계획 수립/조정은 전체 입주자 과반수 서면동의를 받아 의결한다.",
+                    "② 비용수반 장기수선계획 수립에 관해 입주자등 1/10 요청 시 회의를 소집한다.",
+                    "③ 10분의 1 이상이 요청하는 때 30일 이내 소집해야 한다.",
+                    "④ 회의 개최 후 회의록을 작성하여 이를 보관하여야 한다. 중계나 방청하게 할 수 있다.",
+                    "⑤ 300세대 미만의 관리주체는 무조건 회의록을 공개해야 한다."
+                ],
+                answer: 0, // ①
+                explanation: "사용자인 동별 대표자가 과반수인 입주자대표회의에서 비용지출을 수반하는 장기수선계획 수립 또는 조정을 의결하려면 '전체 입주자(소유자) 과반수의 서면동의'를 얻어야 합니다.",
+                keyPoints: [
+                    "사용자 과반수 입대위에서 장기수선계획 조정 의결 ➔ 전체 입주자 과반수 서면동의 필수"
+                ],
+                legalGround: "「공동주택관리법」 제14조 제8항"
+            },
+            {
+                id: 26,
+                chapter: "제4장: 공동주택의 관리조직",
+                type: "mcq",
+                question: "공동주택관리법령상 관리주체에 관한 설명으로 옳지 않은 것을 모두 고른 것은?",
+                box: "㉠ 임대사업자는 관리주체가 될 수 없다.\n㉡ 입주자대표회의는 관리주체로서 법에 따라 관리해야 하며, 위반 시 500만원 이하 과태료.\n㉢ 관리주체는 관리규약으로 정한 사항을 의결한다.\n㉣ 100세대 이상 공동주택 관리주체는 회의록을 공개해야 한다.\n㉤ 관리주체는 공용부분을 사용할 수 있다.",
+                options: [
+                    "① ㉠",
+                    "② ㉠, ㉡",
+                    "③ ㉠, ㉡, ㉢",
+                    "④ ㉠, ㉡, ㉢, ㉣",
+                    "⑤ ㉠, ㉡, ㉢, ㉣, ㉤"
+                ],
+                answer: 3, // ④ (㉠, ㉡, ㉢, ㉣)
+                explanation: "㉠ 임대사업자는 관리주체에 포함됩니다.\n㉡ 입주자대표회의는 의결기구이지 관리주체가 아닙니다.\n㉢ 관리주체는 의결사항을 '집행'합니다.\n㉣ 회의록 작성 및 공개 주체는 관리주체가 아닌 입주자대표회의입니다.",
+                keyPoints: [
+                    "관리주체 = 자치관리기구 대표 소장, 주택관리업자, 임대사업자 등 (입대위 X)"
+                ],
+                legalGround: "「공동주택관리법」 제2조 제1항 제10호"
+            },
+            {
+                id: 27,
+                chapter: "제4장: 공동주택의 관리조직",
+                type: "mcq",
+                question: "공동주택관리법령상 공동주택의 관리에 관한 설명으로 옳은 것은?",
+                box: "",
+                options: [
+                    "① 장기수선충당금 사용하는 공사는 입주자대표회의가 사업자를 선정하고 집행한다.",
+                    "② 관리주체 또는 입주자대표회의는 계약서를 1개월 이내에 공개하여야 한다.",
+                    "③ 관리비등의 수입 금전을 집행하기 위해 사업자 선정 시 경쟁입찰로 하여야 한다.",
+                    "④ 입주자대표회의 회장이 입찰과정을 참관해야 한다.",
+                    "⑤ 새로운 사업자 선정을 위해 기존 사업자 참가가 제한 요구 시 3/2 서면동의가 필요하다."
+                ],
+                answer: 2, // ③
+                explanation: "공동주택 관리주체 또는 입주자대표회의가 주택관리업자나 사업자를 선정할 때에는 원칙적으로 경쟁입찰 방식으로 선정하여야 합니다.\n① 장기수선공사는 입대위가 사업자를 선정하고, 집행은 관리주체가 합니다.\n② 계약서는 체결일부터 1개월 이내에 공개하여야 합니다.",
+                keyPoints: [
+                    "사업자 선정 원칙 ➔ 경쟁입찰"
+                ],
+                legalGround: "「공동주택관리법」 제25조"
+            },
+            {
+                id: 28,
+                chapter: "제4장: 공동주택의 관리조직",
+                type: "mcq",
+                question: "공동주택관리법령상 관리주체가 사업자를 선정하고 집행하는 사항은 모두 몇 개인가?",
+                box: "㉠ 청소, 경비, 소독, 승강기유지의 용역\n㉡ 장기수선충당금을 사용하는 장기수선공사\n㉢ 주민공동시설의 위탁, 물품 구입과 매각\n㉣ 어린이집 등 임대에 따른 잡수입의 취득\n㉤ 전기안전관리를 위한 용역\n㉥ 보험계약",
+                options: [
+                    "① 2개",
+                    "② 3개",
+                    "③ 4개",
+                    "④ 5개",
+                    "⑤ 6개"
+                ],
+                answer: 1, // ② (3개: ㉠, ㉢, ㉥)
+                explanation: "관리주체가 선정하고 집행하는 사항: ㉠ 청소·경비·소독·승강기유지 용역, ㉢ 주민공동시설 위탁/물품 구입·매각, ㉥ 보험계약 (총 3개).\n(㉡ 장기수선공사, ㉤ 전기안전관리 용역은 입주자대표회의가 사업자를 선정하고 관리주체가 집행함)",
+                keyPoints: [
+                    "관리주체 선정 및 집행 ➔ 청소, 경비, 소독, 승강기유지, 물품구입/매각, 주민공동시설위탁, 보험계약"
+                ],
+                legalGround: "「공동주택관리법 시행령」 제25조 제1항 제1호"
+            },
+            {
+                id: 29,
+                chapter: "제4장: 공동주택의 관리조직",
+                type: "mcq",
+                question: "공동주택관리법령상 의무관리대상 공동주택의 관리주체에 대한 회계감사에 관한 설명으로 옳지 않은 것은?",
+                box: "",
+                options: [
+                    "① 회계감사는 회계감사기준에 따라 실시되어야 한다.",
+                    "② 입주자등의 10분의 1 이상이 연서하여 감사인 추천을 요구하는 경우, 입주자대표회의는 의뢰 후 추천받은 자 중에서 선정하여야 한다.",
+                    "③ 회계감사를 받은 경우 감사보고서를 제출받은 날부터 1개월 이내에 보고 및 인터넷 등에 공개해야 한다.",
+                    "④ 300세대 이상으로서 해당 연도에 회계감사를 받지 않기로 과반수의 서면동의를 받은 경우 받지 않아도 된다.",
+                    "⑤ 회계감사 감사인은 완료일부터 1개월 이내에 결과를 시장·군수·구청장에게 제출하고 정보시스템에 공개해야 한다."
+                ],
+                answer: 3, // ④
+                explanation: "300세대 이상인 공동주택이라도 해당 연도에 회계감사를 받지 아니하기로 입주자등의 '3분의 2 이상'의 서면동의를 받은 경우에는 회계감사를 받지 아니할 수 있습니다(과반수 X).",
+                keyPoints: [
+                    "300세대 이상 회계감사 제외 요건 ➔ 입주자등 3분의 2 이상의 서면동의"
+                ],
+                legalGround: "「공동주택관리법」 제26조 제1항 단서"
+            },
+            {
+                id: 30,
+                chapter: "제4장: 공동주택의 관리조직",
+                type: "mcq",
+                question: "공동주택관리법령상 관리사무소장의 업무와 손해배상책임에 관한 설명으로 옳지 않은 것은?",
+                box: "",
+                options: [
+                    "① 관리사무소장은 하자의 발견 및 청구 등 비용이 수반되는 업무를 입주자대표회의 의결 없이 집행할 수 있다.",
+                    "② 안전관리계획 조정은 3년마다 하되 서면동의 시 3년 지나기 전 조정 가능하다.",
+                    "③ 고의 또는 과실로 입주자등에 손해 입힌 경우 배상 책임이 있다.",
+                    "④ 관리사무소장은 징수 및 지출 관리에 있어 입주자대표회의를 대리해 재판상/외 행위를 할 수 있다.",
+                    "⑤ 운영·관리·유지·보수·교체·개량 업무를 집행한다."
+                ],
+                answer: 0, // ①
+                explanation: "관리사무소장은 하자의 발견 및 하자보수의 청구, 장기수선계획의 조정 등 '비용이 수반되는 업무'를 집행할 때에는 반드시 입주자대표회의의 의결을 거쳐야 합니다.",
+                keyPoints: [
+                    "비용 수반 업무 집행 ➔ 입주자대표회의 의결 필수"
+                ],
+                legalGround: "「공동주택관리법」 제64조 제2항"
+            },
+            {
+                id: 31,
+                chapter: "제4장: 공동주택의 관리조직",
+                type: "mcq",
+                question: "민간임대주택에 관한 특별법령상 임대주택의 관리에 관한 설명으로 옳은 것은?",
+                box: "",
+                options: [
+                    "① 임대사업자가 양도하는 경우 특별수선충당금을 최초로 구성되는 입주자대표회의에 넘겨주어야 한다.",
+                    "② 임차인대표회의는 부회장 1명, 이사 1명, 감사 1명을 필수 선출해야 한다.",
+                    "③ 임대사업자가 자체관리 시 국토교통부장관에게 신고해야 한다.",
+                    "④ 소집하려는 경우 3일 전까지 목적/일시/장소 등을 공고해야 한다.",
+                    "⑤ 임대사업자는 관리비 등 경비를 받을 수 없다."
+                ],
+                answer: 0, // ①
+                explanation: "임대사업자가 민간임대주택을 양도하는 경우에는 「공동주택관리법」에 따라 적립한 특별수선충당금을 최초로 구성되는 입주자대표회의에 넘겨주어야 합니다.",
+                keyPoints: [
+                    "임대주택 양도 시 특별수선충당금 ➔ 최초 구성 입주자대표회의에 인계"
+                ],
+                legalGround: "「민간임대주택에 관한 특별법」 제53조 제4항"
+            },
+            {
+                id: 32,
+                chapter: "제4장: 공동주택의 관리조직",
+                type: "subjective",
+                question: "공동주택관리법령상 입주자대표회의 구성에 관한 설명이다. ( )에 들어갈 아라비아 숫자와 용어를 쓰시오.",
+                box: "입주자대표회의는 ( ㉠ )명 이상으로 구성하되, 동별 세대수에 비례하여 ( ㉡ )(으)로 정한 선거구에 따라 선출된 대표자로 구성한다.",
+                inputs: [
+                    { id: "ans_32_1", label: "㉠", correct: ["4", "4명"] },
+                    { id: "ans_32_2", label: "㉡", correct: ["관리규약"] }
+                ],
+                explanation: "입주자대표회의는 4명 이상으로 구성하되, 동별 세대수에 비례하여 관리규약으로 정한 선거구에 따라 선출된 대표자로 구성합니다.",
+                keyPoints: [
+                    "입대위 최소 인원 ➔ 4명 이상",
+                    "선거구 결정 근거 ➔ 관리규약"
+                ],
+                legalGround: "「공동주택관리법」 제14조 제1항"
+            },
+            {
+                id: 33,
+                chapter: "제4장: 공동주택의 관리조직",
+                type: "subjective",
+                question: "공동주택관리법령상 선거관리위원회에 관한 내용이다. ( )에 들어갈 숫자를 쓰시오.",
+                box: "500세대 이상인 의무관리대상 공동주택의 경우 위원장을 포함하여 ( ㉠ )명 이상 ( ㉡ )명 이하의 위원으로 구성한다.",
+                inputs: [
+                    { id: "ans_33_1", label: "㉠", correct: ["5", "5명"] },
+                    { id: "ans_33_2", label: "㉡", correct: ["9", "9명"] }
+                ],
+                explanation: "500세대 이상인 공동주택의 선거관리위원회는 위원장을 포함하여 5명 이상 9명 이하의 위원으로 구성합니다. (500세대 미만은 3명 이상 9명 이하)",
+                keyPoints: [
+                    "500세대 이상 선관위 인원 ➔ 5명 이상 9명 이하"
+                ],
+                legalGround: "「공동주택관리법 시행령」 제15조 제1항"
+            },
+            {
+                id: 34,
+                chapter: "제4장: 공동주택의 관리조직",
+                type: "subjective",
+                question: "공동주택관리법령상 동별 대표자 등의 결격사유 관련이다. ( )에 들어갈 용어를 쓰시오.",
+                box: "공동주택 소유자의 결격사유는 대리하는 자에게 미치며, 공유(共有)인 경우 지분의 ( ㉠ )을(를) 소유한 자의 결격사유를 기준으로 한다.",
+                inputs: [
+                    { id: "ans_34_1", label: "㉠", correct: ["과반", "과반수"] }
+                ],
+                explanation: "공동주택의 소유자가 공유인 경우에는 지분의 과반을 소유한 자의 결격사유를 기준으로 판단합니다.",
+                keyPoints: [
+                    "공유 지분 소유자의 결격사유 기준 ➔ 지분 과반 소유자"
+                ],
+                legalGround: "「공동주택관리법 시행령」 제11조 제4항"
+            },
+            {
+                id: 35,
+                chapter: "제4장: 공동주택의 관리조직",
+                type: "subjective",
+                question: "공동주택관리법령상 관리주체에 대한 회계감사에 관한 내용이다. ( )에 들어갈 숫자와 용어를 쓰시오.",
+                box: "관리주체는 매 회계연도 종료 후 ( ㉠ )개월 이내에 재무상태표, 운영성과표, 이익잉여금처분계산서, ( ㉡ )에 대하여 회계감사를 받아야 한다.",
+                inputs: [
+                    { id: "ans_35_1", label: "㉠", correct: ["9", "9개월"] },
+                    { id: "ans_35_2", label: "㉡", correct: ["주석"] }
+                ],
+                explanation: "회계연도 종료 후 9개월 이내에 재무상태표, 운영성과표, 이익잉여금처분계산서(또는 결손금처리계산서), 주석으로 구성된 재무제표에 대해 회계감사를 받아야 합니다.",
+                keyPoints: [
+                    "회계감사 기한 ➔ 회계연도 종료 후 9개월 이내",
+                    "감사대상 재무제표 ➔ 재무상태표, 운영성과표, 이익잉여금처분계산서, 주석"
+                ],
+                legalGround: "「공동주택관리법 시행령」 제27조 제1항"
+            },
+            {
+                id: 36,
+                chapter: "제5장: 주택관리사제도",
+                type: "mcq",
+                question: "공동주택관리법령상 주택관리사 자격증을 발급받을 수 있는 주택 관련 실무 경력 기준을 충족하지 못하는 자는?",
+                box: "",
+                options: [
+                    "① 주택관리사보 시험 합격 전 한국토지주택공사 직원으로 종사 5년",
+                    "② 공무원으로 주택 관련 인·허가 업무에 종사한 경력 3년인 자",
+                    "③ 단체 직원 2년 종사 후 지방공사 직원 3년 합산 종사자",
+                    "④ 사업계획승인 받은 100세대 관리사무소장 3년 종사자",
+                    "⑤ 국토교통부장관 고시 공동주택 관련 단체 임직원으로 5년 종사자"
+                ],
+                answer: 1, // ②
+                explanation: "공무원으로서 주택관련 인·허가 업무 등에 종사한 경력으로 주택관리사 자격증을 발급받기 위해서는 경력이 '5년 이상'이어야 합니다. 3년 경력은 요건을 충족하지 못합니다.",
+                keyPoints: [
+                    "관리사무소장 경력 ➔ 3년 이상",
+                    "공무원/한국토지주택공사/지방공사/관련단체 직원 경력 ➔ 5년 이상"
+                ],
+                legalGround: "「공동주택관리법 시행령」 제73조 제1항"
+            },
+            {
+                id: 37,
+                chapter: "제5장: 주택관리사제도",
+                type: "subjective",
+                question: "주택관리사등에 대한 행정처분기준의 개별기준 내용이다. ( )에 들어갈 아라비아 숫자를 쓰시오.",
+                box: "중대한 과실로 공동주택을 잘못 관리하여 소유자 및 사용자에게 재산상의 손해를 입힌 경우\n1차 위반: 자격정지 ( ㉠ )개월, 2차 위반: 자격정지 ( ㉡ )개월, 3차 위반: 자격정지 ( ㉢ )개월",
+                inputs: [
+                    { id: "ans_37_1", label: "㉠", correct: ["3", "3개월"] },
+                    { id: "ans_37_2", label: "㉡", correct: ["6", "6개월"] },
+                    { id: "ans_37_3", label: "㉢", correct: ["6", "6개월"] }
+                ],
+                explanation: "중과실로 재산상 손해를 입힌 경우 행정처분 기준:\n1차 위반 ➔ 자격정지 3개월\n2차 위반 ➔ 자격정지 6개월\n3차 위반 ➔ 자격정지 6개월",
+                keyPoints: [
+                    "중과실 재산손해 자격정지 ➔ 1차: 3개월, 2차: 6개월, 3차: 6개월"
+                ],
+                legalGround: "「공동주택관리법 시행규칙」 별표 4"
+            },
+            {
+                id: 38,
+                chapter: "제7장: 입주자관리",
+                type: "mcq",
+                question: "공동주택관리법령상 공동주택관리 분쟁조정위원회의 심의·조정사항이 아닌 것은?",
+                box: "",
+                options: [
+                    "① 공동주택 공용부분의 유지·보수·개량 등에 관한 사항",
+                    "② 공동주택의 리모델링에 관한 사항",
+                    "③ 입주자대표회의의 구성·운영 등에 관한 사항",
+                    "④ 공동주택의 하자담보책임 및 하자보수 등에 관련한 분쟁에 관한 사항",
+                    "⑤ 혼합주택단지에서의 분쟁에 관한 사항"
+                ],
+                answer: 3, // ④
+                explanation: "공동주택의 하자담보책임 및 하자보수 등에 관한 분쟁은 국토교통부에 설치된 '하자심사·분쟁조정위원회'의 담당 사항이며, 일반 공동주택관리 분쟁조정위원회의 심의·조정 대상에서 제외됩니다.",
+                keyPoints: [
+                    "하자 관련 분쟁 ➔ 하자심사·분쟁조정위원회 전담 (공동주택관리 분쟁조정위원회 X)"
+                ],
+                legalGround: "「공동주택관리법」 제71조 제2항 단서"
+            },
+            {
+                id: 39,
+                chapter: "제7장: 입주자관리",
+                type: "mcq",
+                question: "공동주택관리법령상 중앙 공동주택관리 분쟁조정위원회에 관한 설명으로 옳은 것은?",
+                box: "",
+                options: [
+                    "① 위원은 제척 사유 시 스스로 조정에서 기피하여야 한다.",
+                    "② 회의는 재적위원 3분의 2 출석과 3분의 2 찬성으로 의결한다.",
+                    "③ 대리인 출석 등 대리 관련 사항은 규정에 없다.",
+                    "④ 판사·검사·변호사로 6년 이상 재직한 사람이 3명 이상 포함되어야 한다.",
+                    "⑤ 위원장은 위원회를 대표하고 회의를 소집하며 그 의장이 된다."
+                ],
+                answer: 4, // ⑤
+                explanation: "위원장은 중앙 공동주택관리 분쟁조정위원회를 대표하고 회의를 소집하며 그 의장이 됩니다.\n① 제척 사유시 '회피'하여야 함.\n② 회의는 재적위원 과반수 출석과 출석위원 과반수 찬성으로 의결.",
+                keyPoints: [
+                    "중앙 분쟁조정위원회 의결 ➔ 재적 과반수 출석, 출석 과반수 찬성"
+                ],
+                legalGround: "「공동주택관리법」 제72조, 제73조"
+            },
+            {
+                id: 40,
+                chapter: "제7장: 입주자관리",
+                type: "subjective",
+                question: "민간임대주택에 관한 특별법령상 임대주택분쟁조정위원회의 구성에 관한 규정이다. ( )에 들어갈 숫자를 쓰시오.",
+                box: "조정위원회는 위원장 1명을 포함하여 ( ㉠ )명 이내로 구성하되, 변호사, 공인회계사, 감정평가사, 세무사로서 업무에 ( ㉡ )년 이상 종사한 사람이 포함되어야 한다.",
+                inputs: [
+                    { id: "ans_40_1", label: "㉠", correct: ["10", "10명"] },
+                    { id: "ans_40_2", label: "㉡", correct: ["5", "5년"] }
+                ],
+                explanation: "임대주택분쟁조정위원회는 위원장 1명을 포함하여 10명 이내로 구성하며, 법조/회계/평가 전문가로서 5년 이상 종사한 사람이 포함되어야 합니다.",
+                keyPoints: [
+                    "임대주택 분쟁조정위원회 ➔ 위원장 포함 10명 이내",
+                    "자격사 종사 경력 요건 ➔ 5년 이상"
+                ],
+                legalGround: "「민간임대주택에 관한 특별법」 제55조 제2항"
+            }
+        ];
+
+        let currentIndex = 0;
+        let userAnswers = {}; // { qId: { submitted: true, isCorrect: true, userVal: ... } }
+        let currentNoteFilter = 'all';
+
+        window.onload = function() {
+            renderQuestion();
+            updateHeaderProgress();
+            buildQuickJumpModal();
+        };
+
+        function renderQuestion() {
+            const q = quizData[currentIndex];
+
+            // Badges
+            document.getElementById('chapter-badge').innerText = q.chapter;
+            document.getElementById('type-badge').innerText = q.type === 'mcq' ? '객관식 (5지선다)' : '주관식 (단답형)';
+            document.getElementById('current-q-num').innerText = q.id;
+
+            // Text
+            document.getElementById('question-text').innerText = `${q.id}. ${q.question}`;
+
+            // Box Container
+            const boxContainer = document.getElementById('box-container');
+            if (q.box && q.box.trim().length > 0) {
+                boxContainer.classList.remove('hidden');
+                boxContainer.innerText = q.box;
+            } else {
+                boxContainer.classList.add('hidden');
+                boxContainer.innerText = '';
+            }
+
+            // Interactive Answer Area
+            const area = document.getElementById('answer-interactive-area');
+            area.innerHTML = '';
+
+            const isSubmitted = userAnswers[q.id] && userAnswers[q.id].submitted;
+
+            if (q.type === 'mcq') {
+                q.options.forEach((optText, optIdx) => {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = `w-full text-left p-4 rounded-xl border transition-all duration-200 text-sm font-medium flex items-center justify-between shadow-sm `;
+
+                    const isSelected = userAnswers[q.id] && userAnswers[q.id].userVal === optIdx;
+
+                    if (isSubmitted) {
+                        btn.disabled = true;
+                        if (optIdx === q.answer) {
+                            btn.className += ' bg-emerald-500/20 border-emerald-500 text-emerald-300 font-bold';
+                        } else if (isSelected && optIdx !== q.answer) {
+                            btn.className += ' bg-rose-500/20 border-rose-500 text-rose-300 line-through';
+                        } else {
+                            btn.className += ' bg-slate-900 border-slate-800 text-slate-500 opacity-60';
+                        }
+                    } else {
+                        if (isSelected) {
+                            btn.className += ' bg-sky-500/20 border-sky-500 text-sky-200 font-bold shadow-sky-500/10';
+                        } else {
+                            btn.className += ' bg-slate-950/60 border-slate-800 text-slate-300 hover:bg-slate-800/80 hover:border-slate-700';
+                        }
+                        btn.onclick = () => selectMCQOption(optIdx);
+                    }
+
+                    btn.innerHTML = `
+                        <span>${optText}</span>
+                        ${isSubmitted && optIdx === q.answer ? '<i class="fa-solid fa-circle-check text-emerald-400 text-base"></i>' : ''}
+                        ${isSubmitted && isSelected && optIdx !== q.answer ? '<i class="fa-solid fa-circle-xmark text-rose-400 text-base"></i>' : ''}
+                    `;
+                    area.appendChild(btn);
+                });
+            } else if (q.type === 'subjective') {
+                const subBox = document.createElement('div');
+                subBox.className = 'space-y-3 bg-slate-950/40 p-4 rounded-xl border border-slate-800';
+
+                q.inputs.forEach((inputDef, idx) => {
+                    const savedVal = (userAnswers[q.id] && userAnswers[q.id].userVal && userAnswers[q.id].userVal[inputDef.id]) || '';
+
+                    const row = document.createElement('div');
+                    row.className = 'flex flex-col sm:flex-row sm:items-center gap-2';
+
+                    row.innerHTML = `
+                        <label class="shrink-0 w-12 text-sm font-bold text-amber-400 bg-amber-500/10 border border-amber-500/20 py-1.5 px-2.5 rounded-lg text-center">
+                            ${inputDef.label}
+                        </label>
+                        <input
+                            type="text"
+                            id="${inputDef.id}"
+                            value="${savedVal}"
+                            ${isSubmitted ? 'disabled' : ''}
+                            placeholder="정답을 입력하세요"
+                            class="flex-grow bg-slate-900 border border-slate-700 focus:border-sky-500 text-slate-100 text-sm rounded-xl px-4 py-2.5 focus:outline-none transition disabled:opacity-60"
+                        />
+                    `;
+                    subBox.appendChild(row);
+                });
+
+                area.appendChild(subBox);
+            }
+
+            // Buttons state
+            const prevBtn = document.getElementById('prev-btn');
+            const submitBtn = document.getElementById('submit-btn');
+            const nextBtn = document.getElementById('next-btn');
+
+            prevBtn.disabled = (currentIndex === 0);
+
+            if (isSubmitted) {
+                submitBtn.classList.add('hidden');
+                nextBtn.classList.remove('hidden');
+                renderExplanation(q);
+            } else {
+                submitBtn.classList.remove('hidden');
+                nextBtn.classList.add('hidden');
+                document.getElementById('explanation-card').classList.add('hidden');
+            }
+        }
+
+        function selectMCQOption(idx) {
+            const q = quizData[currentIndex];
+            if (userAnswers[q.id] && userAnswers[q.id].submitted) return;
+
+            userAnswers[q.id] = {
+                submitted: false,
+                userVal: idx
+            };
+            renderQuestion();
+        }
+
+        function submitAnswer() {
+            const q = quizData[currentIndex];
+            let isCorrect = false;
+            let userVal = null;
+
+            if (q.type === 'mcq') {
+                if (!userAnswers[q.id] || userAnswers[q.id].userVal === undefined) {
+                    alert('정답 단어를 선택해 주세요!');
+                    return;
+                }
+                userVal = userAnswers[q.id].userVal;
+                isCorrect = (userVal === q.answer);
+            } else if (q.type === 'subjective') {
+                userVal = {};
+                let allFilled = true;
+                let correctCount = 0;
+
+                q.inputs.forEach(inputDef => {
+                    const el = document.getElementById(inputDef.id);
+                    const val = el ? el.value.trim() : '';
+                    if (!val) allFilled = false;
+                    userVal[inputDef.id] = val;
+
+                    // Clean comparison
+                    const cleanVal = val.replace(/\s+/g, '');
+                    const matches = inputDef.correct.some(c => c.replace(/\s+/g, '') === cleanVal);
+                    if (matches) correctCount++;
+                });
+
+                if (!allFilled) {
+                    alert('모든 빈칸의 정답을 입력해 주세요!');
+                    return;
+                }
+
+                isCorrect = (correctCount === q.inputs.length);
+            }
+
+            userAnswers[q.id] = {
+                submitted: true,
+                isCorrect: isCorrect,
+                userVal: userVal
+            };
+
+            updateHeaderProgress();
+            renderQuestion();
+        }
+
+        function renderExplanation(q) {
+            const card = document.getElementById('explanation-card');
+            const banner = document.getElementById('feedback-status-banner');
+            const expText = document.getElementById('explanation-text');
+            const keyPointsList = document.getElementById('key-points-list');
+            const legalTag = document.getElementById('legal-ground-tag');
+
+            card.classList.remove('hidden');
+
+            const ansInfo = userAnswers[q.id];
+
+            if (ansInfo.isCorrect) {
+                card.className = "bg-slate-900 rounded-2xl border border-emerald-500/40 p-6 sm:p-8 shadow-2xl shadow-emerald-500/10";
+                banner.className = "flex items-center gap-3 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400";
+                banner.innerHTML = `<i class="fa-solid fa-circle-check text-2xl"></i> <span>명쾌한 정답입니다! 합격을 축하합니다.</span>`;
+            } else {
+                card.className = "bg-slate-900 rounded-2xl border border-rose-500/40 p-6 sm:p-8 shadow-2xl shadow-rose-500/10";
+                banner.className = "flex items-center gap-3 p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400";
+                banner.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-2xl"></i> <span>아쉽게 틀렸습니다. 아래 해설을 필독하세요!</span>`;
+            }
+
+            expText.innerHTML = q.explanation;
+
+            keyPointsList.innerHTML = '';
+            q.keyPoints.forEach(pt => {
+                const li = document.createElement('li');
+                li.innerText = pt;
+                keyPointsList.appendChild(li);
+            });
+
+            legalTag.innerText = `법적 근거: ${q.legalGround}`;
+        }
+
+        function nextQuestion() {
+            if (currentIndex < quizData.length - 1) {
+                currentIndex++;
+                renderQuestion();
+            } else {
+                showFinalResults();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                renderQuestion();
+            }
+        }
+
+        function updateHeaderProgress() {
+            const total = quizData.length;
+            const answeredKeys = Object.keys(userAnswers).filter(k => userAnswers[k].submitted);
+            const correctCount = answeredKeys.filter(k => userAnswers[k].isCorrect).length;
+
+            const score = Math.round((correctCount / total) * 100);
+
+            document.getElementById('header-score').innerText = `${score}점 (${correctCount}/${total})`;
+            document.getElementById('progress-bar').style.width = `${((currentIndex + 1) / total) * 100}%`;
+        }
+
+        function toggleQuickJumpModal() {
+            const modal = document.getElementById('quick-jump-modal');
+            modal.classList.toggle('hidden');
+        }
+
+        function buildQuickJumpModal() {
+            const grid = document.getElementById('quick-jump-grid');
+            grid.innerHTML = '';
+
+            quizData.forEach((q, idx) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+
+                const isSubmitted = userAnswers[q.id] && userAnswers[q.id].submitted;
+                const isCorrect = isSubmitted ? userAnswers[q.id].isCorrect : null;
+
+                let bgClass = "bg-slate-800 border-slate-700 text-slate-300";
+                if (isSubmitted) {
+                    if (isCorrect) bgClass = "bg-emerald-500/20 border-emerald-500/50 text-emerald-300 font-bold";
+                    else bgClass = "bg-rose-500/20 border-rose-500/50 text-rose-300 font-bold";
+                }
+                if (idx === currentIndex) {
+                    bgClass += " ring-2 ring-sky-400";
+                }
+
+                btn.className = `p-2.5 text-xs rounded-xl border flex flex-col items-center justify-center font-mono transition ${bgClass}`;
+                btn.innerHTML = `<span>${q.id}</span>`;
+                btn.onclick = () => {
+                    currentIndex = idx;
+                    renderQuestion();
+                    toggleQuickJumpModal();
+                };
+                grid.appendChild(btn);
+            });
+        }
+
+        function showFinalResults() {
+            document.getElementById('quiz-view').classList.add('hidden');
+            document.getElementById('result-view').classList.remove('hidden');
+
+            const total = quizData.length;
+            const correctCount = Object.keys(userAnswers).filter(k => userAnswers[k].submitted && userAnswers[k].isCorrect).length;
+            const wrongCount = total - correctCount;
+            const score = Math.round((correctCount / total) * 100);
+
+            document.getElementById('final-score').innerText = score;
+            document.getElementById('final-accuracy').innerText = `${score}%`;
+            document.getElementById('final-counts').innerText = `정답 ${correctCount}문항 / 오답 ${wrongCount}문항`;
+
+            const statusEl = document.getElementById('final-pass-status');
+            if (score >= 60) {
+                statusEl.innerText = "합격 (Pass)";
+                statusEl.className = "text-2xl font-black text-emerald-400";
+            } else {
+                statusEl.innerText = "불합격 (Fail)";
+                statusEl.className = "text-2xl font-black text-rose-400";
+            }
+
+            // Chapter breakdown
+            const chapterMap = {};
+            quizData.forEach(q => {
+                if (!chapterMap[q.chapter]) {
+                    chapterMap[q.chapter] = { total: 0, correct: 0 };
+                }
+                chapterMap[q.chapter].total++;
+                if (userAnswers[q.id] && userAnswers[q.id].isCorrect) {
+                    chapterMap[q.chapter].correct++;
+                }
+            });
+
+            const breakContainer = document.getElementById('chapter-breakdown-container');
+            breakContainer.innerHTML = '';
+
+            Object.keys(chapterMap).forEach(chName => {
+                const data = chapterMap[chName];
+                const pct = Math.round((data.correct / data.total) * 100);
+
+                const card = document.createElement('div');
+                card.className = "bg-slate-950/60 p-4 rounded-xl border border-slate-800 space-y-2";
+                card.innerHTML = `
+                    <div class="text-xs font-bold text-sky-400 truncate">${chName}</div>
+                    <div class="flex items-center justify-between text-xs text-slate-400">
+                        <span>정답률 (${data.correct}/${data.total})</span>
+                        <span class="font-bold text-slate-200">${pct}%</span>
+                    </div>
+                    <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                        <div class="bg-gradient-to-r from-sky-500 to-emerald-400 h-1.5" style="width: ${pct}%"></div>
+                    </div>
+                `;
+                breakContainer.appendChild(card);
+            });
+
+            renderWrongNotes();
+        }
+
+        function filterWrongNotes(mode) {
+            currentNoteFilter = mode;
+            const allBtn = document.getElementById('filter-all-btn');
+            const wrongBtn = document.getElementById('filter-wrong-btn');
+
+            if (mode === 'all') {
+                allBtn.className = "px-3 py-1.5 bg-sky-500 text-white text-xs font-bold rounded-lg transition";
+                wrongBtn.className = "px-3 py-1.5 bg-slate-800 text-slate-400 hover:bg-slate-700 text-xs font-bold rounded-lg border border-slate-700 transition";
+            } else {
+                wrongBtn.className = "px-3 py-1.5 bg-sky-500 text-white text-xs font-bold rounded-lg transition";
+                allBtn.className = "px-3 py-1.5 bg-slate-800 text-slate-400 hover:bg-slate-700 text-xs font-bold rounded-lg border border-slate-700 transition";
+            }
+            renderWrongNotes();
+        }
+
+        function renderWrongNotes() {
+            const list = document.getElementById('wrong-notes-list');
+            list.innerHTML = '';
+
+            quizData.forEach(q => {
+                const ans = userAnswers[q.id];
+                const isCorrect = ans ? ans.isCorrect : false;
+
+                if (currentNoteFilter === 'wrong' && isCorrect) {
+                    return;
+                }
+
+                const card = document.createElement('div');
+                card.className = `p-5 rounded-2xl border transition ${isCorrect ? 'bg-slate-950/40 border-slate-800' : 'bg-rose-950/10 border-rose-500/30'}`;
+
+                let correctTextDisplay = '';
+                if (q.type === 'mcq') {
+                    correctTextDisplay = q.options[q.answer];
+                } else {
+                    correctTextDisplay = q.inputs.map(i => `${i.label}: ${i.correct[0]}`).join(', ');
+                }
+
+                card.innerHTML = `
+                    <div class="flex items-center justify-between gap-2 mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold ${isCorrect ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-rose-500/20 text-rose-400 border border-rose-500/30'}">
+                                ${isCorrect ? '정답' : '오답'}
+                            </span>
+                            <span class="text-xs font-bold text-slate-400">${q.chapter}</span>
+                        </div>
+                        <span class="text-xs font-mono text-slate-500">문항 #${q.id}</span>
+                    </div>
+
+                    <h4 class="text-sm font-bold text-slate-200 mb-3">${q.id}. ${q.question}</h4>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs mb-3 bg-slate-950 p-3 rounded-xl border border-slate-800/80">
+                        <div><span class="text-slate-500">정답:</span> <span class="font-bold text-emerald-400">${correctTextDisplay}</span></div>
+                        <div><span class="text-slate-500">법적 근거:</span> <span class="text-slate-300">${q.legalGround}</span></div>
+                    </div>
+
+                    <div class="text-xs text-slate-300 leading-relaxed bg-slate-900/80 p-3 rounded-xl border border-slate-800">
+                        ${q.explanation}
+                    </div>
+                `;
+                list.appendChild(card);
+            });
+        }
+
+        function resetQuiz() {
+            if (confirm('모의고사를 처음부터 다시 시작하시겠습니까?')) {
+                currentIndex = 0;
+                userAnswers = {};
+                document.getElementById('result-view').classList.add('hidden');
+                document.getElementById('quiz-view').classList.remove('hidden');
+                renderQuestion();
+                updateHeaderProgress();
+            }
+        }
+    </script>
+</body>
+</html>

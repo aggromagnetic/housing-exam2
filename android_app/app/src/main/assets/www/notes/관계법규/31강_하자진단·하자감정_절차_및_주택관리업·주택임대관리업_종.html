@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 관계법규 - 제31강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+            letter-spacing: -0.05em;
+        }
+        
+        h1 {
+            font-size: 13pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        /* 토너 절약 4색 강조 클래스 */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #16803d; 
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #6d28d9; 
+        }
+        
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        ol {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        /* 정답 리스트 3열 격자 레이아웃 */
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px 15px;
+        }
+
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        제31강. 하자진단·하자감정 절차 및 주택관리업·주택임대관리업 종합 정리
+    </h1>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        1. 하자진단과 하자감정의 기능 비교 및 법정 처리기한
+    </h2>
+    <ul>
+        <li><strong>하자진단과 하자감정의 본질적 공통점</strong>: 모두 하자인지 여부를 객관적으로 판정하기 위한 전문 심사 절차(넓은 의미의 하자판정)이다.</li>
+        <li><strong>단계별 작동 기전 및 차이점</strong>:
+            <ul>
+                <li><strong>하자진단 (1차 전문 진단)</strong>: 입주자대표회의 등의 하자보수 청구에 대해 사업주체 등이 <span class="highlight-blue">이의가 있는 경우</span> 사업주체 등의 의뢰로 전문기관이 실시한다.</li>
+                <li><strong>하자감정 (2차·상세 감정)</strong>: 하자심사·분쟁조정위원회에 사건이 계류 중일 때, ① 하자진단 결과에 다툼이 있는 경우, ② 당사자가 직접 요청하는 경우, ③ <span class="highlight-red">하자 원인이 불명확</span>하여 원인 규명이 필요한 경우, ④ 위원회가 필요하다고 인정하는 경우에 위원회의 의뢰로 수행한다.</li>
+            </ul>
+        </li>
+        <li><strong>법정 결과 제출 및 통보 기한 (20일 규칙)</strong>:
+            <ul>
+                <li>하자진단 및 하자감정이 실시되면 지정된 기관은 진단·감정이 완료된 날부터 <span class="highlight-red">20일 이내</span>에 그 결과를 제출·통보하여야 한다.</li>
+                <li><strong>통보 대상의 구별</strong>: 하자진단 결과는 <span class="highlight-blue">입주자대표회의 등 및 사업주체 등</span>에게 통보하며, 하자감정 결과는 <span class="highlight-purple">하자심사·분쟁조정위원회</span>에 제출한다.</li>
+            </ul>
+        </li>
+        <li><strong>비용 부담 원칙 및 장기수선충당금 사용 특례 (★빈출)</strong>:
+            <ul>
+                <li>원칙: 하자진단 및 감정 비용은 <span class="highlight-blue">당사자가 합의</span>한 바에 따라 부담한다.</li>
+                <li>특례: 하자가 아닌 것으로 판정되는 등 입주자 측에서 비용을 부담해야 할 부득이한 경우, <span class="highlight-red">입주자 과반수의 서면동의</span>가 있다면 <span class="highlight-purple">장기수선충당금</span>을 사용하여 해당 비용을 충당할 수 있다.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M11 5H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-5"></path><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+        2. 하자진단기관 및 하자감정기관 법정 구분 비교
+    </h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">구분</th>
+                <th style="width: 45%;">법정 기관 범위</th>
+                <th style="width: 30%;">수험 핵심 포인트</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>하자진단기관 (6개 그룹)</th>
+                <td style="text-align: left; padding-left: 15px;">
+                    ① 국토안전관리원<br>
+                    ② 한국건설기술연구원<br>
+                    ③ 안전진단전문기관<br>
+                    ④ 건축사사무소<br>
+                    ⑤ 엔지니어링사업자<br>
+                    ⑥ 기술사사무소
+                </td>
+                <td rowspan="2" style="text-align: left; padding-left: 15px;">
+                    - 하자진단기관으로 지정된 자는 <span class="highlight-blue">모두 하자감정도 수행</span>할 수 있음.<br>
+                    - 단, 하자감정 전담 추가 지정 기관 등 교차 지정 범위 유의.<br>
+                    - 결과 제출 기한은 둘 다 완료 후 <span class="highlight-red">20일 이내</span>로 동일함.
+                </td>
+            </tr>
+            <tr>
+                <th>하자감정기관</th>
+                <td style="text-align: left; padding-left: 15px;">
+                    - 하자진단기관 전체 포함<br>
+                    - 추가 지정 전문기관 (법정 하자감정 전문기구)
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+            💡 [핵심 정리] 하자진단 vs 안전진단 vs 하자감정 구분
+        </div>
+        <ul>
+            <li><strong>안전진단</strong>: 시·군·구청장이 공동주택에 중대한 하자가 있다고 인정될 때 전문기관에 의뢰하여 실시함.</li>
+            <li><strong>하자진단</strong>: 입주자대표회의 등의 하자보수 청구에 이의가 있는 사업주체 등이 전문기관에 의뢰함.</li>
+            <li><strong>하자감정</strong>: 하자심사·분쟁조정위원회에 신청된 사건에 대해 원인 규명 및 객관적 판정을 위해 위원회가 의뢰함.</li>
+        </ul>
+    </div>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+        3. 주택관리업자 및 주택임대관리업자의 법적 개념 정립
+    </h2>
+    <ul>
+        <li><strong>공동주택 전문관리 주체의 정체성</strong>: '공동주택을 전문적으로 관리하는 자'는 <span class="highlight-blue">관리주체</span>를 의미하며, 관리주체 유형 중 위탁관리를 담당하는 법률상 주체가 <span class="highlight-purple">주택관리업자</span>이다.</li>
+        <li><strong>주택관리업자의 법적 요건 및 지위</strong>:
+            <ul>
+                <li>대상: <span class="highlight-red">의무관리대상 공동주택</span>의 관리를 위탁받아 수행함.</li>
+                <li>등록 의무: <span class="highlight-blue">시장·군수·구청장에게 반드시 등록</span>하여야 한다 (필수 의무 등록).</li>
+                <li>필수 기술인력 요건: <span class="highlight-red">주택관리사 1명 이상</span>이 반드시 포함되어야 한다 (★함정: 주택관리사'보'나 '주택관리사 등'은 등록 불가).</li>
+                <li>법률 관계 준용: 주택관리업자의 지위에 관하여 공동주택관리법에 특별한 규정이 있는 경우를 제외하고는 <span class="highlight-purple">민법 중 위임(委任)에 관한 규정</span>을 준용한다.</li>
+                <li>변경신고 기한: 등록사항 변경 시 <span class="highlight-blue">15일 이내</span>에 신고하여야 한다 (※ 자치관리기구 구성 통보는 30일 이내와 비교).</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        4. 주택임대관리업의 유형 분류 (자기관리형 vs 위탁관리형) 및 보증 의무
+    </h2>
+    <ul>
+        <li><strong>주택임대관리업의 법정 정의</strong>: 주택의 소유자로부터 <span class="highlight-blue">주택 임대관리를 위탁받아</span> 관리하는 업을 말한다.</li>
+        <li><strong>2대 사업 유형 완벽 비교</strong>:
+            <ul>
+                <li><strong>자기관리형 주택임대관리업</strong>: 주택을 임차하여 <span class="highlight-red">자기 책임</span>으로 전대(轉貸)하는 형태의 업.
+                    <ul>
+                        <li>임대인 보호: 임대료 지급을 보장하기 위해 <span class="highlight-blue">3개월분 이상</span>의 임대료를 보장하는 보증상품에 가입하여야 함.</li>
+                        <li>임차인 보호: 임차인의 <span class="highlight-red">임대보증금 전액</span>을 보장하는 보증상품에 가입하여야 함.</li>
+                        <li>증서 교부 시기: 주택임대관리계약 및 주택임대차계약 <span class="highlight-purple">체결 시</span> 당사자에게 보증서 증서를 교부하여야 함.</li>
+                    </ul>
+                </li>
+                <li><strong>위탁관리형 주택임대관리업</strong>: 주택 소유자로부터 <span class="highlight-green">수수료를 받고</span> 임대료 부과·징수 및 시설물 유지·관리 등을 대행하는 형태의 업.</li>
+            </ul>
+        </li>
+        <li><strong>등록 기준 (임의 등록 vs 의무 등록)</strong>:
+            <ul>
+                <li>원칙: 시장·군수·구청장에게 등록할 수 있다 (임의 등록).</li>
+                <li>의무 등록 대상 (일정 규모 이상):
+                    <ul>
+                        <li>자기관리형: <span class="highlight-red">100호(세대) 이상</span> (단, 일반기숙사로 리모델링한 건축물은 제외)</li>
+                        <li>위탁관리형: <span class="highlight-blue">300호(세대) 이상</span></li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        5. 주택관리업 vs 주택임대관리업 완벽 종합 비교표
+    </h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 18%;">구분</th>
+                <th style="width: 27%;">주택관리업자</th>
+                <th style="width: 27%;">주택임대관리업 (자기관리형)</th>
+                <th style="width: 28%;">주택임대관리업 (위탁관리형)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>관련 법률</th>
+                <td class="highlight-blue">공동주택관리법</td>
+                <td colspan="2" class="highlight-purple">민간임대주택에 관한 특별법</td>
+            </tr>
+            <tr>
+                <th>등록 요건</th>
+                <td>의무관리가 대상<br>(필수 등록)</td>
+                <td><span class="highlight-red">100호 이상</span>시 의무 등록</td>
+                <td><span class="highlight-blue">300호 이상</span>시 의무 등록</td>
+            </tr>
+            <tr>
+                <th>자본금 / 인력</th>
+                <td>자본금 2억원 이상<br><span class="highlight-red">주택관리사 1명 이상</span></td>
+                <td>자본금 <span class="highlight-red">2억원 이상</span><br>전문인력 2명 이상</td>
+                <td>자본금 <span class="highlight-blue">1억원 이상</span><br>전문인력 1명 이상</td>
+            </tr>
+            <tr>
+                <th>등록증 대여 벌칙</th>
+                <td class="highlight-purple">1년 이하 징역 / 1천만원 벌금<br>(1년 / 1천만원) + 말소</td>
+                <td colspan="2" class="highlight-red">2년 이하 징역 / 2천만원 벌금<br>(2년 / 2천만원) + 말소</td>
+            </tr>
+            <tr>
+                <th>유사명칭 사용</th>
+                <td class="highlight-blue">1천만원 이하 과태료</td>
+                <td colspan="2" class="highlight-red">2년 이하 징역 / 2천만원 벌금</td>
+            </tr>
+            <tr>
+                <th>영업정지 가늠 과징금</th>
+                <td>200만원 이하</td>
+                <td colspan="2" class="highlight-purple">1천만원 이하</td>
+            </tr>
+            <tr>
+                <th>말소 후 재등록 금지</th>
+                <td class="highlight-blue">2년 미경과 자</td>
+                <td colspan="2" class="highlight-blue">2년 미경과 자</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#b91c1c" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 3-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+            💡 [수험 핵심 함정 정돈] 벌칙 규정의 극명한 차이점
+        </div>
+        <ul>
+            <li><strong>등록증 대여</strong>: 주택관리업자는 <span class="highlight-blue">1년/1천만원</span> 형벌인 반면, 주택임대관리업자는 <span class="highlight-red">2년/2천만원</span> 형벌로 더 엄격합니다. (단, 둘 다 등록말소는 필요적 필수 사유임)</li>
+            <li><strong>유사명칭 사용 금지 위반</strong>: 주택관리업자는 행정벌인 <span class="highlight-blue">과태료 1천만원</span>에 불과하나, 주택임대관리업자는 형사벌인 <span class="highlight-red">2년 이하 징역 또는 2천만원 이하 벌금</span>이 부과되므로 문제 풀이 시 반드시 구분해야 합니다.</li>
+        </ul>
+    </div>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><line x1="18" y1="2" x2="22" y2="6"></line><path d="M7.5 20.5L19 9l-4-4L3.5 16.5 2 22z"></path></svg>
+        6. 주관식 단답형 및 다단 빈칸 채우기 완벽 대비 (실전 훈련)
+    </h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡)에 들어갈 알맞은 핵심 용어나 법정 숫자를 아래 여유 공백에 직접 기재해 보십시오.</p>
+
+    <ol style="line-height: 2.1;">
+        <li>
+            입주자대표회의 등이 청구한 하자보수에 대해 사업주체 등이 이의가 있어 전문기관에 의뢰하는 절차는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )라 한다.
+        </li>
+        <li>
+            하자진단 또는 하자감정이 완료되면 지정된 기관은 완료된 날부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이내에 그 결과를 당사자 또는 위원회에 제출하여야 한다.
+        </li>
+        <li>
+            하자진단 및 감정 비용은 당사자 합의가 원칙이나, 입주자 측 부담 시 전체 입주자 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )의 서면동의를 받아 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )으로 충당할 수 있다.
+        </li>
+        <li>
+            의무관리대상 공동주택의 관리를 위탁받아 관리하는 주택관리업자는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )에게 등록하여야 한다.
+        </li>
+        <li>
+            주택관리업 등록을 위해 반드시 포함되어야 하는 법정 인력 요건은 주택관리사보가 아닌 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 1명 이상이다.
+        </li>
+        <li>
+            주택관리업자의 지위에 관하여 공동주택관리법에 특별한 규정이 없으면 민법 중 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )에 관한 규정을 준용한다.
+        </li>
+        <li>
+            주택관리업자가 등록사항을 변경하려면 변경된 날부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이내에 신고하여야 한다.
+        </li>
+        <li>
+            주택을 임차하여 자기 책임으로 전대하는 형태의 주택임대관리업을 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 주택임대관리업이라 한다.
+        </li>
+        <li>
+            주택 소유자로부터 수수료를 받고 임대료 부과·징수 및 시설물 관리를 대행하는 업은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 주택임대관리업이라 한다.
+        </li>
+        <li>
+            자기관리형 주택임대관리업은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )호 이상인 경우 의무적으로 등록하여야 하며, 위탁관리형은 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )호 이상일 때 의무 등록 대상이다.
+        </li>
+        <li>
+            자기관리형 주택임대관리업자는 임대인 보호를 위해 임대료 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )개월분 이상을 보장하는 보증상품에 가입하여야 한다.
+        </li>
+        <li>
+            자기관리형 주택임대관리업자는 임차인 보호를 위해 임차인의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 전액을 보장하는 보증상품에 가입하여야 한다.
+        </li>
+        <li>
+            주택관리업자가 등록증을 대여한 경우 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년 이하의 징역 또는 1천만원 이하의 벌금에 처해진다.
+        </li>
+        <li>
+            주택임대관리업자가 등록증을 대여한 경우 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년 이하의 징역 또는 2천만원 이하의 벌금에 처해진다.
+        </li>
+        <li>
+            주택관리업자가 유사명칭을 사용한 경우 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )만원 이하의 과태료가 부과된다.
+        </li>
+        <li>
+            주택임대관리업자가 유사명칭을 사용한 경우 2년 이하의 징역 또는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )만원 이하의 벌금에 처해진다.
+        </li>
+    </ol>
+
+    <!-- 수험생 정답 확인용 하단 3열 배치 그리드 영역 -->
+    <div style="font-size: 9.5pt; color: #666666; margin-top: 30px; padding: 15px; border-top: 1px dashed #666666; line-height: 1.8;">
+        <strong style="display: block; margin-bottom: 10px; color: #333333;">[제31강 주관식 단답형 정답 리스트]</strong>
+        <div class="answer-grid">
+            <div>1. ㉠ 하자진단</div>
+            <div>2. ㉠ 20</div>
+            <div>3. ㉠ 과반수, &nbsp; ㉡ 장기수선충당금</div>
+            <div>4. ㉠ 시장·군수·구청장</div>
+            <div>5. ㉠ 주택관리사</div>
+            <div>6. ㉠ 위임</div>
+            <div>7. ㉠ 15</div>
+            <div>8. ㉠ 자기관리형</div>
+            <div>9. ㉠ 위탁관리형</div>
+            <div>10. ㉠ 100, &nbsp; ㉡ 300</div>
+            <div>11. ㉠ 3</div>
+            <div>12. ㉠ 임대보증금</div>
+            <div>13. ㉠ 1</div>
+            <div>14. ㉠ 2</div>
+            <div>15. ㉠ 1천(또는 1,000)</div>
+            <div>16. ㉠ 2천(또는 2,000)</div>
+        </div>
+    </div>
+
+</body>
+</html>

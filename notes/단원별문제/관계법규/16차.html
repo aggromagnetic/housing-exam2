@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="ko" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>주택관리사보 2차 관계법규 실전 모의고사 (40문항 풀세트)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              800: '#166534',
+              900: '#14532d',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+    body {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #1e293b;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #475569;
+      border-radius: 3px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #64748b;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-emerald-500 selection:text-white">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur border-b border-slate-800 px-4 py-3 sm:px-6 shadow-md">
+    <div class="max-w-6xl mx-auto flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-9 h-9 rounded-lg bg-emerald-600 flex items-center justify-center font-extrabold text-white shadow-lg shadow-emerald-900/40 text-sm">
+          법규
+        </div>
+        <div>
+          <h1 class="text-base sm:text-lg font-bold tracking-tight text-white flex items-center gap-2">
+            주택관리사보 2차 관계법규 모의고사
+            <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-950 border border-emerald-700 text-emerald-300 font-medium">40문항 실전</span>
+          </h1>
+          <p class="text-xs text-slate-400 hidden sm:block">100% 최신 개정 법령 반영 • 14대 법률 법정비율 출제 (객관식 24제 + 주관식 16제)</p>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center space-x-2">
+        <div id="timer-display" class="hidden md:flex items-center px-2.5 py-1 text-xs font-mono rounded-lg bg-slate-800 text-emerald-400 border border-slate-700 font-semibold">
+          ⏱️ 00:00
+        </div>
+        <button id="toggle-grid-btn" onclick="toggleOMRModal()" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center gap-1.5 shadow-sm">
+          <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
+          <span>문항표 / OMR</span>
+        </button>
+        <button onclick="finishExam()" class="px-3.5 py-1.5 text-xs font-bold rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white shadow-md shadow-emerald-950 transition flex items-center gap-1">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          채점 및 결과
+        </button>
+      </div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="max-w-6xl mx-auto mt-2.5">
+      <div class="flex justify-between text-xs text-slate-400 mb-1 font-medium">
+        <span>진행 문항: <strong id="progress-text" class="text-emerald-400">1 / 40</strong> (<span id="progress-pct">2.5%</span>)</span>
+        <span id="answered-stat">제출완료: 0 / 40 문항</span>
+      </div>
+      <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+        <div id="progress-bar" class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full transition-all duration-300 rounded-full" style="width: 2.5%;"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="flex-1 max-w-4xl w-full mx-auto p-4 sm:p-6 flex flex-col justify-start">
+
+    <!-- Exam Screen -->
+    <div id="exam-screen" class="w-full">
+      <!-- Question Card -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-8 shadow-xl relative overflow-hidden transition-all duration-200">
+        
+        <!-- Meta Header -->
+        <div class="flex flex-wrap items-center justify-between gap-2 pb-4 mb-5 border-b border-slate-800">
+          <div class="flex items-center space-x-2">
+            <span id="badge-category" class="px-2.5 py-1 text-xs font-bold rounded-md bg-emerald-950 text-emerald-300 border border-emerald-800">주택법</span>
+            <span id="badge-type" class="px-2.5 py-1 text-xs font-medium rounded-md bg-slate-800 text-slate-300 border border-slate-700">객관식 (5지선다)</span>
+          </div>
+          <div class="text-xs text-slate-400 flex items-center gap-2 font-mono">
+            <span>QUESTION <span id="cur-num" class="text-base font-bold text-white">01</span> / 40</span>
+          </div>
+        </div>
+
+        <!-- Question Body -->
+        <div class="mb-6">
+          <h2 id="question-text" class="text-lg sm:text-xl font-medium text-slate-100 leading-relaxed whitespace-pre-line"></h2>
+        </div>
+
+        <!-- Options / Input Area -->
+        <div id="options-container" class="space-y-3 mb-6"></div>
+
+        <!-- Feedback & Explanation (Instant) -->
+        <div id="feedback-area" class="hidden mb-6 p-4 rounded-xl border transition-all duration-200">
+          <div class="flex items-center justify-between mb-2">
+            <div id="feedback-status" class="flex items-center gap-2 text-sm font-bold"></div>
+            <button onclick="toggleExplanation()" class="text-xs text-slate-400 hover:text-slate-200 underline">
+              해설 닫기/열기
+            </button>
+          </div>
+          <div id="explanation-box" class="mt-3 pt-3 border-t border-slate-800/80 text-sm text-slate-300 space-y-2 leading-relaxed">
+            <div class="text-xs font-semibold text-emerald-400 flex items-center gap-1">
+              <span>📖 법적 근거 및 상세 해설</span>
+            </div>
+            <p id="explanation-text" class="text-slate-300 whitespace-pre-line text-sm"></p>
+          </div>
+        </div>
+
+        <!-- Card Footer Navigation -->
+        <div class="flex items-center justify-between pt-4 border-t border-slate-800 gap-2">
+          <button id="btn-prev" onclick="navQuestion(-1)" class="px-4 py-2 text-xs sm:text-sm font-medium rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center gap-1">
+            ← 이전
+          </button>
+          <div class="flex items-center gap-2">
+            <button id="btn-check" onclick="checkCurrentAnswer()" class="px-4 py-2 text-xs sm:text-sm font-bold rounded-lg bg-teal-600 hover:bg-teal-500 text-white shadow transition">
+              정답 확인
+            </button>
+            <button id="btn-next" onclick="navQuestion(1)" class="px-4 py-2 text-xs sm:text-sm font-medium rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center gap-1">
+              다음 →
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Result Screen -->
+    <div id="result-screen" class="hidden w-full space-y-6">
+      <!-- Score Summary Card -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl text-center relative overflow-hidden">
+        <div class="absolute -right-10 -top-10 w-40 h-40 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <span class="inline-block px-3 py-1 rounded-full text-xs font-bold bg-emerald-950 text-emerald-400 border border-emerald-800 mb-3">
+          모의고사 최종 채점 결과
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white mb-2" id="result-title">관계법규 모의고사 완료</h2>
+        <p class="text-xs sm:text-sm text-slate-400 mb-6">합격 기준: 60점 이상 (과락 40점 미만)</p>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-2xl mx-auto mb-6">
+          <div class="bg-slate-950/70 border border-slate-800 rounded-xl p-3">
+            <div class="text-xs text-slate-400">총 점수</div>
+            <div id="score-total" class="text-2xl font-black text-emerald-400 mt-1">0점</div>
+            <div class="text-[10px] text-slate-500">100점 만점</div>
+          </div>
+          <div class="bg-slate-950/70 border border-slate-800 rounded-xl p-3">
+            <div class="text-xs text-slate-400">정답 수</div>
+            <div id="score-correct-count" class="text-2xl font-bold text-white mt-1">0 / 40</div>
+            <div class="text-[10px] text-slate-500">문항</div>
+          </div>
+          <div class="bg-slate-950/70 border border-slate-800 rounded-xl p-3">
+            <div class="text-xs text-slate-400">정답률</div>
+            <div id="score-accuracy" class="text-2xl font-bold text-teal-400 mt-1">0%</div>
+            <div class="text-[10px] text-slate-500">정확도</div>
+          </div>
+          <div class="bg-slate-950/70 border border-slate-800 rounded-xl p-3">
+            <div class="text-xs text-slate-400">합격 여부</div>
+            <div id="score-pass-badge" class="text-lg font-bold text-emerald-400 mt-1">판정중</div>
+            <div id="score-pass-sub" class="text-[10px] text-slate-500">-</div>
+          </div>
+        </div>
+
+        <!-- Action Controls -->
+        <div class="flex flex-wrap items-center justify-center gap-3">
+          <button onclick="restartExam(false)" class="px-4 py-2 text-xs font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition">
+            🔄 처음부터 다시 풀기
+          </button>
+          <button onclick="restartExam(true)" id="btn-retry-wrong" class="px-4 py-2 text-xs font-semibold rounded-lg bg-rose-950 hover:bg-rose-900 text-rose-300 border border-rose-800 transition">
+            ❌ 오답만 다시 풀기
+          </button>
+          <button onclick="backToExamView()" class="px-4 py-2 text-xs font-semibold rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white shadow transition">
+            📝 문항 복습하기
+          </button>
+        </div>
+      </div>
+
+      <!-- Incorrect Answer Note (오답노트) -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl">
+        <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-800">
+          <div>
+            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+              <span>📕 자동 생성 약점 극복 오답노트</span>
+              <span id="wrong-count-badge" class="text-xs px-2 py-0.5 rounded bg-rose-950 border border-rose-800 text-rose-300 font-medium">오답 0개</span>
+            </h3>
+            <p class="text-xs text-slate-400 mt-1">틀린 문항의 핵심 법적 쟁점과 함정 키워드를 집중 점검하세요.</p>
+          </div>
+        </div>
+
+        <div id="wrong-note-list" class="space-y-4"></div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- OMR Modal -->
+  <div id="omr-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
+      <!-- Modal Header -->
+      <div class="p-4 sm:p-5 border-b border-slate-800 flex items-center justify-between">
+        <div>
+          <h3 class="text-base font-bold text-white flex items-center gap-2">
+            <span>📋 전체 40문항 빠른 이동 및 OMR</span>
+          </h3>
+          <p class="text-xs text-slate-400">문항 번호를 클릭하면 해당 문항으로 즉시 이동합니다.</p>
+        </div>
+        <button onclick="toggleOMRModal()" class="text-slate-400 hover:text-white p-1">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+
+      <!-- Modal Body (Grid) -->
+      <div class="p-4 sm:p-6 overflow-y-auto custom-scrollbar flex-1">
+        <div class="mb-4">
+          <div class="text-xs font-bold text-emerald-400 mb-2 flex items-center justify-between">
+            <span>객관식 (1 ~ 24)</span>
+            <span class="text-[11px] text-slate-400 font-normal">5지선다</span>
+          </div>
+          <div id="omr-grid-mc" class="grid grid-cols-6 sm:grid-cols-8 gap-2"></div>
+        </div>
+
+        <div>
+          <div class="text-xs font-bold text-teal-400 mb-2 flex items-center justify-between">
+            <span>주관식 단답/괄호형 (25 ~ 40)</span>
+            <span class="text-[11px] text-slate-400 font-normal">단답/숫자/용어</span>
+          </div>
+          <div id="omr-grid-sub" class="grid grid-cols-4 sm:grid-cols-8 gap-2"></div>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-4 border-t border-slate-800 bg-slate-950/60 flex items-center justify-between text-xs text-slate-400">
+        <div class="flex items-center gap-3">
+          <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-slate-700"></span> 미제출</span>
+          <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> 정답</span>
+          <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span> 오답</span>
+          <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full ring-2 ring-teal-400 bg-slate-800"></span> 현재</span>
+        </div>
+        <button onclick="toggleOMRModal()" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-medium">닫기</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const examData = [
+  {
+    "id": 1,
+    "subject": "관계법규",
+    "category": "주택법",
+    "type": "multiple_choice",
+    "question": "주택법령상 기간시설 및 간선시설에 관한 설명으로 옳지 않은 것은?",
+    "options": [
+      "① '기간시설'이란 도로, 상하수도, 전기시설, 가스시설, 통신시설, 지역난방시설 등을 말한다.",
+      "② '간선시설'이란 도로·상하수도·전기시설·가스시설·통신시설 및 지역난방시설 등 주택단지 안의 기간시설을 그 주택단지 밖에 있는 같은 종류의 기간시설에 연결시키는 시설을 말한다.",
+      "③ 주택단지 안의 기간시설인 가스시설·통신시설 및 지역난방시설은 간선시설에 포함된다.",
+      "④ 100호 이상의 단독주택을 건설하는 경우 간선시설 중 도로 및 상하수도시설은 국가가 전액 직접 설치한다.",
+      "⑤ 전기시설·가스시설 또는 지역난방시설은 해당 시설을 공급하는 자가 설치의무를 부담한다."
+    ],
+    "answer": "4",
+    "explanation": "④ 주택법령상 100호 이상 단독주택 건설 시 간선시설 중 도로 및 상하수도시설의 설치의무자는 '지방자치단체'입니다(주택법 제28조 제1항 제1호). 국가가 설치하는 것이 아니므로 ④번이 옳지 않은 지문으로 정답입니다.\n\n[간선시설 법정 설치의무자 핵심 요약]\n- 도로, 상하수도시설: 지방자치단체 (국가는 50% 범위 보조 가능)\n- 전기·가스·난방·통신시설: 해당 시설 공급자\n- 우체통: 국가"
+  },
+  {
+    "id": 2,
+    "subject": "관계법규",
+    "category": "주택법",
+    "type": "multiple_choice",
+    "question": "주택법령상 준주택(準住宅)의 종류와 범위에 해당하지 않는 것은?",
+    "options": [
+      "① 「건축법 시행령」 별표 1에 따른 기숙사",
+      "② 「건축법 시행령」 별표 1에 따른 다중생활시설",
+      "③ 「건축법 시행령」 별표 1에 따른 노인복지시설 중 「노인복지법」에 따른 노인복지주택",
+      "④ 「건축법 시행령」 별표 1에 따른 일반업무시설 중 오피스텔",
+      "⑤ 「건축법 시행령」 별표 1에 따른 제2종 근린생활시설 중 일반음식점"
+    ],
+    "answer": "5",
+    "explanation": "⑤ 주택법령상 준주택(주택 외의 건축물과 그 부속토지로서 주거시설로 이용가능한 시설)의 종류는 '기숙사, 다중생활시설, 노인복지주택, 오피스텔' 4가지(기·다·노·오)입니다. 일반음식점은 준주택에 해당하지 않습니다(주택법 제2조 제4호, 동법 시행령 제4조)."
+  },
+  {
+    "id": 3,
+    "subject": "관계법규",
+    "category": "주택법",
+    "type": "multiple_choice",
+    "question": "주택법령상 주택건설사업 등의 등록에 관한 설명으로 옳지 않은 것은?",
+    "options": [
+      "① 연간 20호 이상의 단독주택건설사업을 시행하려는 자는 국토교통부장관에게 등록하여야 한다.",
+      "② 연간 20세대(도시형 생활주택의 경우 30세대) 이상의 공동주택건설사업을 시행하려는 자는 등록하여야 한다.",
+      "③ 등록사업자의 등록기준 중 자본금은 법인은 3억원 이상, 개인은 자산평가액 6억원 이상이어야 한다.",
+      "④ 기술인력은 주택건설사업의 경우 건축 분야 기술인 1명 이상, 대지조성사업의 경우 토목 분야 기술인 1명 이상을 확보하여야 한다.",
+      "⑤ 국가, 지방자치단체, 한국토지주택공사, 지방공사는 주택건설사업을 시행하려는 경우에도 국토교통부장관에게 등록하여야 한다."
+    ],
+    "answer": "5",
+    "explanation": "⑤ 국가·지방자치단체, 한국토지주택공사(LH), 지방공사, 공익법인 등은 '비등록 사업주체'로서 국토교통부장관에게 등록하지 아니하고 주택건설사업 또는 대지조성사업을 시행할 수 있습니다(주택법 제4조 제1항 단서)."
+  },
+  {
+    "id": 4,
+    "subject": "관계법규",
+    "category": "주택법",
+    "type": "multiple_choice",
+    "question": "주택법령상 사업계획승인 등에 관한 설명으로 옳지 않은 것은?",
+    "options": [
+      "① 단독주택의 경우 원칙적으로 30호 이상, 공동주택의 경우 원칙적으로 30세대 이상의 주택건설사업을 시행하려는 자는 사업계획승인을 받아야 한다.",
+      "② 공공택지에서 건설·공급하는 조립식 단독주택(한옥 포함)은 50호 이상 건설 시 사업계획승인 대상이다.",
+      "③ 사업계획승인권자는 사업계획승인의 신청을 받은 날부터 60일 이내에 승인 여부를 사업주체에게 통보하여야 한다.",
+      "④ 사업계획승인을 받은 사업주체는 승인받은 날부터 5년 이내에 공사를 시작하여야 한다.",
+      "⑤ 사업주체가 소송 지연 등의 정당한 사유로 공사착수기간의 연장을 신청하는 경우 사업계획승인권자는 그 사유가 없어진 날부터 3년의 범위에서 착공기간을 연장할 수 있다."
+    ],
+    "answer": "5",
+    "explanation": "⑤ 사업계획승인권자는 정당한 사유가 있다고 인정하는 경우 사업주체의 신청을 받아 그 사유가 없어진 날부터 '1년'의 범위에서 착수기간을 연장할 수 있습니다(주택법 제16조 제2항, 3년은 오답)."
+  },
+  {
+    "id": 5,
+    "subject": "관계법규",
+    "category": "주택법",
+    "type": "multiple_choice",
+    "question": "주택법령상 주택상환사채의 발행 및 효력에 관한 설명으로 옳지 않은 것은?",
+    "options": [
+      "① 한국토지주택공사와 등록사업자는 주택상환사채를 발행할 수 있다.",
+      "② 등록사업자는 자본금 5억원 이상, 건설산업기본법에 따른 건설업 등록, 최근 3년간 연평균 300세대 이상의 주택건설실적이 있어야 주택상환사채를 발행할 수 있다.",
+      "③ 등록사업자는 금융기관 또는 주택도시보증공사의 보증을 받은 경우에만 주택상환사채를 발행할 수 있다.",
+      "④ 주택상환사채의 상환기간은 3년을 초과할 수 없으며, 이 경우 상환기간은 발행일부터 주택의 공급계약체결일까지의 기간으로 한다.",
+      "⑤ 등록사업자의 등록이 말소된 경우 등록사업자가 기발행한 주택상환사채의 효력은 상실된다."
+    ],
+    "answer": "5",
+    "explanation": "⑤ 등록사업자의 등록이 말소된 경우에도 그가 기발행한 주택상환사채의 효력에는 영향을 미치지 아니합니다(주택법 제73조 제4항). 주택도시보증공사나 금융기관의 보증이 있기 때문입니다."
+  },
+  {
+    "id": 6,
+    "subject": "관계법규",
+    "category": "공동주택관리법",
+    "type": "multiple_choice",
+    "question": "공동주택관리법령상 의무관리대상 공동주택의 범위에 해당하지 않는 것은? (단, 입주자등이 동의하여 의무관리대상으로 정하는 경우는 제외)",
+    "options": [
+      "① 300세대 이상의 공동주택",
+      "② 150세대 이상으로서 승강기가 설치된 공동주택",
+      "③ 150세대 이상으로서 중앙집중식 난방방식(지역난방방식 포함)의 공동주택",
+      "④ 「건축법」에 따른 건축허가를 받아 주택 외의 시설과 주택을 동일 건축물로 건축한 건축물로서 주택이 150세대 이상인 건축물",
+      "⑤ 승강기가 설치된 100세대의 공동주택"
+    ],
+    "answer": "5",
+    "explanation": "⑤ 승강기가 설치된 공동주택이 법정 의무관리대상이 되려면 150세대 이상이어야 합니다. 100세대는 입주자등의 3분의 2 이상 동의를 받아 전환하지 않는 한 법정 당연 의무관리대상이 아닙니다(공동주택관리법 제2조 제1항 제2호)."
+  },
+  {
+    "id": 7,
+    "subject": "관계법규",
+    "category": "공동주택관리법",
+    "type": "multiple_choice",
+    "question": "공동주택관리법령상 입주자대표회의의 임원 선출에 관한 설명으로 옳지 않은 것은?",
+    "options": [
+      "① 입주자대표회의에는 회장 1명, 감사 2명 이상, 이사 1명 이상의 임원을 두어야 한다.",
+      "② 500세대 이상인 공동주택의 회장과 감사는 원칙적으로 전체 입주자등의 보통·평등·직접·비밀선거를 통하여 동별 대표자 중에서 선출한다.",
+      "③ 500세대 미만인 공동주택의 회장과 감사는 원칙적으로 입주자대표회의 구성원 과반수의 찬성으로 선출한다(단, 관리규약으로 직선제로 정한 경우 제외).",
+      "④ 이사는 입주자대표회의 구성원 과반수의 찬성으로 선출한다.",
+      "⑤ 입주자인 동별 대표자 중에서 회장 후보자가 있는 경우 사용자(임차인)인 동별 대표자도 회장이 될 수 있다."
+    ],
+    "answer": "5",
+    "explanation": "⑤ 입주자(소유자)인 동별 대표자 중에서 회장 후보자가 있는 경우에는 사용자(임차인)인 동별 대표자는 회장이 될 수 없습니다. 다만, 입주자인 동별 대표자 중 후보자가 없는 등 관리규약으로 정하는 경우에는 사용자인 동별 대표자도 회장이 될 수 있습니다(공동주택관리법 시행령 제12조)."
+  },
+  {
+    "id": 8,
+    "subject": "관계법규",
+    "category": "공동주택관리법",
+    "type": "multiple_choice",
+    "question": "공동주택관리법령상 관리비의 세부 구성항목 중 '수선유지비'에 포함되지 않는 것은?",
+    "options": [
+      "① 건축물의 안전점검비용",
+      "② 냉난방시설의 청소비, 소화기충약비 등 공동이용시설의 보수유지비 및 제반 검사비",
+      "③ 재난 및 재해 등의 예방에 따른 비용",
+      "④ 장기수선계획에서 제외되는 공동주택 공용부분의 수선·보수에 소요되는 비용",
+      "⑤ 지능형 홈네트워크 설비 관련 인건비 및 자재비"
+    ],
+    "answer": "5",
+    "explanation": "⑤ 지능형 홈네트워크 설비의 유지 및 관리에 소요되는 비용은 관리비 10개 비목 중 독립된 비목인 '지능형 홈네트워크 설비유지비'에 해당하며, 수선유지비에 포함되지 않습니다(공동주택관리법 시행령 별표 2)."
+  },
+  {
+    "id": 9,
+    "subject": "관계법규",
+    "category": "공동주택관리법",
+    "type": "multiple_choice",
+    "question": "공동주택관리법령상 하자보수보증금의 순차적 반환 비율에 관한 설명이다. 사용검사일부터 '3년'이 경과된 때에 반환하여야 하는 하자보수보증금의 비율은?",
+    "options": [
+      "① 100분의 10",
+      "② 100분의 15",
+      "③ 100분의 20",
+      "④ 100분의 25",
+      "⑤ 100분의 40"
+    ],
+    "answer": "5",
+    "explanation": "⑤ 하자보수보증금의 순차적 반환 비율: 사용검사일부터 2년 경과 시 15%, 3년 경과 시 40%, 5년 경과 시 25%, 10년 경과 시 20%를 순차적으로 반환합니다(공동주택관리법 시행령 제45조)."
+  },
+  {
+    "id": 10,
+    "subject": "관계법규",
+    "category": "공동주택관리법",
+    "type": "multiple_choice",
+    "question": "공동주택관리법령상 장기수선계획 및 장기수선충당금에 관한 설명으로 옳지 않은 것은?",
+    "options": [
+      "① 300세대 이상인 공동주택, 승강기가 설치된 공동주택, 중앙집중식 난방방식 공동주택의 사업주체는 장기수선계획을 수립하여 사용검사권자에게 제출하여야 한다.",
+      "② 입주자대표회의와 관리주체는 장기수선계획을 3년마다 검토하고 필요한 경우 이를 조정하여야 한다.",
+      "③ 주요 시설을 신설하는 등 관리여건상 필요하여 3년이 지나기 전에 장기수선계획을 조정하려는 경우에는 입주자대표회의 구성원 과반수의 서면동의를 받아야 한다.",
+      "④ 장기수선충당금은 해당 공동주택의 소유자로부터 징수하여 적립한다.",
+      "⑤ 공동주택의 소유자는 장기수선충당금을 사용자가 대신하여 납부한 경우에는 그 금액을 반환하여야 한다."
+    ],
+    "answer": "3",
+    "explanation": "③ 3년이 지나기 전에 장기수선계획을 조기 조정하려는 경우에는 입주자대표회의 구성원 과반수가 아니라 '전체 입주자 과반수의 서면동의'를 받아야 합니다(공동주택관리법 제29조 제3항)."
+  },
+  {
+    "id": 11,
+    "subject": "관계법규",
+    "category": "건축법",
+    "type": "multiple_choice",
+    "question": "건축법령상 건축물의 용도 구분에 관한 설명으로 옳지 않은 것은?",
+    "options": [
+      "① 단독주택에는 단독주택, 다중주택, 다가구주택, 공관이 포함된다.",
+      "② 공동주택에는 아파트, 연립주택, 다세대주택, 기숙사가 포함된다.",
+      "③ 다중주택은 학생이나 직장인 등 여러 사람이 장기간 거주할 수 있는 구조로서 연면적이 660제곱미터 이하이고 층수가 3개 층 이하인 주택이다.",
+      "④ 다가구주택은 주택으로 쓰는 층수가 3개 층 이하이고, 1개 동의 주택으로 쓰는 바닥면적 합계가 660제곱미터 이하이며, 19세대 이하가 거주할 수 있는 주택이다.",
+      "⑤ 연립주택은 주택으로 쓰는 1개 동의 바닥면적 합계가 660제곱미터 이하이고, 층수가 4개 층 이하인 주택이다."
+    ],
+    "answer": "5",
+    "explanation": "⑤ 연립주택은 주택으로 쓰는 1개 동의 바닥면적 합계가 '660제곱미터를 초과'하고, 층수가 4개 층 이하인 주택입니다. 660제곱미터 이하인 것은 '다세대주택'입니다(건축법 시행령 별표 1)."
+  },
+  {
+    "id": 12,
+    "subject": "관계법규",
+    "category": "건축법",
+    "type": "multiple_choice",
+    "question": "건축법령상 다중이용 건축물에 해당하는 것으로 옳은 것은? (단, 16층 미만인 건축물을 전제로 함)",
+    "options": [
+      "① 바닥면적의 합계가 5천 제곱미터 이상인 문화 및 집회시설 중 동물원",
+      "② 바닥면적의 합계가 5천 제곱미터 이상인 의료시설 중 격리병원",
+      "③ 바닥면적의 합계가 5천 제곱미터 이상인 숙박시설 중 관광숙박시설",
+      "④ 바닥면적의 합계가 5천 제곱미터 이상인 운수시설 중 고속버스터미널 내 정비창고",
+      "⑤ 바닥면적의 합계가 5천 제곱미터 이상인 관광휴게시설"
+    ],
+    "answer": "3",
+    "explanation": "③ 16층 이상이 아닌 건축물 중 바닥면적 합계 5,000㎡ 이상일 때 다중이용 건축물에 해당하는 용도는 1) 문화 및 집회시설(동물원·식물원 제외), 2) 종교시설, 3) 판매시설, 4) 운수시설 중 여객용 시설, 5) 의료시설 중 종합병원, 6) 관광숙박시설의 6가지뿐입니다. 관광휴게시설이나 동물원은 제외됩니다(건축법 시행령 제2조 제17호)."
+  },
+  {
+    "id": 13,
+    "subject": "관계법규",
+    "category": "건축법",
+    "type": "multiple_choice",
+    "question": "건축법령상 건축허가 제한 및 취소에 관한 설명으로 옳지 않은 것은?",
+    "options": [
+      "① 국토교통부장관은 국토관리를 위하여 특히 필요하다고 인정하거나 주무부장관의 요청이 있으면 허가권자의 건축허가나 착공을 제한할 수 있다.",
+      "② 특별시장·광역시장·도지사는 지역계획이나 도시·군계획에 특히 필요하다고 인정하면 시장·군수·구청장의 건축허가나 착공을 제한할 수 있다.",
+      "③ 건축허가나 착공의 제한기간은 2년 이내로 하며, 1회에 한하여 1년 이내의 범위에서 연장할 수 있다.",
+      "④ 허가권자는 건축허가를 받은 자가 허가를 받은 날부터 2년(공장의 경우 3년) 이내에 공사에 착수하지 아니하면 허가를 취소하여야 한다.",
+      "⑤ 착공신고 전에 경매·공매 등으로 건축주가 대지의 소유권을 상실한 때에는 허가권자는 즉시 건축허가를 취소하여야 한다."
+    ],
+    "answer": "5",
+    "explanation": "⑤ 착공신고 전에 경매 등으로 건축주가 대지의 소유권을 상실한 때부터 '6개월이 지난 이후' 공사의 착수가 불가능하다고 판단되는 경우에 건축허가를 취소하여야 합니다. 대지 소유권 상실 즉시 취소하는 것이 아닙니다(건축법 제11조 제7항 제3호)."
+  },
+  {
+    "id": 14,
+    "subject": "관계법규",
+    "category": "건축법",
+    "type": "multiple_choice",
+    "question": "건축법령상 대지와 도로의 관계에 관한 설명으로 옳지 않은 것은?",
+    "options": [
+      "① 건축물의 대지는 2미터 이상이 도로(자동차 전용도로 제외)에 접하여야 한다.",
+      "② 해당 건축물의 출입에 지장이 없다고 인정되는 경우에는 대지가 2미터 이상 도로에 접하지 않아도 된다.",
+      "③ 건축물의 주변에 광장, 공원, 유원지 등 건축이 금지되고 공중의 통행에 지장이 없는 공지가 있는 경우 도로 접도의무가 면제된다.",
+      "④ 연면적의 합계가 2천 제곱미터(공장인 경우 3천 제곱미터) 이상인 건축물의 대지는 너비 6미터 이상의 도로에 4미터 이상 접하여야 한다.",
+      "⑤ 연면적 합계 2천 제곱미터 이상인 축사 및 작물재배사의 대지는 너비 6미터 이상의 도로에 4미터 이상 접하여야 한다."
+    ],
+    "answer": "5",
+    "explanation": "⑤ 연면적 2천 제곱미터 이상 건축물의 대지가 6미터 이상 도로에 4미터 이상 접해야 하는 규정에서 '축사, 작물재배사 및 그 밖에 이와 비슷한 건축물로서 건축조례로 정하는 건축물'은 적용 대상에서 제외됩니다(건축법 시행령 제28조 제2항 단서)."
+  },
+  {
+    "id": 15,
+    "subject": "관계법규",
+    "category": "민간임대주택에 관한 특별법",
+    "type": "multiple_choice",
+    "question": "민간임대주택에 관한 특별법령상 임대사업자의 등록 거부사유에 해당하지 않는 것은?",
+    "options": [
+      "① 등록신청 당시 신청인의 신용도, 부채비율 등을 고려할 때 임대보증금 보증 가입이 현저히 곤란하다고 판단되는 경우",
+      "② 해당 주택이 도시정비법에 따른 정비사업 또는 소규모주택정비사업으로 인하여 임대의무기간 내 멸실 우려가 있다고 판단되는 경우",
+      "③ 체납한 국세 및 지방세의 합계액이 2억원 이상으로서 임대보증금 보증 가입이 현저히 곤란하다고 판단되는 경우(불복절차 진행 중인 금액 제외)",
+      "④ 미성년자가 민간임대주택을 소유하고 임대사업자로 등록을 신청한 경우",
+      "⑤ 거짓으로 등록하여 등록이 전부 말소된 후 2년이 지나지 아니한 자가 등록을 신청한 경우"
+    ],
+    "answer": "4",
+    "explanation": "④ 미성년자라도 민간임대주택으로 등록할 주택을 소유하고 있는 자는 임대사업자로 등록할 수 있습니다. 미성년자라는 이유만으로 등록이 거부되지 않습니다(민간임대주택에 관한 특별법 제5조, 제6조)."
+  },
+  {
+    "id": 16,
+    "subject": "관계법규",
+    "category": "공공주택 특별법",
+    "type": "multiple_choice",
+    "question": "공공주택 특별법령상 공공주택사업자로 지정될 수 있는 자에 해당하지 않는 것은?",
+    "options": [
+      "① 국가 또는 지방자치단체",
+      "② 「한국토지주택공사법」에 따른 한국토지주택공사",
+      "③ 「지방공기업법」에 따라 주택사업을 목적으로 설립된 지방공사",
+      "④ 지방자치단체가 시설물 관리를 목적으로 총지분의 100분의 40을 출자·설립한 지방공단",
+      "⑤ 공공주택사업자가 총지분의 100분의 50을 초과하여 출자·설립한 법인"
+    ],
+    "answer": "4",
+    "explanation": "④ 공공주택사업자로 지정될 수 있는 공공기관에는 국가, 지자체, LH, 지방공사, 공무원연금공단, 주택도시보증공사, 국가철도공단, 한국철도공사, 한국농어촌공사, 한국자산관리공사, 제주국제자유도시개발센터 등이 있으며, 지자체 지분 40% 출자의 시설관리 지방공단은 지정 대상이 아닙니다(공공주택 특별법 제4조 제1항)."
+  },
+  {
+    "id": 17,
+    "subject": "관계법규",
+    "category": "시설물의 안전 및 유지관리에 관한 특별법",
+    "type": "multiple_choice",
+    "question": "시설물의 안전 및 유지관리에 관한 특별법령상 시설물의 종별 구분에 관한 설명으로 옳지 않은 것은?",
+    "options": [
+      "① 21층 이상 또는 연면적 5만 제곱미터 이상의 건축물(공동주택 제외)은 제1종 시설물이다.",
+      "② 연면적 3만 제곱미터 이상의 철도역시설 및 관람장은 제1종 시설물이다.",
+      "③ 21층 이상인 공동주택은 제1종 시설물에 해당한다.",
+      "④ 16층 이상의 공동주택은 제2종 시설물에 해당한다.",
+      "⑤ 연면적 5천 제곱미터 이상의 관광숙박시설은 제2종 시설물에 해당한다."
+    ],
+    "answer": "3",
+    "explanation": "③ 시설물의 안전 및 유지관리에 관한 특별법령상 '공동주택'은 16층 이상인 경우 모두 '제2종 시설물'에 해당하며, 공동주택이 층수나 면적에 관계없이 제1종 시설물이 되는 경우는 없습니다(시특법 시행령 별표 1)."
+  },
+  {
+    "id": 18,
+    "subject": "관계법규",
+    "category": "전기사업법",
+    "type": "multiple_choice",
+    "question": "전기사업법령상 전압의 종별 구분에 관한 설명으로 옳은 것은?",
+    "options": [
+      "① 저압이란 직류 1,000볼트 이하, 교류 1,500볼트 이하의 전압을 말한다.",
+      "② 저압이란 직류 1,500볼트 이하, 교류 1,000볼트 이하의 전압을 말한다.",
+      "③ 고압이란 직류 1,000볼트 초과 7,000볼트 이하, 교류 1,500볼트 초과 7,000볼트 이하의 전압을 말한다.",
+      "④ 특고압이란 10,000볼트를 초과하는 전압을 말한다.",
+      "⑤ 직류와 교류 모두 1,000볼트 이하를 저압으로 본다."
+    ],
+    "answer": "2",
+    "explanation": "② 전기사업법령상 '저압'이란 직류에서는 1,500볼트 이하, 교류에서는 1,000볼트 이하인 전압을 말하며, '고압'은 직류 1,500볼트 초과 7,000볼트 이하, 교류 1,000볼트 초과 7,000볼트 이하, '특고압'은 7,000볼트를 초과하는 전압을 말합니다(전기사업법 시행규칙 제2조 제1항)."
+  },
+  {
+    "id": 19,
+    "subject": "관계법규",
+    "category": "승강기 안전관리법",
+    "type": "multiple_choice",
+    "question": "승강기 안전관리법령상 관리주체의 승강기 안전관리에 관한 설명으로 옳지 않은 것은?",
+    "options": [
+      "① 관리주체는 승강기 운행에 대한 지식이 풍부한 사람을 승강기 안전관리자로 선임하여 승강기를 관리하게 하여야 한다.",
+      "② 관리주체는 승강기 안전관리자를 선임하거나 변경한 경우 30일 이내에 행정안전부장관(한국승강기안전공단)에게 통보하여야 한다.",
+      "③ 승강기 안전관리자는 선임된 후 3개월 이내에 승강기 관리에 관한 교육을 받아야 한다.",
+      "④ 관리주체는 승강기의 안전에 관한 자체점검을 월 1회 이상 실시하고, 자체점검 실시일부터 10일 이내에 그 결과를 승강기안전종합정보망에 입력하여야 한다.",
+      "⑤ 관리주체가 직접 승강기를 관리하는 법인인 경우에는 법인의 소속 직원 중 1인이 승강기관리교육을 받으면 족하며 대표자가 받을 필요는 없다."
+    ],
+    "answer": "5",
+    "explanation": "⑤ 법인인 관리주체가 승강기 안전관리자를 선임하지 않고 직접 승강기를 관리하는 경우에는 그 '법인의 대표자'가 승강기관리교육을 받아야 합니다(승강기 안전관리법 제29조 제3항).\n\n[최신 개정 법령 반영 팩트체크]\n- ② 선임/변경 통보 기한: 개정 법령에 따라 '30일 이내' 통보로 정립\n- ④ 자체점검 입력: '자체점검 실시일부터 10일 이내'에 법정 정식 명칭인 '승강기안전종합정보망'에 입력 의무화"
+  },
+  {
+    "id": 20,
+    "subject": "관계법규",
+    "category": "도시 및 주거환경정비법",
+    "type": "multiple_choice",
+    "question": "도시 및 주거환경정비법령상 정비사업의 종류 및 토지등소유자의 정의에 관한 설명으로 옳지 않은 것은?",
+    "options": [
+      "① 주거환경개선사업은 도시저소득 주민이 집단거주하는 지역으로서 정비기반시설이 극히 열악하고 노후·불량건축물이 과도하게 밀집한 지역에서 시행한다.",
+      "② 재개발사업은 정비기반시설이 열악하고 노후·불량건축물이 밀집한 지역 또는 상업·공업지역 등에서 도시기능 회복을 위해 시행한다.",
+      "③ 재건축사업은 정비기반시설은 양호하나 노후·불량건축물에 해당하는 공동주택이 밀집한 지역에서 주거환경을 개선하기 위해 시행한다.",
+      "④ 재개발사업의 경우 '토지등소유자'는 정비구역에 위치한 토지 또는 건축물의 소유자 또는 그 지상권자를 말한다.",
+      "⑤ 재건축사업의 경우 '토지등소유자'는 정비구역에 위치한 토지 소유자만으로도 조합원이 될 수 있다."
+    ],
+    "answer": "5",
+    "explanation": "⑤ 재건축사업의 '토지등소유자'는 정비구역에 위치한 '건축물 및 그 부속토지의 소유자'를 말하므로, 토지만 소유한 자나 건축물만 소유한 자는 토지등소유자에 해당하지 않습니다(도정법 제2조 제9호 나목)."
+  },
+  {
+    "id": 21,
+    "subject": "관계법규",
+    "category": "도시재정비 촉진을 위한 특별법",
+    "type": "multiple_choice",
+    "question": "도시재정비 촉진을 위한 특별법령상 재정비촉진지구의 효력 상실에 관한 설명이다. ( )에 들어갈 기간으로 옳은 것은?\n\n'재정비촉진지구 지정을 고시한 날부터 ( ㉠ )이 되는 날까지 재정비촉진계획이 결정되지 아니하면 그 ( ㉠ )이 되는 날의 다음 날에 재정비촉진지구 지정의 효력이 상실된다. 다만, 시·도지사 또는 대도시 시장은 해당 기간을 ( ㉡ )의 범위에서 연장할 수 있다.'",
+    "options": [
+      "① ㉠ 1년, ㉡ 6개월",
+      "② ㉠ 2년, ㉡ 1년",
+      "③ ㉠ 3년, ㉡ 1년",
+      "④ ㉠ 3년, ㉡ 2년",
+      "⑤ ㉠ 5년, ㉡ 2년"
+    ],
+    "answer": "2",
+    "explanation": "② 재정비촉진지구 지정 고시일부터 '2년'이 되는 날까지 재정비촉진계획이 결정되지 아니하면 그 2년이 되는 날의 다음 날에 효력이 상실되며, 시·도지사 등은 1년 범위에서 연장할 수 있습니다(도시재정비 촉진을 위한 특별법 제7조 제2항)."
+  },
+  {
+    "id": 22,
+    "subject": "관계법규",
+    "category": "소방기본법",
+    "type": "multiple_choice",
+    "question": "소방기본법령상 소방박물관 및 소방체험관의 설립·운영 주체로 옳은 것은?",
+    "options": [
+      "① 소방박물관: 소방청장 / 소방체험관: 시·도지사",
+      "② 소방박물관: 시·도지사 / 소방체험관: 소방청장",
+      "③ 소방박물관: 행정안전부장관 / 소방체험관: 시장·군수·구청장",
+      "④ 소방박물관: 소방청장 / 소방체험관: 소방본부장",
+      "⑤ 소방박물관: 한국소방안전원 / 소방체험관: 한국119청소년단"
+    ],
+    "answer": "1",
+    "explanation": "① 소방기본법 제5조에 따라 소방의 역사와 안전문화를 발전시키기 위하여 '소방박물관'은 소방청장이, '소방체험관'은 시·도지사가 설립하여 운영할 수 있습니다."
+  },
+  {
+    "id": 23,
+    "subject": "관계법규",
+    "category": "화재의 예방 및 안전관리에 관한 법률",
+    "type": "multiple_choice",
+    "question": "화재의 예방 및 안전관리에 관한 법령상 화재예방강화지구의 지정에 관한 설명으로 옳지 않은 것은?",
+    "options": [
+      "① 시·도지사는 시장밀집, 공장·창고 밀집지역, 목조건물 밀집지역 등을 화재예방강화지구로 지정하여 관리할 수 있다.",
+      "② 소방청장은 시·도지사가 화재예방강화지구로 지정할 필요가 있는 지역을 지정하지 아니하는 경우 해당 시·도지사에게 지정을 요청할 수 있다.",
+      "③ 소방관서장은 화재예방강화지구 안의 소방대상물에 대하여 화재안전조사를 연 1회 이상 실시하여야 한다.",
+      "④ 소방관서장은 화재예방강화지구 안의 관계인에 대하여 소방에 필요한 훈련 및 교육을 연 1회 이상 실시할 수 있다.",
+      "⑤ 소방관서장이 훈련 및 교육을 실시하려는 경우에는 관계인에게 훈련 또는 교육 3일 전까지 통보하여야 한다."
+    ],
+    "answer": "5",
+    "explanation": "⑤ 소방관서장은 화재예방강화지구 안의 관계인에게 소방 훈련 또는 교육을 실시하려는 경우에는 훈련 또는 교육 '10일 전까지' 그 사실을 통보하여야 합니다(화재의 예방 및 안전관리에 관한 법률 시행령 제13조)."
+  },
+  {
+    "id": 24,
+    "subject": "관계법규",
+    "category": "집합건물의 소유 및 관리에 관한 법률",
+    "type": "multiple_choice",
+    "question": "집합건물의 소유 및 관리에 관한 법률상 공용부분의 관리 및 변경에 관한 설명으로 옳지 않은 것은?",
+    "options": [
+      "① 공용부분의 변경에 관한 사항은 원칙적으로 관리단집회에서 구분소유자의 3분의 2 이상 및 의결권의 3분의 2 이상의 결의로써 결정한다.",
+      "② 공용부분의 개량을 위한 것으로서 지나치게 많은 비용이 드는 것이 아닐 때에는 통상의 집회결의(구분소유자 과반수 및 의결권 과반수)로써 결정할 수 있다.",
+      "③ 건물의 노후화 억제 등을 위한 것으로 구분소유권 및 대지사용권의 범위나 내용에 변동을 일으키는 공용부분의 변경은 구분소유자의 5분의 4 이상 및 의결권의 5분의 4 이상의 결의로써 결정한다.",
+      "④ 공용부분의 관리에 관한 사항은 통상의 집회결의로써 결정하되, 보존행위는 각 공유자가 단독으로 할 수 있다.",
+      "⑤ 복도, 계단 등 구조상 공용부분에 관한 물권의 득실변경은 등기하여야 그 효력이 발생한다."
+    ],
+    "answer": "5",
+    "explanation": "⑤ 복도, 계단, 엘리베이터 등 구조상 공용부분에 관한 물권의 득실변경은 '등기를 요하지 아니합니다'(집합건물법 제13조 제3항)."
+  },
+  {
+    "id": 25,
+    "subject": "관계법규",
+    "category": "주택법",
+    "type": "subjective",
+    "question": "주택법령상 주택조합의 조합원 자격 요건에 관한 규정이다. ( )에 들어갈 아라비아 숫자와 용어를 순서대로 쓰시오.\n\n지역주택조합의 조합원이 될 수 있는 사람은 조합설립인가 신청일부터 해당 주택의 입주가능일까지 세대주를 포함한 세대원 전원이 주택을 소유하지 아니하거나, 세대원 중 1명에 한정하여 주거전용면적 ( ㉠ )제곱미터 이하의 주택 ( ㉡ )채를 소유한 세대의 세대주이어야 한다.",
+    "answer": "85, 1",
+    "answer_keywords": [
+      "85",
+      "1",
+      "한"
+    ],
+    "explanation": "주택법 시행령 제21조제1항제1호에 따라 지역주택조합 및 직장주택조합(인가대상)의 조합원은 무주택자이거나 주거전용면적 85제곱미터 이하의 주택 1채를 소유한 세대주이어야 합니다. ㉠ 85, ㉡ 1"
+  },
+  {
+    "id": 26,
+    "subject": "관계법규",
+    "category": "주택법",
+    "type": "subjective",
+    "question": "주택법령상 사용검사 후 매도청구에 관한 규정이다. ( )에 들어갈 아라비아 숫자를 순서대로 쓰시오.\n\n주택의 소유자들은 주택단지 전체 대지에 속하는 일부 토지에 대한 소유권이전등기 말소소송 등에 따라 사용검사를 받은 이후에 소유권을 회복한 실소유자에게 해당 토지를 시가로 매도청구할 수 있다. 이 경우 대표자는 주택 소유자 전체의 ( ㉠ )분의 ( ㉡ ) 이상의 동의를 받아 선정하며, 매도청구를 하려는 토지 면적은 주택단지 전체 대지면적의 ( ㉢ )퍼센트 미만이어야 한다.",
+    "answer": "4, 3, 5",
+    "answer_keywords": [
+      "4",
+      "3",
+      "5"
+    ],
+    "explanation": "주택법 제62조(사용검사 후 매도청구 등)에 따라 대표자는 소유자 전체의 4분의 3 이상의 동의를 받아 선정하며, 매도청구 대상 토지 면적은 전체 대지면적의 5퍼센트 미만이어야 합니다. ㉠ 4, ㉡ 3, ㉢ 5"
+  },
+  {
+    "id": 27,
+    "subject": "관계법규",
+    "category": "주택법",
+    "type": "subjective",
+    "question": "주택법령상 리모델링주택조합의 설립인가 결의 요건에 관한 규정이다. ( )에 들어갈 숫자를 순서대로 쓰시오.\n\n주택단지 전체를 리모델링하고자 리모델링주택조합의 설립인가를 받으려는 경우 주택단지 전체의 구분소유자와 의결권의 각 ( ㉠ ) 이상의 결의 및 각 동의 구분소유자와 의결권의 각 ( ㉡ )의 결의가 있어야 한다.",
+    "answer": "3분의 2, 과반수",
+    "answer_keywords": [
+      "3분의 2",
+      "2/3",
+      "과반수"
+    ],
+    "explanation": "주택법 시행령 제20조에 따라 리모델링주택조합 설립인가 시 주택단지 전체는 전체 구분소유자 및 의결권의 각 3분의 2(2/3) 이상 결의와 각 동별 구분소유자 및 의결권의 각 과반수 결의가 필요합니다. ㉠ 3분의 2 (또는 2/3), ㉡ 과반수"
+  },
+  {
+    "id": 28,
+    "subject": "관계법규",
+    "category": "공동주택관리법",
+    "type": "subjective",
+    "question": "공동주택관리법령상 층간소음관리위원회의 의무 구성 기준에 관한 내용이다. ( )에 들어갈 아라비아 숫자를 쓰시오.\n\n의무관리대상 공동주택 중 ( )세대 이상인 공동주택의 입주자대표회의 및 관리주체는 층간소음 예방 및 분쟁 조정을 위하여 단지 내 층간소음관리위원회를 의무적으로 구성하여야 한다.",
+    "answer": "700",
+    "answer_keywords": [
+      "700",
+      "700세대"
+    ],
+    "explanation": "공동주택관리법 시행령 개정 규정에 따라 의무관리대상 공동주택 중 700세대 이상 단지는 층간소음관리위원회를 의무적으로 구성하여야 합니다(구 입법예고안 500세대가 아닌 현행 확정 시행령 700세대 기준)."
+  },
+  {
+    "id": 29,
+    "subject": "관계법규",
+    "category": "공동주택관리법",
+    "type": "subjective",
+    "question": "공동주택관리법령상 관리사무소장의 손해배상책임 보장(보증설정)에 관한 설명이다. ( )에 들어갈 아라비아 숫자를 순서대로 쓰시오.\n\n관리사무소장으로 배치된 주택관리사등은 업무상 손해배상책임을 보장하기 위하여 보증보험 또는 공제에 가입하거나 공탁을 하여야 한다. 보증설정 금액은 500세대 미만인 공동주택은 ( ㉠ )천만원, 500세대 이상인 공동주택은 ( ㉡ )천만원 이상이어야 한다.",
+    "answer": "3, 5",
+    "answer_keywords": [
+      "3",
+      "5",
+      "3천",
+      "5천"
+    ],
+    "explanation": "공동주택관리법 시행령 제70조에 따라 관리사무소장의 보증설정 금액은 500세대 미만 3천만원 이상, 500세대 이상 5천만원 이상입니다. ㉠ 3, ㉡ 5"
+  },
+  {
+    "id": 30,
+    "subject": "관계법규",
+    "category": "공동주택관리법",
+    "type": "subjective",
+    "question": "공동주택관리법령상 하자보수청구에 관한 설명이다. ( )에 들어갈 아라비아 숫자를 순서대로 쓰시오.\n\n사업주체는 하자보수를 청구받은 날부터 ( ㉠ )일 이내에 그 하자를 보수하거나 하자보수계획을 시장·군수·구청장과 청구인에게 통보하여야 한다. 이 경우 하자보수계획서에 명시하는 보수기간은 특별한 사유가 없으면 ( ㉡ )일 이내로 하여야 한다.",
+    "answer": "15, 60",
+    "answer_keywords": [
+      "15",
+      "60"
+    ],
+    "explanation": "공동주택관리법 시행령 제38조에 따라 사업주체는 청구받은 날부터 15일 이내에 보수하거나 하자보수계획을 통보해야 하며, 보수기간은 특별한 사유가 없으면 60일 이내로 해야 합니다. ㉠ 15, ㉡ 60"
+  },
+  {
+    "id": 31,
+    "subject": "관계법규",
+    "category": "건축법",
+    "type": "subjective",
+    "question": "건축법령상 건축물의 '대수선' 범위에 관한 규정이다. ( )에 들어갈 아라비아 숫자를 순서대로 쓰시오.\n\n1. 내력벽을 증설 또는 해체하거나 그 벽면적을 ( ㉠ )제곱미터 이상 수선 또는 변경하는 것\n2. 기둥을 증설 또는 해체하거나 ( ㉡ )개 이상 수선 또는 변경하는 것\n3. 보를 증설 또는 해체하거나 ( ㉢ )개 이상 수선 또는 변경하는 것",
+    "answer": "30, 3, 3",
+    "answer_keywords": [
+      "30",
+      "3",
+      "3"
+    ],
+    "explanation": "건축법 시행령 제3조의2에 따라 대수선은 내력벽 벽면적 30제곱미터 이상 수선·변경, 기둥 3개 이상 수선·변경, 보 3개 이상 수선·변경입니다. ㉠ 30, ㉡ 3, ㉢ 3"
+  },
+  {
+    "id": 32,
+    "subject": "관계법규",
+    "category": "건축법",
+    "type": "subjective",
+    "question": "건축법령상 고층건축물 및 초고층건축물의 정의에 관한 설명이다. ( )에 들어갈 아라비아 숫자를 순서대로 쓰시오.\n\n1. '고층건축물'이란 층수가 ( ㉠ )층 이상이거나 높이가 ( ㉡ )미터 이상인 건축물을 말한다.\n2. '초고층건축물'이란 층수가 ( ㉢ )층 이상이거나 높이가 ( ㉣ )미터 이상인 건축물을 말한다.",
+    "answer": "30, 120, 50, 200",
+    "answer_keywords": [
+      "30",
+      "120",
+      "50",
+      "200"
+    ],
+    "explanation": "건축법 제2조 제1항 제19호 및 시행령 제2조에 따라 고층건축물은 층수 30층 이상 또는 높이 120미터 이상, 초고층건축물은 층수 50층 이상 또는 높이 200미터 이상입니다. ㉠ 30, ㉡ 120, ㉢ 50, ㉣ 200"
+  },
+  {
+    "id": 33,
+    "subject": "관계법규",
+    "category": "건축법",
+    "type": "subjective",
+    "question": "건축법령상 구조안전 확인 서류에 관한 규정이다. ( )에 들어갈 직함을 순서대로 쓰시오.\n\n건축물을 건축하거나 대수선하는 경우 ( ㉠ )은(는) 구조의 안전을 확인하여야 하며, ( ㉡ )은(는) 착공신고를 하는 때에 구조 안전 확인 서류를 허가권자에게 제출하여야 한다.",
+    "answer": "설계자, 건축주",
+    "answer_keywords": [
+      "설계자",
+      "건축주"
+    ],
+    "explanation": "건축법 제48조제2항에 따라 구조의 안전을 확인하는 주체는 '설계자'이고, 착공신고 시 확인 서류를 허가권자에게 제출하는 법적 의무자는 '건축주'입니다. ㉠ 설계자, ㉡ 건축주"
+  },
+  {
+    "id": 34,
+    "subject": "관계법규",
+    "category": "민간임대주택에 관한 특별법",
+    "type": "subjective",
+    "question": "민간임대주택에 관한 특별법령상 임대보증금에 대한 보증 수수료 부담 비율에 관한 규정이다. ( )에 들어갈 아라비아 숫자를 순서대로 쓰시오.\n\n임대사업자가 가입하는 임대보증금 보증에 수반되는 보증수수료는 임대사업자가 100분의 ( ㉠ )을 부담하고, 임차인이 100분의 ( ㉡ )을 부담한다.",
+    "answer": "75, 25",
+    "answer_keywords": [
+      "75",
+      "25"
+    ],
+    "explanation": "민간임대주택에 관한 특별법 시행령 제40조에 따라 임대보증금 보증수수료는 임대사업자가 75%(100분의 75), 임차인이 25%(100분의 25)를 부담합니다. ㉠ 75, ㉡ 25"
+  },
+  {
+    "id": 35,
+    "subject": "관계법규",
+    "category": "공공주택 특별법",
+    "type": "subjective",
+    "question": "공공주택 특별법령상 공공주택지구 지정 비율에 관한 설명이다. ( )에 들어갈 아라비아 숫자를 순서대로 쓰시오.\n\n공공주택지구의 경우 공공임대주택은 전체 주택 호수의 100분의 ( ㉠ ) 이상이어야 하고, 공공분양주택은 전체 주택 호수의 100분의 ( ㉡ ) 이하이어야 하며, 공공주택(공공임대+공공분양) 전체는 전체 주택 호수의 100분의 ( ㉢ ) 이상이어야 한다.",
+    "answer": "35, 30, 50",
+    "answer_keywords": [
+      "35",
+      "30",
+      "50"
+    ],
+    "explanation": "공공주택 특별법 시행령 제3조에 따라 공공임대주택은 전체 호수의 35% 이상, 공공분양주택은 30% 이하, 공공주택 합계는 50% 이상이어야 합니다. ㉠ 35, ㉡ 30, ㉢ 50"
+  },
+  {
+    "id": 36,
+    "subject": "관계법규",
+    "category": "시설물의 안전 및 유지관리에 관한 특별법",
+    "type": "subjective",
+    "question": "시설물의 안전 및 유지관리에 관한 특별법령상 제1종 시설물에 대한 정밀안전진단의 안전등급별 정기 실시 주기에 관한 내용이다. ( )에 들어갈 아라비아 숫자를 순서대로 쓰시오.\n\n1. 안전등급 A등급: ( ㉠ )년에 1회 이상\n2. 안전등급 B·C등급: ( ㉡ )년에 1회 이상\n3. 안전등급 D·E등급: ( ㉢ )년에 1회 이상",
+    "answer": "6, 5, 4",
+    "answer_keywords": [
+      "6",
+      "5",
+      "4"
+    ],
+    "explanation": "시특법 시행령 별표 3에 따라 제1종 시설물의 정밀안전진단 정기 실시 주기는 A등급 6년에 1회 이상, B·C등급 5년에 1회 이상, D·E등급 4년에 1회 이상입니다. (암기공식: 6-5-4) ㉠ 6, ㉡ 5, ㉢ 4"
+  },
+  {
+    "id": 37,
+    "subject": "관계법규",
+    "category": "전기사업법",
+    "type": "subjective",
+    "question": "전기사업법령상 용어의 정의에 관한 설명이다. ( )에 들어갈 법률 용어를 쓰시오.\n\n'전기의 원활한 흐름과 품질유지를 위하여 전기의 흐름을 통제·관리하는 체제'를 ( )(이)라고 한다.",
+    "answer": "전력계통",
+    "answer_keywords": [
+      "전력계통"
+    ],
+    "explanation": "전기사업법 제2조 제14호에 따라 전기의 원활한 흐름과 품질유지를 위하여 전기의 흐름을 통제·관리하는 체제는 '전력계통'입니다. (전력관리체계가 아님에 유의)"
+  },
+  {
+    "id": 38,
+    "subject": "관계법규",
+    "category": "승강기 안전관리법",
+    "type": "subjective",
+    "question": "승강기 안전관리법령상 승강기 사고배상책임보험의 법정 보상한도액에 관한 규정이다. ( )에 들어갈 아라비아 숫자를 순서대로 쓰시오.\n\n관리주체는 승강기 사고로 인한 손해배상책임을 보장하기 위해 책임보험에 가입하여야 한다.\n1. 사망의 경우: 1인당 ( ㉠ )천만원 이상 (실손해액이 2천만원 미만인 경우 2천만원)\n2. 재산피해의 경우: 1사고당 ( ㉡ )천만원 이상",
+    "answer": "8, 1",
+    "answer_keywords": [
+      "8",
+      "1",
+      "8천",
+      "1천",
+      "8000",
+      "1000"
+    ],
+    "explanation": "승강기 안전관리법 시행령 제27조에 따라 사망 1인당 8,000만원(8천만원) 이상, 재산피해 1사고당 1,000만원(1천만원) 이상입니다. ㉠ 8, ㉡ 1"
+  },
+  {
+    "id": 39,
+    "subject": "관계법규",
+    "category": "도시 및 주거환경정비법",
+    "type": "subjective",
+    "question": "도시 및 주거환경정비법령상 정비사업 조합의 임원 정수에 관한 규정이다. ( )에 들어갈 아라비아 숫자를 순서대로 쓰시오.\n\n1. 조합에는 조합장 1명과 이사, 감사를 둔다.\n2. 이사의 수는 ( ㉠ )명 이상으로 하되, 토지등소유자의 수가 100인을 초과하는 경우에는 이사의 수를 ( ㉡ )명 이상으로 한다.\n3. 감사의 수는 1명 이상 ( ㉢ )명 이하로 한다.",
+    "answer": "3, 5, 3",
+    "answer_keywords": [
+      "3",
+      "5",
+      "3"
+    ],
+    "explanation": "도시 및 주거환경정비법 제41조에 따라 이사는 3명 이상(토지등소유자 100인 초과 시 5명 이상), 감사는 1명 이상 3명 이하입니다. ㉠ 3, ㉡ 5, ㉢ 3"
+  },
+  {
+    "id": 40,
+    "subject": "관계법규",
+    "category": "소방시설 설치 및 관리에 관한 법률",
+    "type": "subjective",
+    "question": "소방시설 설치 및 관리에 관한 법령상 소방용품의 내용연수에 관한 설명이다. ( )에 들어갈 용어와 아라비아 숫자를 순서대로 쓰시오.\n\n특정소방대상물의 관계인은 내용연수가 경과한 소방용품을 교체하여야 한다. 내용연수를 설정하여야 하는 소방용품은 ( ㉠ ) 형태의 소화약제를 사용하는 소화기로 하며, 그 내용연수는 ( ㉡ )년으로 한다.",
+    "answer": "분말, 10",
+    "answer_keywords": [
+      "분말",
+      "10"
+    ],
+    "explanation": "소방시설 설치 및 관리에 관한 법률 시행령 제17조에 따라 내용연수 설정 대상은 '분말' 형태의 소화약제를 사용하는 소화기이며, 내용연수는 '10년'입니다. ㉠ 분말, ㉡ 10"
+  }
+];
+
+    let currentIndex = 0;
+    let userAnswers = {};
+    let gradingResults = {};
+    let timerSeconds = 0;
+    let timerInterval = null;
+
+    // Timer Start
+    timerInterval = setInterval(() => {
+      timerSeconds++;
+      const mins = String(Math.floor(timerSeconds / 60)).padStart(2, '0');
+      const secs = String(timerSeconds % 60).padStart(2, '0');
+      const el = document.getElementById('timer-display');
+      if (el) el.innerText = `⏱️ ${mins}:${secs}`;
+    }, 1000);
+
+    function renderQuestion(index) {
+      if (index < 0 || index >= examData.length) return;
+      currentIndex = index;
+      const q = examData[index];
+
+      // Update Header Progress
+      document.getElementById('cur-num').innerText = String(q.id).padStart(2, '0');
+      document.getElementById('progress-text').innerText = `${q.id} / ${examData.length}`;
+      const pct = Math.round((q.id / examData.length) * 100);
+      document.getElementById('progress-pct').innerText = `${pct}%`;
+      document.getElementById('progress-bar').style.width = `${pct}%`;
+
+      // Update Badges
+      document.getElementById('badge-category').innerText = q.category;
+      document.getElementById('badge-type').innerText = q.type === 'multiple_choice' ? '객관식 (5지선다)' : '주관식 (단답/괄호형)';
+
+      // Render Question Text
+      document.getElementById('question-text').innerText = q.question;
+
+      // Render Options / Inputs
+      const container = document.getElementById('options-container');
+      container.innerHTML = '';
+
+      if (q.type === 'multiple_choice') {
+        q.options.forEach((opt, optIdx) => {
+          const optNum = String(optIdx + 1);
+          const isSelected = userAnswers[q.id] === optNum;
+          const btn = document.createElement('button');
+          btn.className = `w-full text-left p-3.5 sm:p-4 rounded-xl border text-sm sm:text-base transition-all flex items-start gap-3 ${
+            isSelected 
+              ? 'bg-emerald-950/60 border-emerald-500 text-emerald-100 shadow-md ring-1 ring-emerald-500' 
+              : 'bg-slate-950/60 hover:bg-slate-800/80 border-slate-800 text-slate-200'
+          }`;
+          btn.onclick = () => selectMCOption(q.id, optNum);
+          btn.innerHTML = `
+            <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5 ${
+              isSelected ? 'bg-emerald-500 text-slate-950' : 'bg-slate-800 text-slate-300'
+            }">${optNum}</span>
+            <span class="leading-relaxed">${opt.replace(/^[①-⑤]\s*/, '')}</span>
+          `;
+          container.appendChild(btn);
+        });
+      } else {
+        // Subjective Input
+        const wrapper = document.createElement('div');
+        wrapper.className = 'space-y-3';
+        
+        const curAns = userAnswers[q.id] || '';
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.id = `input-q-${q.id}`;
+        input.value = curAns;
+        input.placeholder = '답안을 입력하세요 (여러 괄호는 쉼표로 구분 예: 85, 1)';
+        input.className = 'w-full p-4 rounded-xl bg-slate-950/80 border border-slate-700 text-slate-100 text-base focus:border-teal-400 focus:outline-none focus:ring-1 focus:ring-teal-400 placeholder:text-slate-600 transition';
+        input.oninput = (e) => {
+          userAnswers[q.id] = e.target.value;
+          updateAnsweredStat();
+        };
+        input.onkeydown = (e) => {
+          if (e.key === 'Enter') {
+            checkCurrentAnswer();
+          }
+        };
+
+        const hint = document.createElement('p');
+        hint.className = 'text-xs text-slate-500';
+        hint.innerText = '💡 입력 후 [정답 확인] 버튼 또는 Enter 키를 누르면 즉시 채점됩니다.';
+
+        wrapper.appendChild(input);
+        wrapper.appendChild(hint);
+        container.appendChild(wrapper);
+
+        setTimeout(() => input.focus(), 50);
+      }
+
+      // Update Feedback Area if already graded
+      renderFeedback(q.id);
+      updateNavButtons();
+      updateAnsweredStat();
+    }
+
+    function selectMCOption(qId, optNum) {
+      userAnswers[qId] = optNum;
+      renderQuestion(currentIndex);
+      checkCurrentAnswer();
+    }
+
+    function checkCurrentAnswer() {
+      const q = examData[currentIndex];
+      const userAns = (userAnswers[q.id] || '').trim();
+
+      if (!userAns) {
+        alert('답안을 선택하거나 입력해주세요.');
+        return;
+      }
+
+      let isCorrect = false;
+      if (q.type === 'multiple_choice') {
+        isCorrect = (userAns === q.answer);
+      } else {
+        const cleanUser = userAns.replace(/\s+/g, '').toLowerCase();
+        const cleanAnswer = q.answer.replace(/\s+/g, '').toLowerCase();
+        
+        if (cleanUser === cleanAnswer) {
+          isCorrect = true;
+        } else if (q.answer_keywords) {
+          isCorrect = q.answer_keywords.every(kw => cleanUser.includes(kw.replace(/\s+/g, '').toLowerCase()));
+        }
+      }
+
+      gradingResults[q.id] = {
+        isCorrect: isCorrect,
+        userAnswer: userAns,
+        correctAnswer: q.answer
+      };
+
+      renderFeedback(q.id);
+      updateAnsweredStat();
+    }
+
+    function renderFeedback(qId) {
+      const feedbackArea = document.getElementById('feedback-area');
+      const statusDiv = document.getElementById('feedback-status');
+      const expBox = document.getElementById('explanation-box');
+      const expText = document.getElementById('explanation-text');
+      const q = examData.find(item => item.id === qId);
+
+      const graded = gradingResults[qId];
+      if (!graded) {
+        feedbackArea.classList.add('hidden');
+        return;
+      }
+
+      feedbackArea.classList.remove('hidden');
+      expBox.classList.remove('hidden');
+
+      if (graded.isCorrect) {
+        feedbackArea.className = 'mb-6 p-4 rounded-xl border bg-emerald-950/40 border-emerald-800/80 transition-all';
+        statusDiv.innerHTML = `
+          <span class="flex items-center gap-1.5 text-emerald-400">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            정답입니다! (+2.5점)
+          </span>
+          <span class="text-xs text-slate-400 font-normal">정답: ${q.answer}</span>
+        `;
+      } else {
+        feedbackArea.className = 'mb-6 p-4 rounded-xl border bg-rose-950/40 border-rose-800/80 transition-all';
+        statusDiv.innerHTML = `
+          <span class="flex items-center gap-1.5 text-rose-400">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            오답입니다!
+          </span>
+          <span class="text-xs text-slate-300 font-normal">제출: <span class="text-rose-300 font-semibold">${graded.userAnswer}</span> / 정답: <span class="text-emerald-400 font-bold">${q.answer}</span></span>
+        `;
+      }
+
+      expText.innerText = q.explanation;
+    }
+
+    function toggleExplanation() {
+      const expBox = document.getElementById('explanation-box');
+      expBox.classList.toggle('hidden');
+    }
+
+    function navQuestion(step) {
+      const nextIdx = currentIndex + step;
+      if (nextIdx >= 0 && nextIdx < examData.length) {
+        renderQuestion(nextIdx);
+      }
+    }
+
+    function updateNavButtons() {
+      document.getElementById('btn-prev').disabled = (currentIndex === 0);
+      document.getElementById('btn-next').disabled = (currentIndex === examData.length - 1);
+      document.getElementById('btn-prev').style.opacity = (currentIndex === 0) ? '0.5' : '1';
+      document.getElementById('btn-next').style.opacity = (currentIndex === examData.length - 1) ? '0.5' : '1';
+    }
+
+    function updateAnsweredStat() {
+      const count = Object.keys(userAnswers).filter(k => userAnswers[k] && userAnswers[k].trim() !== '').length;
+      document.getElementById('answered-stat').innerText = `제출완료: ${count} / ${examData.length} 문항`;
+    }
+
+    function toggleOMRModal() {
+      const modal = document.getElementById('omr-modal');
+      const isHidden = modal.classList.contains('hidden');
+      if (isHidden) {
+        renderOMRGrid();
+        modal.classList.remove('hidden');
+      } else {
+        modal.classList.add('hidden');
+      }
+    }
+
+    function renderOMRGrid() {
+      const mcGrid = document.getElementById('omr-grid-mc');
+      const subGrid = document.getElementById('omr-grid-sub');
+      mcGrid.innerHTML = '';
+      subGrid.innerHTML = '';
+
+      examData.forEach((q, idx) => {
+        const isCurrent = (idx === currentIndex);
+        const graded = gradingResults[q.id];
+        const isAnswered = !!userAnswers[q.id];
+
+        let statusClass = 'bg-slate-800 text-slate-400 border-slate-700 hover:bg-slate-700';
+        if (graded) {
+          if (graded.isCorrect) {
+            statusClass = 'bg-emerald-600 text-white font-bold border-emerald-500 shadow';
+          } else {
+            statusClass = 'bg-rose-600 text-white font-bold border-rose-500 shadow';
+          }
+        } else if (isAnswered) {
+          statusClass = 'bg-slate-700 text-slate-200 border-slate-600';
+        }
+
+        const ringClass = isCurrent ? 'ring-2 ring-teal-400 ring-offset-2 ring-offset-slate-900 scale-105' : '';
+
+        const btn = document.createElement('button');
+        btn.className = `p-2 rounded-lg border text-xs font-mono transition flex flex-col items-center justify-center gap-0.5 ${statusClass} ${ringClass}`;
+        btn.onclick = () => {
+          toggleOMRModal();
+          renderQuestion(idx);
+        };
+        btn.innerHTML = `
+          <span class="font-bold">${String(q.id).padStart(2, '0')}</span>
+          <span class="text-[9px] opacity-75">${userAnswers[q.id] ? (q.type === 'multiple_choice' ? userAnswers[q.id] : '입력') : '-'}</span>
+        `;
+
+        if (q.type === 'multiple_choice') {
+          mcGrid.appendChild(btn);
+        } else {
+          subGrid.appendChild(btn);
+        }
+      });
+    }
+
+    function finishExam() {
+      examData.forEach(q => {
+        if (!gradingResults[q.id] && userAnswers[q.id]) {
+          const userAns = (userAnswers[q.id] || '').trim();
+          let isCorrect = false;
+          if (q.type === 'multiple_choice') {
+            isCorrect = (userAns === q.answer);
+          } else {
+            const cleanUser = userAns.replace(/\s+/g, '').toLowerCase();
+            const cleanAnswer = q.answer.replace(/\s+/g, '').toLowerCase();
+            if (cleanUser === cleanAnswer) {
+              isCorrect = true;
+            } else if (q.answer_keywords) {
+              isCorrect = q.answer_keywords.every(kw => cleanUser.includes(kw.replace(/\s+/g, '').toLowerCase()));
+            }
+          }
+          gradingResults[q.id] = {
+            isCorrect: isCorrect,
+            userAnswer: userAns,
+            correctAnswer: q.answer
+          };
+        }
+      });
+
+      let correctCount = 0;
+      let wrongQuestions = [];
+
+      examData.forEach(q => {
+        const res = gradingResults[q.id];
+        if (res && res.isCorrect) {
+          correctCount++;
+        } else {
+          wrongQuestions.push({
+            question: q,
+            result: res || { isCorrect: false, userAnswer: '(미제출)', correctAnswer: q.answer }
+          });
+        }
+      });
+
+      const totalScore = (correctCount * 2.5).toFixed(1);
+      const isPass = (parseFloat(totalScore) >= 60.0);
+
+      document.getElementById('score-total').innerText = `${totalScore}점`;
+      document.getElementById('score-correct-count').innerText = `${correctCount} / 40`;
+      document.getElementById('score-accuracy').innerText = `${Math.round((correctCount / 40) * 100)}%`;
+
+      const passBadge = document.getElementById('score-pass-badge');
+      const passSub = document.getElementById('score-pass-sub');
+      if (isPass) {
+        passBadge.innerText = '합격권 (PASS)';
+        passBadge.className = 'text-lg font-black text-emerald-400 mt-1';
+        passSub.innerText = '기준 60점 통과';
+      } else {
+        passBadge.innerText = '불합격 (FAIL)';
+        passBadge.className = 'text-lg font-black text-rose-400 mt-1';
+        passSub.innerText = '60점 미만 또는 과락';
+      }
+
+      document.getElementById('wrong-count-badge').innerText = `오답 ${wrongQuestions.length}개`;
+      const wrongList = document.getElementById('wrong-note-list');
+      wrongList.innerHTML = '';
+
+      if (wrongQuestions.length === 0) {
+        wrongList.innerHTML = `
+          <div class="text-center py-8 text-slate-400">
+            <div class="text-3xl mb-2">🎉</div>
+            <div class="font-bold text-white text-base">축하합니다! 40문항 모두 정답입니다!</div>
+            <div class="text-xs text-slate-500 mt-1">완벽한 실전 감각을 유지하고 계십니다.</div>
+          </div>
+        `;
+      } else {
+        wrongQuestions.forEach(({ question: q, result: res }) => {
+          const item = document.createElement('div');
+          item.className = 'p-4 sm:p-5 rounded-xl bg-slate-950/70 border border-slate-800 space-y-3';
+          item.innerHTML = `
+            <div class="flex items-center justify-between flex-wrap gap-2">
+              <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 rounded text-xs font-bold bg-rose-950 border border-rose-800 text-rose-300">Q${String(q.id).padStart(2, '0')}</span>
+                <span class="px-2 py-0.5 rounded text-xs font-medium bg-slate-800 text-slate-300 border border-slate-700">${q.category}</span>
+                <span class="text-xs text-slate-400">${q.type === 'multiple_choice' ? '객관식' : '주관식'}</span>
+              </div>
+              <button onclick="reviewQuestion(${q.id - 1})" class="text-xs text-emerald-400 hover:text-emerald-300 underline font-medium">
+                해당 문항 바로가기 →
+              </button>
+            </div>
+            <p class="text-sm font-medium text-slate-200 whitespace-pre-line">${q.question}</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs bg-slate-900/80 p-3 rounded-lg border border-slate-800">
+              <div class="text-rose-400"><strong>나의 제출답안:</strong> ${res.userAnswer || '(미제출)'}</div>
+              <div class="text-emerald-400"><strong>정답:</strong> ${q.answer}</div>
+            </div>
+            <div class="text-xs text-slate-400 bg-slate-900/50 p-3 rounded-lg border border-slate-800/80 space-y-1">
+              <div class="font-bold text-slate-300 flex items-center gap-1">
+                <span>📌 핵심 법령 및 교정 포인트</span>
+              </div>
+              <p class="text-slate-300 whitespace-pre-line leading-relaxed">${q.explanation}</p>
+            </div>
+          `;
+          wrongList.appendChild(item);
+        });
+      }
+
+      document.getElementById('exam-screen').classList.add('hidden');
+      document.getElementById('result-screen').classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function backToExamView() {
+      document.getElementById('result-screen').classList.add('hidden');
+      document.getElementById('exam-screen').classList.remove('hidden');
+      renderQuestion(currentIndex);
+    }
+
+    function reviewQuestion(idx) {
+      document.getElementById('result-screen').classList.add('hidden');
+      document.getElementById('exam-screen').classList.remove('hidden');
+      renderQuestion(idx);
+    }
+
+    function restartExam(onlyWrong) {
+      if (onlyWrong) {
+        const newAnswers = {};
+        const newGrading = {};
+        examData.forEach(q => {
+          if (gradingResults[q.id] && !gradingResults[q.id].isCorrect) {
+            // keep empty to retry
+          } else if (gradingResults[q.id] && gradingResults[q.id].isCorrect) {
+            newAnswers[q.id] = userAnswers[q.id];
+            newGrading[q.id] = gradingResults[q.id];
+          }
+        });
+        userAnswers = newAnswers;
+        gradingResults = newGrading;
+      } else {
+        userAnswers = {};
+        gradingResults = {};
+      }
+      document.getElementById('result-screen').classList.add('hidden');
+      document.getElementById('exam-screen').classList.remove('hidden');
+      renderQuestion(0);
+    }
+
+    // Keyboard Shortcuts
+    window.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+      if (['1', '2', '3', '4', '5'].includes(e.key)) {
+        const q = examData[currentIndex];
+        if (q.type === 'multiple_choice') {
+          selectMCOption(q.id, e.key);
+        }
+      } else if (e.key === 'ArrowLeft') {
+        navQuestion(-1);
+      } else if (e.key === 'ArrowRight') {
+        navQuestion(1);
+      } else if (e.key === 'Enter') {
+        checkCurrentAnswer();
+      }
+    });
+
+    // Initialize App
+    renderQuestion(0);
+  </script>
+</body>
+</html>

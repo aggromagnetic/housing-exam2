@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 관계법규 - 제70강 학습 노트 (전기사업법 체계 및 전기신사업)</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+            letter-spacing: -0.05em;
+        }
+        
+        h1 {
+            font-size: 12pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #16803d;
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #6d28d9;
+        }
+        
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        ol {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        .quiz-list li {
+            margin-bottom: 8px;
+        }
+
+        .answer-container {
+            margin-top: 30px;
+            padding: 15px;
+            border-top: 1px dashed #666666;
+            font-size: 9.5pt;
+            color: #666666;
+            line-height: 1.8;
+        }
+
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px 15px;
+            margin-top: 10px;
+        }
+
+        .answer-grid div {
+            border-bottom: 1px none #eeeeee;
+        }
+
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        제70강. 전기사업법 - 전기사업 5종·전기신사업 6종·겸업 금지·전기설비 분류·공급약관 및 전력거래 체계
+    </h1>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        1. 5대 전통 전기사업 구분, 허가권자 및 겸업 금지 예외 (법 제2조·제6조)
+    </h2>
+    <ul>
+        <li><strong>전기사업의 정의 및 5가지 종류 (허가 대상)</strong>:
+            <ul>
+                <li><span class="highlight-blue">발전사업</span>: 전기를 생산하여 전력시장을 통하여 전기판매사업자에게 공급하는 것을 주된 목적으로 하는 사업.</li>
+                <li><span class="highlight-purple">송전사업</span>: 발전소에서 배전사업자까지 전기를 송전하는 데 필요한 전기설비를 설치·관리하는 사업.</li>
+                <li><span class="highlight-green">배전사업</span>: 전기사용자에게 전기를 배전하는 데 필요한 전기설비를 설치·운영하는 사업.</li>
+                <li><span class="highlight-red">전기판매사업</span>: 전기사용자에게 전기를 공급하는 것을 주된 목적으로 하는 사업 (전기자동차충전사업, 재생에너지전기공급사업 등은 제외).</li>
+                <li><span class="highlight-blue">구역전기사업</span>: 특정한 공급구역의 수요에 맞추어 <span class="highlight-red">전력시장을 통하지 아니하고</span> 전기사용자에게 전기를 공급하는 사업 (공급용량: <span class="highlight-red">3만5천 킬로와트 이하</span>).</li>
+            </ul>
+        </li>
+        <li><strong>허가권자 및 겸업 금지 원칙과 예외 특칙 (★단독 다출제 3회)</strong>:
+            <ul>
+                <li>허가권자: <span class="highlight-red">기후에너지환경부장관</span> 또는 시·도지사.</li>
+                <li>동일인 겸업 금지 원칙: 동일인에게 두 가지 이상의 전기사업을 허가할 수 없음.</li>
+                <li><strong>★ [출제 1순위] 겸업 허용 예외</strong>: <span class="highlight-red">배전사업과 전기판매사업</span>은 동일인에게 겸업 허가가 가능함! (전기사용자 효율 및 편의 극대화 목적).</li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 20%;">전기사업 종류</th>
+                <th style="width: 35%;">주요 목적 및 전력거래 방식</th>
+                <th style="width: 25%;">설비 및 용량 요건</th>
+                <th style="width: 20%;">인허가 형태</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>발전사업</th>
+                <td>전력 생산 → 전력시장에서 전기판매사업자에 공급</td>
+                <td>발전용 전기설비</td>
+                <td>허가 (겸업 금지)</td>
+            </tr>
+            <tr>
+                <th>송전 / 배전사업</th>
+                <td>발전소~배전사업자(송전) / 배전사업자~사용자(배전)</td>
+                <td>송전·배전용 전기설비</td>
+                <td><span class="highlight-red">배전+판매 겸업 가능</span></td>
+            </tr>
+            <tr>
+                <th>전기판매사업</th>
+                <td>전기사용자에게 전기 공급 (기본공급약관 인가)</td>
+                <td>전기공급 약관 작성</td>
+                <td>허가 대상</td>
+            </tr>
+            <tr>
+                <th>구역전기사업</th>
+                <td><span class="highlight-red">전력시장을 통하지 않고</span> 특정구역 공급</td>
+                <td><span class="highlight-red">3만5천kW 이하</span></td>
+                <td>허가 대상</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 3-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+        2. 6대 전기신사업의 세부 유형 및 등록 절차 (법 제2조, 제16조의2)
+    </h2>
+    <ul>
+        <li><strong>전기신사업의 6가지 세부 분류 (등록 대상)</strong>:
+            <ol>
+                <li><span class="highlight-blue">전기자동차충전사업</span>: 전기자동차에 전기를 유상으로 <span class="highlight-red">공급</span>하는 것을 주된 목적으로 함 (용어 유의: '충전'이 아니라 '공급'임!).</li>
+                <li><span class="highlight-purple">소규모전력중개사업</span>: 모집한 소규모전력자원(<span class="highlight-red">2만 킬로와트 이하</span>)에서 생산·저장한 전력을 모아서 전력시장에서 거래함.</li>
+                <li><span class="highlight-green">재생에너지전기공급사업</span>: 재생에너지를 이용하여 생산한 전기를 <span class="highlight-green">전력시장을 거치지 아니하고</span> 전기사용자에게 직접 공급함.</li>
+                <li><span class="highlight-blue">통합발전소사업</span>: 정보통신 및 자동제어 기술을 이용해 에너지자원을 연계·제어하여 하나의 발전소처럼 운영함.</li>
+                <li><span class="highlight-purple">재생에너지전기저장판매사업</span>: 재생에너지를 이용해 생산한 전기를 전기저장장치(ESS)에 저장하여 판매함.</li>
+                <li><span class="highlight-red">송전제약발생지역전기공급사업</span>: <span class="highlight-red">발전용량과 송전용량의 불일치(송전제약)</span>로 판매하지 못한 전기를 인접 지역 신규 시설 전기사용자에게 공급함.</li>
+            </ol>
+        </li>
+        <li><strong>등록 절차 및 약관 특칙 (법 제16조의2~제16조의5)</strong>:
+            <ul>
+                <li>등록 주체: <span class="highlight-red">기후에너지환경부장관</span>에게 등록 (실제 신청서는 지능형전력망협회 또는 한국전력거래소 제출).</li>
+                <li><strong>약관 신고의 임의성 (★시험 함정 방지)</strong>: 전기신사업자는 이용요금 약관을 <span class="highlight-blue">신고할 수 있음</span> (의무사항 X). 신고를 하지 않은 경우 공정거래위원회 협의를 거쳐 제정된 <span class="highlight-red">표준약관</span>을 사용하여야 함.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M19 21V5a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v16"></path><polyline points="1 21 23 21"></polyline><polyline points="9 10 9 11 10 11 10 10 9 10"></polyline></svg>
+        3. 전기설비의 3대 구분 및 일반용 전기설비의 저압 용량 한도 (법 제2조, 시행규칙 제3조)
+    </h2>
+    <ul>
+        <li><strong>전기설비의 3가지 법정 분류 (★주관식 단골)</strong>:
+            <ul>
+                <li><span class="highlight-blue">전기사업용 전기설비</span>: 전기사업자가 전기사업에 사용하는 전기설비.</li>
+                <li><span class="highlight-purple">일반용 전기설비</span>: 소규모 전기설비로서 한정된 장소에서 전기를 사용하기 위한 설비 (저압 조건).</li>
+                <li><span class="highlight-red">자가용 전기설비</span>: 전기사업용 전기설비 및 일반용 전기설비 <span class="highlight-red">외의 전기설비</span> (아파트 수전설비 등).</li>
+            </ul>
+        </li>
+        <li><strong>★ [주관식 수치 다출제] 일반용 전기설비의 용량 한도 기준 (시행규칙 제3조)</strong>:
+            <ul>
+                <li>수전설비: 저압에 해당하는 용량 <span class="highlight-red">75킬로와트 미만</span>의 전력을 타인으로부터 수전하여 수전장소에서 사용.</li>
+                <li>발전설비: 저압에 해당하는 용량 <span class="highlight-purple">10킬로와트 이하</span>의 발전설비.</li>
+            </ul>
+        </li>
+        <li><strong>★ [주관식 용어] 분산형 전원의 정의 및 용량 기준 (법 제2조, 영 제2조의2)</strong>:
+            <ul>
+                <li>정의: 전력수요의 지역 인근에 설치하여 <span class="highlight-blue">송전선로 건설을 최소화</span>할 수 있는 일정 규모 이하의 발전설비 (태양광 등).</li>
+                <li>용량 기준: 원칙적으로 <span class="highlight-red">4만 킬로와트 이하</span> (단, 구역전기사업 등 특례 시 <span class="highlight-purple">50만 킬로와트 이하</span>).</li>
+            </ul>
+        </li>
+        <li><strong>★ [주관식 용어] 개폐소의 정의 (시행규칙 제2조제1호)</strong>:
+            <ul>
+                <li>개폐소: 발전소 상호간, 변전소 상호간 또는 발전소와 변전소 간의 전압 <span class="highlight-red">5만 볼트 이상</span>의 송전선로를 연결하거나 차단하기 위한 전기설비.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            💡 [수험 핵심 비교] 소규모 관련 법정 용량 한도 수치 종합
+        </div>
+        <ul>
+            <li><strong>구역전기사업 공급용량</strong>: <span class="highlight-red">3만5천 킬로와트 이하</span> (35,000 kW)</li>
+            <li><strong>소규모전력중개사업 자원용량</strong>: <span class="highlight-blue">2만 킬로와트 이하</span> (20,000 kW)</li>
+            <li><strong>일반용 수전설비 용량</strong>: <span class="highlight-purple">75킬로와트 미만</span></li>
+            <li><strong>일반용 발전설비 용량</strong>: <span class="highlight-purple">10킬로와트 이하</span></li>
+            <li><strong>분산형 전원 원칙 용량</strong>: <span class="highlight-green">4만 킬로와트 이하</span></li>
+            <li><strong>개폐소 전압 요건</strong>: <span class="highlight-red">5만 볼트 이상</span></li>
+        </ul>
+    </div>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+        4. 전력수급기본계획, 전력산업기반조성계획 및 전기공급 거부 정당 사유 (법 제25조·제31조)
+    </h2>
+    <ul>
+        <li><strong>법정 계획 수립 주기 수치 비교 (★주관식 빈출)</strong>:
+            <ul>
+                <li><span class="highlight-red">전력수급기본계획</span>: <span class="highlight-red">기후에너지환경부장관</span>이 전력수급의 안정을 위하여 <span class="highlight-red">2년 단위</span>로 수립.</li>
+                <li><span class="highlight-purple">전력산업 기반조성계획</span>: 전력산업 지속 발전을 위하여 <span class="highlight-purple">3년 단위</span>로 수립·시행 (매년 시행계획 공고, 전력정책심의회 심의).</li>
+            </ul>
+        </li>
+        <li><strong>전기공급 의무 및 거부 정당 사유 (법 제14조, 시행령 제7조)</strong>:
+            <ul>
+                <li>원칙: 전기사업자는 정당한 사유 없이 전기의 공급을 거부할 수 없음.</li>
+                <li><strong>★[출제 빈출 5회] 공급 거부 가능한 정당 사유</strong>:
+                    <ol>
+                        <li>요금을 정해진 기간 내에 납부하지 않는 경우.</li>
+                        <li><span class="highlight-red">발전사업자만 해당</span>: 발전용 전기설비의 정기적인 보수기간 중 전기공급을 요청하는 경우 (※ 전기판매사업자 X!).</li>
+                        <li>대량 전력 사용 요청 기한 미준수:
+                            <ul>
+                                <li>5천kW 이상 1만kW 미만: 사용예정일 <span class="highlight-blue">1년 전</span> 요청.</li>
+                                <li>1만kW 이상 10만kW 미만: 사용예정일 <span class="highlight-blue">2년 전</span> 요청.</li>
+                                <li>10만kW 이상 30만kW 미만: 사용예정일 <span class="highlight-blue">3년 전</span> 요청.</li>
+                                <li>30만kW 이상: 사용예정일 <span class="highlight-red">4년 전</span> 요청.</li>
+                                <li><strong>오피스텔 등 일반 업무시설 특칙</strong>: <span class="highlight-purple">2천 킬로와트 이상</span>인 경우 사용예정일 <span class="highlight-purple">1년 전</span> 요청.</li>
+                            </ul>
+                        </li>
+                    </ol>
+                </li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        5. 전력시장 거래 원칙, 전력시장을 거치지 않는 예외, 직접 구매 및 심의기구 (법 제31조~제53조)
+    </h2>
+    <ul>
+        <li><strong>전력시장 및 소규모전력중개시장 운영 규칙 체계</strong>:
+            <ul>
+                <li>시장의 개설·운영: <span class="highlight-blue">한국전력거래소</span>가 시장을 개설·운영함.</li>
+                <li>운영규칙 승인: 한국전력거래소가 작성하여 <span class="highlight-red">기후에너지환경부장관</span>의 승인(<span class="highlight-purple">전기위원회 심의</span>)을 받음.</li>
+                <li><strong>★[주관식 기출] 소규모전력중개사업자 거래 규칙</strong>: 소규모전력중개사업자가 모은 전력을 전력시장에서 거래할 때는 <span class="highlight-red">전력시장운영규칙</span>에 따름!</li>
+            </ul>
+        </li>
+        <li><strong>★[출제 핵심] 전력시장을 거치지 않는 직거래 특칙 및 자가용 거래</strong>:
+            <ul>
+                <li>전력시장 미거유 다이렉트 공급: 재생에너지전기공급사업자, 재생에너지전기저장판매사업자, 송전제약발생지역전기공급사업자, 전기자동차충전사업자.</li>
+                <li>자가용 태양광 설비: 생산 전력 중 자기가 사용하고 남은 전력 거래 가능.</li>
+                <li>태양광 외 자가용 설비: 연간 총생산량의 <span class="highlight-red">30퍼센트 미만</span>의 범위에서 전력시장 거래 가능.</li>
+                <li><strong>★[주관식 다출제] 전기사용자의 전력 직접 구매 자격</strong>: 원칙적으로 직접 구매 불가하나, 수전설비 용량이 <span class="highlight-red">3만 킬로볼트암페어(30,000 kVA) 이상</span>인 전기사용자는 직접 구매 가능함.</li>
+                <li>소규모 우선 구매: 설비용량 <span class="highlight-blue">2만 킬로와트 이하</span>의 소규모 발전설비 전력은 전기판매사업자가 우선 구매 가능.</li>
+            </ul>
+        </li>
+        <li><strong>주요 위원회 기구 비교</strong>:
+            <ul>
+                <li><span class="highlight-blue">전력정책심의회</span>: 전력수급 및 전력산업기반조성 중요사항 심의 (위원장 1명 포함 <span class="highlight-blue">30명 이내</span> 위원).</li>
+                <li><span class="highlight-red">전기위원회</span>: 공정한 경쟁환경 조성, 약관 인가 심의 및 분쟁 재정 (위원장 1명 포함 <span class="highlight-red">9명 이내</span> 위원, 상임위원 포함).</li>
+            </ul>
+        </li>
+    </ul>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>주관식 단답형 및 빈칸 채우기 실전 훈련</h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡, ㉢)에 들어갈 알맞은 핵심 용어나 법정 숫자를 작성해 보십시오.</p>
+
+    <ol class="quiz-list" style="line-height: 2.1;">
+        <li>
+            전기신사업이란 전기자동차충전사업, 소규모전력중개사업, 재생에너지전기공급사업, 통합발전소사업, 재생에너지전기저장판매사업 및 ( ㉠ )지역전기공급사업을 말한다.
+        </li>
+        <li>
+            발전소 상호간, 변전소 상호간 또는 발전소와 변전소 간의 전압 ( ㉠ )만 볼트 이상의 송전선로를 연결하거나 차단하기 위한 전기설비를 개폐소라 한다.
+        </li>
+        <li>
+            전기사업 중 특정한 공급구역의 수요에 맞추어 전력시장을 통하지 아니하고 전기를 공급하는 구역전기사업의 공급용량 한도는 ( ㉠ )만 ( ㉡ )천 킬로와트 이하이다.
+        </li>
+        <li>
+            전기자동차충전사업이란 전기자동차에 전기를 유상으로 ( ㉠ )하는 것을 주된 목적으로 하는 사업이다.
+        </li>
+        <li>
+            소규모전력중개사업이란 모집한 소규모전력자원 용량이 ( ㉠ )만 킬로와트 이하인 설비 등에서 생산·저장한 전력을 모아서 전력시장에서 거래하는 사업이다.
+        </li>
+        <li>
+            ( ㉠ )장관은 전력수급의 안정을 위하여 전력수급기본계획을 2년 단위로 수립하여야 한다.
+        </li>
+        <li>
+            전력산업의 지속적인 발전과 기반조성을 위한 전력산업 기반조성계획은 ( ㉠ )년 단위로 수립·시행하여야 한다.
+        </li>
+        <li>
+            동일인에게 두 가지 이상의 전기사업을 허가할 수 없는 것이 원칙이나, ( ㉠ )사업과 ( ㉡ )사업은 예외적으로 겸업이 허용된다.
+        </li>
+        <li>
+            전기설비 중 일반용 전기설비로서 타인으로부터 수전하여 수전장소에서 사용하는 수전설비의 저압 용량 한도는 ( ㉠ )킬로와트 미만이고, 발전설비는 저압 ( ㉡ )킬로와트 이하이다.
+        </li>
+        <li>
+            전력수요의 지역 인근에 설치하여 송전선로 건설을 최소화할 수 있는 분산형 전원의 발전설비 용량 기준은 원칙적으로 ( ㉠ )만 킬로와트 이하이다.
+        </li>
+        <li>
+            발전용 전기설비의 정기적인 보수기간 중 전기공급을 요청하여 이를 거부할 수 있는 정당한 사유는 전기사업자 중 ( ㉠ )사업자에게만 해당한다.
+        </li>
+        <li>
+            대량의 전력 사용을 요청할 때 사용예정일 1년 전까지 요청하여야 하는 발전용량은 ( ㉠ )천 킬로와트 이상 1만 킬로와트 미만이며, 오피스텔 등 일반 업무시설은 ( ㉡ )천 킬로와트 이상이다.
+        </li>
+        <li>
+            대량 전력 사용 요청 시 사용예정일 ( ㉠ )년 전까지 요청하여야 하는 전기사용신청 용량은 30만 킬로와트 이상이다.
+        </li>
+        <li>
+            전기사용자는 전력시장에서 전력을 직접 구매할 수 없으나, 수전설비 용량이 ( ㉠ )만 킬로볼트암페어 이상인 전기사용자는 직접 구매할 수 있다.
+        </li>
+        <li>
+            전기판매사업자는 설비용량이 ( ㉠ )만 킬로와트 이하인 소규모 발전설비에서 생산된 전력을 우선적으로 구매할 수 있다.
+        </li>
+        <li>
+            자가용 태양광 설비 외의 설비를 설치한 자가 생산한 전력을 전력시장에서 거래하는 경우 연간 총생산량의 ( ㉠ )퍼센트 미만의 범위에서 거래할 수 있다.
+        </li>
+        <li>
+            전기신사업자는 이용요금 등에 관한 약관을 신고할 수 있으며, 약관신고를 하지 아니한 경우 공정거래위원회와 협의하여 제정된 ( ㉠ )약관을 사용하여야 한다.
+        </li>
+        <li>
+            전력수급 및 전력산업기반조성에 관한 중요사항을 심의하기 위하여 ( ㉠ )심의회를 두고, 공정한 경쟁환경 조성 및 분쟁 재정을 위하여 ( ㉡ )위원회를 둔다.
+        </li>
+        <li>
+            전력정책심의회는 위원장 1명을 포함한 ( ㉠ )명 이내의 위원으로 구성한다.
+        </li>
+        <li>
+            전기설비 공사계획의 인가 대상 외의 전기사업용 전기설비 설치공사를 하려는 경우 공사를 ( ㉠ )하기 전에 신고하여야 하며, 비상사태 등으로 부득이하게 공사를 한 경우 공사를 ( ㉡ )한 후 지체 없이 신고하여야 한다.
+        </li>
+    </ol>
+
+    <div class="answer-container">
+        <strong>[제70강 주관식 단답형 정답 리스트]</strong>
+        <div class="answer-grid">
+            <div><strong>1.</strong> ㉠ 송전제약발생</div>
+            <div><strong>2.</strong> ㉠ 5</div>
+            <div><strong>3.</strong> ㉠ 3 | ㉡ 5</div>
+
+            <div><strong>4.</strong> ㉠ 공급</div>
+            <div><strong>5.</strong> ㉠ 2</div>
+            <div><strong>6.</strong> ㉠ 기후에너지환경부</div>
+
+            <div><strong>7.</strong> ㉠ 3</div>
+            <div><strong>8.</strong> ㉠ 배전 | ㉡ 전기판매</div>
+            <div><strong>9.</strong> ㉠ 75 | ㉡ 10</div>
+
+            <div><strong>10.</strong> ㉠ 4</div>
+            <div><strong>11.</strong> ㉠ 발전</div>
+            <div><strong>12.</strong> ㉠ 5 | ㉡ 2</div>
+
+            <div><strong>13.</strong> ㉠ 4</div>
+            <div><strong>14.</strong> ㉠ 3</div>
+            <div><strong>15.</strong> ㉠ 2</div>
+
+            <div><strong>16.</strong> ㉠ 30</div>
+            <div><strong>17.</strong> ㉠ 표준</div>
+            <div><strong>18.</strong> ㉠ 전력정책 | ㉡ 전기</div>
+
+            <div><strong>19.</strong> ㉠ 30</div>
+            <div><strong>20.</strong> ㉠ 시작 | ㉡ 시작</div>
+            <div></div>
+        </div>
+    </div>
+
+</body>
+</html>

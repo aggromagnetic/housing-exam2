@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 관계법규 - 제69강 학습 노트 (건축허가 동의·성능위주설계·화재안전기준·임시소방시설·방염·자체점검)</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+            letter-spacing: -0.05em;
+        }
+        
+        h1 {
+            font-size: 12pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #16803d;
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #6d28d9;
+        }
+        
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        ol {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        .quiz-list li {
+            margin-bottom: 8px;
+        }
+
+        .answer-container {
+            margin-top: 30px;
+            padding: 15px;
+            border-top: 1px dashed #666666;
+            font-size: 9.5pt;
+            color: #666666;
+            line-height: 1.8;
+        }
+
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px 15px;
+            margin-top: 10px;
+        }
+
+        .answer-grid div {
+            border-bottom: 1px none #eeeeee;
+        }
+
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        제69강. 건축허가등의 동의·내진설계·성능위주설계·화재안전기준 설치의무·임시소방시설·방염·자체점검 및 소방용품 승인
+    </h1>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        1. 건축허가등의 소방관서장 동의 절차, 대상 범위 수치 및 회신 기간 (소방시설법 제6조)
+    </h2>
+    <ul>
+        <li><strong>허가대상 vs 신고대상 처리 방식 대조 (★출제 단골)</strong>:
+            <ul>
+                <li><span class="highlight-blue">건축허가등 대상 (허가·인가 등)</span>: 허가권자는 건축허가를 하기 <span class="highlight-red">전에 미리</span> 소방본부장 또는 소방서장의 동의를 받아야 함 (동의 미부여 시 허가 불가).</li>
+                <li><span class="highlight-purple">건축신고 대상</span>: 허가권자가 건축신고를 <span class="highlight-purple">수리한 후</span> 지체 없이 소방본부장 또는 소방서장에게 통보하여야 함.</li>
+            </ul>
+        </li>
+        <li><strong>★ [주관식·객관식 다출제 6회] 동의 대상 건축물의 세부 규모 기준 (영 제7조)</strong>:
+            <ul>
+                <li>원칙 연면적 기준: 연면적 <span class="highlight-red">400제곱미터 이상</span>인 건축물.</li>
+                <li>취약 시설별 연면적 특칙:
+                    <ul>
+                        <li>학교 시설: 연면적 <span class="highlight-red">100제곱미터 이상</span>.</li>
+                        <li>노유자 시설, 수련 시설: 연면적 <span class="highlight-purple">200제곱미터 이상</span>.</li>
+                        <li>의료시설 (정신의료기관, 장애인 의료재활시설 등): 연면적 <span class="highlight-purple">300제곱미터 이상</span>.</li>
+                    </ul>
+                </li>
+                <li>층수 및 지하·무창층 기준:
+                    <ul>
+                        <li>층수가 <span class="highlight-red">6층 이상</span>인 건축물 (층수 기준!).</li>
+                        <li>지하층 또는 무창층의 바닥면적 <span class="highlight-blue">150제곱미터 이상</span> (단, 공연장은 <span class="highlight-red">100제곱미터 이상</span>).</li>
+                        <li>차고·주차장 또는 주차용 건축물: 바닥면적 <span class="highlight-purple">200제곱미터 이상</span> (승강기 등 기계식 주차시설은 20대 이상).</li>
+                    </ul>
+                </li>
+                <li><strong>★[개정 신설 및 출제 1순위] 공동주택 특칙</strong>: <span class="highlight-red">공동주택은 면적이나 규모를 불문하고 무조건 동의 대상</span>에 해당함!</li>
+            </ul>
+        </li>
+        <li><strong>동의 회신 기한 수치 비교 (법 제6조제4항)</strong>:
+            <ul>
+                <li>건축법상 동의 요구 원칙: 서류를 접수한 날부터 <span class="highlight-blue">5일 이내</span> 회신 (특급 소방안전관리대상물은 <span class="highlight-red">10일 이내</span>).</li>
+                <li>기타 법령에 따른 인허가 시설기준에 소방시설이 포함된 경우: <span class="highlight-purple">7일 이내</span> 회신.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 20%;">구분</th>
+                <th style="width: 50%;">동의 대상 세부 요건 및 수치</th>
+                <th style="width: 30%;">동의 회신 기한</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>일반 건축물</th>
+                <td>연면적 <span class="highlight-red">400제곱미터 이상</span> 또는 층수 <span class="highlight-red">6층 이상</span></td>
+                <td rowspan="4" style="vertical-align: middle;">
+                    원칙: <span class="highlight-blue">5일 이내</span><br>
+                    특급: <span class="highlight-red">10일 이내</span><br>
+                    (기타 법령: <span class="highlight-purple">7일 이내</span>)
+                </td>
+            </tr>
+            <tr>
+                <th>특수 목적 시설</th>
+                <td>
+                    학교: <span class="highlight-red">100㎡ 이상</span> / 노유자·수련: <span class="highlight-purple">200㎡ 이상</span><br>
+                    의료(정신·장애인재활): <span class="highlight-purple">300㎡ 이상</span>
+                </td>
+            </tr>
+            <tr>
+                <th>지하층·무창층</th>
+                <td>바닥면적 <span class="highlight-blue">150제곱미터 이상</span> (공연장: <span class="highlight-red">100제곱미터 이상</span>)</td>
+            </tr>
+            <tr>
+                <th>공동주택 (★신설)</th>
+                <td><span class="highlight-red">규모·면적 불문 무조건 동의 대상</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 3-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+        2. 소방시설 내진설계 기준 및 성능위주설계 대상·신고 수순 (소방시설법 제7조·제8조)
+    </h2>
+    <ul>
+        <li><strong>소방시설 내진설계 대상 (법 제7조)</strong>:
+            <ul>
+                <li>내진설계 기준 적용 대상: 층수 <span class="highlight-blue">2층 이상</span>, 연면적 <span class="highlight-blue">200제곱미터 이상</span>, <span class="highlight-red">단독주택 및 공동주택</span>, 높이 13미터 이상, 처마높이 9미터 이상 등.</li>
+                <li>해당 시설에 설치하는 옥내소화전설비, 스프링클러설비, 물분무등소화설비는 내진설계 기준에 맞게 설치하여야 함.</li>
+            </ul>
+        </li>
+        <li><strong>★ [출제 1순위] 성능위주설계 대상 특정소방대상물 범위 (영 제9조)</strong>:
+            <ul>
+                <li>연면적 <span class="highlight-red">20만제곱미터 이상</span>인 특정소방대상물 (아파트등 제외).</li>
+                <li>아파트등: 층수가 <span class="highlight-red">50층 이상</span>(<span class="highlight-red">지하층 제외</span>)이거나 높이가 <span class="highlight-red">200미터 이상</span>인 것.</li>
+                <li>아파트등 외 특정소방대상물: 층수가 <span class="highlight-purple">30층 이상</span>(<span class="highlight-purple">지하층 포함</span>)이거나 높이가 <span class="highlight-purple">120미터 이상</span>인 것.</li>
+                <li>철도시설, 도시철도시설 연면적 <span class="highlight-green">3만제곱미터 이상</span>인 특정소방대상물.</li>
+            </ul>
+        </li>
+        <li><strong>★ [절차 기출] 성능위주설계 신고 시기 및 단계적 수순 (법 제8조)</strong>:
+            <ul>
+                <li>신축 조건: 대상 건축물을 <span class="highlight-blue">신축</span>하는 경우에 적용함.</li>
+                <li>신고 시기: 성능위주설계를 <span class="highlight-red">한 후</span>, <span class="highlight-red">건축허가를 신청하기 전에</span> 소방청장 등에게 신고하여야 함.</li>
+                <li>사전검토 요청: 건축위원회 심의 대상인 경우 <span class="highlight-purple">심의를 신청하기 전에</span> 기본설계도서에 대해 소방관서장의 사전검토를 받아야 함.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+        3. ★[강의 핵심 강조] 특정소방대상물 관계인의 소방시설 설치·관리 의무 및 화재안전기준 (법 제12조)
+    </h2>
+    <ul>
+        <li><strong>★[출제 1순위 법조문] 특정소방대상물 관계인의 소방시설 설치·관리 의무 (법 제12조제1항)</strong>:
+            <ul>
+                <li>의무 주체: 특정소방대상물의 <span class="highlight-red">관계인</span> (소유자, 관리자, 점유자).</li>
+                <li>설치·관리 준수 기준: 관계인은 대통령령으로 정하는 소방시설을 <span class="highlight-red">화재안전기준</span>에 따라 설치 및 관리하여야 함.</li>
+            </ul>
+        </li>
+        <li><strong>화재안전기준의 체계적 구분 (성능기준 및 기술기준) (법 제12조제2항)</strong>:
+            <ul>
+                <li><span class="highlight-blue">성능기준</span>: 소방시설의 기능 및 성능에 관한 기준으로서 소방청장이 고시하는 기준.</li>
+                <li><span class="highlight-purple">기술기준</span>: 성능기준을 만족하는 구체적인 기술, 수치, 규격에 관한 기준으로서 소방청장의 승인을 받아 국립소방연구원장이 고시하는 기준.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            💡 [수험 핵심 요약] 특정소방대상물 관계인의 소방시설 설치·관리 원칙
+        </div>
+        <ul>
+            <li>특정소방대상물의 <span class="highlight-red">관계인</span>은 법정 소방시설을 <span class="highlight-red">화재안전기준</span>에 적합하도록 설치·유지·관리하여야 함.</li>
+            <li>화재안전기준 위반 시 소방관서장은 시정명령, 조치명령 등 행정처분을 명할 수 있음.</li>
+        </ul>
+    </div>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M19 21V5a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v16"></path><polyline points="1 21 23 21"></polyline><polyline points="9 10 9 10 10 11 10 10 9 10"></polyline></svg>
+        4. 건설현장 화재위험작업 시 임시소방시설 설치 및 소화기 내용연수 (소방시설법 제15조·제17조)
+    </h2>
+    <ul>
+        <li><strong>★[주관식 빈출] 화재위험작업과 임시소방시설 종류 (법 제15조, 영 별표 8)</strong>:
+            <ul>
+                <li>의무자 및 시기: <span class="highlight-red">공사시공자</span>가 인화성 물질 취급, 용접·절단 등 불꽃을 일으키는 화재위험작업을 하기 <span class="highlight-red">전에</span> 설치·관리함.</li>
+                <li>임시소방시설의 종류 (7가지):
+                    <ol>
+                        <li>소화기</li>
+                        <li>간이소화장치</li>
+                        <li>비상경보장치</li>
+                        <li>간이피난유도선</li>
+                        <li>가스누설경보기</li>
+                        <li>비상조명등</li>
+                        <li><span class="highlight-red">방화포</span> (용접 작업 시 불티 차단용 천 또는 불연성 물품).</li>
+                    </ol>
+                </li>
+                <li>대체 인정 규정: 이미 설치된 소화기, 옥내소화전 등 기능이 유사한 정식 소방시설이 있는 경우 임시소방시설 설치를 면제함.</li>
+            </ul>
+        </li>
+        <li><strong>★[수치 정밀 암기] 분말소화기 내용연수 규정 (영 제19조)</strong>:
+            <ul>
+                <li>대상: <span class="highlight-blue">분말형태의 소화약제를 사용하는 소화기</span>.</li>
+                <li>법정 내용연수: 제조연월부터 <span class="highlight-red">10년</span> (10년 경과 시 교체 또는 한국소방산업기술원의 성능확인검사를 받아 연장 가능).</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+        5. 방염대상물품의 방염성능검사 실시 주체 구분 (소방시설법 제20조·제21조)
+    </h2>
+    <ul>
+        <li><strong>방염성능기준 준수 대상</strong>: 특정소방대상물(근린생활시설, 체력단련장, 숙박시설, 노유자시설 등)의 실내장식물 및 부착물.</li>
+        <li><strong>★[관서장 구분 기출] 방염성능검사 실시 주체 이원화 (영 제32조)</strong>:
+            <ul>
+                <li>원칙: <span class="highlight-red">소방청장</span>이 실시하는 방염성능검사를 받은 것이어야 함.</li>
+                <li><strong>★ 시·도지사가 실시하는 예외 특칙</strong>: <span class="highlight-purple">건축물 실내 설치 현장에서 방염 처리를 하는 합판·목재류</span> 등의 방염성능검사는 관할 <span class="highlight-purple">시·도지사</span>가 실시함.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        6. 소방시설 자체점검 절차, 제출·보관 기한, 이행 완료 기간 및 소방용품 승인 (소방시설법 제22조·제37조~제42조)
+    </h2>
+    <ul>
+        <li><strong>소방시설 자체점검의 실시 및 신설 특칙 (법 제22조)</strong>:
+            <ul>
+                <li>의무자: 특정소방대상물의 <span class="highlight-blue">관계인</span> (직접 하거나 소방시설관리업자에게 대행시킴).</li>
+                <li><strong>신설 건축물 자체점검 시기</strong>: 건축물을 신설한 경우 사용할 수 있게 된 날부터 <span class="highlight-red">60일 이내</span>에 최초 자체점검을 실시함.</li>
+                <li>점검 대가: <span class="highlight-purple">행정안전부령</span>으로 정함.</li>
+            </ul>
+        </li>
+        <li><strong>★[주관식 다출제 5회] 점검 결과 서류 제출·보고 및 보관 기간 (시행규칙 제23조)</strong>:
+            <ul>
+                <li>기술자/관리업자 → 관계인 제출: 점검이 끝난 날부터 <span class="highlight-red">10일 이내</span>에 서면 제출.</li>
+                <li>관계인 → 소방관서장 보고: 점검이 끝난 날부터 <span class="highlight-red">15일 이내</span>에 소방본부장 또는 소방서장에게 보고.</li>
+                <li><strong>점검결과 서류 자체 보관 기간</strong>: 관계인은 자체점검 결과 서류를 <span class="highlight-purple">2년간 자체 보관</span>하여야 함.</li>
+            </ul>
+        </li>
+        <li><strong>지시사항 이행계획서 완료 기간 및 이행보고 (시행규칙 제23조)</strong>:
+            <ul>
+                <li>수리·정비 등 이행 완료 원칙: <span class="highlight-blue">10일 이내</span>.</li>
+                <li>시설물 새로 교체·설치 특칙: <span class="highlight-red">20일 이내</span>.</li>
+                <li>이행 완료 보고: 완료한 날부터 <span class="highlight-purple">10일 이내</span>에 소방관서장에게 이행 완료 보고서 제출.</li>
+            </ul>
+        </li>
+        <li><strong>★[출제 핵심] 소방용품 승인·인증 제도 정리 (법 제37조~제42조)</strong>:
+            <ul>
+                <li><strong>형식승인 단계 및 순서</strong>: <span class="highlight-red">소방청장의 심사 → 형식승인 → 제품검사</span>.</li>
+                <li>2가지 이상 결합 시: 하나의 소방용품에 2가지 이상 형식승인 사항 결합 시 <span class="highlight-blue">모두 실시하고 하나의 형식승인</span>을 할 수 있음.</li>
+                <li>결격 기간: 형식승인이 취소된 날부터 <span class="highlight-red">2년 이내</span>에는 동일 품목 형식승인 불가.</li>
+                <li><strong>우수품질인증 유효기간</strong>: 법률상 5년 범위에서 <span class="highlight-purple">행정안전부령으로 3년</span>으로 정함.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>주관식 단답형 및 빈칸 채우기 실전 훈련</h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡, ㉢)에 들어갈 알맞은 핵심 용어나 법정 숫자를 작성해 보십시오.</p>
+
+    <ol class="quiz-list" style="line-height: 2.1;">
+        <li>
+            건축허가등의 권한이 있는 행정기관은 건축허가를 하기 전에 미리 소방본부장 또는 소방서장의 ( ㉠ )을(를) 받아야 한다.
+        </li>
+        <li>
+            소방관서장의 건축허가 동의 대상이 되는 일반 건축물의 연면적 기준은 ( ㉠ )제곱미터 이상이며, 학교시설은 연면적 ( ㉡ )제곱미터 이상이다.
+        </li>
+        <li>
+            노유자시설 및 수련시설은 연면적 ( ㉠ )제곱미터 이상, 정신의료기관 및 장애인 의료재활시설은 연면적 ( ㉡ )제곱미터 이상일 때 건축허가 동의 대상이다.
+        </li>
+        <li>
+            지하층 또는 무창층의 바닥면적이 ( ㉠ )제곱미터 이상(공연장은 ㉡ 제곱미터 이상)이거나 지상층 층수가 ( ㉢ )층 이상인 건축물은 건축허가 동의 대상이다.
+        </li>
+        <li>
+            ( ㉠ )은(는) 연면적 및 층수 규모에 관계없이 무조건 소방관서장의 건축허가등의 동의 대상에 해당한다.
+        </li>
+        <li>
+            건축허가 동의 요구를 받은 소방본부장 또는 소방서장은 서류를 접수한 날부터 ( ㉠ )일 이내(특급 소방안전관리대상물은 ㉡ 일 이내)에 동의 여부를 회신하여야 한다.
+        </li>
+        <li>
+            소방시설을 성능위주설계하려는 자는 성능위주설계를 한 후 ( ㉠ )을(를) 신청하기 전에 소방청장 등에게 신고하여야 한다.
+        </li>
+        <li>
+            아파트등으로서 층수가 ( ㉠ )층 이상(지하층 제외)이거나 높이가 ( ㉡ )미터 이상인 경우 성능위주설계 대상에 해당한다.
+        </li>
+        <li>
+            특정소방대상물의 관계인은 대통령령으로 정하는 소방시설을 ( ㉠ )기준에 따라 설치 및 관리하여야 한다.
+        </li>
+        <li>
+            공사시공자는 용접·절단 등 불꽃을 일으키는 ( ㉠ )작업을 하기 전에 임시소방시설을 설치·관리하여야 한다.
+        </li>
+        <li>
+            임시소방시설 중 용접 작업 시 발생하는 불티로부터 가연물이 점화되는 것을 방지하기 위해 설치하는 천이나 불연성 물품을 ( ㉠ )이라 한다.
+        </li>
+        <li>
+            분말형태의 소화약제를 사용하는 소화기의 내용연수는 ( ㉠ )년으로 한다.
+        </li>
+        <li>
+            방염대상물품의 방염성능검사는 원칙적으로 소방청장이 실시하나, 건축물 실내 설치 현장에서 방염 처리하는 합판·목재류는 ( ㉠ )이(가) 실시한다.
+        </li>
+        <li>
+            특정소방대상물이 신설된 경우 사용할 수 있게 된 날부터 ( ㉠ )일 이내에 최초 자체점검을 실시하여야 한다.
+        </li>
+        <li>
+            소방시설 관리업자 등이 자체점검을 마친 경우 점검이 끝난 날부터 ( ㉠ )일 이내에 관계인에게 점검결과보고서를 제출하여야 한다.
+        </li>
+        <li>
+            관계인은 자체점검을 마친 날부터 ( ㉠ )일 이내에 소방본부장 또는 소방서장에게 결과를 보고하고, 점검 결과 서류를 ( ㉡ )년간 보관하여야 한다.
+        </li>
+        <li>
+            자체점검 결과 정비·수리 등 이행계획 완료기간은 원칙적으로 ( ㉠ )일 이내이며, 새로 교체·설치하는 경우는 ( ㉡ )일 이내로 한다.
+        </li>
+        <li>
+            소방용품의 형식승인을 받으려는 자는 소방청장의 ( ㉠ )을(를) 먼저 받은 후 형식승인을 받고 ( ㉡ )을(를) 받아야 한다.
+        </li>
+        <li>
+            소방용품의 형식승인이 취소된 날부터 ( ㉠ )년 이내에는 취소된 소방용품과 동일한 품목에 대하여 형식승인을 받을 수 없다.
+        </li>
+        <li>
+            소방청장이 지정하는 우수품질인증의 유효기간은 법률상 5년 범위에서 행정안전부령으로 정하는 ( ㉠ )년으로 한다.
+        </li>
+    </ol>
+
+    <div class="answer-container">
+        <strong>[제69강 주관식 단답형 정답 리스트]</strong>
+        <div class="answer-grid">
+            <div><strong>1.</strong> ㉠ 동의</div>
+            <div><strong>2.</strong> ㉠ 400 | ㉡ 100</div>
+            <div><strong>3.</strong> ㉠ 200 | ㉡ 300</div>
+
+            <div><strong>4.</strong> ㉠ 150 | ㉡ 100 | ㉢ 6</div>
+            <div><strong>5.</strong> ㉠ 공동주택</div>
+            <div><strong>6.</strong> ㉠ 5 | ㉡ 10</div>
+
+            <div><strong>7.</strong> ㉠ 건축허가</div>
+            <div><strong>8.</strong> ㉠ 50 | ㉡ 200</div>
+            <div><strong>9.</strong> ㉠ 화재안전</div>
+
+            <div><strong>10.</strong> ㉠ 화재위험</div>
+            <div><strong>11.</strong> ㉠ 방화포</div>
+            <div><strong>12.</strong> ㉠ 10</div>
+
+            <div><strong>13.</strong> ㉠ 시·도지사</div>
+            <div><strong>14.</strong> ㉠ 60</div>
+            <div><strong>15.</strong> ㉠ 10</div>
+
+            <div><strong>16.</strong> ㉠ 15 | ㉡ 2</div>
+            <div><strong>17.</strong> ㉠ 10 | ㉡ 20</div>
+            <div><strong>18.</strong> ㉠ 심사 | ㉡ 제품검사</div>
+
+            <div><strong>19.</strong> ㉠ 2</div>
+            <div><strong>20.</strong> ㉠ 3</div>
+            <div></div>
+        </div>
+    </div>
+
+</body>
+</html>

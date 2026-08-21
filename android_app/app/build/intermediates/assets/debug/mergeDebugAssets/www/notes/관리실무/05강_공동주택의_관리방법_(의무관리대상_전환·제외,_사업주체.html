@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 공동주택 관리실무 - 제5강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        
+        * {
+            box-sizing: border-box;
+            letter-spacing: -0.06em; /* 장평 90% 수준의 자간 효과 */
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.5;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+        }
+        
+        h1 {
+            font-size: 12pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 6px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 8px;
+            padding-left: 6px;
+            border-left: 3px solid #1d4ed8;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 8px;
+            margin-bottom: 15px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #111111;
+            padding: 6px 8px;
+            text-align: center;
+            line-height: 1.4;
+        }
+        
+        th {
+            background-color: #f3f4f6; /* 토너 절약형 미세 회색 */
+            font-weight: bold;
+        }
+        
+        /* 2색 프리미엄 텍스트 강조 (인쇄 토너 절약형) */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+        
+        /* 얇은 점선 형태의 토너 세이브 설명 상자 */
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #4b5563;
+            padding: 10px;
+            margin: 12px 0;
+            background-color: #ffffff;
+            line-height: 1.5;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 4px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* 자가 진단 및 인쇄용 정답 처리 */
+        .blank-answer {
+            color: #e5e7eb; /* 인쇄 시 거의 보이지 않는 옅은 회색 */
+            font-weight: bold;
+            border-bottom: 1px dashed #4b5563;
+            padding: 0 4px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        
+        .blank-answer:hover {
+            color: #1d4ed8; /* 마우스 호버 시 파란색으로 정답 노출 */
+        }
+
+        ul, ol {
+            margin-top: 4px;
+            margin-bottom: 8px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 4px;
+        }
+
+        /* 인쇄 최적화 설정 */
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .blank-answer {
+                color: #e5e7eb !important;
+                border-bottom: 1px dashed #111111 !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>[5강] 공동주택의 관리방법 (의무관리대상 전환·제외, 사업주체 관리 및 인수인계)</h1>
+    
+    <h2>1. 공동주택의 관리 의무와 형태 (공동주택관리법 기준)</h2>
+    <ul>
+        <li>의무관리대상 공동주택의 입주자등은 해당 공동주택을 <span class="highlight-blue">자치관리</span>하거나 주택관리업자에게 <span class="highlight-blue">위탁하여 관리</span>하여야 한다. (오직 자치와 위탁 2가지 형태만 존재함)</li>
+        <li><span class="highlight-red">시험 함정</span>: "의무관리대상 공동주택은 위탁관리하여야 하며, 자치관리할 수 없다"는 지문은 오답이다. (둘 다 선택 가능하다)</li>
+    </ul>
+
+    <h2>2. 임의관리 대상의 의무관리 전환 및 제외 절차 (신설 빈출 영역)</h2>
+    <ul>
+        <li><strong>의무관리대상으로의 전환</strong>: 비의무대상 공동주택을 의무관리대상으로 전환하려는 경우, 입주자등의 <span class="highlight-red">3분의 2 이상</span>의 서면동의를 받아야 한다.</li>
+        <li><strong>의무관리대상에서의 제외</strong>: 다시 임의관리(비의무)로 제외하려는 경우에도 입주자등의 <span class="highlight-red">3분의 2 이상</span>의 서면동의를 받아야 한다.</li>
+        <li><strong>전환·제외 신고인 및 제출 기한</strong>:</li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 20%;">구분</th>
+                <th style="width: 30%;">신고 의무자 (원칙 및 예외)</th>
+                <th style="width: 25%;">신고 기한 및 신고처</th>
+                <th style="width: 25%;">신고수리 통지 기한</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th class="bold">전환 신고</th>
+                <td>
+                    - 원칙: <span class="highlight-blue">관리인</span><br>
+                    - 자치관리 개시 전: <span class="highlight-blue">분양자</span><br>
+                    - 관리인이 미신고 시: 입주자등의 <span class="highlight-red">10분의 1 이상이 연서</span>하여 직접 신고 가능
+                </td>
+                <td rowspan="2">동의를 받은 날부터<br><span class="highlight-red">30일 이내</span><br>관할 <span class="highlight-blue">시장·군수·구청장</span>에게 제출</td>
+                <td rowspan="2">신고서 접수일부터<br><span class="highlight-red">10일 이내</span><br>(※일반 신고는 7일이나 전환·제외는 10일임)</td>
+            </tr>
+            <tr>
+                <th class="bold">제외 신고</th>
+                <td>- <span class="bold">입주자대표회의 회장</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="explanation">
+        <div class="explanation-title">⚠️ [기산점 정밀 비교] 전환 후 관리 체계 구축 프로세스 (3·3·6 법칙)</div>
+        <p>전환 신고 수리 이후 입주자등이 이행해야 하는 법정 기한은 숫자가 동일하더라도 <strong>"기산점(시작점)"</strong>이 완전히 다르므로 단독 주관식 및 객관식 난이도 상(上) 문제로 출제된다.</p>
+        <ol>
+            <li><strong>입주자대표회의 구성 기한</strong>: <span class="highlight-blue">관리규약 제정신고가 수리된 날</span>부터 <span class="highlight-red">3개월 이내</span>에 구성하여야 한다. (동대표 선출 선거구는 관리규약으로 정하기 때문임)</li>
+            <li><strong>관리방법(자치/위탁) 결정 기한</strong>: <span class="highlight-blue">입주자대표회의 구성신고가 수리된 날</span>부터 <span class="highlight-red">3개월 이내</span>에 결정하여야 한다.</li>
+            <li><strong>주택관리업자 선정 기한 (위탁 시)</strong>: <span class="highlight-blue">입주자대표회의 구성신고가 수리된 날</span>부터 <span class="highlight-red">6개월 이내</span>에 선정하여야 한다.</li>
+        </ol>
+    </div>
+
+    <h2>3. 사업주체의 요구에 따른 관리 체계 전환</h2>
+    <ul>
+        <li><strong>관리 요구 시기</strong>: 사업주체는 입주예정자의 <span class="highlight-red">과반수가 입주</span>하였을 때에는 입주자등에게 그 사실을 <span class="highlight-blue">통지</span>하고 공동주택을 관리할 것을 <span class="highlight-blue">요구</span>하여야 한다.</li>
+        <li><span class="highlight-red">시험 함정</span>: "과반수 입주 시 입주자등의 동의를 받아 요구한다"는 지문은 오답이다. 동의 없이 즉시 요구 및 사실 통지만 하면 된다.</li>
+        <li><strong>임대주택 분양전환 시 요구 기준</strong>: 민간/공공임대주택이 양도되거나 분양전환되는 경우에도 분양전환 <span class="highlight-blue">가반수(과반수)</span>가 완료되었을 때 동일하게 관리 요구를 진행한다.</li>
+        <li><strong>요구에 따른 입대의 구성 기한</strong>: 입주자등은 사업주체로부터 관리 요구를 받았을 때에는 요구를 받은 날부터 <span class="highlight-red">3개월 이내</span>에 입주자대표회의를 구성하여야 한다.</li>
+    </ul>
+
+    <h2>4. 관리방법의 결정 및 변경 절차</h2>
+    <ul>
+        <li>관리방법의 결정 및 변경 절차는 <span class="highlight-blue">관리규약 제정·개정 절차</span>와 완전히 동일하게 진행된다.</li>
+    </ul>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 30%;">제안 주체 (택일)</th>
+                <th style="width: 40%;">최종 의사결정 기준 (찬성 요건)</th>
+                <th style="width: 30%;">신고 절차</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    1. <span class="highlight-blue">입주자대표회의 의결</span><br>
+                    또는<br>
+                    2. 전체 입주자등의 <span class="highlight-red">10분의 1 이상</span>의 서면제안
+                </td>
+                <td>
+                    전체 입주자등의 <span class="highlight-red font-bold">과반수 찬성</span><br>
+                    (※ 2/3 찬성이 아님을 필히 구별할 것!)
+                </td>
+                <td>
+                    결정·변경일부터 <span class="highlight-blue">30일 이내</span><br>
+                    <span class="highlight-red">시장·군수·구청장</span>에게 신고<br>
+                    (※수리 통지 기한은 <span class="highlight-blue">7일 이내</span>)
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>5. 사업주체의 초기 관리 및 예외적 임대계약</h2>
+    <ul>
+        <li><strong>사업주체의 관리 기간</strong>: 입주예정자 <span class="highlight-blue">과반수가 입주할 때까지</span>는 사업주체가 직접 관리 책임을 진다.</li>
+        <li><strong>관리비예치금 징수</strong>: 사업주체는 직접 관리하는 기간 동안 입주예정자와 <span class="highlight-blue">관리계약</span>을 체결하고, 공용부분의 관리·운영에 필요한 <span class="highlight-red">관리비예치금</span>을 징수할 수 있다. (※'관리비'와 명확히 구분할 것)</li>
+        <li><strong>[주관식 빈출] 입대의 구성 전 주민공동시설의 예외적 조기 계약</strong>:
+            <ul>
+                <li>시장·군수·구청장은 입대의가 구성되기 전이라도 조기 운영이 필요한 시설에 대해 입주예정자 <span class="highlight-red">10분의 3 이상</span>의 서면동의를 받아 사업주체로 하여금 임대계약을 체결하게 할 수 있다.</li>
+                <li><strong>대상 시설 3가지</strong>: <span class="highlight-blue">어린이집</span>, <span class="highlight-blue">다함께돌봄센터</span>, <span class="highlight-blue">공동육아나눔터</span></li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>6. 관리업무의 인수인계 절차 및 대상 서류</h2>
+    <ul>
+        <li><strong>최초 인수인계 기한 (사업주체/전환관리인 → 새로운 관리주체)</strong>: 법정 인수인계 사유가 발생한 날부터 <span class="highlight-red">1개월 이내</span>에 관리업무를 인계하여야 한다.</li>
+        <li><strong>관리주체 변경 시 인수인계 기한</strong>:
+            <ul>
+                <li>원칙: 기존 관리주체의 <span class="highlight-blue">임기 종료일까지</span> 인계 완료하여야 한다.</li>
+                <li>예외 1 (미완료 시): 기존 임기 종료일부터 <span class="highlight-red">1개월 이내</span>에 인계하여야 한다.</li>
+                <li>예외 2 (새 관리주체 미선정 시): 새로운 관리주체가 <span class="highlight-red">선정된 날부터 1개월 이내</span>에 인계하여야 한다.</li>
+            </ul>
+        </li>
+        <li><strong>인수인계 참관 의무</strong>: 인수인계 시에는 <span class="highlight-blue">입주자대표회의 회장 및 감사 1명 이상</span>이 반드시 참관하여 서명날인하여야 한다.</li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 50%;">인수인계 대상 필수 서류 (인계 품목)</th>
+                <th style="width: 50%;">인수인계 대상에서 제외되는 서류 (시험 오답 지문)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="text-align: left;">
+                    1. 설계도서, 장비명세<br>
+                    2. <span class="bold">장기수선계획</span> 및 안전관리계획<br>
+                    3. 관리비·사용료·이용료 부과·징수자료 및 회계서류<br>
+                    4. <span class="highlight-red">장기수선충당금 적립현황</span> (※사용내역은 해당 없음)<br>
+                    5. 관리비예치금 명세<br>
+                    6. 세대별 전유부분의 입주자 인도 날짜 현황 (하자보수 기산점 확인용)
+                </td>
+                <td style="text-align: left; vertical-align: top;">
+                    1. <span class="highlight-red">입주자대표회의 회의록</span> (보관 주체는 맞으나 인계 대상 아님)<br>
+                    2. <span class="highlight-red">하자보수보증금 예치서</span><br>
+                    3. 장기수선충당금 사용내역
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>7. 자치관리기구의 구성 요건</h2>
+    <ul>
+        <li><strong>구성 기한</strong>: 입주자등이 자치관리로 결정한 경우, 입대의는 자치관리 결정을 요구받은 날(또는 전환구성 신고일)부터 <span class="highlight-red">6개월 이내</span>에 기술인력 및 장비를 갖춘 자치관리기구를 구성하여야 한다.</li>
+        <li><strong>[주관식 초강조] 자치관리기구의 대표자</strong>: 자치관리기구의 대표자로서 <span class="highlight-red font-bold">관리사무소장</span>을 선임하여야 한다. (※'입대의 회장'이나 '동별 대표자'를 선임한다고 하면 무조건 오답)</li>
+        <li><strong>위탁에서 자치로 변경 시 특례</strong>: 위탁관리에서 자치관리로 관리방법을 변경하는 경우에는 기존 주택관리업자의 <span class="highlight-blue">위탁관리 종료일까지</span> 자치관리기구를 구성하여야 한다. (이 경우 6개월의 유예기간을 주지 않음)</li>
+    </ul>
+
+    <hr style="border: 0; border-top: 1px double #111111; margin: 20px 0;">
+
+    <h2>8. 주관식 단답형 대비 핵심 용어 리스트 (빈칸 채우기)</h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 10px;">* 괄호 안의 연한 영역을 마우스 드래그로 긁거나 인쇄하여 정답을 확인하며 암기하세요.</p>
+    
+    <ol>
+        <li>임의관리 공동주택을 의무관리대상 공동주택으로 전환하고자 할 때 필요한 서면 동의 요건은 입주자등 <span class="blank-answer">( 3분의 2 )</span> 이상의 찬성이다.</li>
+        <li>의무관리대상 공동주택 전환신고는 동의를 받은 날부터 30일 이내에 제출하여야 하며, 이에 대한 시장·군수·구청장의 신고수리 통지 기한은 <span class="blank-answer">( 10일 )</span> 이내이다.</li>
+        <li>의무관리대상 전환 공동주택의 입주자대표회의는 관리규약 제정신고가 수리된 날부터 <span class="blank-answer">( 3개월 )</span> 이내에 구성하여야 한다.</li>
+        <li>공동주택의 관리방법 결정 및 변경 제안은 입주자대표회의의 의결 또는 전체 입주자등 <span class="blank-answer">( 10분의 1 )</span> 이상의 서면제안으로 이루어진다.</li>
+        <li>공동주택의 관리방법을 결정하거나 변경하기 위한 최종 의결 요건은 전체 입주자등의 <span class="blank-answer">( 과반수 )</span> 찬성이다.</li>
+        <li>사업주체는 입주예정자 <span class="blank-answer">( 과반수 )</span>가 입주하였을 때 입주자등에게 공동주택을 관리할 것을 요구하여야 한다.</li>
+        <li>입대의가 구성되기 전이라도 주민공동시설의 임대계약 체결을 위해 사업주체가 받아야 하는 입주예정자의 동의 기준은 <span class="blank-answer">( 10분의 3 )</span> 이상이다.</li>
+        <li>조기 임대계약이 허용되는 시설 3가지는 어린이집, 공동육아나눔터 및 <span class="blank-answer">( 다함께돌봄센터 )</span>이다.</li>
+        <li>사업주체가 최초 관리 업무를 인계할 때의 법정 인수의무 기한은 인계 사유가 발생한 날부터 <span class="blank-answer">( 1개월 )</span> 이내이다.</li>
+        <li>관리업무 인계인수 서류 중 회계 및 관리자금과 연관된 적립 현황을 넘겨야 하는 항목은 <span class="blank-answer">( 장기수선충당금 )</span> 적립현황이다.</li>
+        <li>자치관리기구를 구성할 때 입대의는 자치관리기구의 대표자로서 <span class="blank-answer">( 관리사무소장 )</span>을 선임하여야 한다.</li>
+        <li>위탁관리에서 자치관리로 변경하기로 결정한 경우, 입대의는 기존 위탁 계약의 <span class="blank-answer">( 종료일까지 )</span> 자치관리기구를 구성 완료하여야 한다.</li>
+    </ol>
+
+</body>
+</html>

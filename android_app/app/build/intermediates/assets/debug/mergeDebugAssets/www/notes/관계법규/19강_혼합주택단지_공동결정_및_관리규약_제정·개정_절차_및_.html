@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 관계법규 - 제19강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght=400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+            letter-spacing: -0.05em; /* 장평 및 자간 최적화 */
+        }
+        
+        h1 {
+            font-size: 13pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8; /* 프리미엄 블루 라인 */
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        /* 토너 절약 4색 강조 클래스 */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #16803d; /* 학습 편의 녹색 */
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #6d28d9; /* 구조 구분 보라색 */
+        }
+        
+        /* 얇은 점선 형태의 토너 세이브 설명 상자 */
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        ol {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        /* 주관식 정답 가로 3열 배치 레이아웃 */
+        .answer-container {
+            margin-top: 30px;
+            padding: 15px;
+            border-top: 1px dashed #666666;
+            font-size: 10pt;
+            color: #777777;
+            line-height: 1.8;
+        }
+
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .answer-item {
+            border-bottom: 1px none #eeeeee;
+        }
+
+        /* 인쇄 최적화 설정 */
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+        제19강. 혼합주택단지 공동결정 및 관리규약 제정·개정 절차 및 의무관리 추진체계
+    </h1>
+    
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        1. 혼합주택단지(분양+임대)의 법적 성격 및 공동결정 사항 5가지
+    </h2>
+    <ul>
+        <li><strong>혼합주택단지의 정의</strong>: 하나의 공동주택단지 내에 <span class="highlight-blue">분양을 목적으로 하는 공동주택</span>과 <span class="highlight-purple">임대주택(민간·공공)</span>이 함께 혼재되어 있는 복합적인 단지를 말한다.</li>
+        <li><strong>의사결정의 주체</strong>: 의사결정 시 분양주택을 대표하는 <span class="highlight-blue">입주자대표회의(입대위)</span>와 임대주택을 소유한 <span class="highlight-purple">임대사업자</span>가 머리를 맞대고 '공동으로 결정(합의)'하는 것이 대원칙이다. (※ 임차인대표회의가 구성된 경우 임대사업자는 사전 협의 필요)</li>
+        <li><strong>반드시 공동결정해야 하는 법정 사항 5가지 (★필수 암기)</strong>:
+            <ol>
+                <li>공동주택의 <span class="highlight-red">관리방법의 결정 및 변경</span></li>
+                <li><span class="highlight-red">주택관리업자의 선정</span></li>
+                <li><span class="highlight-blue">장기수선계획의 조정</span></li>
+                <li>장기수선충당금 및 특별수선충당금을 사용하는 <span class="highlight-blue">주요 시설의 교체 및 보수</span>에 관한 사항</li>
+                <li>관리비등을 사용하여 시행하는 <span class="highlight-purple">각종 공사 및 용역</span>에 관한 사항</li>
+            </ol>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        2. 예외적 각자 결정 요건 및 합의 불도출 시 의사결정 기준 (면적 비율 법칙)
+    </h2>
+    <ul>
+        <li><strong>돈 문제에 대한 '각자 결정' 예외 인정</strong>: 위 공동결정 사항 중 <span class="highlight-green">4호(주요 시설 교체·보수)</span> 및 <span class="highlight-green">5호(각종 공사·용역)</span>는 돈과 밀접하여 매우 민감하므로, 다음의 2가지 요건을 **동시에 모두 충족**하는 경우에 한하여 입대위와 임대사업자가 각자 독자적으로 결정할 수 있다.
+            <ul>
+                <li>① 분양주택과 임대주택이 별개의 동(棟)으로 배치되는 등 <span class="highlight-purple">구분관리가 가능할 것</span></li>
+                <li>② 입대위와 임대사업자가 공동결정하지 않고 <span class="highlight-red">각자 결정하기로 합의(합정)하였을 것</span></li>
+            </ul>
+        </li>
+        <li><strong>공동결정 합의가 최종 불도출 시 결정 메커니즘 (★계산 및 출제 유의)</strong>:</li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">대상 사항 구분</th>
+                <th style="width: 45%;">합의가 성립되지 아니한 때의 결정 주체 기준</th>
+                <th style="width: 30%;">비고 (특례 및 절차)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th class="highlight-red">① 관리방법 결정·변경<br>② 주택관리업자 선정</th>
+                <td>해당 혼합주택단지 공급면적의 <span class="highlight-red">2분의 1 (50%)을 초과</span>하는 면적을 관리하는 측이 결정</td>
+                <td>초과 면적 보유자가 단독 결정권 행사 (50% 이하는 불가)</td>
+            </tr>
+            <tr>
+                <th class="highlight-blue">③ 장기수선계획 조정<br>④ 주요시설 교체·보수<br>⑤ 공사 및 용역 시행</th>
+                <td>해당 혼합주택단지 공급면적의 <span class="highlight-blue">3분의 2 (66.6%) 이상</span>의 면적을 관리하는 측이 결정</td>
+                <td>면적 기준 미달 시 원칙적으로 '분쟁조정위원회' 신청 대상</td>
+            </tr>
+            <tr>
+                <th class="highlight-purple">시급한 안전관리 특례<br>(★최신 개정 신설)</th>
+                <td class="highlight-purple">
+                    3분의 2 이상을 관리하는 측이 없는 경우로서, 상호 협의를 거쳐도 합의되지 아니한 <span class="highlight-red">'시설물의 안전관리계획 수립 및 안전관리 관련 사항'</span>은 공급면적의 <span class="highlight-blue">2분의 1 초과</span> 측이 결정 가능
+                </td>
+                <td>안전 등 급박한 위협에 대응하기 위한 완화책</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+            💡 [합의 불성립의 종국 해결책] 공동주택관리 분쟁조정위원회
+        </div>
+        <ul>
+            <li>위의 공급면적별 완화 요건(1/2 초과, 3/2 이상 등)을 적용했음에도 비율이 정확히 반반(50:50)이거나 상호 대립하여 최종 결정을 내리지 못한 경우에는 부득이하게 국토교통부 또는 지자체 산하의 <span class="highlight-red">공동주택관리 분쟁조정위원회</span>에 조정을 신청하여 해결하여야 합니다.</li>
+        </ul>
+    </div>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M11 5H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-5"></path><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+        3. 공동주택 관리규약의 제정(최초) 및 개정(2026년 최신 개정 절차 반영)
+    </h2>
+    <ul>
+        <li><strong>관리규약의 목적 및 적용</strong>: 입주자등의 권리 보호와 공동생활의 질서유지를 위하여 스스로 정하는 자치 규약이다. (※ 의무관리대상 공동주택은 법상 관리규약 제정이 의무화된다).</li>
+        <li><strong>최초 제정 절차 (사업주체 개입)</strong>:
+            <ul>
+                <li><strong>제안자</strong>: 사업이 완료되는 초기 어수선한 단계이므로 <span class="highlight-blue">사업주체</span>가 입주예정자와 관리계약을 체결할 때 제정안을 제안한다.</li>
+                <li><strong>의사결정 및 공고</strong>: 입주예정자 <span class="highlight-red">과반수의 서면 동의</span>로 결정하며, 제안 내용은 <span class="highlight-purple">인터넷 홈페이지</span> 공고 및 입주예정자 대상 <span class="highlight-purple">개별 통지</span>를 동시에 완료하여야 한다.</li>
+            </ul>
+        </li>
+        <li><strong>관리규약 개정 절차 (★2026년 6월 개정법 반영 수험 중요도 1순위)</strong>:
+            <ul>
+                <li><strong>제안 요건</strong>: 입주자대표회의 의결로 제안하거나 전체 입주자등의 <span class="highlight-blue">10분의 1 이상</span>이 서면 제안한다.</li>
+                <li><strong>[2026 개정 핵심] 입주민 개별 통지 항목 완화</strong>: 종전에는 개정안 전문을 전부 인쇄하여 통지했으나, 불필요한 비용 낭비를 방지하고자 입주민 개별 통지 대상을 <span class="highlight-red">개정안 요약서</span>로 대폭 간소화하였다.</li>
+                <li><strong>[2026 개정 핵심] 게시판 공고 의무화</strong>: 대신, 정보 접근성을 해치지 않기 위해 <span class="highlight-purple">해당 단지 인터넷 홈페이지</span> 및 각 동의 현관 등 <span class="highlight-red">동별 게시판(통로별 게시판 포함)</span>에 개정안 전문을 반드시 병행 공고하여야 한다.</li>
+                <li><strong>의사결정</strong>: 전체 입주자등의 <span class="highlight-green">과반수 찬성</span>으로 최종 결정 및 개정한다.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        4. 어린이집 등 임대차 계약 특별 예외 (입대의 구성 전 조기 계약 요건)
+    </h2>
+    <ul>
+        <li><strong>도입 취지</strong>: 아파트 신규 입주 시 영유아를 둔 가정의 편의를 위해 입대의가 정식 구성되기 전에 단지 내 어린이집, 다함께 돌봄센터, 공동육아나눔터 임대 계약을 사전에 조기 체결할 수 있도록 특례를 부여한다.</li>
+        <li><strong>[최신 개정] 사전 입주민 동의 비율 인하 (★완화)</strong>:
+            <ul>
+                <li>입대의 구성 전 어린이집 등 임대차 계약의 조기 체결이 필요하다고 판단되는 경우, 시장·군수·구청장 등은 사업주체로 하여금 입주예정자 <span class="highlight-red">10분의 3 (30%) 이상</span>의 서면 동의를 얻어 임대차 계약을 체결하도록 조치할 수 있다. (종전 '과반수 동의' 기준에서 3/10으로 완화되어 원활한 육아시설 개원을 돕는다).</li>
+            </ul>
+        </li>
+        <li><strong>의결사항 제외</strong>: 이러한 육아 및 돌봄 관련 필수 주민공동시설의 위탁(임대)운용에 관한 사항은 입대의 구성 전 체결되는 법리적 한계로 인하여, 향후 구성될 <span class="highlight-purple">입대위의 의결 사항에서 명시적으로 제외</span>된다.</li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+        5. 의무관리대상 공동주택의 단계별 추진 체계 (일반 의무 vs 전환 의무)
+    </h2>
+    <ul>
+        <li><strong>일반 의무관리대상단지 (사업주체 관리 시발점)</strong>:
+            <ol>
+                <li><strong>가반수 입주 완료</strong>: 최초 분양 후 입주율이 <span class="highlight-blue">과반수</span>를 돌파하는 시점에 도달한다.</li>
+                <li><strong>구성 요구 통지</strong>: 사업주체는 입주자등에게 3개월 이내에 입대의를 구성할 것을 서면 요구한다.</li>
+                <li><strong>입대의 정식 구성</strong>: 요구를 받은 날부터 <span class="highlight-purple">3개월 이내</span>에 입대의 구성을 완료한다.</li>
+                <li><strong>관리방법 결정 및 신고</strong>: 입대위 의결 또는 입주민 서면 동의를 거쳐 관리방법(자치/위탁)을 결정하고 구청에 신고한다.</li>
+                <li><strong>자치관리기구 구성 기한</strong>: 자치관리로 결정된 경우, 결정 통지를 받은 날부터 <span class="highlight-red">6개 이내</span>에 자치관리기구를 구성하여야 한다. </li>
+                <li><strong>[★중요 출제 함정] 위탁관리 주택관리업자 선정 기한</strong>: 위탁관리로 결정된 경우, 별축법상 주택관리업자를 선정해야 하는 구체적인 법정 제한 기한은 <span class="highlight-red">법률상 존재하지 않는다</span> (사업주체라는 공식 관리주체가 인계 시까지 계속 관리하고 있어 급박하지 않기 때문).</li>
+            </ol>
+        </li>
+        <li><strong>의무관리 전환대상단지 (어설픈 관리에서 정식 관리로의 전환)</strong>:
+            <ol>
+                <li><strong>전환신고 수리</strong>: 비의무관리 단지 입주민 전체의 <span class="highlight-blue">3분의 2 이상</span> 서면동의로 관할 지자체에 전환신고서가 수리된다.</li>
+                <li><strong>최초 관리규약 제정</strong>: 기존 관리인이 주식 등을 참조하여 규약 제정안을 마련하고, 입주자등 <span class="highlight-red">과반수 서면 동의</span>로 최초 규약을 제정·신고한다 (30일 이내).</li>
+                <li><strong>입대의 구성신고 수리</strong>: 제정된 규약에 따라 입대위를 직접 구성하여 구청에 신고한다.</li>
+                <li><strong>관리방법 결정 기한 (★일반과 구별되는 고난도 기출)</strong>: 입대의 구성신고가 수리된 날부터 반드시 <span class="highlight-red">3개월 이내</span>에 자치 또는 위탁관리 방법을 결정하여야 한다.</li>
+                <li><strong>위탁관리 선정 기한 (★전환의 결정적 차이)</strong>: 위탁관리 방식으로 결정된 경우, 결정된 날(또는 입대위 구성신고 수리일 기준 등)로부터 반드시 <span class="highlight-purple">6개월 이내</span>에 주택관리업자를 선정 완료하여야 한다 (전환 단지는 관리인이 임시 관리하므로 신속한 전문 관리업자 교체를 위해 6개월의 선정이행 기한이 강제된다).</li>
+            </ol>
+        </li>
+    </ul>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><line x1="18" y1="2" x2="22" y2="6"></line><path d="M7.5 20.5L19 9l-4-4L3.5 16.5 2 22z"></path></svg>
+        6. 주관식 단답형 및 다단 빈칸 채우기 완벽 대비 (실전 훈련)
+    </h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡, ㉢)에 들어갈 알맞은 핵심 용어나 법정 숫자를 아래 여유 공백에 직접 기재해 보십시오. (필기가 쉽도록 한글 4자 규격의 공간으로 구성되었습니다.)</p>
+    
+    <ol style="line-height: 2.1;">
+        <li>
+            하나의 단지 내에 분양 공동주택과 임대주택이 공존하는 혼합주택단지에서 관리방법의 결정 및 변경이나 주택관리업자의 선정을 공동결정할 때, 상호 합의가 이루어지지 않는 경우 해당 단지 공급면적의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )을 초과하는 면적을 관리하는 측이 단독 결정할 수 있다.
+        </li>
+        <li>
+            혼합주택단지에서 장기수선계획의 조정이나 주요 시설의 교체·보수 사항에 대해 상호 합의가 이루어지지 않은 때에는, 원칙적으로 단지 전체 공급면적의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 이상을 관리하는 측이 직접 결정하도록 규정하고 있다.
+        </li>
+        <li>
+            최신 개정법에 따라 혼합주택단지에서 상호 대립 시, 급박한 위험 대응을 위한 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 수립 및 관련 사항은 예외적으로 공급면적의 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )을 초과하는 면적을 관리하는 측이 결정할 수 있는 특례가 신설되었다.
+        </li>
+        <li>
+            최초 관리규약을 제정할 때 제안자는 사업주체이며, 제안 내용은 인터넷 홈페이지에 공고하고 입주예정자들에게는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )하여 동시에 알려야 하고, 전체 입주예정자 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )의 서면동의로 결정한다.
+        </li>
+        <li>
+            2026년 개정된 관리규약 개정 절차에 따르면, 개정 시 입주민 각 세대에 배부하여 개별 통지하는 서류는 과도한 비용 절감을 위해 전체 개정안이 아닌 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )로 간소화되었다.
+        </li>
+        <li>
+            관리규약 개정안 요약서를 개별 통지함과 동시에 입주민의 알 권리를 위해 해당 아파트의 인터넷 홈페이지 및 각 동 출입구 등에 마련된 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )에 개정안 전문을 병행하여 공고하여야 한다.
+        </li>
+        <li>
+            입대의 구성 전에 단지 내 주민공동시설인 어린이집 등을 조기에 입점 임대 계약 체결하기 위해서는, 사업주체가 사전에 전체 입주예정자 최소 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 이상의 서면동의를 확보해야 한다.
+        </li>
+        <li>
+            일반 의무관리대상단지는 최초 입주예정자의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )가 입주를 완료하였을 때 법정 자치기구의 추진 체계가 작동하게 된다.
+        </li>
+        <li>
+            의무관리대상으로 전환되는 공동주택단지에서는, 전환신고가 구청에 의해 최종 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )된 시점부터 법적인 의무관리의 전환 효력이 정식 발생한다.
+        </li>
+        <li>
+            일반 의무관리단지에서 자치관리 방식으로 관리를 수행하기로 입주민 의견을 확정 지었다면, 결정된 날로부터 반드시 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )개월 이내에 자치관리기구를 직접 구성하여야 한다.
+        </li>
+        <li>
+            의무관리 전환단지의 경우에는 입대의 구성신고가 구청에 수리된 날로부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )개월 이내에 자치 또는 위탁관리 등의 공동주택 관리방법을 결정하여 신고를 마쳐야 한다.
+        </li>
+        <li>
+            의무관리 전환단지에서 위탁관리 방식으로 관리방법을 결정하였다면, 전환신고 수리 후 지연 없는 전문업체 교체를 유도하기 위해 반드시 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )개월 이내에 전문 주택관리업자를 선정하여야 한다.
+        </li>
+        <li>
+            일반 의무관리단지에서 입주자가 법정 기한 내에 자치관리기구를 구성하지 않거나 연락 두절 등 방치될 시, 관리 공백을 예방하기 위해 최종적으로 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )가 직접 전문 주택관리업자를 대리 선정할 수 있는 직권이 규정되어 있다.
+        </li>
+    </ol>
+
+    <!-- 수험생 정답 확인용 하단 주르륵 배치 영역 -->
+    <div class="answer-container">
+        <strong>[제19강 주관식 단답형 정답 리스트]</strong> (가로 3열 정렬 방식)
+        <div class="answer-grid">
+            <div class="answer-item"><strong>1.</strong> ㉠ 2분의 1 초과</div>
+            <div class="answer-item"><strong>2.</strong> ㉠ 3분의 2 이상</div>
+            <div class="answer-item"><strong>3.</strong> ㉠ 시설물의 안전관리계획 | ㉡ 2분의 1 초과</div>
+            
+            <div class="answer-item"><strong>4.</strong> ㉠ 개별 통지 | ㉡ 과반수</div>
+            <div class="answer-item"><strong>5.</strong> ㉠ 개정안 요약서</div>
+            <div class="answer-item"><strong>6.</strong> ㉠ 동별 게시판(또는 통로별 게시판)</div>
+            
+            <div class="answer-item"><strong>7.</strong> ㉠ 10분의 3(또는 3/10)</div>
+            <div class="answer-item"><strong>8.</strong> ㉠ 과반수</div>
+            <div class="answer-item"><strong>9.</strong> ㉠ 수리</div>
+            
+            <div class="answer-item"><strong>10.</strong> ㉠ 6</div>
+            <div class="answer-item"><strong>11.</strong> ㉠ 3</div>
+            <div class="answer-item"><strong>12.</strong> ㉠ 6</div>
+            
+            <div class="answer-item"><strong>13.</strong> ㉠ 사업주체</div>
+            <div class="answer-item"></div>
+            <div class="answer-item"></div>
+        </div>
+    </div>
+
+</body>
+</html>

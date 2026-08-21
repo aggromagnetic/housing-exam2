@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 관계법규 - 제34강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+            letter-spacing: -0.05em;
+        }
+        
+        h1 {
+            font-size: 13pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        /* 토너 절약 4색 강조 클래스 */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #16803d; 
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #6d28d9; 
+        }
+        
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        ol {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        /* 정답 리스트 3열 격자 레이아웃 */
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px 15px;
+        }
+
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        제34강. 분쟁조정위원회 운영, 주택관리사 단체, 지원기구, 감사요청·비리신고센터 및 벌칙·과태료 종합 정리
+    </h1>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        1. 공동주택관리 분쟁조정위원회 운영 절차 및 시스템 구축
+    </h2>
+    <ul>
+        <li><strong>회의 개의 및 통지 시한</strong>:
+            <ul>
+                <li>회의 소지시 위원장은 회의 개최 <span class="highlight-blue">3일 전</span>까지 위원에게 통지해야 함 (하자심사·분쟁조정위 절차와 동일).</li>
+                <li>당사자 또는 이해관계인 출석·의견진술 요구 시 회의 개최 <span class="highlight-red">5일 전</span>까지 통지. 부득이한 사유 시 미리 <span class="highlight-purple">서면 제출</span> 가능.</li>
+            </ul>
+        </li>
+        <li><strong>전자적 사건 처리 전용 시스템 명칭 구별 (★빈출)</strong>:
+            <ul>
+                <li>중앙분쟁조정위원회 사건의 전자적 접수·처리 시스템: <span class="highlight-red">중앙분쟁조정시스템</span>.</li>
+                <li>하자심사·분쟁조정위원회 사건의 전자적 처리 시스템: <span class="highlight-blue">하자관리정보시스템</span> (용어 혼동 주의).</li>
+            </ul>
+        </li>
+        <li><strong>조정 신청 처리 및 효력 규정</strong>:
+            <ul>
+                <li>조정신청 통지를 받은 상대방은 통지받은 날부터 <span class="highlight-blue">10일 이내</span>에 답변서를 제출해야 함 (미제출 시 과태료 대상).</li>
+                <li>조정 절차 진행 중 당사자가 소를 제기한 경우: 분쟁조정위는 조정을 <span class="highlight-purple">중지</span>하여야 함.</li>
+                <li>소멸시효 중단 및 서류 송달에 관하여는 <span class="highlight-green">민사조정법</span> 및 <span class="highlight-green">민사소송법</span> 준용.</li>
+                <li>분쟁조정 위원 등의 비밀누설 벌칙: <span class="highlight-red">1년 이하의 징역 또는 1,000만원 이하의 벌금</span>.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+        2. 주택관리사 단체(협회) 설립 및 공제사업 운용 규칙
+    </h2>
+    <ul>
+        <li><strong>단체 설립 요건 및 성격</strong>:
+            <ul>
+                <li>주택관리사등은 주택관리사 단체를 설립할 수 있으며, 법적 성격은 <span class="highlight-blue">민법상 사단법인</span> 규정을 준용.</li>
+                <li>발기인 요건: 공동주택에 배치된 주택관리사등의 <span class="highlight-red">5분의 1 이상</span>.</li>
+                <li>설립 인가권자: 정관 작성 및 창립총회 의결 후 <span class="highlight-purple">국토교통부장관의 인가</span>를 받아 주소지 등기소에 등기함으로써 성립.</li>
+                <li>행정처분 관련 회원의 권리: 자격정지·영업정지 처분을 받은 회원권리는 정지기간 중 <span class="highlight-blue">정지</span>되며, 자격취소 시 회원자격 <span class="highlight-red">상실</span>.</li>
+            </ul>
+        </li>
+        <li><strong>공제사업 운용 및 건전성 감독</strong>:
+            <ul>
+                <li>공제사업은 다른 회계와 <span class="highlight-purple">구분하여 별도 회계</span>로 관리해야 함. 책임준비금을 다른 용도로 사용 시 <span class="highlight-blue">국토교통부장관의 승인</span> 필요.</li>
+                <li><strong>공시 의무</strong>: 매 사업연도 종료 후 <span class="highlight-blue">2개월 이내</span>에 국토교통부장관에게 보고하고 일간신문 또는 인터넷 홈페이지에 공시.</li>
+                <li><strong>검사 요청 특례★</strong>: 국토교통부장관이 요청하는 경우 <span class="highlight-red">금융감독원 원장</span>이 공제사업에 대해 <span class="highlight-red">검사</span>를 할 수 있음.</li>
+            </ul>
+        </li>
+        <li><strong>모범관리단지 vs 우수관리단지 및 층간소음 지원</strong>:
+            <ul>
+                <li>시·도지사 → <span class="highlight-blue">모범관리단지</span> 선정 / 국토교통부장관 → 모범단지 중 <span class="highlight-red">우수관리단지</span> 선정.</li>
+                <li>지자체장은 층간소음 측정·진단 비용을 지원할 수 있으며, 국가도 <span class="highlight-purple">주택도시기금</span>에서 층간소음 저감방지 단지 등에 비용 일부를 융자 지원할 수 있음.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M16 16v1a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v1"></path><path d="M18 8l4 4-4 4"></path><path d="M22 12H9"></path></svg>
+        3. 공동주택관리 지원기구, 권한의 위임·위탁 체계 및 청문(聽聞) 절차
+    </h2>
+    <ul>
+        <li><strong>공동주택관리 지원기구</strong>:
+            <ul>
+                <li>국토교통부장관이 지정·고시하며, 예산 범위에서 경비 출연·보조 가능.</li>
+                <li>지원기구는 업무 수행 비용의 전부 또는 일부를 <span class="highlight-blue">입주자대표회의 또는 관리주체</span>로부터 받을 수 있음.</li>
+                <li>주요 지원 업무: 관리규약 제·개정 지원, 장기수선계획 수립·조정 지원, 혼합주택단지 분쟁조정 상담, 층간소음 조사·상담 등.</li>
+            </ul>
+        </li>
+        <li><strong>주요 업무 위탁 기관 완벽 비교 (★단골 출제)</strong>:
+            <ul>
+                <li><strong>공동주택관리 정보시스템 구축·운영 위탁</strong>: <span class="highlight-red">한국부동산원</span> (과거 감정원).</li>
+                <li><strong>관리사무소장 배치신고 접수 업무 위탁</strong>: <span class="highlight-blue">주택관리사 단체</span> (배치신고서를 집계하여 분기별로 시장·군수·구청장에게 보고하는 간접신고 방식).</li>
+                <li><strong>입주자대표회의 구성원 교육 및 안전교육 위탁</strong>: <span class="highlight-purple">공동주택관리 지원기구</span>.</li>
+                <li><strong>주택관리업자 및 소장 교육, 장기수선계획 조정 교육 위탁</strong>: 시·도지사가 전문기관·단체에 위탁.</li>
+            </ul>
+        </li>
+        <li><strong>청문(聽聞) 실시 대상 처분 및 암기법 (★교수님 강조 / 함정 방지)</strong>:
+            <ul>
+                <li><strong>청문 필수 실시 3대 처분 ('~소' 법칙★)</strong>:
+                    <ul>
+                        <li>① 행위허가의 <span class="highlight-red">취소</span> (시장·군수·구청장)</li>
+                        <li>② 주택관리업의 등록<span class="highlight-red">말소</span> (시장·군수·구청장)</li>
+                        <li>③ 주택관리사등의 자격<span class="highlight-red">취소</span> (시·도지사)</li>
+                    </ul>
+                </li>
+                <li><span class="highlight-purple">주의 (핵심 출제 함정)</span>: 영업정지 처분 및 자격정지 처분은 <span class="highlight-red">청문 대상이 아니다</span> (청문을 거치지 아니함).</li>
+            </ul>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">위탁 대상 업무</th>
+                <th style="width: 25%;">원래 권한권자</th>
+                <th style="width: 25%;">수탁 기관/단체</th>
+                <th style="width: 25%;">비고 및 핵심 특징</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>공동주택관리 정보시스템 구축·운영</th>
+                <td>국토교통부장관</td>
+                <td class="highlight-red">한국부동산원</td>
+                <td>K-apt 정보망 통합 관리</td>
+            </tr>
+            <tr>
+                <th>소장 배치신고 접수 업무</th>
+                <td>시장·군수·구청장</td>
+                <td class="highlight-blue">주택관리사 단체</td>
+                <td>접수 후 분기별 지자체장 보고</td>
+            </tr>
+            <tr>
+                <th>입대위 구성원 교육 / 안전교육</th>
+                <td>시장·군수·구청장</td>
+                <td class="highlight-purple">공동주택관리 지원기구</td>
+                <td>시설물·방범·소방 안전교육 포함</td>
+            </tr>
+            <tr>
+                <th>주택관리업자 및 소장 교육</th>
+                <td>시·도지사</td>
+                <td class="highlight-green">지정 전문기관·단체</td>
+                <td>실무 및 보수교육 시행</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        4. 지자체장의 감사 요청 제도 및 공동주택관리 비리신고센터
+    </h2>
+    <ul>
+        <li><strong>지자체장에 대한 입주자등의 감사 요청 절차</strong>:
+            <ul>
+                <li>입주자등은 전체 입주자등의 <span class="highlight-red">10분의 2 이상</span>의 서면동의를 받아 지자체장에게 감사를 요청할 수 있음 (개정 법률★).</li>
+                <li><strong>감사 결과의 공개 의무 (관리주체 수검 의무★)</strong>:
+                    <ul>
+                        <li>감사 결과를 통보받은 관리주체는 통보받은 날부터 <span class="highlight-blue">10일 이내</span>에 그 내용을 인터넷 홈페이지 및 게시판에 <span class="highlight-red">7일 이상 공개</span>하여야 함.</li>
+                        <li>동별 게시판에는 감사 결과 요약문 공개 가능. 열람 요구 시 응해야 함.</li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li><strong>공동주택관리 비리신고센터 (국토교통부 설치)</strong>:
+            <ul>
+                <li>신고 시 익명신고 금지: 반드시 본인의 인적사항 적시, 자필 <span class="highlight-blue">서명한 서면</span>으로 제출.</li>
+                <li><strong>처리 시한 및 보고 절차 (대통령령 수치 주의★)</strong>:
+                    <ul>
+                        <li>신고 접수 후 지자체장에 조사·조치 요구: <span class="highlight-blue">10일 이내</span>.</li>
+                        <li>지자체장의 조사·조치 완료 시한: 요구받은 날부터 <span class="highlight-red">60일 이내</span> (부득이한 경우 1회 <span class="highlight-purple">30일 연장</span> 가능, 최대 90일).</li>
+                        <li>조치 완료 후 지자체장이 국토교통부장관에게 통보: 완료일부터 <span class="highlight-blue">10일 이내</span>. 국토교통부장관은 신고자에게 요지 통보.</li>
+                    </ul>
+                </li>
+                <li>신고서 보완 요구 기간: <span class="highlight-green">15일 이내</span>. 보완 미이행 또는 내용이 명백히 거짓인 경우 <span class="highlight-purple">종결 처리</span> 가능.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+        5. 공동주택관리법상 주요 벌칙 및 과태료 핵심 비교표
+    </h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 20%;">벌칙 및 행벌 수준</th>
+                <th style="width: 50%;">위반 행위 내용</th>
+                <th style="width: 30%;">비고 및 행정처분 병과</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>3년 이하 징역 또는<br>3,000만원 이하 벌금</th>
+                <td>입대위, 관리주체 등이 공동주택 관리와 관련하여 공모하여 부정한 재물·재산상 이익 취득/제공</td>
+                <td>부당이익의 50% 금액이 3천만원 초과 시 <span class="highlight-red">부당이익의 2배 이하 벌금</span> (몰수·추징)</td>
+            </tr>
+            <tr>
+                <th>2년 이하 징역 또는<br>2,000만원 이하 벌금</th>
+                <td>· 부정한 재물·재산상 이익 취득 또는 제공 (부정한 금품수수)<br>· 무등록 주택관리업 영위 또는 거짓 등록</td>
+                <td>주택관리업자 부정한 금품수수 시 <span class="highlight-red">필요적 영업정지</span> 병과</td>
+            </tr>
+            <tr>
+                <th>1년 이하 징역 또는<br>1,000만원 이하 벌금</th>
+                <td>· 영업정지 중 영업 영위 / 등록말소 후 영업 영위<br>· 자격증·등록증 대여 / 자격 미취득자 소장 업무 수행<br>· 자치관리기구 인력·장비 미갖추고 관리행위 수행<br>· 분쟁조정위원의 비밀 누설 행위</td>
+                <td>등록증 대여 시 <span class="highlight-red">필요적 등록말소</span> 병과<br>자격증 대여 시 <span class="highlight-red">필요적 자격취소</span> 병과</td>
+            </tr>
+            <tr>
+                <th>1,000만원 이하 벌금<br>(과태료가 아닌 형벌★)</th>
+                <td>· <span class="highlight-red">관리사무소장을 배치하지 아니한 자</span><br>· 자치관리 결정 후 법정 기한 내 자치관리기구를 미구성한 자</td>
+                <td>과태료 부과 대상이 아닌 <span class="highlight-purple">형사벌(벌금)</span> 부과 규정 주의</td>
+            </tr>
+            <tr>
+                <th>2,000만원 이하 과태료</th>
+                <td>하자보수보증금을 용도 외의 목적으로 사용한 자</td>
+                <td>최고액 과태료 규정</td>
+            </tr>
+            <tr>
+                <th>1,000만원 이하 과태료</th>
+                <td>· 관리비·사용료·장기수선충당금을 용도 외 목적으로 사용<br>· 수립·조정된 장기수선계획에 따라 주요시설 교체·보수를 안 한 자</td>
+                <td>주택관리업자 용도외 사용 시 <span class="highlight-red">필요적 영업정지</span> 병과</td>
+            </tr>
+            <tr>
+                <th>500만원 이하 과태료</th>
+                <td>분쟁조정위 답변서 미제출, 비리신고 조사 거부·방해 등</td>
+                <td>일반 과태료 규정</td>
+            </tr>
+            <tr>
+                <th>300만원 이하 과태료<br>(개정 완화 규정★)</th>
+                <td>· 주택관리업자 <span class="highlight-blue">등록사항 변경신고 미이행</span> (15일 이내)<br>· 자치관리기구 미구성 (의무관리대상 결정 통지 6개월 내 미구성)</td>
+                <td>종전 500만원에서 <span class="highlight-blue">300만원으로 하향 개정</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+            💡 [수험 팁] 양벌규정과 형벌·행정처분·과태료의 병과 구조 이해
+        </div>
+        <ul>
+            <li><strong>양벌규정 적용 원칙</strong>: 법인의 대표자, 대리인, 종업원 등이 위반행위를 한 경우 직접 위반한 <span class="highlight-blue">행위자를 벌하는 외에</span> 그 법인 또는 개인에게도 해당 조문의 <span class="highlight-purple">벌금형</span>을 과함. (단, 상당한 주의와 감독을 게을리하지 아니한 경우에는 적용 배제).</li>
+            <li><strong>형벌과 행정처분의 관계</strong>: 부정한 금품수수 시 형사처벌(2년/2,000만원)과 행정처분(필요적 영업정지)은 상호 배계되는 것이 아니라 <span class="highlight-red">동시에 병과(竝科)</span>하여 부과됨.</li>
+        </ul>
+    </div>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>주관식 단답형 및 빈칸 채우기 실전 훈련</h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡)에 들어갈 알맞은 핵심 용어나 법정 숫자를 아래 여유 공백에 직접 기재해 보십시오.</p>
+
+    <ol class="quiz-list" style="line-height: 2.1;">
+        <li>
+            공동주택관리 중앙분쟁조정위원회 위원장이 회의를 소집하려는 경우 회의 개최 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 전까지 회의 일시·장소 및 안건을 각 위원에게 알려야 한다.
+        </li>
+        <li>
+            국토교통부장관은 중앙분쟁조정위원회의 분쟁조정 사건을 전자적 방법으로 접수·처리하기 위하여 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )을 구축·운영하여야 한다.
+        </li>
+        <li>
+            중앙분쟁조정위원회로부터 조정 신청 통지를 받은 상대방은 통지받은 날부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이내에 답변서를 제출하여야 한다.
+        </li>
+        <li>
+            공동주택관리법상 분쟁조정위원회 위원 등이 직무상 알게 된 비밀을 누설한 경우 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년 이하의 징역 또는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )만원 이하의 벌금에 처한다.
+        </li>
+        <li>
+            주택관리사등이 주택관리사 단체를 설립하려는 경우 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )의 인가를 받아야 하며, 법적 성격은 민법 중 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )에 관한 규정을 준용한다.
+        </li>
+        <li>
+            주택관리사 단체를 설립하고자 하는 경우 발기인은 공동주택에 배치된 주택관리사등의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 이상이어야 한다.
+        </li>
+        <li>
+            주택관리사 단체는 공제사업 운용실적을 매 사업연도 종료 후 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )개월 이내에 국토교통부장관에게 보고하고 일간신문 등에 공시하여야 한다.
+        </li>
+        <li>
+            국토교통부장관이 주택관리사 단체의 공제사업에 대해 검사를 요청할 수 있는 기관의 장은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이다.
+        </li>
+        <li>
+            공동주택 모범관리단지는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )가 선정하고, 우수관리단지는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이 선정한다.
+        </li>
+        <li>
+            국토교통부장관이 공동주택관리 정보시스템 구축·운영 업무를 위탁하는 기관은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이다.
+        </li>
+        <li>
+            시장·군수·구청장이 관리사무소장의 배치신고 접수 업무를 위탁하는 대상은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이다.
+        </li>
+        <li>
+            시장·군수·구청장이 입주자대표회의 구성원에 대한 교육 업무를 위탁하는 대상은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이다.
+        </li>
+        <li>
+            지방자치단체의 장에게 공동주택 관리 감사를 요청하려는 경우 전체 입주자등의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 이상의 서면동의를 받아야 한다.
+        </li>
+        <li>
+            공동주택관리법상 행위허가의 취소, 주택관리업 등록말소, 주택관리사 자격취소 처분을 하려면 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )을 거쳐야 하나, 영업정지 처분은 이를 거치지 아니한다.
+        </li>
+        <li>
+            지자체장의 감사 결과를 통보받은 관리주체는 통보받은 날부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이내에 그 결과를 인터넷 홈페이지 및 게시판에 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이상 공개하여야 한다.
+        </li>
+        <li>
+            지자체장이 비리신고센터로부터 조사·조치 요구를 받은 경우 요구받은 날부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이내에 조사·조치를 완료하여야 한다.
+        </li>
+        <li>
+            비리신고센터는 접수된 신고서의 보완이 필요한 경우 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이내의 기간을 정하여 보완을 요구할 수 있다.
+        </li>
+        <li>
+            공동주택 관리와 관련하여 부정한 재물이나 재산상의 이익을 취득하거나 제공한 자는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년 이하의 징역 또는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )만원 이하의 벌금에 처한다.
+        </li>
+        <li>
+            자치관리기구의 기술인력 및 장비를 갖추지 아니하고 관리행위를 한 자에게 부과되는 벌칙은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년 이하의 징역 또는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )만원 이하의 벌금이다.
+        </li>
+        <li>
+            의무관리대상 공동주택 전환 결정 통지를 받고도 자치관리기구를 구성하지 아니한 자에게 부과되는 과태료는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )만원 이하이다.
+        </li>
+    </ol>
+
+    <!-- 수험생 정답 확인용 하단 3열 배치 그리드 영역 -->
+    <div style="font-size: 9.5pt; color: #666666; margin-top: 30px; padding: 15px; border-top: 1px dashed #666666; line-height: 1.8;">
+        <strong style="display: block; margin-bottom: 10px; color: #333333;">[제34강 주관식 단답형 정답 리스트]</strong>
+        <div class="answer-grid">
+            <div><strong>1.</strong> ㉠ 3</div>
+            <div><strong>2.</strong> ㉠ 중앙분쟁조정시스템</div>
+            <div><strong>3.</strong> ㉠ 10</div>
+            <div><strong>4.</strong> ㉠ 1, &nbsp; ㉡ 1천(1,000)</div>
+            <div><strong>5.</strong> ㉠ 국토교통부장관, &nbsp; ㉡ 사단법인</div>
+            <div><strong>6.</strong> ㉠ 5분의 1</div>
+            <div><strong>7.</strong> ㉠ 2</div>
+            <div><strong>8.</strong> ㉠ 금융감독원 원장</div>
+            <div><strong>9.</strong> ㉠ 시·도지사, &nbsp; ㉡ 국토교통부장관</div>
+            <div><strong>10.</strong> ㉠ 한국부동산원</div>
+            <div><strong>11.</strong> ㉠ 주택관리사 단체</div>
+            <div><strong>12.</strong> ㉠ 공동주택관리 지원기구</div>
+            <div><strong>13.</strong> ㉠ 10분의 2</div>
+            <div><strong>14.</strong> ㉠ 청문</div>
+            <div><strong>15.</strong> ㉠ 10, &nbsp; ㉡ 7</div>
+            <div><strong>16.</strong> ㉠ 60</div>
+            <div><strong>17.</strong> ㉠ 15</div>
+            <div><strong>18.</strong> ㉠ 2, &nbsp; ㉡ 2천(2,000)</div>
+            <div><strong>19.</strong> ㉠ 1, &nbsp; ㉡ 1천(1,000)</div>
+            <div><strong>20.</strong> ㉠ 300</div>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 공동주택관리실무 - 제28강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+            letter-spacing: -0.05em;
+        }
+        
+        h1 {
+            font-size: 13pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        /* 토너 절약 4색 강조 클래스 */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #16803d; 
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #6d28d9; 
+        }
+        
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        ol {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        /* 정답 리스트 3열 격자 레이아웃 */
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px 15px;
+        }
+
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        제28강. 부당노동행위 유형·벌칙·구제절차 및 4대 사회보험(보험료징수법) 종합 정리
+    </h1>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        1. 노동조합법상 부당노동행위의 개념 · 법정 4대 유형 및 벌칙 규정
+    </h2>
+    <ul>
+        <li><strong>부당노동행위의 법적 정의</strong>: 사용자가 근로자의 헌법상 노동3권(단결권·단체교섭권·단체행동권)을 침해하거나 방해하는 불법행위를 말한다.</li>
+        <li><strong>형사처벌 규정 (★2년 2천만원 vs 확정 구제명령 불이행 3년 3천만원)</strong>:
+            <ul>
+                <li>사용자가 부당노동행위를 한 경우: <span class="highlight-red">2년 이하의 징역 또는 2천만원 이하의 벌금</span>에 처한다 (2학년 2반).</li>
+                <li>확정된 구제명령 또는 재심판정을 이행하지 아니한 경우: <span class="highlight-purple">3년 이하의 징역 또는 3천만원 이하의 벌금</span>에 처한다 (3학년 3반).</li>
+            </ul>
+        </li>
+        <li><strong>부당노동행위의 법정 4대 주요 유형</strong>:
+            <ul>
+                <li><strong>① 불이익 처우 (단결권 침해)</strong>: 근로자가 노동조합에 가입·조직하려고 하였거나 정당한 노조 업무를 수행한 것을 이유로 해고 또는 불이익을 주는 행위.</li>
+                <li><strong>② 비계약 / 조건부 계약 (황견계약, Yellow-Dog Contract)</strong>: 근로자가 특정 노조에 가입하지 아니할 것, 탈퇴할 것, 또는 특정 노조의 조합원이 될 것을 고용조건으로 하는 행위.
+                    <ul>
+                        <li><span class="highlight-blue">유니언 숍(Union Shop) 예외 (부당노동행위 제외★)</span>: 노동조합이 해당 사업장에 종사하는 근로자의 <span class="highlight-red">3분의 2 이상</span>을 대표하고 있는 경우, 그 노조의 조합원이 될 것을 고용조건으로 하는 단체협약 체결은 부당노동행위가 아니다.</li>
+                        <li><span class="highlight-purple">신분상 불이익 제한 특례</span>: 유니언 숍 협정이 체결되었더라도, 근로자가 노조에서 제명되거나 탈퇴하여 <span class="highlight-blue">새로운 노조를 조직하거나 다른 노조에 가입</span>한 경우에는 사용자가 이를 이유로 신분상 불이익 처우를 할 수 없다.</li>
+                    </ul>
+                </li>
+                <li><strong>③ 단체교섭 거부 · 태만 (단체교섭권 침해)</strong>: 노동조합의 대표자 또는 위임받은 자와의 단체교섭을 정당한 이유 없이 거부하거나 해태하는 행위.</li>
+                <li><strong>④ 지배 · 개입 및 경비원조 (자율성 침해)</strong>: 노동조합의 조직·운영을 지배하거나 개입하는 행위, 급여 지원 및 운영비 원조 행위.
+                    <ul>
+                        <li><span class="highlight-green">부당노동행위 제외 예외 사유 4가지</span>:
+                            <br>1) 근로시간 면제한도(타임오프) 내에서 사용자와의 협의·교섭, 고충처리, 산업안전 활동 등을 허용하는 행위.
+                            <br>2) 근로자의 후생자금 또는 재해방지 기부금을 지급하는 행위.
+                            <br>3) <span class="highlight-red">최소한 규모의 노동조합 사무소</span>를 제공하는 행위.
+                            <br>4) 노동조합의 자주적 운영을 침해할 위험이 없는 범위의 운영비 원조.</li>
+                    </ul>
+                </li>
+                <li><strong>⑤ 보복적 불이익 취급 (단체행동권 및 구제신청 보호)</strong>: 정당한 쟁의행위에 참가하거나, 노동위원회 등에 부당노동행위를 신고·증언·증거 제출한 것을 이유로 불이익을 주는 행위.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        2. 부당노동행위 구제절차(3개월 / 10일 / 15일) 및 긴급이행명령(관할법원 주체)
+    </h2>
+    <ul>
+        <li><strong>구제신청권자 및 신청 제척기간 (★근로자 및 노동조합 공동 가능)</strong>:
+            <ul>
+                <li><strong>신청권자</strong>: 부당노동행위로 인하여 권리를 침해당한 <span class="highlight-red">근로자 또는 노동조합</span>이 신청할 수 있다 (근로기준법상 부당해고 구제신청은 '근로자만' 가능하나, 부당노동행위는 '노동조합'도 주체로 포함됨).</li>
+                <li><strong>제척기간 및 관할</strong>: 부당노동행위가 있은 날(계속되는 행위는 종료일)부터 <span class="highlight-red">3개월 이내</span>에 <span class="highlight-blue">지방노동위원회</span>에 신청하여야 한다.</li>
+            </ul>
+        </li>
+        <li><strong>조사 · 신문 및 증인출석 요구 (직권 가능)</strong>:
+            <ul>
+                <li>신청을 받은 노동위원회는 <span class="highlight-blue">지체 없이</span> 필요한 조사와 관계 당사자 신문을 실시하여야 한다.</li>
+                <li>증인 출석 요구는 당사자의 신청뿐만 아니라 노동위원회의 <span class="highlight-red">직권으로도 가능</span>하다.</li>
+            </ul>
+        </li>
+        <li><strong>불복 절차 및 확정 (★10일 / 15일 / 효력 불정지 원칙)</strong>:
+            <ul>
+                <li><strong>중앙노동위원회 재심 신청</strong>: 지방노동위원회의 구제명령서나 기각결정서를 송달받은 날부터 <span class="highlight-purple">10일 이내</span>에 중노위에 재심을 신청할 수 있다.</li>
+                <li><strong>행정소송 제기</strong>: 중앙노동위원회의 재심판정서를 송달받은 날부터 <span class="highlight-red">15일 이내</span>에 행정소송법에 따른 소를 제기할 수 있다.</li>
+                <li><strong>효력 불정지 원칙</strong>: 중노위 재심신청이나 행정소송 제기는 노동위원회의 구제명령 효력을 <span class="highlight-blue">정지시키지 아니한다</span>.</li>
+            </ul>
+        </li>
+        <li><strong>긴급이행명령 제도 (★관할법원 주체 / 중앙노동위원회 신청 필수)</strong>:
+            <ul>
+                <li>사용자가 중앙노동위원회의 재심판정에 불복하여 행정소송을 제기한 경우, <span class="highlight-red">관할법원</span>은 <span class="highlight-purple">중앙노동위원회의 신청</span>에 따른 결정으로 판결이 확정될 때까지 구제명령의 전부 또는 일부를 이행하도록 명할 수 있다.</li>
+                <li><strong>출제 포인트</strong>: 긴급이행명령은 중앙노동위원회가 직접 명하는 것이 아니라 <span class="highlight-red">관할법원</span>이 명하며, 관할법원의 <span class="highlight-blue">직권이나 노동조합의 신청이 아닌 '중앙노동위원회의 신청'</span>에 의해서만 결정된다.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+            💡 [핵심 정리] 부당해고 vs 부당노동행위 구제절차 완벽 비교
+        </div>
+        <ul>
+            <li><strong>신청 주체</strong>: 부당해고 = <span class="highlight-purple">근로자만</span> 가능 / 부당노동행위 = <span class="highlight-red">근로자 및 노동조합</span> 모두 가능.</li>
+            <li><strong>신청 기한</strong>: 공통 <span class="highlight-blue">3개월 이내</span> (지방노동위원회).</li>
+            <li><strong>이행강제금 vs 형사벌</strong>: 부당해고 = 이행강제금 부과 (최대 3천만원) / 부당노동행위 = <span class="highlight-red">이행강제금 제도가 없으며</span>, 불이행 시 <span class="highlight-purple">3년 이하 징역 또는 3천만원 이하 벌금</span> 처벌.</li>
+            <li><strong>긴급이행명령</strong>: 부당노동행위에만 존재하며 <span class="highlight-blue">중노위 신청 → 관할법원 결정</span> 구조 적용.</li>
+        </ul>
+    </div>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+        3. 사회보험 - 보험료징수법상 보수의 정의 · 관장기관(공단 역할 분담) 및 보험가입자
+    </h2>
+    <ul>
+        <li><strong>보험료징수법의 적용 범위 및 성격</strong>:
+            <ul>
+                <li>4대 사회보험 중 <span class="highlight-blue">고용보험</span> 및 <span class="highlight-purple">산업재해보상보험(산재보험)</span>의 보험관계 성립·소멸, 보험료 부과·징수 업무를 규정하는 법률이다.</li>
+            </ul>
+        </li>
+        <li><strong>'보수(Remuneration)'의 법적 정의</strong>:
+            <ul>
+                <li>소득세법에 따른 근로소득에서 대통령령으로 정하는 <span class="highlight-red">비과세 소득을 뺀 금액</span>을 말한다.</li>
+                <li>근로자가 휴직이나 그 밖에 이와 유사한 상태에 있는 기간 중에 사업주 외의 자로부터 지급받는 금품 중 고용노동부장관이 정하여 고시하는 금품도 <span class="highlight-blue">보수로 본다</span>.</li>
+            </ul>
+        </li>
+        <li><strong>행정기관 역할 분담 (★근로복지공단 vs 국민건강보험공단)</strong>:
+            <ul>
+                <li><strong>고용노동부장관</strong>: 고용·산재보험 사업의 총괄 관장 주체.</li>
+                <li><strong>근로복지공단</strong>: 보험사업 수행, 피보험자격 및 보험료의 <span class="highlight-red">부과(Assessment)</span> 업무 담당.</li>
+                <li><strong>국민건강보험공단</strong>: 4대 사회보험의 보험료 <span class="highlight-blue">고지 및 수납(Collection)</span>, <span class="highlight-purple">체납관리</span> 업무 통합 담당.</li>
+            </ul>
+        </li>
+        <li><strong>보험가입자 및 보험료 부담 주체 (★공동주택 관리비 부과 연결 빈출)</strong>:
+            <ul>
+                <li><strong>산재보험</strong>: <span class="highlight-red">사업주만</span> 보험가입자가 된다 (근로자 부담분 없음). 보험료 <span class="highlight-red">100% 사업주 전액 부담</span> → 공동주택 일반관리비로 전액 부과 가능.</li>
+                <li><strong>고용보험</strong>: <span class="highlight-blue">사업주와 근로자 모두</span> 보험가입자가 된다.
+                    <ul>
+                        <li>고용안정·직업능력개발사업 보험료: <span class="highlight-red">사업주 전액 부담</span> → 관리비 부과 대상.</li>
+                        <li>실업급여 보험료: <span class="highlight-purple">사업주 1/2, 근로자 1/2</span> 각각 부담 → 근로자 부담분은 급여에서 원천공제(예수금)하며, 일반관리비로 부과하면 위법.</li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li><strong>65세 이상 근로자 고용보험 실업급여 적용 특례 (★초빈출)</strong>:
+            <ul>
+                <li><strong>원칙 (65세 이후 신규 고용)</strong>: 65세 이후에 새로 고용된 자에게는 고용보험상 <span class="highlight-red">실업급여 보험료를 징수하지 아니한다</span> (단, 고용안정·직업능력개발사업 보험료는 정상 징수/사업주 부담).</li>
+                <li><strong>예외 (65세 전부터 계속 고용)</strong>: 65세 전부터 피보험자격을 유지하던 사람이 65세 이후에도 계속 고용된 경우에는 <span class="highlight-purple">실업급여 보험료를 계속 징수한다</span>.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M11 5H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-5"></path><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+        4. 보험료 납부기한(다음 달 10일) · 연간 보수총액 신고(3월 15일) 및 고액체납자 공개
+    </h2>
+    <ul>
+        <li><strong>월별 보험료 납부기한 (★4대 보험 공통 규칙)</strong>:
+            <ul>
+                <li>월별 보험료의 납부기한은 <span class="highlight-red">다음 달 10일까지</span>로 한다 (건강·연금·고용·산재 4대 보험 공통 통일).</li>
+                <li>국민건강보험공단은 납부기한 <span class="highlight-blue">10일 전까지</span> 문서로 고지하여야 한다.</li>
+            </ul>
+        </li>
+        <li><strong>연간 보수총액 신고 기한 (★3월 15일 규칙)</strong>:
+            <ul>
+                <li>사업주는 매년 전년도 보수총액을 <span class="highlight-purple">다음 해 3월 15일까지</span> <span class="highlight-blue">근로복지공단</span>에 신고하여야 한다.</li>
+                <li>보험관계 소멸(폐업 등) 시에는 소멸한 날부터 <span class="highlight-red">14일 이내</span>에 신고하여야 한다.</li>
+            </ul>
+        </li>
+        <li><strong>고액 · 상습 체납자 인적사항 공개 기준 (1년 / 5천만원)</strong>:
+            <ul>
+                <li>국민건강보험공단은 납부기한의 다음 날부터 <span class="highlight-blue">1년이 지난</span> 보험료 및 징수금의 체납액 총액이 <span class="highlight-red">5천만원 이상</span>인 체납자에 대하여 인적사항 및 체납액 등을 공개할 수 있다.</li>
+            </ul>
+        </li>
+        <li><strong>소멸시효 기간</strong>:
+            <ul>
+                <li>보험료징수법상 보험료 및 징수금을 징수하거나 반환받을 권리의 소멸시효는 원칙적으로 <span class="highlight-red">3년</span>이다.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        5. 부당노동행위 구제 및 4대 사회보험(보험료징수법) 핵심 종합 비교표
+    </h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 22%;">항목</th>
+                <th style="width: 39%;">부당노동행위 구제제도</th>
+                <th style="width: 39%;">고용 · 산재 보험료징수법</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>주요 관할 관청</th>
+                <td class="highlight-blue">지방노동위원회 / 중앙노동위원회</td>
+                <td class="highlight-red">부과: 근로복지공단<br>고지·수납·체납: 국민건강보험공단</td>
+            </tr>
+            <tr>
+                <th>신청 / 신고 기한</th>
+                <td>부당행위 발생일로부터 <span class="highlight-red">3개월 이내</span></td>
+                <td>전년도 보수총액 신고: 매년 <span class="highlight-purple">3월 15일까지</span><br>성립·소멸·변경 신고: <span class="highlight-blue">14일 이내</span></td>
+            </tr>
+            <tr>
+                <th>불복 / 납부 기한</th>
+                <td>중노위 재심 <span class="highlight-purple">10일</span> / 행정소송 <span class="highlight-purple">15일</span></td>
+                <td class="highlight-red">월별 보험료 납부기한: 다음 달 10일까지</td>
+            </tr>
+            <tr>
+                <th>핵심 예외 규정</th>
+                <td class="highlight-purple">유니언 숍: 2/3 이상 대표 노조 허용<br>노조 사무소: 최소한 규모 제공 허용</td>
+                <td class="highlight-red">65세 이후 신규 고용자: 실업급여 징수 제외<br>65세 전부터 계속 고용자: 실업급여 계속 징수</td>
+            </tr>
+            <tr>
+                <th>부담 주체 / 제재</th>
+                <td>위반 시 2년/2천만원<br>확정 구제명령 불이행 시 <span class="highlight-red">3년/3천만원</span></td>
+                <td class="highlight-blue">산재: 사업주 100% 전액 부담<br>고용(실업급여): 사업주 1/2 + 근로자 1/2</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><line x1="18" y1="2" x2="22" y2="6"></line><path d="M7.5 20.5L19 9l-4-4L3.5 16.5 2 22z"></path></svg>
+        6. 주관식 단답형 및 다단 빈칸 채우기 완벽 대비 (실전 훈련)
+    </h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡)에 들어갈 알맞은 핵심 용어나 법정 숫자를 아래 여유 공백에 직접 기재해 보십시오.</p>
+
+    <ol style="line-height: 2.1;">
+        <li>
+            부당노동행위를 한 사용자는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년 이하의 징역 또는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )만원 이하의 벌금에 처한다.
+        </li>
+        <li>
+            확정된 부당노동행위 구제명령을 이행하지 아니한 사용자는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년 이하의 징역 또는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )만원 이하의 벌금에 처한다.
+        </li>
+        <li>
+            노동조합이 당해 사업장에 종사하는 근로자의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 이상을 대표하고 있는 경우 유니언 숍(Union Shop) 협정을 체결하는 것은 부당노동행위에 해당하지 아니한다.
+        </li>
+        <li>
+            노동조합에 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 규모의 노동조합 사무소를 제공하는 행위는 부당노동행위 예외로서 허용된다.
+        </li>
+        <li>
+            부당노동행위 구제신청은 부당노동행위가 있은 날부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )개월 이내에 지방노동위원회에 신청하여야 한다.
+        </li>
+        <li>
+            부당노동행위 구제신청은 권리를 침해당한 근로자뿐만 아니라 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )도 신청권자가 된다.
+        </li>
+        <li>
+            지방노동위원회의 부당노동행위 구제명령에 불복하는 당사자는 송달받은 날부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이내에 중앙노동위원회에 재심을 신청할 수 있고, 재심판정서는 송달받은 날부터 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이내에 행정소송을 제기할 수 있다.
+        </li>
+        <li>
+            사용자가 행정소송을 제기한 경우 긴급이행명령은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )의 신청에 의하여 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이 결정으로 이행을 명한다.
+        </li>
+        <li>
+            부당노동행위 구제명령에 대한 재심신청이나 행정소송 제기는 구제명령의 효력을 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 아니한다.
+        </li>
+        <li>
+            보험료징수법상 보수란 소득세법에 따른 근로소득에서 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 소득을 뺀 금액을 말한다.
+        </li>
+        <li>
+            고용·산재보험료의 부과 업무는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이 담당하고, 고지·수납 및 체납관리 업무는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이 담당한다.
+        </li>
+        <li>
+            산재보험료는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이 전액 부담하고, 고용보험의 실업급여 보험료는 사업주와 근로자가 각각 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )씩 부담한다.
+        </li>
+        <li>
+            ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )세 이후에 새로 고용된 자에 대해서는 고용보험상 실업급여 보험료를 징수하지 아니한다.
+        </li>
+        <li>
+            65세 전부터 피보험자격을 유지하던 사람이 65세 이후에도 계속 고용된 경우 실업급여 보험료는 계속 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )한다.
+        </li>
+        <li>
+            사회보험의 월별 보험료 납부기한은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )까지이다.
+        </li>
+        <li>
+            사업주는 매년 전년도 보수총액을 다음 해 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )월 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일까지 근로복지공단에 신고하여야 한다.
+        </li>
+        <li>
+            보험료 납부기한 경과 후 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년이 지난 체납액 총액이 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )만원 이상인 체납자는 인적사항 등을 공개할 수 있다.
+        </li>
+    </ol>
+
+    <!-- 수험생 정답 확인용 하단 3열 배치 그리드 영역 -->
+    <div style="font-size: 9.5pt; color: #666666; margin-top: 30px; padding: 15px; border-top: 1px dashed #666666; line-height: 1.8;">
+        <strong style="display: block; margin-bottom: 10px; color: #333333;">[제28강 주관식 단답형 정답 리스트]</strong>
+        <div class="answer-grid">
+            <div>1. ㉠ 2, &nbsp; ㉡ 2천(또는 2,000)</div>
+            <div>2. ㉠ 3, &nbsp; ㉡ 3천(또는 3,000)</div>
+            <div>3. ㉠ 3분의 2</div>
+            <div>4. ㉠ 최소한</div>
+            <div>5. ㉠ 3</div>
+            <div>6. ㉠ 노동조합</div>
+            <div>7. ㉠ 10, &nbsp; ㉡ 15</div>
+            <div>8. ㉠ 중앙노동위원회, &nbsp; ㉡ 관할법원</div>
+            <div>9. ㉠ 정지시키지</div>
+            <div>10. ㉠ 비과세</div>
+            <div>11. ㉠ 근로복지공단, &nbsp; ㉡ 국민건강보험공단</div>
+            <div>12. ㉠ 사업주, &nbsp; ㉡ 2분의 1</div>
+            <div>13. ㉠ 65</div>
+            <div>14. ㉠ 징수</div>
+            <div>15. ㉠ 다음 달 10일</div>
+            <div>16. ㉠ 3, &nbsp; ㉡ 15</div>
+            <div>17. ㉠ 1, &nbsp; ㉡ 5천(또는 5,000)</div>
+        </div>
+    </div>
+
+</body>
+</html>
