@@ -696,6 +696,61 @@ function weightedSampleWithoutReplacement(pool, k) {
     return sampled;
 }
 
+function parseQuestionAndOptions(qText) {
+    if (!qText) return { prompt: '', options: [] };
+    const firstOptIndex = qText.search(/[①②③④⑤]/);
+    if (firstOptIndex !== -1) {
+        const prompt = qText.slice(0, firstOptIndex).trim();
+        const optionsPart = qText.slice(firstOptIndex);
+        const options = [];
+        const symbols = ['①', '②', '③', '④', '⑤'];
+        for (let i = 0; i < symbols.length; i++) {
+            const sym = symbols[i];
+            const nextSyms = symbols.slice(i + 1).join('');
+            const r = new RegExp(`${sym}\\s*([\\s\\S]*?)(?=[${nextSyms}]|$)`);
+            const m = optionsPart.match(r);
+            if (m) {
+                options.push(`${sym} ${m[1].trim()}`);
+            }
+        }
+        if (options.length >= 2) {
+            return { prompt, options };
+        }
+    }
+    return { prompt: qText, options: [] };
+}
+
+function selectMultipleChoiceOption(optNum) {
+    const cards = document.querySelectorAll('.mc-option-card');
+    cards.forEach((card, idx) => {
+        if (idx + 1 === optNum) {
+            card.classList.add('selected');
+        } else {
+            card.classList.remove('selected');
+        }
+    });
+
+    const quickBtns = document.querySelectorAll('.mc-quick-btn');
+    quickBtns.forEach((btn, idx) => {
+        if (idx + 1 === optNum) {
+            btn.classList.add('selected');
+        } else {
+            btn.classList.remove('selected');
+        }
+    });
+
+    const ansInput = document.getElementById('quiz-answer-input');
+    if (ansInput) {
+        ansInput.value = optNum;
+    }
+
+    if (!penRecognizedMap[quizCurrentIndex]) {
+        penRecognizedMap[quizCurrentIndex] = {};
+    }
+    penRecognizedMap[quizCurrentIndex]['default'] = String(optNum);
+    userAnswers[quizCurrentIndex] = String(optNum);
+}
+
 function renderQuizQuestion() {
     const currentQ = quizQuestions[quizCurrentIndex];
     if (!currentQ) return;
@@ -726,24 +781,73 @@ function renderQuizQuestion() {
     document.getElementById('quiz-step-indicator').innerText = `문제 ${quizCurrentIndex + 1} / ${quizQuestions.length}`;
     document.getElementById('quiz-subject-tag').innerText = `${currentQ.subject} (${currentQ.lectureTitle.split('.')[0] || ''})`;
 
-    document.getElementById('quiz-question-text').innerHTML = `
-        <div style="margin-bottom: 8px; font-weight: 700; color: #60a5fa;">[${escapeHtml(currentQ.lectureTitle)}]</div>
-        ${escapeHtml(currentQ.question)}
-    `;
+    const savedAns = userAnswers[quizCurrentIndex] || '';
+
+    // Check Multiple Choice Options
+    const parsedMC = parseQuestionAndOptions(currentQ.question);
+    const isMultipleChoice = parsedMC.options.length > 0;
+
+    if (isMultipleChoice) {
+        let optionsHtml = '<div class="quiz-mc-options-list">';
+        parsedMC.options.forEach((optStr, idx) => {
+            const optNum = idx + 1;
+            const sym = ['①', '②', '③', '④', '⑤'][idx] || String(optNum);
+            const cleanOptText = optStr.replace(/^[①②③④⑤1-5]\s*[\.\)]?\s*/, '');
+            const isSelected = savedAns === String(optNum) || savedAns === sym;
+
+            optionsHtml += `
+                <div class="mc-option-card ${isSelected ? 'selected' : ''}" onclick="selectMultipleChoiceOption(${optNum})">
+                    <span class="mc-opt-num">${sym}</span>
+                    <span class="mc-opt-text">${escapeHtml(cleanOptText)}</span>
+                </div>
+            `;
+        });
+        optionsHtml += '</div>';
+
+        document.getElementById('quiz-question-text').innerHTML = `
+            <div class="quiz-prompt-header">[${escapeHtml(currentQ.lectureTitle)}] <span style="color: #34d399; font-size: 11px; margin-left: 6px; font-weight: normal;">• 객관식 (보기 클릭 선택)</span></div>
+            <div class="quiz-prompt-title">${escapeHtml(parsedMC.prompt)}</div>
+            ${optionsHtml}
+        `;
+    } else {
+        document.getElementById('quiz-question-text').innerHTML = `
+            <div class="quiz-prompt-header">[${escapeHtml(currentQ.lectureTitle)}]</div>
+            <div class="quiz-prompt-title">${escapeHtml(currentQ.question)}</div>
+        `;
+    }
 
     // Detect symbols in question & answer
     const symbols = detectQuizSymbols(currentQ);
     const container = document.getElementById('quiz-inputs-container');
     container.innerHTML = '';
 
-    const savedAns = userAnswers[quizCurrentIndex] || '';
+    if (isMultipleChoice) {
+        // Multiple-choice mode
+        document.getElementById('quiz-input-label').innerText = '✍️ 정답 보기 선택 (보기 카드 클릭 또는 번호 탭)';
+        
+        let quickBtnsHtml = '<div class="mc-quick-bar">';
+        [1, 2, 3, 4, 5].forEach(n => {
+            const sym = ['①', '②', '③', '④', '⑤'][n - 1];
+            const isSel = savedAns === String(n) || savedAns === sym;
+            quickBtnsHtml += `<button type="button" class="mc-quick-btn ${isSel ? 'selected' : ''}" onclick="selectMultipleChoiceOption(${n})">${sym} ${n}번</button>`;
+        });
+        quickBtnsHtml += '</div>';
 
-    // Setup Multi-blank or Single-blank Pen Canvases
-    setupPenCanvases(symbols);
+        container.innerHTML = `
+            ${quickBtnsHtml}
+            <input type="text" id="quiz-answer-input" class="quiz-text-input" placeholder="정답 번호 (1~5)" value="${escapeHtml(typeof savedAns === 'string' ? savedAns : '')}" autocomplete="off" onkeydown="handleQuizEnter(event)">
+        `;
 
-    if (symbols.length > 1) {
+        setupPenCanvases(['default']);
+
+        const singleInp = document.getElementById('quiz-answer-input');
+        if (quizInputMode === 'text') {
+            singleInp?.focus();
+        }
+    } else if (symbols.length > 1) {
         // Multi-blank mode: Create separate input fields for ㉠, ㉡, ㉢
         document.getElementById('quiz-input-label').innerText = `✍️ 빈칸별 정답 입력 (총 ${symbols.length}개 빈칸)`;
+        setupPenCanvases(symbols);
         
         const gridEl = document.createElement('div');
         gridEl.className = 'multi-blank-grid';
@@ -788,6 +892,7 @@ function renderQuizQuestion() {
     } else {
         // Single-blank mode
         document.getElementById('quiz-input-label').innerText = '✍️ 정답 입력';
+        setupPenCanvases(symbols);
         container.innerHTML = `
             <input type="text" id="quiz-answer-input" class="quiz-text-input" placeholder="정답을 입력하세요" value="${escapeHtml(typeof savedAns === 'string' ? savedAns : '')}" autocomplete="off" onkeydown="handleQuizEnter(event)">
         `;
@@ -1826,8 +1931,24 @@ function checkAnswerCorrectness(userAns, realAnsRaw) {
     return checkSingleBlankValue(userAns, realAnsRaw);
 }
 
+function normalizeMcAnswer(val) {
+    if (!val) return '';
+    let str = String(val).trim();
+    str = str.replace(/\[정답:\s*(\d+)번?\]/i, '$1');
+    str = str.replace(/(\d+)번/, '$1');
+    str = str.replace(/①/g, '1').replace(/②/g, '2').replace(/③/g, '3').replace(/④/g, '4').replace(/⑤/g, '5');
+    return str.trim();
+}
+
 function checkSingleBlankValue(userVal, realValRaw) {
     if (!userVal || !realValRaw) return false;
+
+    // Check multiple-choice numeric equality (1~5, ①~⑤, [정답: X번])
+    const normUserMc = normalizeMcAnswer(userVal);
+    const normRealMc = normalizeMcAnswer(realValRaw);
+    if (normUserMc && normRealMc && /^[1-5]$/.test(normUserMc) && /^[1-5]$/.test(normRealMc)) {
+        return normUserMc === normRealMc;
+    }
 
     // 1. Normalize fractions in both userVal and realValRaw first
     const normUserVal = normalizeFractionAndUnits(userVal);
