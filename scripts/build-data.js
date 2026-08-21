@@ -53,22 +53,22 @@ function parseHtmlNote(fileObj) {
         subject = '관계법규(문제)';
         isMockExam = true;
         customLectureNum = 16;
-        customTitle = '[16단원·모의고사 1회] 관계법규 실전 모의고사 40문항';
+        customTitle = '[16단원·모의고사 1회] 관계법규 주관식 실전 16문항';
     } else if (fileObj.fileName.match(/^17차/i) || relPathNorm.includes('17차.html')) {
         subject = '관계법규(문제)';
         isMockExam = true;
         customLectureNum = 17;
-        customTitle = '[17단원·모의고사 2회] 관계법규 실전 모의고사 40문항';
+        customTitle = '[17단원·모의고사 2회] 관계법규 주관식 실전 16문항';
     } else if (fileObj.fileName.match(/^12차/i) || relPathNorm.includes('12차.html')) {
         subject = '관리실무(문제)';
         isMockExam = true;
         customLectureNum = 12;
-        customTitle = '[12단원·모의고사 1회] 공동주택관리실무 실전 모의고사 40문항';
+        customTitle = '[12단원·모의고사 1회] 공동주택관리실무 주관식 실전 16문항';
     } else if (fileObj.fileName.match(/^13차/i) || relPathNorm.includes('13차.html')) {
         subject = '관리실무(문제)';
         isMockExam = true;
         customLectureNum = 13;
-        customTitle = '[13단원·모의고사 2회] 공동주택관리실무 실전 모의고사 40문항';
+        customTitle = '[13단원·모의고사 2회] 공동주택관리실무 주관식 실전 16문항';
     } else if (relPathNorm.includes('단원별문제/관계법규')) {
         subject = '관계법규(문제)';
     } else if (relPathNorm.includes('단원별문제/관리실무')) {
@@ -116,7 +116,7 @@ function parseHtmlNote(fileObj) {
     // 4. Parse Quiz & Answers inside HTML
     const quizzes = [];
 
-    // Check for embedded examData in Mock Exam HTML files
+    // Check for embedded examData in Mock Exam HTML files (Extract subjective questions only)
     const examDataMatch = content.match(/const\s+examData\s*=\s*(\[[\s\S]*?\n\s*\];)/);
     if (examDataMatch) {
         try {
@@ -124,14 +124,12 @@ function parseHtmlNote(fileObj) {
             vm.runInNewContext('data = ' + examDataMatch[1].replace(/;\s*$/, ''), sandbox);
             if (Array.isArray(sandbox.data)) {
                 sandbox.data.forEach((item, itemIdx) => {
+                    // Exclude multiple-choice questions, keep only subjective questions
+                    if (item.type === 'multiple_choice') return;
+
                     const qNum = item.id || (itemIdx + 1);
                     let qText = item.question || '';
                     let ansRaw = String(item.answer || '').trim();
-
-                    if (item.type === 'multiple_choice' && Array.isArray(item.options)) {
-                        qText += '\n\n' + item.options.join('\n');
-                        ansRaw = `[정답: ${item.answer}번]`;
-                    }
 
                     quizzes.push({
                         id: `${fileObj.fileName.replace(/\.html$/i, '')}_mock_${qNum}`,
