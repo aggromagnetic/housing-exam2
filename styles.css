@@ -557,6 +557,120 @@ body {
     box-sizing: border-box;
 }
 
+/* Multiple Choice Option Cards */
+.quiz-prompt-header {
+    margin-bottom: 8px;
+    font-weight: 700;
+    color: #60a5fa;
+    font-size: 13px;
+}
+
+.quiz-prompt-title {
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.65;
+    color: #f8fafc;
+    margin-bottom: 12px;
+}
+
+.quiz-mc-options-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.mc-option-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: rgba(30, 41, 59, 0.6);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 10px 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.mc-option-card:hover {
+    background: rgba(59, 130, 246, 0.12);
+    border-color: rgba(59, 130, 246, 0.4);
+    transform: translateX(2px);
+}
+
+.mc-option-card.selected {
+    background: rgba(16, 185, 129, 0.18);
+    border-color: #10b981;
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.3);
+}
+
+.mc-opt-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-muted);
+    font-weight: 700;
+    font-size: 13px;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+}
+
+.mc-option-card.selected .mc-opt-num {
+    background: #10b981;
+    color: #ffffff;
+}
+
+.mc-opt-text {
+    flex: 1;
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: #e2e8f0;
+}
+
+.mc-option-card.selected .mc-opt-text {
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.mc-quick-bar {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    width: 100%;
+    margin-bottom: 6px;
+}
+
+.mc-quick-btn {
+    background: rgba(30, 41, 59, 0.8);
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 700;
+    padding: 10px 6px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+.mc-quick-btn:hover {
+    border-color: var(--accent-blue);
+    color: #60a5fa;
+    background: rgba(59, 130, 246, 0.15);
+}
+
+.mc-quick-btn.selected {
+    background: #10b981;
+    border-color: #10b981;
+    color: #ffffff;
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+}
+
 .quiz-input-group {
     display: flex;
     flex-direction: column;
