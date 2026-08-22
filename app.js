@@ -866,7 +866,7 @@ function renderQuizQuestion() {
             rowEl.className = 'blank-input-row';
             rowEl.innerHTML = `
                 <span class="blank-symbol-badge">${sym}</span>
-                <input type="text" class="blank-text-input" data-symbol="${sym}" placeholder="${sym} 빈칸 정답 입력" value="${escapeHtml(parsedSavedMap[sym] || '')}" autocomplete="off">
+                <input type="text" class="blank-text-input" data-symbol="${sym}" placeholder="${sym} 빈칸 정답 입력" value="${escapeHtml(parsedSavedMap[sym] || '')}" autocomplete="off" oninput="onQuizInputChanged()">
             `;
             gridEl.appendChild(rowEl);
         });
@@ -878,16 +878,10 @@ function renderQuizQuestion() {
             inp.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter') {
                     e.preventDefault();
-                    const box = document.getElementById('quiz-instant-answer-box');
-                    if (box && box.style.display !== 'none' && box.style.display !== '') {
-                        nextQuizQuestion();
-                        return;
-                    }
-
-                    // Check if other empty inputs remain
-                    const emptyInputs = Array.from(inputs).filter(i => !i.value.trim());
-                    if (emptyInputs.length > 0) {
-                        emptyInputs[0].focus();
+                    // If subsequent empty inputs exist, move focus to the next empty input
+                    const nextEmpty = Array.from(inputs).find((otherInp, oIdx) => oIdx > idx && !otherInp.value.trim());
+                    if (nextEmpty) {
+                        nextEmpty.focus();
                     } else {
                         checkCurrentQuestionAnswer();
                     }
@@ -904,7 +898,7 @@ function renderQuizQuestion() {
         document.getElementById('quiz-input-label').innerText = '✍️ 정답 입력';
         setupPenCanvases(symbols);
         container.innerHTML = `
-            <input type="text" id="quiz-answer-input" class="quiz-text-input" placeholder="정답을 입력하고 Enter를 누르세요" value="${escapeHtml(typeof savedAns === 'string' ? savedAns : '')}" autocomplete="off" onkeydown="handleQuizEnter(event)">
+            <input type="text" id="quiz-answer-input" class="quiz-text-input" placeholder="정답을 입력하고 Enter를 누르세요" value="${escapeHtml(typeof savedAns === 'string' ? savedAns : '')}" autocomplete="off" onkeydown="handleQuizEnter(event)" oninput="onQuizInputChanged()">
         `;
         const singleInp = document.getElementById('quiz-answer-input');
         if (quizInputMode === 'text') {
@@ -1767,15 +1761,17 @@ function checkCurrentQuestionAnswer() {
     box.style.display = 'block';
 }
 
+function onQuizInputChanged() {
+    const box = document.getElementById('quiz-instant-answer-box');
+    if (box && box.style.display !== 'none') {
+        box.style.display = 'none';
+    }
+}
+
 function handleQuizEnter(e) {
     if (e.key === 'Enter') {
         e.preventDefault();
-        const box = document.getElementById('quiz-instant-answer-box');
-        if (!box || box.style.display === 'none' || box.style.display === '') {
-            checkCurrentQuestionAnswer();
-        } else {
-            nextQuizQuestion();
-        }
+        checkCurrentQuestionAnswer();
     }
 }
 
