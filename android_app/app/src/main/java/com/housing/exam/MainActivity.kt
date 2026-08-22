@@ -67,6 +67,18 @@ class MainActivity : AppCompatActivity() {
             ): WebResourceResponse? {
                 return assetLoader.shouldInterceptRequest(request.url)
             }
+
+            override fun onReceivedError(
+                view: WebView,
+                request: WebResourceRequest,
+                error: androidx.webkit.WebResourceErrorCompat
+            ) {
+                super.onReceivedError(view, request, error)
+                // If live online page fails to load (e.g. no Wi-Fi / offline), seamlessly fallback to local asset
+                if (request.isForMainFrame && !request.url.toString().contains("appassets.androidplatform.net")) {
+                    view.loadUrl("https://appassets.androidplatform.net/assets/www/index.html")
+                }
+            }
         }
 
         webView.webChromeClient = object : WebChromeClient() {
@@ -106,8 +118,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // 7. Load Local Web App via HTTPS Asset Domain
-        webView.loadUrl("https://appassets.androidplatform.net/assets/www/index.html")
+        // 7. Load Live Online App with Auto-Updates (Falls back to local asset if offline)
+        webView.loadUrl("https://aggromagnetic.github.io/housing-exam2/")
 
         // 8. Handle Back Button (Prevent Accidental Exits)
         setupBackPressHandler()
