@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 - 제69강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+            letter-spacing: -0.05em;
+        }
+        
+        h1 {
+            font-size: 12pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        /* 토너 절약 4색 시각 강조 클래스 (배경색 배제) */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #16803d; 
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #6d28d9; 
+        }
+        
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        ol.quiz-list {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+            line-height: 2.1;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        /* 하단 정답표 3단 그리드 배치 출력 */
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px 15px;
+        }
+
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        제69강. 비상방송설비·피난구조설비·유도등·연결송수관설비·비상콘센트설비 정밀 학습 노트
+    </h1>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        1. 비상방송설비 및 피난구조설비(피난기구) 법정 설치기준 (NFTC 202, 301, NFPC 608)
+    </h2>
+    <ul>
+        <li><strong>★ 비상방송설비 주요 구성요소 및 법정 수치 (★단독 출제 핵심)</strong>:
+            <ol>
+                <li><span class="highlight-blue">★ 확성기(스피커) 음성입력 기준</span>: 확성기의 음성입력은 <span class="highlight-blue">3와트(3 W) 이상</span>[실내에 설치하는 것은 <span class="highlight-blue">1와트(1 W) 이상</span>]일 것.
+                    <br>&rarr; <span class="highlight-purple">★ 공동주택 화재안전성능기준(NFPC 608) 특례</span>: 각 세대마다 설치하며, 아파트등의 실내에 설치하는 확성기 음성입력은 <span class="highlight-purple">2와트(2 W) 이상</span>일 것.</li>
+                <li><span class="highlight-red">★ 확성기 수평거리 및 배치</span>: 확성기는 각 층마다 설치하되, 그 층의 각 부분으로부터 하나의 확성기까지의 수평거리가 <span class="highlight-red">25미터(25 m) 이하</span>가 되도록 설치할 것. (NFTC 202 제2.1.1.2호).</li>
+                <li><span class="highlight-purple">★ 음량조정기 배선 방식 (★출제 함정 1순위)</span>: 음량조정기를 설치하는 경우 그 배선은 반드시 <span class="highlight-purple">3선식</span>(업무용, 긴급용, 공통선)으로 할 것. (※ 4선식이나 2선식으로 표기 시 오답!).</li>
+                <li><span class="highlight-green">조작부 스위치 높이</span>: 바닥으로부터 높이 <span class="highlight-green">0.8미터(0.8 m) 이상 1.5미터(1.5 m) 이하</span> (땡팔 1호 공식).</li>
+                <li><span class="highlight-red">★ 방송 개시 소요시간</span>: 화재신호를 수신한 후 유효한 방송이 자동으로 개시될 때까지의 소요시간은 <span class="highlight-red">10초 이하</span>일 것.</li>
+            </ol>
+        </li>
+        <li><strong>★ 피난기구 용어 정밀 정의 및 주관식 기출 유형 (★개념 상호 비교)</strong>:
+            <ol>
+                <li><span class="highlight-blue">완강기</span>: 사용자의 몸무게에 따라 자동적으로 내려올 수 있는 기구 중 사용자가 <span class="highlight-blue">교대하여 연속적으로 사용할 수 있는</span> 피난기구.</li>
+                <li><span class="highlight-red">간이완강기</span>: 사용자의 몸무게에 따라 자동적으로 내려올 수 있는 기구 중 사용자가 <span class="highlight-red">연속적으로 사용할 수 없는</span> 피난기구 (1회성 사용).</li>
+                <li><span class="highlight-purple">구조대</span>: 포지 등을 사용하여 <span class="highlight-purple">자루 형태로 만든 것</span>으로서 화재 시 사용자가 그 내부에 들어가서 내려옴으로써 대피하는 피난기구.</li>
+                <li><span class="highlight-green">공기안전매트</span>: 피난자가 뛰어내릴 때 충격을 흡수하도록 포지에 공기 등을 주입하는 피난기구.</li>
+                <li><span class="highlight-blue">★ 다수인피난장비 (★주관식 빈출)</span>: 화재 시 <span class="highlight-blue">2인 이상의 피난자가 동시에</span> 해당 층에서 지상 또는 피난층으로 하강하는 피난기구.</li>
+                <li><span class="highlight-purple">승강식 피난기</span>: 사용자 몸무게에 따라 자동 하강하고 내리면 무동력으로 자동 상승하여 연속 사용하는 피난기구.</li>
+                <li><span class="highlight-green">하향식 피난구용 내림식 사다리</span>: 발코니 바닥 개구부 덮개에 내장되어 사용 시 아래층으로 펼쳐지는 사다리.</li>
+                <li><span class="highlight-blue">피난용 트랩</span>: 화재 층과 직상 층을 연결하는 계단 형태의 피난기구.</li>
+            </ol>
+        </li>
+        <li><strong>★ 승강식 피난기 및 하향식 피난구용 내림식 사다리 설치 기술기준 (NFTC 301)</strong>:
+            <ol>
+                <li><span class="highlight-red">★ 대피실 면적 기준</span>: 대피실 면적은 <span class="highlight-red">2제곱미터(2 m²) 이상</span> (2세대 이상이 공동 사용하는 경우에는 <span class="highlight-red">3제곱미터(3 m²) 이상</span>)일 것.</li>
+                <li><span class="highlight-purple">★ 하강구(개구부) 규격</span>: 하강구 규격은 <span class="highlight-purple">직경 60센티미터(60 cm) 이상</span>일 것. (성인 체형 피난 공간 확보).</li>
+            </ol>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">설비 및 기구 구분</th>
+                <th style="width: 45%;">핵심 법정 수치 및 기술기준</th>
+                <th style="width: 30%;">수험 핵심 출제 포인트</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th><span class="highlight-blue">비상방송설비</span></th>
+                <td>음성입력 <span class="highlight-blue">3 W</span>(실내 <span class="highlight-blue">1 W</span>, 아파트 <span class="highlight-purple">2 W</span>) / 수평거리 <span class="highlight-blue">25 m 이하</span></td>
+                <td>배선 <span class="highlight-purple">3선식</span> / 방송 개시 <span class="highlight-red">10초 이내</span></td>
+            </tr>
+            <tr>
+                <th><span class="highlight-red">완강기 vs 간이완강기</span></th>
+                <td>완강기: <span class="highlight-blue">연속 사용 가능</span> / 간이완강기: <span class="highlight-red">연속 사용 불가</span></td>
+                <td>용어 교차 오답 지문 주의</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-purple">구조대 / 다수인피난장비</span></th>
+                <td>구조대: <span class="highlight-purple">자루 형태</span> / 다수인: <span class="highlight-green">2인 이상 동시에 하강</span></td>
+                <td>단독 주관식 용어 기출</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-green">하향식 피난구 규격</span></th>
+                <td>대피실 <span class="highlight-red">2 m² 이상</span>(2세대 <span class="highlight-red">3 m²</span>) / 하강구 <span class="highlight-purple">직경 60 cm 이상</span></td>
+                <td>최근 연속 주관식 최다 기출 수치</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+        2. 유도등 및 유도표지 설치기준, 수평거리 및 비상전원 (NFTC 303)
+    </h2>
+    <ul>
+        <li><strong>★ 유도등 및 유도표지의 정의 및 세부 구분</strong>:
+            <ol>
+                <li><span class="highlight-blue">유도등 정의</span>: 화재 시 피난을 유도하기 위한 등으로서, 평상시에는 상용전원에 의해 점등되고 정전 시에는 비상전원으로 자동 전환되어 점등되는 등.</li>
+                <li><span class="highlight-red">피난구유도등</span>: 피난구 또는 피난경로로 사용되는 출입구를 표시하여 피난을 유도하는 등. (화살표 미표시).</li>
+                <li><span class="highlight-purple">통로유도등</span>: 피난통로를 안내하기 위한 등 (복도통로, 거실통로, 계단통로유도등으로 구분하며 방향 화살표 표시).</li>
+                <li><span class="highlight-green">유도표지</span>: 전원 공급 없이 빛을 축광하거나 반사하여 피난유도 방향을 표시하는 표지.</li>
+            </ol>
+        </li>
+        <li><strong>★ 유도등·유도표지 종류별 설치 높이 및 보행거리 (★수치 정밀 암기)</strong>:
+            <ol>
+                <li><span class="highlight-blue">★ 피난구유도등</span>: 바닥으로부터 높이 <span class="highlight-blue">1.5미터(1.5 m) 이상</span>으로서 출입구에 인접하도록 설치할 것.</li>
+                <li><span class="highlight-red">★ 복도통로유도등</span>: 복도에 설치하되, 구부러진 모퉁이 및 보행거리 <span class="highlight-red">20미터(20 m) 마다</span> 설치하고, 바닥으로부터 높이 <span class="highlight-red">1미터(1 m) 이하</span>의 위치에 설치할 것.</li>
+                <li><span class="highlight-purple">★ 거실통로유도등</span>: 거실 통로에 설치하되, 구부러진 모퉁이 및 보행거리 <span class="highlight-purple">20미터(20 m) 마다</span> 설치하고, 바닥으로부터 높이 <span class="highlight-purple">1.5미터(1.5 m) 이상</span>의 위치에 설치할 것. (※ 기둥 설치 시 1.5 m 이하 가능).</li>
+                <li><span class="highlight-green">★ 계단통로유도등</span>: 각 층의 경사로참 또는 계단참마다 설치하고, 바닥으로부터 높이 <span class="highlight-green">1미터(1 m) 이하</span>의 위치에 설치할 것. (※ 보행거리 기준 없음).</li>
+                <li><span class="highlight-blue">★ 유도표지 (통로유도표지)</span>: 복도 및 통로 각 부분으로부터 하나의 유도표지까지의 보행거리가 <span class="highlight-blue">15미터(15 m) 이하</span>가 되도록 설치하고, 바닥으로부터 높이 <span class="highlight-blue">1미터(1 m) 이하</span>에 설치할 것. (피난구유도표지는 출입구 상단).</li>
+            </ol>
+        </li>
+        <li><strong>★ 유도등 비상전원 전용 종류 및 작동시간 (★기출 정답 단골)</strong>:
+            <ol>
+                <li><span class="highlight-red">★ 전원 종류 규정</span>: 유도등의 비상전원은 <span class="highlight-red">축전지설비로만 설치</span>하여야 함. (※ 자가발전설비 사용 불가 지문 오답!).</li>
+                <li><span class="highlight-blue">★ 일반 특정소방대상물</span>: 유도등을 유효하게 <span class="highlight-blue">20분 이상</span> 작동시킬 수 있는 용량일 것.</li>
+                <li><span class="highlight-purple">★ 60분 이상 적용 장소 (★단독 주관식 기출)</span>:
+                    <br>&rarr; 지하층을 제외한 층수가 <span class="highlight-purple">11층 이상</span>인 층.
+                    <br>&rarr; 지하층 또는 무창층으로서 용도가 <span class="highlight-purple">도매시장, 소매시장, 여객자동차터미널, 지하역사 또는 지하상가</span>.</li>
+            </ol>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">유도등 / 표지 구분</th>
+                <th style="width: 25%;">바닥 설치 높이 기준</th>
+                <th style="width: 25%;">보행거리 기준</th>
+                <th style="width: 25%;">비상전원 작동시간</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th><span class="highlight-blue">피난구유도등</span></th>
+                <td><span class="highlight-blue">1.5 m 이상</span> (출입구 상단)</td>
+                <td>출입구 인접 설치</td>
+                <td>원칙: <span class="highlight-blue">20분 이상</span></td>
+            </tr>
+            <tr>
+                <th><span class="highlight-red">복도통로유도등</span></th>
+                <td><span class="highlight-red">1 m 이하</span></td>
+                <td><span class="highlight-red">20 m 마다</span></td>
+                <td>원칙: <span class="highlight-blue">20분 이상</span></td>
+            </tr>
+            <tr>
+                <th><span class="highlight-purple">거실통로유도등</span></th>
+                <td><span class="highlight-purple">1.5 m 이상</span> (기둥 1.5 m 이하)</td>
+                <td><span class="highlight-purple">20 m 마다</span></td>
+                <td>11층 이상 / 지하상가 등:</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-green">계단통로유도등</span></th>
+                <td><span class="highlight-green">1 m 이하</span></td>
+                <td>계단참마다 설치</td>
+                <td><span class="highlight-purple">60분 이상</span></td>
+            </tr>
+            <tr>
+                <th><span class="highlight-blue">통로유도표지</span></th>
+                <td><span class="highlight-blue">1 m 이하</span> (피난구: 상단)</td>
+                <td><span class="highlight-blue">15 m 이하</span></td>
+                <td>비상전원 없음 (축광식)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M3 3h18v18H3z"></path><path d="M8 12h8"></path></svg>
+        3. 소화활동설비: 연결송수관설비 및 비상콘센트설비 세부 기술기준 (NFTC 502, 504, NFPC 608)
+    </h2>
+    <ul>
+        <li><strong>★ 연결송수관설비 송수구, 배관, 방수구 법정 설치기준 (NFTC 502, NFPC 608)</strong>:
+            <ol>
+                <li><span class="highlight-blue">★ 송수구 설치기준</span>:
+                    <br>&rarr; 높이: 지면으로부터 <span class="highlight-blue">0.5미터(0.5 m) 이상 1미터(1 m) 이하</span>.
+                    <br>&rarr; 구경 및 형상: 구경 <span class="highlight-blue">65밀리미터(65 mm) 쌍구형</span>.
+                    <br>&rarr; 설치 개수: 연결송수관마다 1개 이상 (송수관이 상호 연결된 경우 건축물마다 1개 이상 가능).</li>
+                <li><span class="highlight-red">★ 주배관 구경 및 습식설비 적용 기준 (★최다 빈출)</span>:
+                    <br>&rarr; 주배관 구경: <span class="highlight-red">100밀리미터(100 mm) 이상</span>.
+                    <br>&rarr; 습식 배관 의무화 기준: 지면으로부터 높이가 <span class="highlight-red">31미터(31 m) 이상</span>인 특정소방대상물 또는 지상 <span class="highlight-red">11층 이상</span>인 특정소방대상물.
+                    <br>&rarr; 수직배관 설치 장소: <span class="highlight-purple">내화구조로 구획된 계단실</span> 또는 파이프덕트 등 화재 우려가 없는 장소.</li>
+                <li><span class="highlight-purple">★ 방수구 설치기준 및 아파트 특례</span>:
+                    <br>&rarr; 설치 위치: 층마다 설치. (단, <span class="highlight-purple">아파트의 1층과 2층은 설치 제외 가능</span>).
+                    <br>&rarr; 수평거리 및 높이: 각 부분으로부터 수평거리 <span class="highlight-purple">50미터(50 m) 이하</span>, 바닥 높이 <span class="highlight-purple">0.5미터(0.5 m) 이상 1미터(1 m) 이하</span>, 구경 <span class="highlight-purple">65밀리미터(65 mm)</span>.
+                    <br>&rarr; 쌍구형/단구형 구분: 11층 이상 방수구는 <span class="highlight-red">쌍구형이 원칙</span>이나, <span class="highlight-red">아파트 용도 층은 단구형으로 설치 가능</span>.
+                    <br>&rarr; 아파트 방수구 위치 특례(NFPC 608): 계단 출입구(부속실 포함)로부터 <span class="highlight-green">5미터(5 m) 이내</span> 설치. (초과 시 추가 설치).</li>
+                <li><span class="highlight-green">★ 방수기구함 설치위치 및 간격</span>:
+                    <br>&rarr; 피난층과 가장 가까운 층을 기준하여 <span class="highlight-green">3개 층마다 설치</span>하되, 방수구로부터 보행거리 <span class="highlight-green">5미터(5 m) 이내</span>에 설치할 것.</li>
+                <li><span class="highlight-red">★ 가압송수장치(펌프) 토출량 및 방사압력</span>:
+                    <br>&rarr; 펌프 토출량: 분당 <span class="highlight-red">2,400리터(2,400 L/min) 이상</span>. (계단식 아파트는 분당 <span class="highlight-red">1,200 L/min 이상</span>).
+                    <br>&rarr; 방수구 3개 초과 시: 1개당 분당 <span class="highlight-purple">800 L/min</span> (계단식 아파트는 <span class="highlight-purple">400 L/min</span>) 가산 (최대 5개까지 계산).
+                    <br>&rarr; 방사압력: 최상층 노즐선단 방사압력이 <span class="highlight-red">0.35메가파스칼(0.35 MPa) 이상</span>일 것. (※ 옥내소화전 0.17 MPa, 스프링클러 0.1 MPa과 정밀 비교!).</li>
+            </ol>
+        </li>
+        <li><strong>★ 비상콘센트설비 전원, 회로, 높이 법정 기준 (NFTC 504, NFPC 608)</strong>:
+            <ol>
+                <li><span class="highlight-blue">설치 대상</span>: 층수가 <span class="highlight-blue">11층 이상</span>인 특정소방대상물의 <span class="highlight-blue">11층 이상인 층</span>에 설치.</li>
+                <li><span class="highlight-red">★ 전원회로 수치 (★주관식 단골 출제)</span>: 비상콘센트설비 전원회로는 <span class="highlight-red">단상교류 220볼트(220 V)</span>인 것으로서, 그 공급용량은 <span class="highlight-red">1.5 kilovolt-ampere(1.5 kVA) 이상</span>일 것.</li>
+                <li><span class="highlight-purple">★ 전용회로 수치 및 갯수 제한</span>: 하나의 전용회로에 설치하는 비상콘센트는 <span class="highlight-purple">10개 이하</span>로 할 것.</li>
+                <li><span class="highlight-green">★ 스위치 및 콘센트 설치 높이</span>: 바닥으로부터 높이 <span class="highlight-green">0.8미터(0.8 m) 이상 1.5미터(1.5 m) 이하</span> (땡팔 1호 공식).</li>
+                <li><span class="highlight-blue">★ 아파트 비상콘센트 위치 특례(NFPC 608)</span>: 계단 출입구(부속실 포함)로부터 <span class="highlight-blue">5미터(5 m) 이내</span> 설치 (수평거리 50 m 초과 시 추가 설치).</li>
+            </ol>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">소화활동설비 구분</th>
+                <th style="width: 45%;">핵심 법정 설치 및 기술수치</th>
+                <th style="width: 30%;">수험 핵심 출제 포인트</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th><span class="highlight-blue">연결송수관 송수구</span></th>
+                <td>높이 <span class="highlight-blue">0.5 m~1 m 이하</span> / 구경 <span class="highlight-blue">65 mm 쌍구형</span></td>
+                <td>송수관마다 1개 이상 원칙</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-red">연결송수관 배관/방수구</span></th>
+                <td>주배관 <span class="highlight-red">100 mm</span> / 습식: <span class="highlight-red">31 m 이상 또는 11층 이상</span></td>
+                <td>방수구 수평거리 <span class="highlight-purple">50 m 이하</span> (아파트 단구형 허용)</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-purple">연결송수관 펌프</span></th>
+                <td>토출량 <span class="highlight-purple">2,400 L/min</span> (계단식 아파트 <span class="highlight-purple">1,200 L/min</span>)</td>
+                <td>노즐선단 방사압력 <span class="highlight-red">0.35 MPa 이상</span></td>
+            </tr>
+            <tr>
+                <th><span class="highlight-green">비상콘센트설비</span></th>
+                <td>전원 <span class="highlight-green">단상교류 220 V</span> / 용량 <span class="highlight-green">1.5 kVA 이상</span></td>
+                <td>회로당 <span class="highlight-red">10개 이하</span> / 높이 <span class="highlight-blue">0.8 m~1.5 m</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+            💡 [수험 핵심 팁] 제69강 실전 출제 포인트 & 함정 방지 최종 체크
+        </div>
+        <ul>
+            <li><strong>비상방송 수치</strong>: 확성기 음성입력 = <span class="highlight-blue">3 W</span> (실내 <span class="highlight-blue">1 W</span> / 아파트 NFPC 608 <span class="highlight-blue">2 W</span>). 수평거리 = <span class="highlight-blue">25 m 이하</span> (NFTC 202 법정 기준). 배선 = <span class="highlight-red">3선식</span> (4선식X). 방송개시 소요시간 = <span class="highlight-purple">10초 이하</span>.</li>
+            <li><strong>피난기구 정밀 구분</strong>: 연속 사용 가능 = <span class="highlight-blue">완강기</span> / 연속 사용 불가 = <span class="highlight-red">간이완강기</span> / 자루 형태 = <span class="highlight-purple">구조대</span> / 2인 이상 동시 하강 = <span class="highlight-green">다수인피난장비</span>. 대피실 면적 = <span class="highlight-red">2 m²</span>(2세대 <span class="highlight-red">3 m²</span>), 하강구 직경 = <span class="highlight-purple">60 cm 이상</span>.</li>
+            <li><strong>유도등·표지 설치 높이 및 보행거리</strong>:
+                <br>&rarr; 피난구유도등 = 높이 <span class="highlight-blue">1.5 m 이상</span> (출입구 상단).
+                <br>&rarr; 복도통로유도등 = 보행거리 <span class="highlight-red">20 m 마다</span>, 높이 <span class="highlight-red">1 m 이하</span>.
+                <br>&rarr; 거실통로유도등 = 보행거리 <span class="highlight-purple">20 m 마다</span>, 높이 <span class="highlight-purple">1.5 m 이상</span> (기둥 1.5 m 이하).
+                <br>&rarr; 계단통로유도등 = 계단참마다, 높이 <span class="highlight-green">1 m 이하</span>.
+                <br>&rarr; 통로유도표지 = 보행거리 <span class="highlight-blue">15 m 이하</span>, 높이 <span class="highlight-blue">1 m 이하</span>.
+            </li>
+            <li><strong>유도등 비상전원</strong>: 오직 <span class="highlight-red">축전지설비</span>만 사용. 일반 = <span class="highlight-blue">20분 이상</span> / 11층 이상·지하상가·도매시장 등 = <span class="highlight-purple">60분 이상</span>.</li>
+            <li><strong>연결송수관 핵심 수치</strong>: 습식 배관 적용 = <span class="highlight-red">31 m 이상 또는 11층 이상</span>. 수직배관 = <span class="highlight-purple">내화구조 구획 계단실</span>. 방수구 수평거리 = <span class="highlight-blue">50 m 이하</span>, 바닥 높이 <span class="highlight-blue">0.5 m~1 m 이하</span>, 11층 이상 쌍구형 원칙(아파트 단구형 가능). 펌프 방사압력 = <span class="highlight-red">0.35 MPa 이상</span>, 토출량 = <span class="highlight-red">2,400 L/min</span> (계단식 아파트 <span class="highlight-red">1,200 L/min</span>).</li>
+            <li><strong>비상콘센트 핵심 수치</strong>: 전원 = <span class="highlight-blue">단상교류 220 V</span>, 용량 = <span class="highlight-blue">1.5 kVA 이상</span>, 회로당 수량 = <span class="highlight-red">10개 이하</span>, 높이 = <span class="highlight-purple">0.8 m~1.5 m</span>.</li>
+        </ul>
+    </div>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>주관식 단답형 및 빈칸 채우기 실전 훈련</h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡, ㉢)에 들어갈 알맞은 핵심 용어나 법정 수치, 단위를 아래 빈칸에 직접 작성해 보십시오.</p>
+
+    <ol class="quiz-list">
+        <li>
+            비상방송설비 확성기의 음성입력은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )W[실내에 설치하는 것은 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )W] 이상이어야 하고, 확성기까지의 수평거리는 ( ㉢&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이하이어야 한다.
+        </li>
+        <li>
+            비상방송설비의 음량조정기를 설치하는 경우 그 배선은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )선식으로 하여야 하며, 화재신호 수신 후 방송 개시까지의 소요시간은 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )초 이하이어야 한다.
+        </li>
+        <li>
+            사용자 몸무게에 따라 자동적으로 내려올 수 있는 피난기구 중 사용자가 교대하여 연속적으로 사용할 수 있는 것을 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )(이라) 하고, 연속적으로 사용할 수 없는 것을 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )(이라) 한다.
+        </li>
+        <li>
+            포지 등을 사용하여 자루 형태로 만든 피난기구를 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )(이라) 하고, 2인 이상의 피난자가 동시에 해당 층에서 지상이나 피난층으로 하강하는 피난기구를 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )(이라) 한다.
+        </li>
+        <li>
+            승강식 피난기 및 하향식 피난구용 내림식 사다리 설치 시 대피실 면적은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )제곱미터(2세대 이상인 경우 ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 제곱미터) 이상이어야 하고, 하강구 직경은 ( ㉢&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )센티미터 이상이어야 한다.
+        </li>
+        <li>
+            피난구유도등은 피난구 바닥으로부터 높이 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이상으로서 출입구에 인접하도록 설치하여야 한다.
+        </li>
+        <li>
+            복도통로유도등은 구부러진 모퉁이 및 보행거리 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터마다 설치하고, 바닥으로부터 높이 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이하의 위치에 설치하여야 한다.
+        </li>
+        <li>
+            거실통로유도등은 구부러진 모퉁이 및 보행거리 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터마다 설치하고, 바닥으로부터 높이 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이상의 위치에 설치하여야 한다.
+        </li>
+        <li>
+            계단통로유도등은 각 층의 경사로참 또는 계단참마다 설치하고, 바닥으로부터 높이 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이하의 위치에 설치하여야 한다.
+        </li>
+        <li>
+            유도표지는 계단에 설치하는 것을 제외하고 각 층마다 복도 및 통로 각 부분으로부터 하나의 유도표지까지 보행거리 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이하가 되도록 설치하고, 통로유도표지는 바닥 높이 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이하에 설치한다.
+        </li>
+        <li>
+            유도등의 비상전원은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )설비로 하여야 하며, 유도등을 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )분 이상 유효하게 작동시킬 수 있는 용량이어야 한다.
+        </li>
+        <li>
+            층수가 11층 이상인 층이나 지하층·무창층으로서 용도가 도매시장·소매시장·지하상가 등의 유도등 비상전원은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )분 이상 유효하게 작동할 수 있는 용량이어야 한다.
+        </li>
+        <li>
+            연결송수관설비의 송수구는 지면으로부터 높이가 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이상 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이하의 위치에 설치하고, 구경 ( ㉢&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )밀리미터의 쌍구형으로 하여야 한다.
+        </li>
+        <li>
+            연결송수관설비의 주배관 구경은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )밀리미터 이상이어야 하며, 지면 높이 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이상 또는 지상 ( ㉢&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )층 이상인 특정소방대상물에는 습식설비로 하여야 한다.
+        </li>
+        <li>
+            연결송수관설비 방수구는 특정소방대상물의 각 부분으로부터 수평거리가 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이하가 되도록 설치하고, 바닥으로부터 높이는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이상 ( ㉢&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이하에 설치하여야 한다.
+        </li>
+        <li>
+            연결송수관설비 방수구는 11층 이상인 층에 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )형으로 설치하는 것이 원칙이나, 아파트로 사용되는 층에는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )형으로 설치할 수 있다.
+        </li>
+        <li>
+            연결송수관설비의 방수기구함은 피난층에서 가장 가까운 층을 기준하여 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )개 층마다 설치하되, 방수구로부터 보행거리 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이내에 설치하여야 한다.
+        </li>
+        <li>
+            연결송수관설비 가압송수장치의 토출량은 분당 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )리터(계단식 아파트는 분당 ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 리터) 이상이어야 하고, 최상층 방수구 노즐선단 방사압력은 ( ㉢&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )MPa 이상이어야 한다.
+        </li>
+        <li>
+            비상콘센트설비의 전원회로는 단상교류 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )V인 것으로서 공급용량은 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )kVA 이상이어야 하고, 하나의 전용회로에 비상콘센트는 ( ㉢&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )개 이하로 설치한다.
+        </li>
+        <li>
+            비상콘센트설비의 스위치 및 콘센트 설치 높이는 바닥으로부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이상 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이하의 위치에 설치하여야 한다.
+        </li>
+    </ol>
+
+    <div style="font-size: 9.5pt; color: #666666; margin-top: 30px; padding: 15px; border-top: 1px dashed #666666; line-height: 1.8;">
+        <strong style="display: block; margin-bottom: 10px; color: #333333;">[제69강 주관식 단답형 정답 리스트]</strong>
+        <div class="answer-grid">
+            <div><strong>1.</strong> ㉠ 3, ㉡ 1, ㉢ 25</div>
+            <div><strong>2.</strong> ㉠ 3, ㉡ 10</div>
+            <div><strong>3.</strong> ㉠ 완강기, ㉡ 간이완강기</div>
+            <div><strong>4.</strong> ㉠ 구조대, ㉡ 다수인피난장비</div>
+            <div><strong>5.</strong> ㉠ 2, ㉡ 3, ㉢ 60</div>
+            <div><strong>6.</strong> ㉠ 1.5</div>
+            <div><strong>7.</strong> ㉠ 20, ㉡ 1</div>
+            <div><strong>8.</strong> ㉠ 20, ㉡ 1.5</div>
+            <div><strong>9.</strong> ㉠ 1</div>
+            <div><strong>10.</strong> ㉠ 15, ㉡ 1</div>
+            <div><strong>11.</strong> ㉠ 축전지, ㉡ 20</div>
+            <div><strong>12.</strong> ㉠ 60</div>
+            <div><strong>13.</strong> ㉠ 0.5, ㉡ 1, ㉢ 65</div>
+            <div><strong>14.</strong> ㉠ 100, ㉡ 31, ㉢ 11</div>
+            <div><strong>15.</strong> ㉠ 50, ㉡ 0.5, ㉢ 1</div>
+            <div><strong>16.</strong> ㉠ 쌍구, ㉡ 단구</div>
+            <div><strong>17.</strong> ㉠ 3, ㉡ 5</div>
+            <div><strong>18.</strong> ㉠ 2,400, ㉡ 1,200, ㉢ 0.35</div>
+            <div><strong>19.</strong> ㉠ 220, ㉡ 1.5, ㉢ 10</div>
+            <div><strong>20.</strong> ㉠ 0.8, ㉡ 1.5</div>
+        </div>
+    </div>
+
+</body>
+</html>
