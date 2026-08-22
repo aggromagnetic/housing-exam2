@@ -588,8 +588,19 @@ function startQuizMode() {
     const selectEl = document.getElementById('quiz-unit-select');
     if (selectEl) selectEl.value = 'all';
 
+    // Filter out unit mock exams (단원별문제 / 모의고사) for the standard lecture random quiz pool
+    const regularQuizzes = studyData.quizzes.filter(q => {
+        const isMock = q.isMockExam || 
+                       (q.noteFileName && q.noteFileName.includes('단원별문제')) || 
+                       (q.subject && q.subject.includes('(문제)')) ||
+                       (q.lectureTitle && (q.lectureTitle.includes('단원') || q.lectureTitle.includes('모의고사')));
+        return !isMock;
+    });
+
+    const poolSource = regularQuizzes.length > 0 ? regularQuizzes : studyData.quizzes;
+
     // 1. Calculate Weights for each quiz (Cap at 5.0x max)
-    const quizPool = studyData.quizzes.map(q => {
+    const quizPool = poolSource.map(q => {
         const stat = quizStats[q.id] || { wrongCount: 0, tryCount: 0 };
         const rawWeight = 1.0 + (stat.wrongCount * 1.0);
         const cappedWeight = Math.min(5.0, rawWeight);
