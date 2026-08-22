@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 - 제71강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+            letter-spacing: -0.05em;
+        }
+        
+        h1 {
+            font-size: 12pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        /* 토너 절약 4색 시각 강조 클래스 (배경색 배제) */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #16803d; 
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #6d28d9; 
+        }
+        
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        ol.quiz-list {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+            line-height: 2.1;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        /* 하단 정답표 3단 그리드 배치 */
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px 15px;
+        }
+
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        제71강. 가스설비(LPG vs LNG 세부 특성·도시가스 법정 기술기준) 및 전기설비 기초 정밀 학습 노트
+    </h1>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        1. LPG(액화석유가스) vs LNG(액화천연가스) 물리적 특성 및 설비 기술기준 정밀 비교
+    </h2>
+    <ul>
+        <li><strong>★ 명칭, 사용 단위 및 용기/배관 공급 방식 정밀 구분 (★출제 1순위)</strong>:
+            <ol>
+                <li><span class="highlight-blue">★ 명칭 상호 교차 금지</span>: <span class="highlight-blue">LPG = 액화석유가스</span> (Liquefied Petroleum Gas) / <span class="highlight-blue">LNG = 액화천연가스</span> (Liquefied Natural Gas). (※ 용어 서술 교차 오답 지문 주의!).</li>
+                <li><span class="highlight-red">★ 단위 표기 구분 (중량 vs 부피)</span>:
+                    <br>&rarr; LPG: 용기(봄베)에 액화시켜 중량 단위로 공급하므로 사용 단위는 <span class="highlight-red">kg/h</span> (킬로그램 퍼 아워).
+                    <br>&rarr; LNG: 기화시켜 배관으로 부피 단위 공급하므로 사용 단위는 <span class="highlight-red">m³/h</span> (세제곱미터 퍼 아워).</li>
+                <li><span class="highlight-purple">★ 운반 및 공급 수단 방식 비교</span>:
+                    <br>&rarr; LPG: 압축 액화가 용이하여 <span class="highlight-purple">용기(봄베) 공급 및 배관 공급 모두 가능</span>.
+                    <br>&rarr; LNG: 초저온 액화가 필요하므로 <span class="highlight-purple">오직 배관(파이프라인)을 통해서만 공급 가능</span>. (용기 공급 불가!).</li>
+            </ol>
+        </li>
+        <li><strong>★ 주성분, 탄소수 및 공기 비중·누출 감지기 설치 높이</strong>:
+            <ol>
+                <li><span class="highlight-blue">★ 주성분 및 탄소수 (★출제 난이도 최상)</span>:
+                    <br>&rarr; LPG: <span class="highlight-blue">프로판(C₃H₈, 탄소수 3)</span> 및 <span class="highlight-blue">부탄(C₄H₁₀, 탄소수 4)</span>이 주성분. (※ 탄소수가 3~4인 탄화수소는 LPG의 원료).
+                    <br>&rarr; LNG: <span class="highlight-blue">메탄(CH₄, 탄소수 1)</span>이 주성분. (※ 탄소수가 1인 탄화수소는 LNG의 원료).</li>
+                <li><span class="highlight-red">★ 공기 비중 및 가스 누출 감지기 설치 높이 공식</span>:
+                    <br>&rarr; LPG: 공기보다 무거움 (비중 약 1.5~2.0). 누출 시 바닥으로 가라앉으므로, 감지기는 <span class="highlight-red">바닥면으로부터 30 cm 이하</span> 위치에 설치.
+                    <br>&rarr; LNG: 공기보다 가벼움 (비중 약 0.55~0.6). 누출 시 천장으로 희산되므로, 감지기는 <span class="highlight-red">천장면으로부터 30 cm 이하</span> 위치에 설치.</li>
+            </ol>
+        </li>
+        <li><strong>★ 착화온도, 안전성, 발열량 및 비점 비교</strong>:
+            <ol>
+                <li><span class="highlight-purple">★ 착화온도 및 위험도/안전성</span>:
+                    <br>&rarr; LPG: 바닥에 체류·축적되므로 <span class="highlight-purple">착화온도(불이 붙는 온도)가 낮아</span> 작은 불꽃 스파크에도 즉시 폭발 위험이 커 안전성이 낮음.
+                    <br>&rarr; LNG: 공기 중으로 쉽게 확산되므로 <span class="highlight-purple">착화온도가 높아</span>(약 500 ℃ 이상) 상대적으로 안전성이 높음.</li>
+                <li><span class="highlight-green">★ 발열량 및 독성</span>: LPG와 LNG 모두 기본적으로 무색·무취·무독성·무공해 가스이나, 발열량은 <span class="highlight-green">LPG가 LNG보다 큼</span> (동일량 연소 시 효율 우수). 누출 확인을 위해 악취제(부취제)를 첨가함.</li>
+                <li><span class="highlight-blue">★ 비점 비교</span>:
+                    <br>&rarr; LPG(프로판): 비점이 약 <span class="highlight-blue">-42.1 ℃</span>.
+                    <br>&rarr; LNG(메탄): 비점이 약 <span class="highlight-blue">-162 ℃</span>. (※ LNG가 LPG보다 비점이 훨씬 낮음. 상온 대기압에서는 기체 상태이며, 수송 시 1/600 부피로 초저온 액화함).</li>
+            </ol>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 18%;">구분 항목</th>
+                <th style="width: 41%;">LPG (액화석유가스)</th>
+                <th style="width: 41%;">LNG (액화천연가스)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th><span class="highlight-blue">주성분 / 탄소수</span></th>
+                <td><span class="highlight-blue">프로판(C₃H₈), 부탄(C₄H₁₀)</span> [탄소수 3, 4]</td>
+                <td><span class="highlight-blue">메탄(CH₄)</span> [탄소수 1]</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-red">사용 단위 / 공급</span></th>
+                <td><span class="highlight-red">kg/h</span> (중량 단위) / 용기(봄베) 및 배관</td>
+                <td><span class="highlight-red">m³/h</span> (부피 단위) / <span class="highlight-red">오직 배관 공급만</span></td>
+            </tr>
+            <tr>
+                <th><span class="highlight-purple">비중 / 감지기 높이</span></th>
+                <td>공기보다 무겁다 / <span class="highlight-purple">바닥면 30 cm 이하</span></td>
+                <td>공기보다 가볍다 / <span class="highlight-purple">천장면 30 cm 이하</span></td>
+            </tr>
+            <tr>
+                <th><span class="highlight-green">착화온도 / 안전성</span></th>
+                <td><span class="highlight-green">착화온도 낮음</span> (폭발 위험 큼, 안전성 낮음)</td>
+                <td><span class="highlight-green">착화온도 높음</span> (희산성 우수, 안전성 높음)</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-blue">발열량 / 비점</span></th>
+                <td>발열량 상대적 큼 / 비점 약 <span class="highlight-blue">-42.1 ℃</span></td>
+                <td>발열량 상대적 작음 / 비점 약 <span class="highlight-blue">-162 ℃</span> (낮음)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+        2. 도시가스사업법상 도시가스 압력 구분 및 가스사용시설 법정 설치·기술·검사기준
+    </h2>
+    <ul>
+        <li><strong>★ 도시가스 법정 압력 구분 3단계 (도시가스사업법 시행규칙 제2조) (★주관식 단골)</strong>:
+            <ol>
+                <li><span class="highlight-red">고압 (High Pressure)</span>: 게이지 압력이 <span class="highlight-red">1 메가파스칼(1 MPa) 이상</span>의 압력. (※ 액체 상태의 액화가스는 고압으로 봄).</li>
+                <li><span class="highlight-purple">중압 (Medium Pressure)</span>: 게이지 압력이 <span class="highlight-purple">0.1 메가파스칼(0.1 MPa) 이상 1 메가파스칼(1 MPa) 미만</span>의 압력.</li>
+                <li><span class="highlight-blue">저압 (Low Pressure)</span>: 게이지 압력이 <span class="highlight-blue">0.1 메가파스칼(0.1 MPa) 미만</span>의 압력.</li>
+            </ol>
+        </li>
+        <li><strong>★ 가스계량기 법정 설치 높이, 화기 및 전기설비 이격거리 (★최다 출제 1순위 수치)</strong>:
+            <ol>
+                <li><span class="highlight-red">★ 화기 이격거리 (공통 공식)</span>: 가스계량기 및 입상관과 화기(자체화기 제외) 사이에 유지해야 하는 거리는 <span class="highlight-red">우회거리 2미터(2 m) 이상</span>일 것.</li>
+                <li><span class="highlight-purple">★ 바닥 설치 높이 기준</span>: 가스계량기(30 m³/h 미만)의 설치 높이는 바닥으로부터 계량기 지시장치 중심까지 <span class="highlight-purple">1.6미터(1.6 m) 이상 2미터(2 m) 이내</span>에 수직·수평으로 설치하고 고정할 것.
+                    <br>&rarr; <span class="highlight-blue">★ 설치 높이 제한 예외 장소</span>: <span class="highlight-blue">격납상자 내, 기계실, 보일러실(가정용 제외), 문이 달린 파이프 덕트(PS/PD) 내</span>에 설치하는 경우에는 바닥으로부터 2m 이내에 설치 가능. (1.6m 미만도 허용).</li>
+                <li><span class="highlight-red">★ 전기설비 및 굴뚝 이격거리 (★수치 암기 필수)</span>:
+                    <br>&rarr; 가스계량기 및 배관 이음부(용접이음매 제외) ↔ <span class="highlight-red">전기계량기 및 전기개폐기</span>: <span class="highlight-red">60센티미터(60 cm, 0.6 m) 이상</span>.
+                    <br>&rarr; 가스계량기 ↔ <span class="highlight-purple">전기점멸기, 전기접속기(콘센트), 단열 조치 없는 굴뚝</span>: <span class="highlight-purple">30센티미터(30 cm, 0.3 m) 이상</span>. (※ 배관 이음부는 15cm 이상).
+                    <br>&rarr; 가스계량기 ↔ <span class="highlight-green">절연 조치를 하지 아니한 전선</span>: <span class="highlight-green">15센티미터(15 cm, 0.15 m) 이상</span>.</li>
+                <li><span class="highlight-blue">★ 계량기 설치 금지 장소 (★함정 지문 주의)</span>: 환기가 잘 되지 않는 장소나 거주자가 상시 생활·대피하는 공간인 <span class="highlight-blue">공동주택의 대피공간, 방, 거실 및 주방 등에는 가스계량기를 설치할 수 없음</span>. (원칙적으로 옥외 외벽 설치).</li>
+            </ol>
+        </li>
+        <li><strong>★ 입상관, 지하 매설 깊이 및 관경별 배관 고정장치 간격</strong>:
+            <ol>
+                <li><span class="highlight-blue">★ 입상관 밸브 설치 높이</span>: 입상관 밸브는 바닥으로부터 <span class="highlight-blue">1.6미터(1.6 m) 이상 2미터(2 m) 이내</span>에 설치할 것. (단, 보호상자 안에 설치하는 경우 제한 예외). 화기와 <span class="highlight-blue">우회거리 2 m 이상</span> 유지.</li>
+                <li><span class="highlight-red">★ 배관 지하 매설 깊이</span>: 배관을 지하에 매설하는 경우에는 지면으로부터 <span class="highlight-red">0.6미터(0.6 m) 이상</span>의 거리를 유지할 것.</li>
+                <li><span class="highlight-purple">★ 관경(호칭지름)별 배관 고정장치 간격 (★주관식 최다 기출)</span>:
+                    <br>&rarr; 관경 <span class="highlight-purple">13 mm 미만</span>: <span class="highlight-purple">1미터(1 m) 마다</span>.
+                    <br>&rarr; 관경 <span class="highlight-purple">13 mm 이상 33 mm 미만</span>: <span class="highlight-purple">2미터(2 m) 마다</span>.
+                    <br>&rarr; 관경 <span class="highlight-purple">33 mm 이상</span>: <span class="highlight-purple">3미터(3 m) 마다</span>. (단, 100 mm 이상은 적절한 방법으로 3 m 초과 가능).</li>
+            </ol>
+        </li>
+        <li><strong>★ 배관 표면 도색, 황색 띠 표기 및 정기점검 기술기준 (★최신 개정 용어)</strong>:
+            <ol>
+                <li><span class="highlight-blue">지상배관 도색 원칙</span>: 부식방지도장 후 표면색상을 <span class="highlight-blue">황색</span>으로 도색할 것.
+                    <br>&rarr; <span class="highlight-purple">★ 황색 도색 생략 예외 규정</span>: 건축물 내·외벽에 노출된 배관으로서 바닥(층 바닥)으로부터 <span class="highlight-purple">1미터(1 m) 높이</span>에 <span class="highlight-purple">폭 3센티미터(3 cm)의 황색 띠를 2중(이중)으로 표시</span>한 경우에는 표면 전체를 황색으로 도색하지 아니할 수 있음.</li>
+                <li><span class="highlight-red">★ 지하매설배관 도색 규정</span>:
+                    <br>&rarr; 최고사용압력이 저압인 배관: <span class="highlight-red">황색</span>.
+                    <br>&rarr; 최고사용압력이 중압 이상인 배관: <span class="highlight-red">붉은색</span>. (※ '적색'이 아닌 법정 용어 '붉은색' 엄수!).</li>
+                <li><span class="highlight-green">★ 안전점검 주기</span>: 압력조정기 등 가스사용시설에 대한 정기 안전점검은 <span class="highlight-green">연 1회 이상</span> (1년에 1회 이상) 실시할 것.</li>
+            </ol>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">대상 및 설비 구분</th>
+                <th style="width: 45%;">법정 이격거리 및 설치 높이 수치</th>
+                <th style="width: 30%;">수험 핵심 출제 포인트</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th><span class="highlight-blue">가스계량기 / 입상관</span></th>
+                <td>화기 <span class="highlight-blue">우회거리 2 m 이상</span> / 높이 <span class="highlight-blue">1.6 m ~ 2 m 이내</span></td>
+                <td>격납상자/보호상자 설치 시 높이 예외</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-red">전기계량기 · 개폐기</span></th>
+                <td>가스계량기 및 배관 이음부로부터 <span class="highlight-red">60 cm(0.6 m) 이상</span></td>
+                <td>단독 주관식 단골 수치</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-purple">전기점멸기 · 접속기</span></th>
+                <td>가스계량기로부터 <span class="highlight-purple">30 cm 이상</span> (단열X 굴뚝 <span class="highlight-purple">30 cm</span>)</td>
+                <td>배관 이음부: 15 cm 이상</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-green">절연 미조치 전선</span></th>
+                <td>가스계량기 및 배관 이음부로부터 <span class="highlight-green">15 cm 이상</span></td>
+                <td>절연 전선 배관 이음부: 10 cm 이상</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-blue">배관 고정 간격</span></th>
+                <td>13mm 미만: <span class="highlight-blue">1m</span> / 13~33mm 미만: <span class="highlight-blue">2m</span> / 33mm 이상: <span class="highlight-blue">3m</span></td>
+                <td>지하 매설 깊이: <span class="highlight-red">0.6m 이상</span></td>
+            </tr>
+            <tr>
+                <th><span class="highlight-purple">배관 도색 / 황색 띠</span></th>
+                <td>지상: <span class="highlight-purple">황색</span> (높이 <span class="highlight-purple">1m</span>, 폭 <span class="highlight-purple">3cm 2중 띠</span> 시 생략)</td>
+                <td>지하: 저압 <span class="highlight-purple">황색</span> / 중압 이상 <span class="highlight-red">붉은색</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M3 3h18v18H3z"></path><path d="M8 12h8"></path></svg>
+        3. 전기설비 기초: 강전 설비 및 약전 설비 정밀 분류
+    </h2>
+    <ul>
+        <li><strong>★ 강전 설비 (Strong Current Facilities)</strong>:
+            <ol>
+                <li><span class="highlight-red">개념</span>: 높은 전압과 큰 전류를 사용하여 전력을 수전·변전·배전하거나 대용량 동력 및 조명을 구동하는 설비. (접촉 시 인체 감전 사망 위험이 매우 큼).</li>
+                <li><span class="highlight-blue">주요 구성 설비 종류</span>:
+                    <br>&rarr; <span class="highlight-blue">수변전설비</span> (특고압 22.9 kV 등을 수전하여 변압하는 설비).
+                    <br>&rarr; <span class="highlight-blue">자가발전설비 및 축전지설비</span> (비상전원 공급).
+                    <br>&rarr; <span class="highlight-blue">동력설비</span> (급수·배수·난방 펌프, 승강기 및 환기팬 등 모터 구동).
+                    <br>&rarr; <span class="highlight-blue">조명설비</span> (세대 및 단지 공용 조명 전원 220 V).
+                    <br>&rarr; <span class="highlight-blue">피뢰설비</span> (낙뢰로부터 건축물 보호).</li>
+            </ol>
+        </li>
+        <li><strong>★ 약전 설비 (Weak Current Facilities)</strong>:
+            <ol>
+                <li><span class="highlight-purple">개념</span>: 신호 전달, 통신, 방범, 방송 및 정보 제어를 목적으로 낮은 전압(건전지 또는 소전압)과 미세한 전류를 사용하는 설비. (접촉 시 감전 위험이 거의 없음).</li>
+                <li><span class="highlight-green">주요 구성 설비 종류</span>:
+                    <br>&rarr; <span class="highlight-green">전화통신설비 및 인터폰(홈네트워크) 설비</span>.
+                    <br>&rarr; <span class="highlight-green">전기시계 설비</span>.
+                    <br>&rarr; <span class="highlight-green">방송설비 및 TV 공동수신 안테나 설비</span>.
+                    <br>&rarr; <span class="highlight-green">방범설비 (CCTV 및 침입탐지설비)</span>.</li>
+            </ol>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">전기설비 구분</th>
+                <th style="width: 45%;">주요 대표 설비 종류</th>
+                <th style="width: 30%;">인체 위험성 및 특성</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th><span class="highlight-red">강전 설비</span></th>
+                <td><span class="highlight-blue">수변전, 자가발전, 축전지, 동력, 조명, 피뢰설비</span></td>
+                <td>고전압·대전류 사용, <span class="highlight-red">접촉 시 감전 사망 위험</span></td>
+            </tr>
+            <tr>
+                <th><span class="highlight-purple">약전 설비</span></th>
+                <td><span class="highlight-green">전화통신, 인터폰, 전기시계, 방송·안테나, 방범설비</span></td>
+                <td>신호·정보 전달 목적, 저전압 사용, 감전 위험 없음</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+            💡 [수험 핵심 팁] 제71강 실전 출제 포인트 & 함정 방지 최종 체크
+        </div>
+        <ul>
+            <li><strong>LPG vs LNG 용어 및 수치</strong>: LPG = <span class="highlight-blue">액화석유가스</span>(프로판·부탄, <span class="highlight-red">kg/h</span>, <span class="highlight-purple">바닥 30 cm 이하</span>) / LNG = <span class="highlight-blue">액화천연가스</span>(메탄, <span class="highlight-red">m³/h</span>, <span class="highlight-purple">천장 30 cm 이하</span>, <span class="highlight-green">오직 배관 공급만</span>). 비점 = LNG가 <span class="highlight-blue">-162 ℃</span>로 LPG(-42.1 ℃)보다 훨씬 낮음.</li>
+            <li><strong>도시가스 압력 3단계</strong>: 고압 = <span class="highlight-red">1 MPa 이상</span> / 중압 = <span class="highlight-purple">0.1 MPa 이상 1 MPa 미만</span> / 저압 = <span class="highlight-blue">0.1 MPa 미만</span>.</li>
+            <li><strong>가스계량기 & 배관 주요 수치 암기 묶음</strong>:
+                <br>&rarr; 화기 이격 = <span class="highlight-red">우회거리 2 m 이상</span> / 계량기·입상관 밸브 바닥 높이 = <span class="highlight-purple">1.6 m ~ 2 m 이내</span> (격납상자/보호상자 예외).
+                <br>&rarr; 이격거리 3종 = 전기계량기·개폐기 <span class="highlight-red">60 cm 이상</span> / 전기점멸기·접속기·단열X 굴뚝 <span class="highlight-purple">30 cm 이상</span> / 절연 미조치 전선 <span class="highlight-green">15 cm 이상</span>.
+                <br>&rarr; 지하 매설 깊이 = <span class="highlight-red">0.6 m 이상</span> / 고정 간격 = 13mm 미만 <span class="highlight-blue">1m</span>, 13~33mm 미만 <span class="highlight-blue">2m</span>, 33mm 이상 <span class="highlight-blue">3m</span>.
+                <br>&rarr; 배관 도색 = 지상 <span class="highlight-purple">황색</span> (바닥 <span class="highlight-purple">1m</span>, 폭 <span class="highlight-purple">3cm 2중 띠</span> 시 생략) / 지하 저압 <span class="highlight-purple">황색</span>, 중압 이상 <span class="highlight-red">붉은색</span>.
+            </li>
+            <li><strong>전기설비 구분</strong>: 자가발전·축전지·동력·피뢰 = <span class="highlight-red">강전</span> / 인터폰·방송·안테나·방범 = <span class="highlight-purple">약전</span>.</li>
+        </ul>
+    </div>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>주관식 단답형 및 빈칸 채우기 실전 훈련</h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡, ㉢)에 들어갈 알맞은 핵심 용어나 법정 수치, 단위를 아래 빈칸에 직접 작성해 보십시오.</p>
+
+    <ol class="quiz-list">
+        <li>
+            액화석유가스(LPG)의 사용 단위는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이고, 액화천연가스(LNG)의 사용 단위는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이다.
+        </li>
+        <li>
+            액화석유가스(LPG)의 주성분은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )(와)과 부탄이고, 액화천연가스(LNG)의 주성분은 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이다.
+        </li>
+        <li>
+            액화석유가스(LPG) 누출 감지기는 바닥면으로부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )cm 이하의 위치에 설치하고, 액화천연가스(LNG) 누출 감지기는 천장면으로부터 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )cm 이하의 위치에 설치한다.
+        </li>
+        <li>
+            도시가스사업법령상 도시가스의 고압은 게이지 압력이 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )MPa 이상, 저압은 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )MPa 미만, 중압은 ( ㉢&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )MPa 이상 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )MPa 미만의 압력을 말한다.
+        </li>
+        <li>
+            가스계량기 및 입상관과 화기(자체화기 제외) 사이에 유지하여야 하는 거리는 우회거리 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이상이어야 한다.
+        </li>
+        <li>
+            가스계량기의 설치 높이는 바닥으로부터 계량기 지시장치 중심까지 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이상 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이내에 수직·수평으로 설치하여야 한다.
+        </li>
+        <li>
+            가스계량기 및 배관 이음부와 전기계량기 및 전기개폐기와의 이격거리는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )cm 이상이어야 한다.
+        </li>
+        <li>
+            가스계량기와 전기점멸기, 전기접속기(콘센트) 및 단열 조치를 하지 아니한 굴뚝과의 이격거리는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )cm 이상이어야 한다.
+        </li>
+        <li>
+            가스계량기와 절연 조치를 하지 아니한 전선과의 이격거리는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )cm 이상이어야 한다.
+        </li>
+        <li>
+            입상관 밸브의 설치 높이는 바닥으로부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이상 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이내에 설치하여야 한다.
+        </li>
+        <li>
+            도시가스 배관을 지하에 매설하는 경우 지면으로부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이상의 매설 깊이를 유지하여야 한다.
+        </li>
+        <li>
+            도시가스 배관 고정장치는 관경이 13mm 미만인 것은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터마다, 13mm 이상 33mm 미만인 것은 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터마다, 33mm 이상인 것은 ( ㉢&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터마다 설치하여야 한다.
+        </li>
+        <li>
+            지상 도시가스배관의 표면색상은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )색으로 도색하는 것이 원칙이다.
+        </li>
+        <li>
+            지상 도시가스배관이 건축물 내·외벽에 노출된 경우 바닥에서 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 높이에 폭 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )cm의 황색 띠를 ( ㉢&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )중으로 표시한 경우에는 표면 전체를 황색으로 도색하지 아니할 수 있다.
+        </li>
+        <li>
+            지하매설 도시가스배관은 최고사용압력이 저압인 배관은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )색, 중압 이상인 배관은 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )색으로 하여야 한다.
+        </li>
+        <li>
+            도시가스 사용시설의 압력조정기 등 시설에 대한 정기 안전점검은 연 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )회 이상 실시하여야 한다.
+        </li>
+        <li>
+            전기설비 중 수변전설비, 자가발전설비, 축전지설비, 동력설비, 조명설비 및 피뢰설비는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )류 설비에 해당한다.
+        </li>
+        <li>
+            전기설비 중 전화통신설비, 인터폰설비, 전기시계, 방송설비 및 방범설비는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )류 설비에 해당한다.
+        </li>
+        <li>
+            액화천연가스(LNG)는 상온·1기압에서 액화시키면 부피가 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )분의 1로 줄어들어 수송 및 저장이 용이해진다.
+        </li>
+        <li>
+            액화석유가스(LPG)와 액화천연가스(LNG) 중 비점이 더 낮은 가스는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이다.
+        </li>
+    </ol>
+
+    <div style="font-size: 9.5pt; color: #666666; margin-top: 30px; padding: 15px; border-top: 1px dashed #666666; line-height: 1.8;">
+        <strong style="display: block; margin-bottom: 10px; color: #333333;">[제71강 주관식 단답형 정답 리스트]</strong>
+        <div class="answer-grid">
+            <div><strong>1.</strong> ㉠ kg/h, ㉡ m³/h</div>
+            <div><strong>2.</strong> ㉠ 프로판, ㉡ 메탄</div>
+            <div><strong>3.</strong> ㉠ 30, ㉡ 30</div>
+            <div><strong>4.</strong> ㉠ 1, ㉡ 0.1, ㉢ 0.1</div>
+            <div><strong>5.</strong> ㉠ 2</div>
+            <div><strong>6.</strong> ㉠ 1.6, ㉡ 2</div>
+            <div><strong>7.</strong> ㉠ 60</div>
+            <div><strong>8.</strong> ㉠ 30</div>
+            <div><strong>9.</strong> ㉠ 15</div>
+            <div><strong>10.</strong> ㉠ 1.6, ㉡ 2</div>
+            <div><strong>11.</strong> ㉠ 0.6</div>
+            <div><strong>12.</strong> ㉠ 1, ㉡ 2, ㉢ 3</div>
+            <div><strong>13.</strong> ㉠ 황</div>
+            <div><strong>14.</strong> ㉠ 1, ㉡ 3, ㉢ 2(또는 이)</div>
+            <div><strong>15.</strong> ㉠ 황, ㉡ 붉은</div>
+            <div><strong>16.</strong> ㉠ 1</div>
+            <div><strong>17.</strong> ㉠ 강전</div>
+            <div><strong>18.</strong> ㉠ 약전</div>
+            <div><strong>19.</strong> ㉠ 600</div>
+            <div><strong>20.</strong> ㉠ LNG(액화천연가스)</div>
+        </div>
+    </div>
+
+</body>
+</html>

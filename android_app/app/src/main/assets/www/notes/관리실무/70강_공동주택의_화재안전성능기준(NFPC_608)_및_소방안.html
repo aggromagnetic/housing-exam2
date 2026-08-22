@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 - 제70강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+            letter-spacing: -0.05em;
+        }
+        
+        h1 {
+            font-size: 12pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        /* 토너 절약 4색 시각 강조 클래스 (배경색 배제) */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #16803d; 
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #6d28d9; 
+        }
+        
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        ol.quiz-list {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+            line-height: 2.1;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        /* 하단 정답표 3단 그리드 배치 */
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px 15px;
+        }
+
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        제70강. 공동주택의 화재안전성능기준(NFPC 608) 및 소방안전관리 정밀 학습 노트
+    </h1>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        1. 공동주택의 화재안전성능기준(NFPC 608) 설비별 법정 특례기준
+    </h2>
+    <ul>
+        <li><strong>★ 소화기구 및 주방자동소화장치 특례기준 (NFPC 608 제5조)</strong>:
+            <ol>
+                <li><span class="highlight-blue">★ 능력단위 기준</span>: 바닥면적 <span class="highlight-blue">100제곱미터(100 m²) 마다</span> 1단위 이상의 능력단위를 기준으로 설치할 것. (※ 아파트등의 각 세대 및 공용부마다 설치 필수).</li>
+                <li><span class="highlight-red">★ 주거용 주방자동소화장치</span>: 아파트등의 <span class="highlight-red">모든 층 주방</span>에 열원(가스 또는 전기) 종류에 적합한 것으로 설치하고, 열원 차단장치를 함께 설치할 것.</li>
+            </ol>
+        </li>
+        <li><strong>★ 옥내소화전설비 및 자동화재탐지설비 복층형 특례 (NFPC 608 제6조, 제11조)</strong>:
+            <ol>
+                <li><span class="highlight-purple">★ 호스릴 방식 의무화</span>: 아파트등의 옥내소화전설비는 반드시 <span class="highlight-purple">호스릴(Hose Reel) 방식</span>으로 설치할 것.</li>
+                <li><span class="highlight-green">★ 복층형 구조의 방수구 및 발신기 제외</span>: 복층형 구조인 경우 <span class="highlight-green">출입구가 없는 층에는 방수구 및 발신기를 설치하지 아니할 수 있음</span>. (※ 주의: 출입구가 없는 층이라도 <span class="highlight-red">화재감지기는 반드시 설치</span>하여야 함!).</li>
+                <li><span class="highlight-blue">★ 거실 감지기 종류</span>: 세대 내 거실(취침 용도 방 및 거실)에는 반드시 <span class="highlight-blue">연기감지기</span>를 설치할 것. (열감지기 사용 불가).</li>
+            </ol>
+        </li>
+        <li><strong>★ 스프링클러설비 기준개수, 방호구역, 수평거리 및 헤드 특례 (NFPC 608 제7조)</strong>:
+            <ol>
+                <li><span class="highlight-red">★ 헤드 기준개수 및 수원 산정</span>: 아파트등의 기준개수는 <span class="highlight-red">10개</span>. (저수량 = <span class="highlight-red">10개 × 1.6 m³ = 16 m³</span>). 세대별 개수가 10개 미만인 경우 실제 설치개수 적용.
+                    <br>&rarr; <span class="highlight-purple">★ 주차장 연결 구조 특례</span>: 각 동이 주차장으로 서로 연결된 구조인 경우 주차장 부분 기준개수는 <span class="highlight-purple">30개</span> 적용.</li>
+                <li><span class="highlight-blue">★ 방호구역 구획 기준</span>: 하나의 방호구역은 <span class="highlight-blue">2개 층에 미치지 아니하도록</span> 할 것. (단, 복층형 구조인 경우 <span class="highlight-blue">3개 층 이내</span> 가능).</li>
+                <li><span class="highlight-red">★ 세대 내 수평거리 수치 (★최다 출제)</span>: 각 부분으로부터 하나의 스프링클러헤드까지의 수평거리는 <span class="highlight-red">2.6미터(2.6 m) 이하</span>일 것.</li>
+                <li><span class="highlight-purple">★ 외벽 창문 헤드 배치 및 예외</span>: 외벽 창문에서 <span class="highlight-purple">0.6미터(0.6 m) 이내</span>에 헤드 배치.
+                    <br>&rarr; 예외 장소: <span class="highlight-green">드렌처설비 설치</span>, 창문 간 수직 이격거리 내화구조 <span class="highlight-green">90 cm 이상</span>, 방화판/방화유리창 설치, <span class="highlight-green">발코니 설치 부분</span>.</li>
+                <li><span class="highlight-blue">★ 거실 헤드 및 대피공간 제외</span>: 거실에는 <span class="highlight-blue">조기반응형 헤드</span> 설치. 대피공간에는 <span class="highlight-blue">헤드 설치 제외 가능</span>.</li>
+            </ol>
+        </li>
+        <li><strong>★ 비상방송·피난기구·소화활동설비 아파트 특례 (NFPC 608 제12조~제18조)</strong>:
+            <ol>
+                <li><span class="highlight-red">★ 비상방송 확성기 음성입력</span>: 아파트등 실내에 설치하는 확성기 음성입력은 <span class="highlight-red">2와트(2 W) 이상</span>일 것. (일반 실내 1 W와 차별화).</li>
+                <li><span class="highlight-purple">★ 공기안전매트 추가 설치</span>: 의무관리대상 공동주택은 관리주체 구역마다 <span class="highlight-purple">공기안전매트 1개 이상</span> 추가 설치.</li>
+                <li><span class="highlight-green">★ 연결송수관 및 비상콘센트 위치 특례</span>: 계단 출입구(부속실 포함)로부터 <span class="highlight-green">5미터(5 m) 이내</span> 설치 (수평거리 50 m 초과 시 추가 설치). 연결송수관 1·2층 방수구 제외 가능 및 <span class="highlight-green">단구형 설치 허용</span>.</li>
+            </ol>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">소방설비 구분</th>
+                <th style="width: 45%;">공동주택 화재안전성능기준(NFPC 608) 핵심 수치</th>
+                <th style="width: 30%;">수험 출제 핵심 포인트</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th><span class="highlight-blue">소화기 / 주방자동소화</span></th>
+                <td>바닥면적 <span class="highlight-blue">100 m² 마다 1단위</span> / 전 층 주방 자동소화장치</td>
+                <td>소화기 감소 규정 적용 배제</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-red">옥내소화전 / 자탐</span></th>
+                <td><span class="highlight-red">호스릴 방식</span> 의무 / 세대 거실 <span class="highlight-red">연기감지기</span></td>
+                <td>복층형: 출입구 없는 층 방수구/발신기 제외</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-purple">스프링클러설비</span></th>
+                <td>기준개수 <span class="highlight-purple">10개</span> (주차장 <span class="highlight-purple">30개</span>) / 수평거리 <span class="highlight-purple">2.6 m 이하</span></td>
+                <td>창문 이격 <span class="highlight-purple">0.6 m 이내</span> (드렌처/발코니 제외)</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-green">비상방송 / 연결송수관</span></th>
+                <td>실내 확성기 <span class="highlight-green">2 W 이상</span> / 방수구·콘센트 계단 <span class="highlight-green">5 m 이내</span></td>
+                <td>의무관리대상: 공기안전매트 1개 추가</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+        2. 화재예방법상 소방안전관리대상물 구분, 선임 자격 및 보조자 기준
+    </h2>
+    <ul>
+        <li><strong>★ 아파트 소방안전관리대상물 등급별 구분 (★주관식 단골 출제)</strong>:
+            <ol>
+                <li><span class="highlight-red">★ 특급 소방안전관리대상물 (아파트)</span>: 지하층을 제외한 층수가 <span class="highlight-red">50층 이상</span>이거나 지상으로부터 높이가 <span class="highlight-red">200미터(200 m) 이상</span>인 아파트. (※ 일반 건축물: 30층 이상 또는 120 m 이상, 연면적 10만 m² 이상).</li>
+                <li><span class="highlight-blue">★ 1급 소방안전관리대상물 (아파트)</span>: 지하층을 제외한 층수가 <span class="highlight-blue">30층 이상</span>이거나 지상으로부터 높이가 <span class="highlight-blue">120미터(120 m) 이상</span>인 아파트. (※ 일반 건축물: 11층 이상, 연면적 1만 5천 m² 이상).</li>
+                <li><span class="highlight-purple">★ 2급 소방안전관리대상물 (아파트)</span>: <span class="highlight-purple">의무관리대상 공동주택</span> (옥내소화전설비 또는 스프링클러설비가 설치된 공동주택으로 한정하며, 특급 및 1급 대상 제외).</li>
+            </ol>
+        </li>
+        <li><strong>★ 소방안전관리자 선임 자격 기준 (★실무 경력 수치)</strong>:
+            <ol>
+                <li><span class="highlight-green">★ 특급 선임 자격</span>: 소방설비기사 자격 취득 후 1급 대상물 소방안전관리자로 <span class="highlight-green">5년 이상</span> 실무경력 / 소방설비산업기사는 <span class="highlight-green">7년 이상</span> / 소방공무원 <span class="highlight-green">20년 이상</span> 근무 경력자.</li>
+                <li><span class="highlight-blue">★ 1급 선임 자격</span>: 소방설비기사(산업기사) 자격증 소지자 / 소방공무원 <span class="highlight-blue">7년 이상</span> 근무 경력자.</li>
+                <li><span class="highlight-red">★ 겸임 금지 규정</span>: 특급 및 1급 소방안전관리대상물의 소방안전관리자는 <span class="highlight-red">다른 안전관리자(전기·가스·위험물 등)와 겸임할 수 없음</span>. (독자 전담 의무화).</li>
+            </ol>
+        </li>
+        <li><strong>★ 소방안전관리 보조자 선임 세대수 기준 (★주관식 최다 기출)</strong>:
+            <ol>
+                <li><span class="highlight-red">★ 기본 선임 세대수</span>: 아파트의 경우 <span class="highlight-red">300세대 이상</span>인 경우 소방안전관리보조자 <span class="highlight-red">1명</span>을 선임하여야 함.</li>
+                <li><span class="highlight-purple">★ 추가 선임 공식</span>: <span class="highlight-purple">300세대를 초과할 때마다 1명 이상</span>을 추가로 선임할 것.
+                    <br>&rarr; <span class="highlight-blue">예시</span>: 300~599세대 = 1명 / 600~899세대 = 2명 / 900~1,199세대 = 3명.</li>
+            </ol>
+        </li>
+        <li><strong>★ 선임 기한 및 관할 소방서 신고 절차</strong>:
+            <ol>
+                <li><span class="highlight-red">★ 선임 기한</span>: 소방안전관리자를 선임하여야 하는 사유가 발생한 날(해임일·퇴직일 등)부터 <span class="highlight-red">30일 이내</span>에 선임할 것.</li>
+                <li><span class="highlight-blue">★ 신고 기한</span>: 소방안전관리자를 선임한 경우 선임한 날부터 <span class="highlight-blue">14일 이내</span>에 관할 소방본부장 또는 소방서장에게 신고할 것.</li>
+            </ol>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">소방안전관리 등급</th>
+                <th style="width: 45%;">아파트 대상 기준 및 선임 자격 수치</th>
+                <th style="width: 30%;">보조자 및 겸임 규정</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th><span class="highlight-red">특급 대상물</span></th>
+                <td>지하층 제외 <span class="highlight-red">50층 이상</span> 또는 높이 <span class="highlight-red">200 m 이상</span></td>
+                <td><span class="highlight-red">다른 안전관리자 겸임 불가</span></td>
+            </tr>
+            <tr>
+                <th><span class="highlight-blue">1급 대상물</span></th>
+                <td>지하층 제외 <span class="highlight-blue">30층 이상</span> 또는 높이 <span class="highlight-blue">120 m 이상</span></td>
+                <td><span class="highlight-red">다른 안전관리자 겸임 불가</span></td>
+            </tr>
+            <tr>
+                <th><span class="highlight-purple">2급 대상물</span></th>
+                <td>옥내소화전·스프링클러 설치 <span class="highlight-purple">의무관리대상 공동주택</span></td>
+                <td>다른 안전관리자 겸임 가능</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-green">보조자 선임</span></th>
+                <td>아파트 <span class="highlight-green">300세대 이상 1명</span> + 초과 <span class="highlight-green">300세대마다 1명</span> 추가</td>
+                <td>선임 <span class="highlight-red">30일 이내</span> / 신고 <span class="highlight-blue">14일 이내</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M3 3h18v18H3z"></path><path d="M8 12h8"></path></svg>
+        3. 소방안전관리자 9대 법정 업무 및 소방훈련·교육(소통피) 기술기준
+    </h2>
+    <ul>
+        <li><strong>★ 소방안전관리자 9대 법정 업무 (화재예방법 제24조)</strong>:
+            <ol>
+                <li><span class="highlight-blue">★ 소방계획서의 작성 및 시행</span> (※ 소방안전관리대상물 관계인 업무 중 소방안전관리자 전담).</li>
+                <li><span class="highlight-red">★ 자위소방대 및 초기대응체계의 구성·운영 및 교육</span> (※ 소방안전관리대상물 전담).</li>
+                <li><span class="highlight-purple">피난시설, 방화구획 및 방화시설의 관리</span>.</li>
+                <li><span class="highlight-green">소방시설이나 그 밖의 소방 관련 시설의 관리</span>.</li>
+                <li><span class="highlight-blue">★ 소방훈련 및 교육</span> (※ 소방안전관리대상물 전담).</li>
+                <li><span class="highlight-red">화기(火氣) 취급의 감독</span>.</li>
+                <li><span class="highlight-purple">★ 소방안전관리에 관한 업무수행에 관한 기록·유지</span> (※ 소방안전관리대상물 전담).</li>
+                <li><span class="highlight-green">화재발생 시 초기대응</span>.</li>
+                <li><span class="highlight-blue">그 밖에 소방안전관리에 필요한 업무</span>.</li>
+            </ol>
+            <div class="explanation">
+                <div class="explanation-title">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+                    💡 [암기 공식] 소방안전관리자 업무 두문자 암기법
+                </div>
+                &rarr; <strong>"개·자·피·설·훈·화·기·초"</strong> (계획서, 자위소방대, 피난시설, 소방시설, 훈련교육, 화기취급, 기록유지, 초기대응).
+                <br>&rarr; <span class="highlight-red">소방안전관리대상물에만 적용되는 4대 전담 업무</span>: <strong>개·자·훈·기</strong> (소방계획서, 자위소방대, 소방훈련/교육, 기록유지).
+            </div>
+        </li>
+        <li><strong>★ 근무자 및 거주자 소방훈련·교육 법정 기술기준 (★주관식 단골 출제)</strong>:
+            <ol>
+                <li><span class="highlight-red">★ 훈련 항목 3가지 공식 (소·통·피)</span>: 관계인은 근무자 및 거주자에게 <span class="highlight-red">소화, 통보, 피난</span> 등의 훈련과 소방안전관리에 필요한 교육을 실시하여야 함.</li>
+                <li><span class="highlight-blue">★ 훈련 횟수 및 보관 기간</span>: 소방훈련 및 교육은 <span class="highlight-blue">연 1회 이상</span> 실시하고, 그 실시 결과 기록부는 <span class="highlight-blue">2년간 보관</span>하여야 함.</li>
+                <li><span class="highlight-purple">★ 특급 및 1급 제출 의무</span>: 특급 및 1급 소방안전관리대상물의 관계인은 소방훈련 및 교육을 실시한 날부터 <span class="highlight-purple">30일 이내</span>에 그 결과를 관할 소방본부장 또는 소방서장에게 제출하여야 함.</li>
+            </ol>
+        </li>
+    </ul>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+            💡 [수험 핵심 팁] 제70강 실전 출제 포인트 & 함정 방지 최종 체크
+        </div>
+        <ul>
+            <li><strong>NFPC 608 수치 총정리</strong>: 아파트 소화기 = <span class="highlight-blue">100 m² 마다 1단위</span>. 스프링클러 = 기준개수 <span class="highlight-red">10개</span> (저수량 <span class="highlight-red">16 m³</span>), 세대 수평거리 = <span class="highlight-purple">2.6 m 이하</span>, 창문 헤드 = <span class="highlight-green">0.6 m 이내</span> (드렌처/90cm 내화벽/발코니 제외). 거실 = <span class="highlight-blue">조기반응형 헤드</span>, 세대 거실 = <span class="highlight-red">연기감지기</span>, 확성기 = <span class="highlight-purple">2 W 이상</span>.</li>
+            <li><strong>아파트 소방안전관리 등급</strong>: 특급 = 지하층 제외 <span class="highlight-red">50층 이상 또는 200 m 이상</span> / 1급 = 지하층 제외 <span class="highlight-blue">30층 이상 또는 120 m 이상</span> / 2급 = <span class="highlight-purple">의무관리대상 공동주택</span>.</li>
+            <li><strong>소방안전관리 보조자</strong>: 아파트 <span class="highlight-green">300세대 이상 1명</span> + 초과 <span class="highlight-green">300세대마다 1명 추가</span>.</li>
+            <li><strong>선임 / 신고 / 보관 기간</strong>: 선임 = 사유 발생 <span class="highlight-red">30일 이내</span> / 선임 신고 = 선임일 <span class="highlight-blue">14일 이내</span> / 훈련 기록부 보관 = <span class="highlight-purple">2년</span> / 특급·1급 훈련 결과 제출 = <span class="highlight-green">30일 이내</span>.</li>
+            <li><strong>소방훈련 3대 요소</strong>: <span class="highlight-red">소화, 통보, 피난 (소·통·피)</span>.</li>
+        </ul>
+    </div>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>주관식 단답형 및 빈칸 채우기 실전 훈련</h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡, ㉢)에 들어갈 알맞은 핵심 용어나 법정 수치, 단위를 아래 빈칸에 직접 작성해 보십시오.</p>
+
+    <ol class="quiz-list">
+        <li>
+            공동주택의 화재안전성능기준(NFPC 608)상 소화기는 바닥면적 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )제곱미터마다 1단위 이상의 능력단위를 기준으로 설치하여야 한다.
+        </li>
+        <li>
+            아파트등의 세대에 설치하는 옥내소화전설비는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 방식으로 설치하여야 하고, 복층형 구조인 경우 출입구가 없는 층에 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )(을)를 설치하지 아니할 수 있다.
+        </li>
+        <li>
+            공동주택의 화재안전성능기준(NFPC 608)상 폐쇄형 스프링클러헤드를 사용하는 아파트등의 기준개수는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )개이고, 수원은 기준개수에 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )세제곱미터를 곱한 양 이상을 확보하여야 한다.
+        </li>
+        <li>
+            아파트등의 각 동이 주차장으로 서로 연결된 구조인 경우 해당 주차장 부분의 스프링클러헤드 기준개수는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )개로 한다.
+        </li>
+        <li>
+            아파트등의 세대 내에 스프링클러헤드를 설치하는 경우 각 부분으로부터 하나의 스프링클러헤드까지의 수평거리는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이하이어야 한다.
+        </li>
+        <li>
+            스프링클러헤드는 외벽에 설치된 창문에서 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이내에 배치하되, 창문에 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )설비가 설치되었거나 창문 간 수직 이격거리가 내화구조로 ( ㉢&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )cm 이상인 경우에는 예외로 한다.
+        </li>
+        <li>
+            공동주택 거실에는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 스프링클러헤드를 설치하여야 하고, 세대 내 거실에는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )감지기를 설치하여야 한다.
+        </li>
+        <li>
+            비상방송설비의 확성기는 각 세대마다 설치하되, 아파트등의 실내에 설치하는 확성기 음성입력은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )W 이상이어야 한다.
+        </li>
+        <li>
+            공동주택관리법상 의무관리대상 공동주택의 피난기구 설치 시 하나의 관리주체가 관리하는 구역마다 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 1개 이상을 추가로 설치하여야 한다.
+        </li>
+        <li>
+            아파트등의 연결송수관설비 및 비상콘센트는 계단의 출입구로부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이내에 설치하고, 해당 층의 각 부분까지 수평거리가 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터를 초과하는 경우 추가 설치한다.
+        </li>
+        <li>
+            아파트등의 연결송수관 방수구는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )층과 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )층에는 설치하지 아니할 수 있으며, 방수구 형상은 ( ㉢&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )형으로 설치할 수 있다.
+        </li>
+        <li>
+            층수가 50층 이상이거나 높이가 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이상인 아파트는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 소방안전관리대상물에 해당한다.
+        </li>
+        <li>
+            층수가 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )층 이상이거나 높이가 120미터 이상인 아파트는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 소방안전관리대상물에 해당한다.
+        </li>
+        <li>
+            소방설비기사 자격을 취득한 후 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년 이상 1급 소방안전관리대상물의 소방안전관리자로 근무한 실무경력이 있는 경우 특급 소방안전관리자 자격이 부여된다.
+        </li>
+        <li>
+            아파트의 경우 세대수가 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )세대 이상인 경우에는 소방안전관리보조자를 1명 선임하여야 하며, ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )세대를 초과할 때마다 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )명 이상을 추가로 선임하여야 한다.
+        </li>
+        <li>
+            소방안전관리자를 선임하여야 하는 사유가 발생한 날부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이내에 선임하여야 하고, 선임한 날부터 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이내에 관할 소방본부장 또는 소방서장에게 신고하여야 한다.
+        </li>
+        <li>
+            특정소방대상물의 소방안전관리자 9대 업무 중 특정소방대상물 관계인은 하지 않고 소방안전관리대상물의 경우에만 적용되는 업무 4가지는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )의 작성 및 시행, ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 및 초기대응체계의 구성·운영·교육, 소방훈련 및 교육, 소방안전관리에 관한 업무수행의 ( ㉢&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )·유지이다.
+        </li>
+        <li>
+            특급 및 1급 소방안전관리대상물은 다른 안전관리자가 소방안전관리자를 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )할 수 없다.
+        </li>
+        <li>
+            소방안전관리대상물의 관계인은 근무자 및 거주자에게 소화, 통보, ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 등의 소방훈련 및 교육을 연 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )회 이상 실시하여야 한다.
+        </li>
+        <li>
+            소방훈련 및 교육 실시 결과 기록부는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년간 보관하여야 하고, 특급 및 1급 소방안전관리대상물의 관계인은 훈련 실시 후 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이내에 소방본부장 또는 소방서장에게 결과를 제출하여야 한다.
+        </li>
+    </ol>
+
+    <div style="font-size: 9.5pt; color: #666666; margin-top: 30px; padding: 15px; border-top: 1px dashed #666666; line-height: 1.8;">
+        <strong style="display: block; margin-bottom: 10px; color: #333333;">[제70강 주관식 단답형 정답 리스트]</strong>
+        <div class="answer-grid">
+            <div><strong>1.</strong> ㉠ 100</div>
+            <div><strong>2.</strong> ㉠ 호스릴(hose reel), ㉡ 방수구</div>
+            <div><strong>3.</strong> ㉠ 10, ㉡ 1.6</div>
+            <div><strong>4.</strong> ㉠ 30</div>
+            <div><strong>5.</strong> ㉠ 2.6</div>
+            <div><strong>6.</strong> ㉠ 0.6, ㉡ 드렌처, ㉢ 90</div>
+            <div><strong>7.</strong> ㉠ 조기반응형, ㉡ 연기</div>
+            <div><strong>8.</strong> ㉠ 2</div>
+            <div><strong>9.</strong> ㉠ 공기안전매트</div>
+            <div><strong>10.</strong> ㉠ 5, ㉡ 50</div>
+            <div><strong>11.</strong> ㉠ 1(또는 피난층), ㉡ 2(또는 직상층), ㉢ 단구</div>
+            <div><strong>12.</strong> ㉠ 200, ㉡ 특급</div>
+            <div><strong>13.</strong> ㉠ 30, ㉡ 1급</div>
+            <div><strong>14.</strong> ㉠ 5</div>
+            <div><strong>15.</strong> ㉠ 300, ㉡ 1</div>
+            <div><strong>16.</strong> ㉠ 30, ㉡ 14</div>
+            <div><strong>17.</strong> ㉠ 소방계획서, ㉡ 자위소방대, ㉢ 기록</div>
+            <div><strong>18.</strong> ㉠ 겸임</div>
+            <div><strong>19.</strong> ㉠ 피난, ㉡ 1</div>
+            <div><strong>20.</strong> ㉠ 2, ㉡ 30</div>
+        </div>
+    </div>
+
+</body>
+</html>
