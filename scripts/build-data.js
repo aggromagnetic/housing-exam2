@@ -124,26 +124,56 @@ function parseHtmlNote(fileObj) {
             vm.runInNewContext('data = ' + examDataMatch[1].replace(/;\s*$/, ''), sandbox);
             if (Array.isArray(sandbox.data)) {
                 sandbox.data.forEach((item, itemIdx) => {
-                    // Exclude multiple-choice questions, keep only subjective questions
-                    if (item.type === 'multiple_choice') return;
+                    const typeLower = String(item.type || '').toLowerCase();
+                    const isMC = typeLower.includes('mc') || typeLower.includes('choice') || Array.isArray(item.options);
+                    if (isMC) return; // Exclude multiple-choice
 
                     const qNum = item.id || (itemIdx + 1);
-                    let qText = item.question || '';
-                    let ansRaw = String(item.answer || '').trim();
+                    let qText = item.question || item.prompt || item.title || '';
+                    if (item.box) {
+                        let boxText = cleanText(item.box);
+                        if (boxText) {
+                            qText = qText ? (qText + '\n\n' + boxText) : boxText;
+                        }
+                    }
 
-                    quizzes.push({
-                        id: `${fileObj.fileName.replace(/\.html$/i, '')}_mock_${qNum}`,
-                        num: qNum,
-                        question: qText,
-                        answerRaw: ansRaw,
-                        subject: subject.includes('관계법규') ? '관계법규' : '관리실무',
-                        lectureNum: lectureNum,
-                        lectureTitle: h1Text,
-                        noteFileName: fileObj.relativePath,
-                        anchorId: `q-${qNum}`,
-                        explanation: item.explanation || '',
-                        isMockExam: true
-                    });
+                    // Extract answerRaw
+                    let ansRaw = '';
+                    if (item.answerText && String(item.answerText).trim()) {
+                        ansRaw = String(item.answerText).trim();
+                    } else if (item.blanks && Array.isArray(item.blanks)) {
+                        const parts = item.blanks.map(b => {
+                            const sym = b.key || b.symbol || b.label || '';
+                            let ans = '';
+                            if (Array.isArray(b.correct) && b.correct.length > 0) {
+                                ans = b.correct[0];
+                            } else if (Array.isArray(b.answers) && b.answers.length > 0) {
+                                ans = b.answers[0];
+                            } else if (b.answer) {
+                                ans = String(b.answer);
+                            }
+                            return sym ? `${sym} ${ans}` : ans;
+                        }).filter(Boolean);
+                        ansRaw = parts.join(' | ');
+                    } else if (item.answer !== undefined && item.answer !== null) {
+                        ansRaw = String(item.answer).trim();
+                    }
+
+                    if (qText && qText.trim()) {
+                        quizzes.push({
+                            id: `${fileObj.fileName.replace(/\.html$/i, '')}_mock_${qNum}`,
+                            num: qNum,
+                            question: qText.trim(),
+                            answerRaw: ansRaw,
+                            subject: subject.includes('관계법규') ? '관계법규' : '관리실무',
+                            lectureNum: lectureNum,
+                            lectureTitle: h1Text,
+                            noteFileName: fileObj.relativePath,
+                            anchorId: `q-${qNum}`,
+                            explanation: item.explanation || '',
+                            isMockExam: true
+                        });
+                    }
                 });
             }
         } catch (err) {
