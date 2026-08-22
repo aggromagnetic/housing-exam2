@@ -145,7 +145,11 @@ function parseHtmlNote(fileObj) {
                         const parts = item.blanks.map(b => {
                             const sym = b.key || b.symbol || b.label || '';
                             let ans = '';
-                            if (Array.isArray(b.correct) && b.correct.length > 0) {
+                            if (b.displayAns) {
+                                ans = String(b.displayAns).trim();
+                            } else if (Array.isArray(b.accepts) && b.accepts.length > 0) {
+                                ans = b.accepts[0];
+                            } else if (Array.isArray(b.correct) && b.correct.length > 0) {
                                 ans = b.correct[0];
                             } else if (Array.isArray(b.answers) && b.answers.length > 0) {
                                 ans = b.answers[0];
@@ -155,6 +159,8 @@ function parseHtmlNote(fileObj) {
                             return sym ? `${sym} ${ans}` : ans;
                         }).filter(Boolean);
                         ansRaw = parts.join(' | ');
+                    } else if (item.keyword && String(item.keyword).trim()) {
+                        ansRaw = String(item.keyword).trim();
                     } else if (item.answer !== undefined && item.answer !== null) {
                         ansRaw = String(item.answer).trim();
                     }
@@ -252,7 +258,7 @@ function parseHtmlNote(fileObj) {
         // 3) Universal Global Single-line / Multi-line Pattern Matcher (1. ans1  2. ans2  3. ans3)
         if (Object.keys(answersMap).length === 0) {
             const cleanAnsBlock = cleanText(rawAnsBlock).replace(/\s+/g, ' ');
-            const globalMatches = [...cleanAnsBlock.matchAll(/(\d+)\.\s*(.*?)(?=(?:\s+\d+\.|$))/g)];
+            const globalMatches = [...cleanAnsBlock.matchAll(/(\d+)\.\s*(.*?)(?=(?:\s+\d+\.(?!\d)|$))/g)];
             globalMatches.forEach(m => {
                 const qNum = parseInt(m[1], 10);
                 const ansContent = m[2].trim().replace(/^[\s,·]+|[\s,·]+$/g, '');
