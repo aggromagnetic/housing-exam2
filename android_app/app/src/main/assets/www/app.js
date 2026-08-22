@@ -779,7 +779,14 @@ function renderQuizQuestion() {
     document.getElementById('quiz-progress-fill').style.width = `${progress}%`;
 
     document.getElementById('quiz-step-indicator').innerText = `문제 ${quizCurrentIndex + 1} / ${quizQuestions.length}`;
-    document.getElementById('quiz-subject-tag').innerText = `${currentQ.subject} (${currentQ.lectureTitle.split('.')[0] || ''})`;
+    const isRelLaw = currentQ.subject.includes('관계법규');
+    const titleColor = isRelLaw ? '#34d399' : '#60a5fa';
+
+    const subjTag = document.getElementById('quiz-subject-tag');
+    if (subjTag) {
+        subjTag.innerText = `${currentQ.subject} (${currentQ.lectureTitle.split('.')[0] || ''})`;
+        subjTag.style.color = titleColor;
+    }
 
     const savedAns = userAnswers[quizCurrentIndex] || '';
 
@@ -805,13 +812,13 @@ function renderQuizQuestion() {
         optionsHtml += '</div>';
 
         document.getElementById('quiz-question-text').innerHTML = `
-            <div class="quiz-prompt-header">[${escapeHtml(currentQ.lectureTitle)}] <span style="color: #34d399; font-size: 11px; margin-left: 6px; font-weight: normal;">• 객관식 (보기 클릭 선택)</span></div>
+            <div class="quiz-prompt-header ${isRelLaw ? 'rel' : 'prac'}" style="color: ${titleColor};">[${escapeHtml(currentQ.lectureTitle)}] <span style="color: #34d399; font-size: 11px; margin-left: 6px; font-weight: normal;">• 객관식 (보기 클릭 선택)</span></div>
             <div class="quiz-prompt-title">${escapeHtml(parsedMC.prompt)}</div>
             ${optionsHtml}
         `;
     } else {
         document.getElementById('quiz-question-text').innerHTML = `
-            <div class="quiz-prompt-header">[${escapeHtml(currentQ.lectureTitle)}]</div>
+            <div class="quiz-prompt-header ${isRelLaw ? 'rel' : 'prac'}" style="color: ${titleColor};">[${escapeHtml(currentQ.lectureTitle)}]</div>
             <div class="quiz-prompt-title">${escapeHtml(currentQ.question)}</div>
         `;
     }
@@ -871,15 +878,18 @@ function renderQuizQuestion() {
             inp.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter') {
                     e.preventDefault();
-                    if (idx < inputs.length - 1) {
-                        inputs[idx + 1].focus();
+                    const box = document.getElementById('quiz-instant-answer-box');
+                    if (box && box.style.display !== 'none' && box.style.display !== '') {
+                        nextQuizQuestion();
+                        return;
+                    }
+
+                    // Check if other empty inputs remain
+                    const emptyInputs = Array.from(inputs).filter(i => !i.value.trim());
+                    if (emptyInputs.length > 0) {
+                        emptyInputs[0].focus();
                     } else {
-                        const box = document.getElementById('quiz-instant-answer-box');
-                        if (box && box.style.display === 'none') {
-                            checkCurrentQuestionAnswer();
-                        } else {
-                            nextQuizQuestion();
-                        }
+                        checkCurrentQuestionAnswer();
                     }
                 }
             });
@@ -894,7 +904,7 @@ function renderQuizQuestion() {
         document.getElementById('quiz-input-label').innerText = '✍️ 정답 입력';
         setupPenCanvases(symbols);
         container.innerHTML = `
-            <input type="text" id="quiz-answer-input" class="quiz-text-input" placeholder="정답을 입력하세요" value="${escapeHtml(typeof savedAns === 'string' ? savedAns : '')}" autocomplete="off" onkeydown="handleQuizEnter(event)">
+            <input type="text" id="quiz-answer-input" class="quiz-text-input" placeholder="정답을 입력하고 Enter를 누르세요" value="${escapeHtml(typeof savedAns === 'string' ? savedAns : '')}" autocomplete="off" onkeydown="handleQuizEnter(event)">
         `;
         const singleInp = document.getElementById('quiz-answer-input');
         if (quizInputMode === 'text') {
@@ -1759,8 +1769,9 @@ function checkCurrentQuestionAnswer() {
 
 function handleQuizEnter(e) {
     if (e.key === 'Enter') {
+        e.preventDefault();
         const box = document.getElementById('quiz-instant-answer-box');
-        if (box && box.style.display === 'none') {
+        if (!box || box.style.display === 'none' || box.style.display === '') {
             checkCurrentQuestionAnswer();
         } else {
             nextQuizQuestion();

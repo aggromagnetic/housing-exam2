@@ -562,7 +562,16 @@ body {
     margin-bottom: 8px;
     font-weight: 700;
     color: #60a5fa;
-    font-size: 13px;
+    font-size: 13.5px;
+    letter-spacing: -0.2px;
+}
+
+.quiz-prompt-header.rel {
+    color: #34d399;
+}
+
+.quiz-prompt-header.prac {
+    color: #60a5fa;
 }
 
 .quiz-prompt-title {
