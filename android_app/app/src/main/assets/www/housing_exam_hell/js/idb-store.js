@@ -268,6 +268,50 @@ export const IDBStore = {
     },
 
     /**
+     * Save custom question edit
+     */
+    async saveQuestionEdit(qKey, editData) {
+        try {
+            const map = JSON.parse(localStorage.getItem('housing_exam_custom_edits') || '{}');
+            map[qKey] = {
+                ...editData,
+                editedAt: new Date().toISOString()
+            };
+            localStorage.setItem('housing_exam_custom_edits', JSON.stringify(map));
+        } catch (e) {}
+    },
+
+    /**
+     * Get custom question edit
+     */
+    async getQuestionEdit(qKey) {
+        try {
+            const map = JSON.parse(localStorage.getItem('housing_exam_custom_edits') || '{}');
+            return map[qKey] || null;
+        } catch (e) { return null; }
+    },
+
+    /**
+     * Get all custom question edits
+     */
+    async getAllQuestionEditsMap() {
+        try {
+            return JSON.parse(localStorage.getItem('housing_exam_custom_edits') || '{}');
+        } catch (e) { return {}; }
+    },
+
+    /**
+     * Delete custom question edit (reset to original)
+     */
+    async deleteQuestionEdit(qKey) {
+        try {
+            const map = JSON.parse(localStorage.getItem('housing_exam_custom_edits') || '{}');
+            delete map[qKey];
+            localStorage.setItem('housing_exam_custom_edits', JSON.stringify(map));
+        } catch (e) {}
+    },
+
+    /**
      * Reset all learning statistics
      */
     async resetAllStats() {

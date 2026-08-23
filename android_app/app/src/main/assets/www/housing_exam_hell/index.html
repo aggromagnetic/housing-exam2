@@ -185,9 +185,17 @@
                 <div id="explanation-card" class="explanation-card">
                     <div class="exp-header">
                         <span class="exp-title"><i class="fa-solid fa-lightbulb text-amber-400"></i> 정답 및 상세 해설</span>
-                        <button id="btn-retry-q" class="btn-override" style="display: none;" title="오답 기록은 유지한 채 다시 풀기">
-                            <i class="fa-solid fa-rotate-left"></i> 이 문제 다시 풀기
-                        </button>
+                        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                            <button id="btn-copy-question-ai" class="btn-ctrl-sm" title="문제·보기·정답·해설을 복사하여 AI(Gemini 등) 검증에 활용합니다.">
+                                <i class="fa-solid fa-copy"></i> 복사
+                            </button>
+                            <button id="btn-edit-question" class="btn-ctrl-sm" title="문제/정답/해설 오류를 직접 수정합니다.">
+                                <i class="fa-solid fa-pen-to-square"></i> 수정
+                            </button>
+                            <button id="btn-retry-q" class="btn-override" style="display: none;" title="오답 기록은 유지한 채 다시 풀기">
+                                <i class="fa-solid fa-rotate-left"></i> 다시 풀기
+                            </button>
+                        </div>
                     </div>
                     <!-- Prominent Target Correct Answer Display -->
                     <div id="exp-answer-box" class="exp-answer-box"></div>
@@ -322,6 +330,73 @@
             <div id="wrong-items-container" class="wrong-items-list" style="display: flex; flex-direction: column; gap: 10px; max-height: 60vh; overflow-y: auto;">
                 <!-- Dynamically rendered list items -->
             </div>
+        </div>
+    </div>
+
+    <!-- Problem Edit Modal (Custom Question Override) -->
+    <div id="modal-edit-question" class="modal-overlay">
+        <div class="modal-card" style="max-width: 650px; max-height: 90vh; overflow-y: auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                <h3 style="font-size: 1.15rem; font-weight: 800;">
+                    <i class="fa-solid fa-pen-to-square text-sky-400"></i> 문제·정답·해설 직접 수정
+                </h3>
+                <button class="btn-close-modal btn-icon"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">
+                개정 법령 반영 또는 오탈자가 있는 경우 직접 수정하여 브라우저에 영구 저장할 수 있습니다.
+            </p>
+
+            <form id="form-edit-question">
+                <input type="hidden" id="edit-q-key">
+                
+                <div class="edit-form-group">
+                    <label class="edit-form-label">문제 지문 (Title)</label>
+                    <textarea id="edit-q-title" class="edit-form-textarea" rows="3" required></textarea>
+                </div>
+
+                <div class="edit-form-group">
+                    <label class="edit-form-label">조건/지문 박스 (Passage - 없을 경우 비워둠)</label>
+                    <textarea id="edit-q-passage" class="edit-form-textarea" rows="3"></textarea>
+                </div>
+
+                <div id="edit-options-group" class="edit-form-group">
+                    <label class="edit-form-label">객관식 보기 (1~5번)</label>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <input type="text" id="edit-opt-1" class="edit-form-input" placeholder="1번 보기">
+                        <input type="text" id="edit-opt-2" class="edit-form-input" placeholder="2번 보기">
+                        <input type="text" id="edit-opt-3" class="edit-form-input" placeholder="3번 보기">
+                        <input type="text" id="edit-opt-4" class="edit-form-input" placeholder="4번 보기">
+                        <input type="text" id="edit-opt-5" class="edit-form-input" placeholder="5번 보기">
+                    </div>
+                </div>
+
+                <div class="edit-form-group">
+                    <label class="edit-form-label">정답 (객관식: 1~5 숫자, 주관식: 키=정답 형태)</label>
+                    <input type="text" id="edit-q-answer" class="edit-form-input" required>
+                </div>
+
+                <div class="edit-form-group">
+                    <label class="edit-form-label">상세 해설</label>
+                    <textarea id="edit-q-explanation" class="edit-form-textarea" rows="4"></textarea>
+                </div>
+
+                <div class="edit-form-group">
+                    <label class="edit-form-label">일타 팁 (선택)</label>
+                    <input type="text" id="edit-q-tip" class="edit-form-input" placeholder="예: 암기 비법 or 관련 조문">
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 20px;">
+                    <button type="button" id="btn-reset-original-q" class="btn-ctrl" style="background: rgba(244,63,94,0.15); border-color: #F43F5E; color: #FDA4AF;">
+                        <i class="fa-solid fa-rotate-left"></i> 원본 복구
+                    </button>
+                    <div style="display: flex; gap: 10px;">
+                        <button type="button" class="btn-close-modal btn-ctrl">취소</button>
+                        <button type="submit" class="btn-ctrl btn-primary">
+                            <i class="fa-solid fa-floppy-disk"></i> 저장하기
+                        </button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 

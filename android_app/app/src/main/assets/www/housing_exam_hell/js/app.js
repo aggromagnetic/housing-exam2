@@ -205,6 +205,38 @@
                     createdAt: new Date().toISOString()
                 });
             } catch (e) {}
+        },
+
+        async saveQuestionEdit(qKey, editData) {
+            try {
+                const map = JSON.parse(localStorage.getItem('housing_exam_custom_edits') || '{}');
+                map[qKey] = {
+                    ...editData,
+                    editedAt: new Date().toISOString()
+                };
+                localStorage.setItem('housing_exam_custom_edits', JSON.stringify(map));
+            } catch (e) {}
+        },
+
+        async getQuestionEdit(qKey) {
+            try {
+                const map = JSON.parse(localStorage.getItem('housing_exam_custom_edits') || '{}');
+                return map[qKey] || null;
+            } catch (e) { return null; }
+        },
+
+        async getAllQuestionEditsMap() {
+            try {
+                return JSON.parse(localStorage.getItem('housing_exam_custom_edits') || '{}');
+            } catch (e) { return {}; }
+        },
+
+        async deleteQuestionEdit(qKey) {
+            try {
+                const map = JSON.parse(localStorage.getItem('housing_exam_custom_edits') || '{}');
+                delete map[qKey];
+                localStorage.setItem('housing_exam_custom_edits', JSON.stringify(map));
+            } catch (e) {}
         }
     };
 
@@ -486,6 +518,30 @@
 
             const all = [...mcMatches, ...saMatches];
             return all.sort(() => Math.random() - 0.5);
+        },
+
+        generateInfiniteHellSet(statsMap = {}, excludeKeysSet = new Set()) {
+            const lawMC = this.getQuestionPool('관계법규', 'choice');
+            const lawSA = this.getQuestionPool('관계법규', 'short');
+            const gwanriMC = this.getQuestionPool('관리실무', 'choice');
+            const gwanriSA = this.getQuestionPool('관리실무', 'short');
+
+            // 20 관계법규 (12 MC + 8 SA) + 20 관리실무 (12 MC + 8 SA) = 40 questions
+            const pickedLawMC = this.weightedPick(lawMC, statsMap, 12, excludeKeysSet);
+            const pickedLawSA = this.weightedPick(lawSA, statsMap, 8, excludeKeysSet);
+            const pickedGwanriMC = this.weightedPick(gwanriMC, statsMap, 12, excludeKeysSet);
+            const pickedGwanriSA = this.weightedPick(gwanriSA, statsMap, 8, excludeKeysSet);
+
+            const combined = [...pickedLawMC, ...pickedLawSA, ...pickedGwanriMC, ...pickedGwanriSA];
+            
+            if (combined.length < 40) {
+                const allPool = [...lawMC, ...lawSA, ...gwanriMC, ...gwanriSA];
+                const usedKeys = new Set([...excludeKeysSet, ...combined.map(q => q.qKey)]);
+                const remainder = this.weightedPick(allPool, statsMap, 40 - combined.length, usedKeys);
+                combined.push(...remainder);
+            }
+
+            return this.shuffleWithAntiClumping(combined);
         },
 
         getChapterList(subject) {
@@ -827,6 +883,7 @@
         results: [],
         firstAttemptResults: [],
         statsMap: {},
+        customEdits: {},
 
         infiniteSetCount: 1,
         infiniteUsedKeys: new Set(),
@@ -840,6 +897,22 @@
     };
 
     let elements = {};
+
+    function applyCustomEdits(q) {
+        if (!q || !q.qKey || !state.customEdits) return q;
+        const custom = state.customEdits[q.qKey];
+        if (custom) {
+            if (custom.question !== undefined) q.question = custom.question;
+            if (custom.passage !== undefined) q.passage = custom.passage;
+            if (custom.options !== undefined) q.options = [...custom.options];
+            if (custom.answer !== undefined) q.answer = custom.answer;
+            if (custom.answers !== undefined) q.answers = { ...custom.answers };
+            if (custom.explanation !== undefined) q.explanation = custom.explanation;
+            if (custom.tip !== undefined) q.tip = custom.tip;
+            q.isCustomEdited = true;
+        }
+        return q;
+    }
 
     function initDOMElements() {
         elements = {
@@ -883,6 +956,7 @@
                 partSelect: document.getElementById('modal-part-select'),
                 pinAuth: document.getElementById('modal-pin-auth'),
                 wrongManager: document.getElementById('modal-wrong-manager'),
+                editQuestion: document.getElementById('modal-edit-question'),
                 omrGrid: document.getElementById('omr-grid-container'),
                 partList: document.getElementById('part-list-container'),
                 wrongList: document.getElementById('wrong-items-container'),
@@ -934,7 +1008,7 @@
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
-                elements.header.timerBadge.classList.remove('warning');
+                elements.header.timerBadge.classList.remove('warning', 'overtime-burning');
             }
             if (elements.header.bloodBar) {
                 elements.header.bloodBar.style.width = '0%';
@@ -991,18 +1065,33 @@
         if (modeKey === 'infinite') {
             state.infiniteSetCount = 1;
             state.infiniteUsedKeys.clear();
-            state.questions = ExamEngine.generateExamSet(state.subject, state.statsMap, state.infiniteUsedKeys);
-            state.questions.forEach(q => state.infiniteUsedKeys.add(q.qKey));
-            elements.header.modeTitle.innerHTML = `<i class="fa-solid fa-skull"></i> 헬 모드 (무한 풀이)`;
+            // 헬 모드: 과목(관계법규+관리실무) 및 유형(객관식+주관식) 전격 융합 40문항 셔플 세트
+            state.questions = ExamEngine.generateInfiniteHellSet(state.statsMap, state.infiniteUsedKeys);
+            state.questions.forEach(q => {
+                applyCustomEdits(q);
+                state.infiniteUsedKeys.add(q.qKey);
+            });
+            if (elements.header.modeTitle) {
+                elements.header.modeTitle.innerHTML = `<i class="fa-solid fa-skull text-rose-500"></i> 무한 헬 모드 (세트 1: 1~40번)`;
+            }
         } else if (modeKey === 'review') {
             state.questions = ExamEngine.generateReviewSet(state.subject, state.statsMap, 40);
-            elements.header.modeTitle.innerHTML = `<i class="fa-solid fa-rotate-left"></i> 오답 집중 복습`;
+            state.questions.forEach(applyCustomEdits);
+            if (elements.header.modeTitle) {
+                elements.header.modeTitle.innerHTML = `<i class="fa-solid fa-rotate-left text-orange-400"></i> 오답 집중 복습 (40문항)`;
+            }
         } else if (modeKey === 'mock') {
             state.questions = ExamEngine.generateExamSet(state.subject, state.statsMap);
-            elements.header.modeTitle.innerHTML = `<i class="fa-solid fa-clock"></i> 실전 모의고사 (40분)`;
+            state.questions.forEach(applyCustomEdits);
+            if (elements.header.modeTitle) {
+                elements.header.modeTitle.innerHTML = `<i class="fa-solid fa-clock text-sky-400"></i> 실전 모의고사 (40분)`;
+            }
         } else if (modeKey === 'part') {
             state.questions = ExamEngine.generatePartSet(state.subject, partPattern);
-            elements.header.modeTitle.innerHTML = `<i class="fa-solid fa-layer-group"></i> 파트별 전수 완독`;
+            state.questions.forEach(applyCustomEdits);
+            if (elements.header.modeTitle) {
+                elements.header.modeTitle.innerHTML = `<i class="fa-solid fa-layer-group text-purple-400"></i> 파트별 전수 완독`;
+            }
         }
 
         if (state.questions.length === 0) {
@@ -1019,30 +1108,39 @@
         clearInterval(state.timerInterval);
         state.elapsedSeconds = 0;
         state.mockRemainingSeconds = 40 * 60;
+        if (elements.header.timerBadge) {
+            elements.header.timerBadge.classList.remove('warning', 'overtime-burning');
+        }
 
         const updateTimerDisplay = () => {
             if (isCountdown) {
                 state.mockRemainingSeconds--;
-                const mins = Math.floor(state.mockRemainingSeconds / 60);
-                const secs = state.mockRemainingSeconds % 60;
-                elements.header.timerBadge.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+                if (state.mockRemainingSeconds >= 0) {
+                    const mins = Math.floor(state.mockRemainingSeconds / 60);
+                    const secs = state.mockRemainingSeconds % 60;
+                    elements.header.timerBadge.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+                    elements.header.timerBadge.classList.remove('overtime-burning');
 
-                if (state.mockRemainingSeconds <= 300) {
-                    elements.header.timerBadge.classList.add('warning');
+                    if (state.mockRemainingSeconds <= 300) {
+                        elements.header.timerBadge.classList.add('warning');
+                    } else {
+                        elements.header.timerBadge.classList.remove('warning');
+                    }
                 } else {
+                    // Overtime: -MM:SS with burning flame animation (no forced quit)
+                    const overSecs = Math.abs(state.mockRemainingSeconds);
+                    const overMins = Math.floor(overSecs / 60);
+                    const overRemSecs = overSecs % 60;
+                    elements.header.timerBadge.textContent = `-${String(overMins).padStart(2, '0')}:${String(overRemSecs).padStart(2, '0')}`;
                     elements.header.timerBadge.classList.remove('warning');
-                }
-
-                if (state.mockRemainingSeconds <= 0) {
-                    clearInterval(state.timerInterval);
-                    finishSession();
+                    elements.header.timerBadge.classList.add('overtime-burning');
                 }
             } else {
                 state.elapsedSeconds++;
                 const mins = Math.floor(state.elapsedSeconds / 60);
                 const secs = state.elapsedSeconds % 60;
                 elements.header.timerBadge.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-                elements.header.timerBadge.classList.remove('warning');
+                elements.header.timerBadge.classList.remove('warning', 'overtime-burning');
             }
         };
 
@@ -1184,12 +1282,12 @@
             if (state.results[index] === undefined) {
                 const userAns = state.userAnswers[index];
                 if (userAns !== undefined && userAns !== null && userAns !== '') {
-                    elements.quiz.btnToggleExp.innerHTML = `<i class="fa-solid fa-circle-check text-sky-400"></i> ${userAns}번 정답 확인 (Space)`;
+                    elements.quiz.btnToggleExp.innerHTML = `<i class="fa-solid fa-circle-check text-sky-400"></i> ${userAns}번 정답 확인`;
                 } else {
-                    elements.quiz.btnToggleExp.innerHTML = `<i class="fa-solid fa-circle-check text-sky-400"></i> 정답 확인 (Space)`;
+                    elements.quiz.btnToggleExp.innerHTML = `<i class="fa-solid fa-circle-check text-sky-400"></i> 정답 확인`;
                 }
             } else {
-                elements.quiz.btnToggleExp.innerHTML = `<i class="fa-solid fa-lightbulb text-amber-400"></i> 정답·해설 (Space)`;
+                elements.quiz.btnToggleExp.innerHTML = `<i class="fa-solid fa-lightbulb text-amber-400"></i> 정답·해설`;
             }
         }
 
@@ -1200,6 +1298,7 @@
         elements.quiz.optionsContainer.innerHTML = '';
         const userSelected = state.userAnswers[index];
         const res = state.results[index];
+        const isNegativeQuestion = /옳지\s*않|틀린|아닌|잘못된|어긋난/i.test(q.question || q.title || '');
 
         (q.options || []).forEach((optText, optIdx) => {
             const choiceNum = optIdx + 1;
@@ -1207,9 +1306,16 @@
             optBtn.className = 'option-item';
             if (userSelected === choiceNum) optBtn.classList.add('selected');
 
+            let textClass = 'opt-text';
+            let extraBadge = '';
+
             if (res !== undefined) {
                 if (choiceNum === Number(q.answer)) {
                     optBtn.classList.add('correct');
+                    if (isNegativeQuestion) {
+                        textClass += ' false-statement-text';
+                        extraBadge = '<span class="false-text-badge">⚠️ 틀린 지문</span>';
+                    }
                 } else if (userSelected === choiceNum && !res.isCorrect) {
                     optBtn.classList.add('wrong');
                 }
@@ -1217,7 +1323,7 @@
 
             optBtn.innerHTML = `
                 <span class="opt-num">${choiceNum}</span>
-                <span class="opt-text">${optText}</span>
+                <span class="${textClass}">${optText}${extraBadge}</span>
             `;
 
             optBtn.addEventListener('click', () => {
@@ -1289,7 +1395,7 @@
         });
 
         if (elements.quiz.btnToggleExp) {
-            elements.quiz.btnToggleExp.innerHTML = `<i class="fa-solid fa-circle-check text-sky-400"></i> ${choiceNum}번 정답 확인 (Space)`;
+            elements.quiz.btnToggleExp.innerHTML = `<i class="fa-solid fa-circle-check text-sky-400"></i> ${choiceNum}번 정답 확인`;
         }
     }
 
@@ -1423,11 +1529,17 @@
         } else {
             if (state.mode === 'infinite') {
                 state.infiniteSetCount++;
-                const nextSet = ExamEngine.generateExamSet(state.subject, state.statsMap, state.infiniteUsedKeys);
+                const nextSet = ExamEngine.generateInfiniteHellSet(state.statsMap, state.infiniteUsedKeys);
                 if (nextSet.length > 0) {
-                    nextSet.forEach(q => state.infiniteUsedKeys.add(q.qKey));
+                    nextSet.forEach(q => {
+                        applyCustomEdits(q);
+                        state.infiniteUsedKeys.add(q.qKey);
+                    });
                     state.questions.push(...nextSet);
-                    showToast(`🔥 [헬 모드 ${state.infiniteSetCount}세트] 40문항 추가!`);
+                    showToast(`🔥 [헬 모드 ${state.infiniteSetCount}세트] 40문항 추가 소환!`);
+                    if (elements.header.modeTitle) {
+                        elements.header.modeTitle.innerHTML = `<i class="fa-solid fa-skull text-rose-500"></i> 무한 헬 모드 (세트 ${state.infiniteSetCount}: ${state.questions.length - 39}~${state.questions.length}번)`;
+                    }
                     renderQuestion(state.currentIndex + 1);
                     return;
                 }
@@ -1487,33 +1599,35 @@
     }
 
     function openOMR() {
-        OMRSheet.renderGrid(
-            elements.modals.omrGrid,
+        if (!elements.modals.omr) return;
+        OMRSheet.render(
             state.questions,
             state.userAnswers,
             state.results,
-            (selectedIdx) => {
+            state.currentIndex,
+            (targetIdx) => {
                 closeModal(elements.modals.omr);
-                renderQuestion(selectedIdx);
+                renderQuestion(targetIdx);
             }
         );
         elements.modals.omr.classList.add('active');
     }
 
     function openPartSelectModal() {
-        const chapters = ExamEngine.getChapterList(state.subject);
+        if (!elements.modals.partSelect || !elements.modals.partList) return;
         elements.modals.partList.innerHTML = '';
 
-        chapters.forEach(chap => {
+        const chapters = ExamEngine.getChapterList(state.subject);
+        chapters.forEach(c => {
             const btn = document.createElement('button');
-            btn.className = 'option-item';
+            btn.className = 'part-item-btn';
             btn.innerHTML = `
-                <i class="fa-solid fa-folder-open text-sky-400"></i>
-                <span>${chap.chapter}</span>
+                <span><i class="fa-solid fa-book-bookmark text-sky-400"></i> ${c.chapter}</span>
+                <i class="fa-solid fa-chevron-right text-slate-500"></i>
             `;
             btn.addEventListener('click', () => {
                 closeModal(elements.modals.partSelect);
-                startMode('part', chap.chapter);
+                startMode('part', c.chapter);
             });
             elements.modals.partList.appendChild(btn);
         });
@@ -1525,85 +1639,67 @@
         if (!elements.modals.pinAuth) return;
         elements.modals.inputPin.value = '';
         elements.modals.pinAuth.classList.add('active');
-        setTimeout(() => {
-            if (elements.modals.inputPin) elements.modals.inputPin.focus();
-        }, 120);
+        setTimeout(() => elements.modals.inputPin.focus(), 100);
     }
 
-    async function verifyPINAuth() {
+    function verifyPINAuth() {
         const pin = (elements.modals.inputPin.value || '').trim();
-        if (pin === '2834') {
+        if (pin === '0000') {
             closeModal(elements.modals.pinAuth);
-            showToast('🔓 보안 인증 성공: 오답 리스트 관리로 이동합니다.');
-            await openWrongManagerModal('all');
+            openWrongManagerModal();
         } else {
-            showToast('❌ 비밀번호가 일치하지 않습니다. (4자리)');
+            showToast('❌ 잘못된 PIN 번호입니다.');
             elements.modals.inputPin.value = '';
             elements.modals.inputPin.focus();
         }
     }
 
-    async function openWrongManagerModal(subjectFilter = 'all') {
+    async function openWrongManagerModal() {
         if (!elements.modals.wrongManager) return;
+        state.statsMap = await IDBStore.getAllStatsMap();
+        renderWrongManagerList('all');
         elements.modals.wrongManager.classList.add('active');
-        await renderWrongManagerList(subjectFilter);
     }
 
-    async function renderWrongManagerList(subjectFilter = 'all') {
-        const statsMap = await IDBStore.getAllStatsMap();
-        state.statsMap = statsMap;
-
-        // ExamEngine의 풀에서 3,470개 정규 문항 객체(qKey 완벽 일치) 추출
-        const allQuestions = [
-            ...ExamEngine.getQuestionPool('관계법규', 'choice'),
-            ...ExamEngine.getQuestionPool('관계법규', 'short'),
-            ...ExamEngine.getQuestionPool('관리실무', 'choice'),
-            ...ExamEngine.getQuestionPool('관리실무', 'short')
-        ];
-
-        // 가중치 2 이상 또는 오답 기록이 있는 문항 필터링
-        const wrongItems = allQuestions.filter(q => {
-            const st = statsMap[q.qKey];
-            if (!st) return false;
-            const isWrong = (st.weight || 1) >= 2 || (st.wrongCount || 0) > 0;
-            if (!isWrong) return false;
-            if (subjectFilter !== 'all' && q.subject !== subjectFilter) return false;
-            return true;
-        });
-
-        // 가중치 내림차순, 오답 횟수 내림차순 정렬
-        wrongItems.sort((a, b) => {
-            const stA = statsMap[a.qKey] || { weight: 1, wrongCount: 0 };
-            const stB = statsMap[b.qKey] || { weight: 1, wrongCount: 0 };
-            if ((stB.weight || 1) !== (stA.weight || 1)) {
-                return (stB.weight || 1) - (stA.weight || 1);
-            }
-            return (stB.wrongCount || 0) - (stA.wrongCount || 0);
-        });
-
-        if (elements.modals.cntTotalWrong) {
-            elements.modals.cntTotalWrong.textContent = wrongItems.length;
-        }
-
+    function renderWrongManagerList(filterSubject = 'all') {
+        if (!elements.modals.wrongList) return;
         elements.modals.wrongList.innerHTML = '';
 
-        if (wrongItems.length === 0) {
+        const lawPool = [...ExamEngine.getQuestionPool('관계법규', 'choice'), ...ExamEngine.getQuestionPool('관계법규', 'short')];
+        const gwanriPool = [...ExamEngine.getQuestionPool('관리실무', 'choice'), ...ExamEngine.getQuestionPool('관리실무', 'short')];
+        let allPool = [...lawPool, ...gwanriPool];
+
+        if (filterSubject !== 'all') {
+            allPool = allPool.filter(q => q.subject === filterSubject);
+        }
+
+        const wrongQuestions = allPool.filter(q => {
+            const stat = state.statsMap[q.qKey];
+            return stat && stat.wrongCount > 0;
+        }).sort((a, b) => {
+            const wA = state.statsMap[a.qKey]?.weight || 1;
+            const wB = state.statsMap[b.qKey]?.weight || 1;
+            return wB - wA;
+        });
+
+        elements.modals.cntTotalWrong.textContent = wrongQuestions.length;
+
+        if (wrongQuestions.length === 0) {
             elements.modals.wrongList.innerHTML = `
                 <div style="text-align: center; padding: 40px 20px; color: var(--text-muted);">
-                    <i class="fa-solid fa-circle-check text-emerald-400" style="font-size: 2.5rem; margin-bottom: 12px; display: block;"></i>
-                    <p style="font-weight: 700; font-size: 1rem; color: #F1F5F9;">등록된 오답 문항이 없습니다.</p>
-                    <p style="font-size: 0.85rem; margin-top: 4px;">가중치가 누적된 취약 문제가 없거나 모두 삭제 처리되었습니다.</p>
+                    <i class="fa-solid fa-circle-check" style="font-size: 2.5rem; color: #10B981; margin-bottom: 12px; display: block;"></i>
+                    등록된 오답 문제가 없습니다. 완벽합니다!
                 </div>
             `;
             return;
         }
 
-        wrongItems.forEach(q => {
-            const st = statsMap[q.qKey] || { weight: 1, wrongCount: 0 };
-            const weight = st.weight || 1;
-            const wrongCount = st.wrongCount || 0;
+        wrongQuestions.forEach(q => {
+            const stat = state.statsMap[q.qKey] || { weight: 1, wrongCount: 0 };
+            const weight = stat.weight || 1;
+            const wrongCount = stat.wrongCount || 0;
 
-            let wText = `⚡ Lv.1 (W=2 / 오답 ${wrongCount}회)`;
+            let wText = `Lv.1 보통 (W=1)`;
             let wColor = '#38BDF8';
             if (weight >= 10) {
                 wText = `🔥 Lv.4 지옥 (W=10 / 오답 ${wrongCount}회)`;
@@ -1747,6 +1843,170 @@
             }
         });
 
+        // 📋 AI 검증용 문제·정답·해설 복사 버튼
+        const btnCopyQAI = document.getElementById('btn-copy-question-ai');
+        if (btnCopyQAI) {
+            btnCopyQAI.addEventListener('click', () => {
+                const q = state.questions[state.currentIndex];
+                if (!q) return;
+                const formatted = formatQuestionAndPassage(q);
+
+                let optText = '';
+                if (q.type === 'choice' && Array.isArray(q.options)) {
+                    optText = q.options.map((opt, i) => `  ${i + 1}번: ${opt}`).join('\n');
+                }
+
+                let ansText = '';
+                if (q.type === 'choice') {
+                    const corrOpt = (q.options && q.options[Number(q.answer) - 1]) ? ` (${q.options[Number(q.answer) - 1]})` : '';
+                    ansText = `${q.answer}번${corrOpt}`;
+                } else {
+                    ansText = Object.entries(q.answers || {}).map(([k, v]) => `[${k}] ${v}`).join(', ');
+                }
+
+                const fullPrompt = `[주택관리사보 2차 기출·모의 문제 검증 요청]
+- 과목: ${q.subject}
+- 단원: ${q.chapterName}
+- 문제 유형: ${q.type === 'choice' ? '객관식 5지선다' : '주관식 단답/빈칸형'}
+
+[문제]
+${formatted.title}
+${formatted.passage ? `\n[지문/보기 박스]\n${formatted.passage}\n` : ''}
+${optText ? `[선택 보기]\n${optText}\n` : ''}
+[정답]
+${ansText}
+
+[해설]
+${q.explanation || '(등록된 해설 없음)'}
+${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
+
+---
+🤖 요청사항: 위 문제의 법률 조문, 정답, 해설에 최신 개정 법령 반영 오류나 오탈자, 불일치가 있는지 검증하고 올바른 근거를 상세히 설명해 주세요.`;
+
+                navigator.clipboard.writeText(fullPrompt).then(() => {
+                    showToast('📋 문제·정답·해설이 복사되었습니다! (Gemini/AI 검증용)');
+                }).catch(() => {
+                    alert('클립보드 권한을 확인해주세요.');
+                });
+            });
+        }
+
+        // ✏️ 문제·정답·해설 직접 수정 모달 핸들러
+        const btnEditQ = document.getElementById('btn-edit-question');
+        const modalEditQ = document.getElementById('modal-edit-question');
+        const formEditQ = document.getElementById('form-edit-question');
+        const btnResetOriginalQ = document.getElementById('btn-reset-original-q');
+
+        if (btnEditQ && modalEditQ) {
+            btnEditQ.addEventListener('click', () => {
+                const q = state.questions[state.currentIndex];
+                if (!q) return;
+
+                document.getElementById('edit-q-key').value = q.qKey;
+                document.getElementById('edit-q-title').value = q.question || q.title || '';
+                document.getElementById('edit-q-passage').value = q.passage || '';
+
+                const optGroup = document.getElementById('edit-options-group');
+                if (q.type === 'choice') {
+                    optGroup.style.display = 'block';
+                    for (let i = 1; i <= 5; i++) {
+                        const optInput = document.getElementById(`edit-opt-${i}`);
+                        if (optInput) {
+                            optInput.value = (q.options && q.options[i - 1]) || '';
+                        }
+                    }
+                    document.getElementById('edit-q-answer').value = q.answer || '1';
+                } else {
+                    optGroup.style.display = 'none';
+                    const ansStr = Object.entries(q.answers || {}).map(([k, v]) => `${k}=${v}`).join(', ');
+                    document.getElementById('edit-q-answer').value = ansStr;
+                }
+
+                document.getElementById('edit-q-explanation').value = q.explanation || '';
+                document.getElementById('edit-q-tip').value = q.tip || '';
+
+                modalEditQ.classList.add('active');
+            });
+        }
+
+        if (formEditQ) {
+            formEditQ.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const qKey = document.getElementById('edit-q-key').value;
+                const q = state.questions[state.currentIndex];
+                if (!q || q.qKey !== qKey) return;
+
+                const newTitle = document.getElementById('edit-q-title').value.trim();
+                const newPassage = document.getElementById('edit-q-passage').value.trim();
+                const newAns = document.getElementById('edit-q-answer').value.trim();
+                const newExp = document.getElementById('edit-q-explanation').value.trim();
+                const newTip = document.getElementById('edit-q-tip').value.trim();
+
+                const editData = {
+                    question: newTitle,
+                    passage: newPassage,
+                    explanation: newExp,
+                    tip: newTip
+                };
+
+                if (q.type === 'choice') {
+                    const newOptions = [];
+                    for (let i = 1; i <= 5; i++) {
+                        const optVal = document.getElementById(`edit-opt-${i}`).value.trim();
+                        newOptions.push(optVal);
+                    }
+                    editData.options = newOptions;
+                    editData.answer = newAns;
+                } else {
+                    const newAnswers = {};
+                    newAns.split(',').forEach(pair => {
+                        const [k, v] = pair.split('=').map(s => s.trim());
+                        if (k && v) newAnswers[k] = v;
+                    });
+                    editData.answers = newAnswers;
+                }
+
+                await IDBStore.saveQuestionEdit(qKey, editData);
+                state.customEdits[qKey] = editData;
+                applyCustomEdits(q);
+
+                renderQuestion(state.currentIndex);
+                closeModal(modalEditQ);
+                showToast('💾 문제 수정사항이 저장되었습니다!');
+            });
+        }
+
+        if (btnResetOriginalQ) {
+            btnResetOriginalQ.addEventListener('click', async () => {
+                const qKey = document.getElementById('edit-q-key').value;
+                const q = state.questions[state.currentIndex];
+                if (!q || q.qKey !== qKey) return;
+
+                if (confirm('이 문제의 수정 내역을 삭제하고 원본 기출 데이터로 복구하시겠습니까?')) {
+                    await IDBStore.deleteQuestionEdit(qKey);
+                    delete state.customEdits[qKey];
+
+                    // Find original from dataset
+                    const rawPool = ExamEngine.getQuestionPool(q.subject, q.type);
+                    const original = rawPool.find(item => item.qKey === qKey);
+                    if (original) {
+                        q.question = original.question;
+                        q.passage = original.passage;
+                        q.options = original.options ? [...original.options] : undefined;
+                        q.answer = original.answer;
+                        q.answers = original.answers ? { ...original.answers } : undefined;
+                        q.explanation = original.explanation;
+                        q.tip = original.tip;
+                        q.isCustomEdited = false;
+                    }
+
+                    renderQuestion(state.currentIndex);
+                    closeModal(modalEditQ);
+                    showToast('🔄 원본 기출 문제로 복구되었습니다.');
+                }
+            });
+        }
+
         elements.result.btnHomeFromRes.addEventListener('click', () => showScreen('home'));
         elements.result.btnRetry.addEventListener('click', () => startMode(state.mode, state.currentPartPattern));
         elements.result.btnCopyAI.addEventListener('click', () => {
@@ -1774,7 +2034,7 @@
             });
         });
 
-        window.addEventListener('keydown', async (e) => {
+        window.addEventListener('keydown', (e) => {
             if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
 
             if (elements.screens.quiz && elements.screens.quiz.classList.contains('active')) {
@@ -1782,14 +2042,6 @@
                     const q = state.questions[state.currentIndex];
                     if (q && q.type === 'choice') {
                         selectChoice(parseInt(e.key, 10));
-                    }
-                } else if (e.key === ' ' || e.code === 'Space') {
-                    e.preventDefault();
-                    const idx = state.currentIndex;
-                    if (state.results[idx] === undefined) {
-                        await gradeCurrentQuestion();
-                    } else {
-                        toggleExplanation();
                     }
                 } else if (e.key === 'ArrowRight') {
                     nextQuestion();
@@ -1805,6 +2057,7 @@
         initDOMElements();
         await IDBStore.init();
         state.statsMap = await IDBStore.getAllStatsMap();
+        state.customEdits = await IDBStore.getAllQuestionEditsMap();
 
         const canvasEl = document.getElementById('drawing-canvas');
         const toolbarEl = document.getElementById('stylus-toolbar');
