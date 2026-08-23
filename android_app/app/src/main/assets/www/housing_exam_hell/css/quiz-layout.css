@@ -286,10 +286,19 @@
 .q-badge {
     background: var(--theme-badge-bg);
     color: var(--theme-primary);
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     font-weight: 800;
     padding: 4px 10px;
     border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    border: 1px solid transparent;
+}
+
+.q-badge:hover {
+    border-color: var(--theme-primary);
+    box-shadow: 0 0 8px var(--theme-glow);
+    transform: scale(1.03);
 }
 
 .weight-badge {
@@ -332,6 +341,9 @@
     flex-direction: column;
     gap: 12px;
     margin-bottom: 20px;
+    position: relative;
+    z-index: 30;
+    pointer-events: auto;
 }
 
 .option-item {
@@ -350,6 +362,9 @@
     line-height: 1.55;
     font-weight: 400;
     width: 100%;
+    position: relative;
+    z-index: 31;
+    pointer-events: auto;
 }
 
 .option-item:hover {
@@ -884,6 +899,13 @@
     background: var(--theme-badge-bg);
 }
 
+.omr-cell.current {
+    border-color: #38BDF8 !important;
+    box-shadow: 0 0 14px rgba(56, 189, 248, 0.7) !important;
+    background: rgba(56, 189, 248, 0.25) !important;
+    outline: 2px solid #38BDF8;
+}
+
 .omr-cell.correct {
     border-color: var(--color-correct);
     background: rgba(16, 185, 129, 0.2);
@@ -1167,4 +1189,61 @@
     .btn-ctrl { padding: 8px 14px; font-size: 0.85rem; }
     .wrong-item-card { flex-direction: column; align-items: flex-start; }
     .btn-reset-single-w { width: 100%; justify-content: center; }
+}
+
+/* PC / Laptop Screen Expansion (≥ 1024px) */
+@media (min-width: 1024px) {
+    .app-container {
+        max-width: 1160px;
+        padding: 20px 28px;
+    }
+    .header-content {
+        max-width: 1160px;
+    }
+    .controls-content {
+        max-width: 1160px;
+    }
+    .quiz-card {
+        padding: 28px 32px;
+        border-radius: 24px;
+    }
+    .q-title {
+        font-size: 1.35rem;
+        line-height: 1.75;
+    }
+    .passage-box {
+        font-size: 1.18rem;
+        padding: 18px 24px;
+    }
+    .option-item {
+        padding: 15px 22px;
+        font-size: 1.2rem;
+    }
+    .exp-body {
+        font-size: 1.2rem;
+        line-height: 1.85;
+    }
+}
+
+/* Wide PC Monitor Expansion (≥ 1400px) */
+@media (min-width: 1400px) {
+    .app-container {
+        max-width: 1360px;
+        padding: 24px 36px;
+    }
+    .header-content {
+        max-width: 1360px;
+    }
+    .controls-content {
+        max-width: 1360px;
+    }
+    .quiz-card {
+        padding: 34px 44px;
+    }
+    .q-title {
+        font-size: 1.4rem;
+    }
+    .mode-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
 }
