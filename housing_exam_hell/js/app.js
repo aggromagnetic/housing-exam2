@@ -1937,9 +1937,10 @@
 
     function verifyPINAuth() {
         const pin = (elements.modals.inputPin.value || '').trim();
-        if (pin === '0000') {
+        if (pin === '2834' || pin === '0000') {
             closeModal(elements.modals.pinAuth);
             openWrongManagerModal();
+            showToast('🔓 오답 리스트 관리가 열렸습니다.');
         } else {
             showToast('❌ 잘못된 PIN 번호입니다.');
             elements.modals.inputPin.value = '';
@@ -2078,6 +2079,22 @@
             elements.modals.formPin.addEventListener('submit', (e) => {
                 e.preventDefault();
                 verifyPINAuth();
+            });
+        }
+
+        const btnSubmitPin = document.getElementById('btn-submit-pin');
+        if (btnSubmitPin) {
+            btnSubmitPin.addEventListener('click', (e) => {
+                e.preventDefault();
+                verifyPINAuth();
+            });
+        }
+
+        if (elements.modals.inputPin) {
+            elements.modals.inputPin.addEventListener('input', (e) => {
+                if (e.target.value.length === 4) {
+                    verifyPINAuth();
+                }
             });
         }
 
