@@ -241,6 +241,35 @@ export const ExamEngine = {
     },
 
     /**
+     * Generate Infinite Hell Mode Set (40 questions: Mixed Subjects + Mixed MC/SA + Fully Shuffled)
+     */
+    generateInfiniteHellSet(statsMap = {}, excludeKeysSet = new Set()) {
+        const lawMC = this.getQuestionPool('관계법규', 'choice');
+        const lawSA = this.getQuestionPool('관계법규', 'short');
+        const gwanriMC = this.getQuestionPool('관리실무', 'choice');
+        const gwanriSA = this.getQuestionPool('관리실무', 'short');
+
+        // Target: 20 관계법규 (12 MC + 8 SA) + 20 관리실무 (12 MC + 8 SA) = 40 questions
+        const pickedLawMC = this.weightedPick(lawMC, statsMap, 12, excludeKeysSet);
+        const pickedLawSA = this.weightedPick(lawSA, statsMap, 8, excludeKeysSet);
+        const pickedGwanriMC = this.weightedPick(gwanriMC, statsMap, 12, excludeKeysSet);
+        const pickedGwanriSA = this.weightedPick(gwanriSA, statsMap, 8, excludeKeysSet);
+
+        const combined = [...pickedLawMC, ...pickedLawSA, ...pickedGwanriMC, ...pickedGwanriSA];
+        
+        // If shortfall due to exclusion, fill from remaining pool
+        if (combined.length < 40) {
+            const allPool = [...lawMC, ...lawSA, ...gwanriMC, ...gwanriSA];
+            const usedKeys = new Set([...excludeKeysSet, ...combined.map(q => q.qKey)]);
+            const remainder = this.weightedPick(allPool, statsMap, 40 - combined.length, usedKeys);
+            combined.push(...remainder);
+        }
+
+        // Fully shuffle and anti-clump so subjects and question types are completely intermixed!
+        return this.shuffleWithAntiClumping(combined);
+    },
+
+    /**
      * Get list of unique chapters for a subject
      */
     getChapterList(subject) {
