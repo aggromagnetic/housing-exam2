@@ -2364,6 +2364,24 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
                 }
             }
         });
+
+        // Handle Mobile/Tablet Virtual Keyboard & S-Pen IME Avoidance (prevents home button overlap)
+        if (window.visualViewport) {
+            window.visualViewport.addEventListener('resize', () => {
+                const controls = document.getElementById('quiz-bottom-controls');
+                if (!controls) return;
+                const isKeyboardOpen = window.visualViewport.height < window.innerHeight * 0.78;
+                if (isKeyboardOpen) {
+                    controls.style.opacity = '0';
+                    controls.style.pointerEvents = 'none';
+                    controls.style.transform = 'translateY(100%)';
+                } else {
+                    controls.style.opacity = '1';
+                    controls.style.pointerEvents = 'auto';
+                    controls.style.transform = 'translateY(0)';
+                }
+            });
+        }
     }
 
     // App Initialization on DOM Load

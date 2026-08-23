@@ -773,15 +773,16 @@
 
 /* Bottom Controls */
 .quiz-controls {
-    background: rgba(13, 19, 34, 0.9);
-    backdrop-filter: blur(12px);
+    background: rgba(13, 19, 34, 0.95);
+    backdrop-filter: blur(14px);
     border-top: 1px solid var(--border-base);
     position: sticky;
     bottom: 0;
-    padding: 6px 14px;
+    padding: 8px 16px max(14px, env(safe-area-inset-bottom, 14px));
     display: none;
     z-index: 30;
     width: 100%;
+    transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
 .controls-content {
