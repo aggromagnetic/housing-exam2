@@ -15,23 +15,44 @@ export class TabletCanvas {
         this.isDrawing = false;
         this.currentTool = 'pen'; // 'pen' | 'eraser'
         this.penColor = '#38BDF8';
-        this.penWidth = 2.5;
+        this.penWidth = 3;
         this.palmRejection = true;
 
         this.currentQuestionKey = null;
-        this.strokes = []; // [ { tool, color, width, points: [{x, y}] } ]
+        this.strokes = [];
         this.currentStroke = null;
 
         this.initEvents();
-        this.handleResize();
+        this.initResizeObserver();
+    }
+
+    initResizeObserver() {
+        if (!this.canvas || !this.canvas.parentElement) return;
+        if (window.ResizeObserver) {
+            this.resizeObserver = new ResizeObserver(() => {
+                this.handleResize();
+            });
+            this.resizeObserver.observe(this.canvas.parentElement);
+        }
         window.addEventListener('resize', () => this.handleResize());
+        window.addEventListener('orientationchange', () => setTimeout(() => this.handleResize(), 150));
     }
 
     handleResize() {
-        if (!this.canvas) return;
+        if (!this.canvas || !this.canvas.parentElement) return;
         const rect = this.canvas.parentElement.getBoundingClientRect();
-        this.canvas.width = rect.width;
-        this.canvas.height = rect.height;
+        if (rect.width === 0 || rect.height === 0) return;
+
+        const dpr = window.devicePixelRatio || 1;
+        const targetWidth = Math.round(rect.width);
+        const targetHeight = Math.round(rect.height);
+
+        this.canvas.width = targetWidth * dpr;
+        this.canvas.height = targetHeight * dpr;
+        this.canvas.style.width = targetWidth + 'px';
+        this.canvas.style.height = targetHeight + 'px';
+
+        this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         this.redraw();
     }
 
@@ -40,6 +61,42 @@ export class TabletCanvas {
         this.canvas.addEventListener('pointermove', (e) => this.onPointerMove(e));
         this.canvas.addEventListener('pointerup', (e) => this.onPointerUp(e));
         this.canvas.addEventListener('pointercancel', (e) => this.onPointerUp(e));
+
+        if (this.toolbar) {
+            this.toolbar.querySelectorAll('.stylus-btn[data-tool]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    this.toolbar.querySelectorAll('.stylus-btn[data-tool]').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    this.currentTool = btn.dataset.tool;
+                });
+            });
+
+            this.toolbar.querySelectorAll('.color-dot').forEach(dot => {
+                dot.addEventListener('click', () => {
+                    this.toolbar.querySelectorAll('.color-dot').forEach(d => d.classList.remove('selected'));
+                    dot.classList.add('selected');
+                    this.penColor = dot.dataset.color || '#38BDF8';
+                    this.currentTool = 'pen';
+                    this.toolbar.querySelectorAll('.stylus-btn[data-tool]').forEach(b => {
+                        b.classList.toggle('active', b.dataset.tool === 'pen');
+                    });
+                });
+            });
+
+            const clearBtn = document.getElementById('btn-clear-canvas');
+            if (clearBtn) {
+                clearBtn.addEventListener('click', () => this.clearCurrentStrokes());
+            }
+
+            const closeBtn = document.getElementById('btn-close-stylus');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', () => {
+                    this.togglePen(false);
+                    const headerPen = document.getElementById('btn-toggle-pen');
+                    if (headerPen) headerPen.classList.remove('active');
+                });
+            }
+        }
     }
 
     getPos(e) {
@@ -52,20 +109,20 @@ export class TabletCanvas {
 
     onPointerDown(e) {
         if (!this.isEnabled) return;
+        e.preventDefault();
 
-        // Palm Rejection: Ignore touch if stylus is active
-        if (this.palmRejection && e.pointerType === 'touch' && e.isPrimary === false) {
-            return;
-        }
+        if (this.palmRejection && e.pointerType === 'touch' && e.isPrimary === false) return;
 
         this.isDrawing = true;
-        this.canvas.setPointerCapture(e.pointerId);
+        try {
+            this.canvas.setPointerCapture(e.pointerId);
+        } catch (err) {}
 
         const pos = this.getPos(e);
         this.currentStroke = {
             tool: this.currentTool,
             color: this.penColor,
-            width: this.currentTool === 'eraser' ? 20 : this.penWidth,
+            width: this.currentTool === 'eraser' ? 24 : this.penWidth,
             points: [pos]
         };
         this.strokes.push(this.currentStroke);
@@ -76,6 +133,7 @@ export class TabletCanvas {
 
     onPointerMove(e) {
         if (!this.isDrawing || !this.currentStroke) return;
+        e.preventDefault();
 
         const pos = this.getPos(e);
         this.currentStroke.points.push(pos);
@@ -84,7 +142,7 @@ export class TabletCanvas {
             this.ctx.save();
             this.ctx.globalCompositeOperation = 'destination-out';
             this.ctx.beginPath();
-            this.ctx.arc(pos.x, pos.y, 15, 0, Math.PI * 2);
+            this.ctx.arc(pos.x, pos.y, 16, 0, Math.PI * 2);
             this.ctx.fill();
             this.ctx.restore();
         } else {
@@ -103,23 +161,30 @@ export class TabletCanvas {
         if (!this.isDrawing) return;
         this.isDrawing = false;
         this.currentStroke = null;
+        try {
+            if (e && e.pointerId) this.canvas.releasePointerCapture(e.pointerId);
+        } catch (err) {}
 
-        // Save strokes to IndexedDB
         if (this.currentQuestionKey) {
             await IDBStore.saveDrawingStrokes(this.currentQuestionKey, this.strokes);
         }
     }
 
     redraw() {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        const dpr = window.devicePixelRatio || 1;
+        const rect = this.canvas.getBoundingClientRect();
+        const w = rect.width || this.canvas.width / dpr;
+        const h = rect.height || this.canvas.height / dpr;
+
+        this.ctx.clearRect(0, 0, w, h);
 
         this.strokes.forEach(stroke => {
-            if (!stroke.points || stroke.points.length < 2) return;
+            if (!stroke.points || stroke.points.length === 0) return;
 
             this.ctx.save();
             if (stroke.tool === 'eraser') {
                 this.ctx.globalCompositeOperation = 'destination-out';
-                this.ctx.lineWidth = stroke.width || 20;
+                this.ctx.lineWidth = stroke.width || 24;
             } else {
                 this.ctx.strokeStyle = stroke.color || this.penColor;
                 this.ctx.lineWidth = stroke.width || this.penWidth;
@@ -140,7 +205,7 @@ export class TabletCanvas {
     async loadQuestionStrokes(qKey) {
         this.currentQuestionKey = qKey;
         this.strokes = (await IDBStore.getDrawingStrokes(qKey)) || [];
-        this.redraw();
+        this.handleResize();
     }
 
     async clearCurrentStrokes() {
@@ -156,6 +221,9 @@ export class TabletCanvas {
         this.canvas.style.pointerEvents = this.isEnabled ? 'auto' : 'none';
         if (this.toolbar) {
             this.toolbar.classList.toggle('active', this.isEnabled);
+        }
+        if (this.isEnabled) {
+            this.handleResize();
         }
         return this.isEnabled;
     }
