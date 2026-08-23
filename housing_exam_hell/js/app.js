@@ -514,9 +514,9 @@
 
             this.isEnabled = false;
             this.isDrawing = false;
-            this.currentTool = 'pen';
+            this.currentTool = 'pen'; // 'pen' | 'eraser'
             this.penColor = '#38BDF8';
-            this.penWidth = 2.5;
+            this.penWidth = 3;
             this.palmRejection = true;
 
             this.currentQuestionKey = null;
@@ -524,15 +524,36 @@
             this.currentStroke = null;
 
             this.initEvents();
-            this.handleResize();
+            this.initResizeObserver();
+        }
+
+        initResizeObserver() {
+            if (!this.canvas || !this.canvas.parentElement) return;
+            if (window.ResizeObserver) {
+                this.resizeObserver = new ResizeObserver(() => {
+                    this.handleResize();
+                });
+                this.resizeObserver.observe(this.canvas.parentElement);
+            }
             window.addEventListener('resize', () => this.handleResize());
+            window.addEventListener('orientationchange', () => setTimeout(() => this.handleResize(), 150));
         }
 
         handleResize() {
-            if (!this.canvas) return;
+            if (!this.canvas || !this.canvas.parentElement) return;
             const rect = this.canvas.parentElement.getBoundingClientRect();
-            this.canvas.width = rect.width;
-            this.canvas.height = rect.height;
+            if (rect.width === 0 || rect.height === 0) return;
+
+            const dpr = window.devicePixelRatio || 1;
+            const targetWidth = Math.round(rect.width);
+            const targetHeight = Math.round(rect.height);
+
+            this.canvas.width = targetWidth * dpr;
+            this.canvas.height = targetHeight * dpr;
+            this.canvas.style.width = targetWidth + 'px';
+            this.canvas.style.height = targetHeight + 'px';
+
+            this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
             this.redraw();
         }
 
@@ -551,30 +572,58 @@
                     });
                 });
 
+                this.toolbar.querySelectorAll('.color-dot').forEach(dot => {
+                    dot.addEventListener('click', () => {
+                        this.toolbar.querySelectorAll('.color-dot').forEach(d => d.classList.remove('selected'));
+                        dot.classList.add('selected');
+                        this.penColor = dot.dataset.color || '#38BDF8';
+                        this.currentTool = 'pen';
+                        this.toolbar.querySelectorAll('.stylus-btn[data-tool]').forEach(b => {
+                            b.classList.toggle('active', b.dataset.tool === 'pen');
+                        });
+                    });
+                });
+
                 const clearBtn = document.getElementById('btn-clear-canvas');
                 if (clearBtn) {
                     clearBtn.addEventListener('click', () => this.clearCurrentStrokes());
+                }
+
+                const closeBtn = document.getElementById('btn-close-stylus');
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', () => {
+                        this.togglePen(false);
+                        const headerPen = document.getElementById('btn-toggle-pen');
+                        if (headerPen) headerPen.classList.remove('active');
+                    });
                 }
             }
         }
 
         getPos(e) {
             const rect = this.canvas.getBoundingClientRect();
-            return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+            return {
+                x: e.clientX - rect.left,
+                y: e.clientY - rect.top
+            };
         }
 
         onPointerDown(e) {
             if (!this.isEnabled) return;
+            e.preventDefault();
+
             if (this.palmRejection && e.pointerType === 'touch' && e.isPrimary === false) return;
 
             this.isDrawing = true;
-            this.canvas.setPointerCapture(e.pointerId);
+            try {
+                this.canvas.setPointerCapture(e.pointerId);
+            } catch (err) {}
 
             const pos = this.getPos(e);
             this.currentStroke = {
                 tool: this.currentTool,
                 color: this.penColor,
-                width: this.currentTool === 'eraser' ? 20 : this.penWidth,
+                width: this.currentTool === 'eraser' ? 24 : this.penWidth,
                 points: [pos]
             };
             this.strokes.push(this.currentStroke);
@@ -585,6 +634,7 @@
 
         onPointerMove(e) {
             if (!this.isDrawing || !this.currentStroke) return;
+            e.preventDefault();
 
             const pos = this.getPos(e);
             this.currentStroke.points.push(pos);
@@ -593,7 +643,7 @@
                 this.ctx.save();
                 this.ctx.globalCompositeOperation = 'destination-out';
                 this.ctx.beginPath();
-                this.ctx.arc(pos.x, pos.y, 15, 0, Math.PI * 2);
+                this.ctx.arc(pos.x, pos.y, 16, 0, Math.PI * 2);
                 this.ctx.fill();
                 this.ctx.restore();
             } else {
@@ -608,10 +658,13 @@
             }
         }
 
-        async onPointerUp() {
+        async onPointerUp(e) {
             if (!this.isDrawing) return;
             this.isDrawing = false;
             this.currentStroke = null;
+            try {
+                if (e && e.pointerId) this.canvas.releasePointerCapture(e.pointerId);
+            } catch (err) {}
 
             if (this.currentQuestionKey) {
                 await IDBStore.saveDrawingStrokes(this.currentQuestionKey, this.strokes);
@@ -619,15 +672,20 @@
         }
 
         redraw() {
-            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            const dpr = window.devicePixelRatio || 1;
+            const rect = this.canvas.getBoundingClientRect();
+            const w = rect.width || this.canvas.width / dpr;
+            const h = rect.height || this.canvas.height / dpr;
+
+            this.ctx.clearRect(0, 0, w, h);
 
             this.strokes.forEach(stroke => {
-                if (!stroke.points || stroke.points.length < 2) return;
+                if (!stroke.points || stroke.points.length === 0) return;
 
                 this.ctx.save();
                 if (stroke.tool === 'eraser') {
                     this.ctx.globalCompositeOperation = 'destination-out';
-                    this.ctx.lineWidth = stroke.width || 20;
+                    this.ctx.lineWidth = stroke.width || 24;
                 } else {
                     this.ctx.strokeStyle = stroke.color || this.penColor;
                     this.ctx.lineWidth = stroke.width || this.penWidth;
@@ -648,7 +706,7 @@
         async loadQuestionStrokes(qKey) {
             this.currentQuestionKey = qKey;
             this.strokes = (await IDBStore.getDrawingStrokes(qKey)) || [];
-            this.redraw();
+            this.handleResize();
         }
 
         async clearCurrentStrokes() {
@@ -657,6 +715,7 @@
             if (this.currentQuestionKey) {
                 await IDBStore.clearDrawingStrokes(this.currentQuestionKey);
             }
+            showToast('필기가 모두 지워졌습니다.');
         }
 
         togglePen(forceState) {
@@ -664,6 +723,9 @@
             this.canvas.style.pointerEvents = this.isEnabled ? 'auto' : 'none';
             if (this.toolbar) {
                 this.toolbar.classList.toggle('active', this.isEnabled);
+            }
+            if (this.isEnabled) {
+                this.handleResize();
             }
             return this.isEnabled;
         }
@@ -853,6 +915,14 @@
         const bottomCtrl = document.getElementById('quiz-bottom-controls');
         if (bottomCtrl) {
             bottomCtrl.style.display = screenKey === 'quiz' ? 'block' : 'none';
+        }
+
+        if (screenKey === 'quiz') {
+            setTimeout(() => {
+                if (state.tabletCanvas) {
+                    state.tabletCanvas.handleResize();
+                }
+            }, 60);
         }
 
         // 홈 화면 복귀 시 헤더 타이틀, 타이머, 게이지 깔끔하게 초기화
@@ -1109,6 +1179,20 @@
             }
         }
 
+        // Update Bottom Bar [정답 확인 / 정답·해설] button label
+        if (elements.quiz.btnToggleExp) {
+            if (state.results[index] === undefined) {
+                const userAns = state.userAnswers[index];
+                if (userAns !== undefined && userAns !== null && userAns !== '') {
+                    elements.quiz.btnToggleExp.innerHTML = `<i class="fa-solid fa-circle-check text-sky-400"></i> ${userAns}번 정답 확인 (Space)`;
+                } else {
+                    elements.quiz.btnToggleExp.innerHTML = `<i class="fa-solid fa-circle-check text-sky-400"></i> 정답 확인 (Space)`;
+                }
+            } else {
+                elements.quiz.btnToggleExp.innerHTML = `<i class="fa-solid fa-lightbulb text-amber-400"></i> 정답·해설 (Space)`;
+            }
+        }
+
         updateBloodGauge();
     }
 
@@ -1188,15 +1272,36 @@
         });
     }
 
-    async function selectChoice(choiceNum) {
-        state.userAnswers[state.currentIndex] = choiceNum;
-        await gradeCurrentQuestion();
+    function selectChoice(choiceNum) {
+        const idx = state.currentIndex;
+        if (state.results[idx] !== undefined) return; // Already checked
+
+        state.userAnswers[idx] = choiceNum;
+
+        // Visual selection update
+        const optBtns = elements.quiz.optionsContainer.querySelectorAll('.option-item');
+        optBtns.forEach((btn, optIdx) => {
+            if (optIdx + 1 === choiceNum) {
+                btn.classList.add('selected');
+            } else {
+                btn.classList.remove('selected');
+            }
+        });
+
+        if (elements.quiz.btnToggleExp) {
+            elements.quiz.btnToggleExp.innerHTML = `<i class="fa-solid fa-circle-check text-sky-400"></i> ${choiceNum}번 정답 확인 (Space)`;
+        }
     }
 
     async function gradeCurrentQuestion() {
         const idx = state.currentIndex;
         const q = state.questions[idx];
         const userAns = state.userAnswers[idx];
+
+        if (state.results[idx] !== undefined) {
+            toggleExplanation();
+            return;
+        }
 
         const gradeRes = Grader.grade(q, userAns);
         state.results[idx] = gradeRes;
@@ -1597,7 +1702,14 @@
 
         elements.quiz.btnNext.addEventListener('click', nextQuestion);
         elements.quiz.btnPrev.addEventListener('click', prevQuestion);
-        elements.quiz.btnToggleExp.addEventListener('click', () => toggleExplanation());
+        elements.quiz.btnToggleExp.addEventListener('click', async () => {
+            const idx = state.currentIndex;
+            if (state.results[idx] === undefined) {
+                await gradeCurrentQuestion();
+            } else {
+                toggleExplanation();
+            }
+        });
         if (elements.quiz.btnRetry) {
             elements.quiz.btnRetry.addEventListener('click', retryCurrentQuestion);
         }
@@ -1611,9 +1723,19 @@
 
         elements.header.btnOMR.addEventListener('click', openOMR);
         elements.header.btnPen.addEventListener('click', () => {
+            const isQuizScreen = elements.screens.quiz && elements.screens.quiz.classList.contains('active');
+            if (!isQuizScreen) {
+                showToast('✍️ 문제 풀이 화면에서 필기 모드를 사용할 수 있습니다.');
+                return;
+            }
             if (state.tabletCanvas) {
                 const active = state.tabletCanvas.togglePen();
                 elements.header.btnPen.classList.toggle('active', active);
+                if (active) {
+                    showToast('✍️ 필기 모드 ON (문제 위에 필기 가능)');
+                } else {
+                    showToast('필기 모드 OFF');
+                }
             }
         });
 
@@ -1652,7 +1774,7 @@
             });
         });
 
-        window.addEventListener('keydown', (e) => {
+        window.addEventListener('keydown', async (e) => {
             if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
 
             if (elements.screens.quiz && elements.screens.quiz.classList.contains('active')) {
@@ -1663,7 +1785,12 @@
                     }
                 } else if (e.key === ' ' || e.code === 'Space') {
                     e.preventDefault();
-                    toggleExplanation();
+                    const idx = state.currentIndex;
+                    if (state.results[idx] === undefined) {
+                        await gradeCurrentQuestion();
+                    } else {
+                        toggleExplanation();
+                    }
                 } else if (e.key === 'ArrowRight') {
                     nextQuestion();
                 } else if (e.key === 'ArrowLeft') {
