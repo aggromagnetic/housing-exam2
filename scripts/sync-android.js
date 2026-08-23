@@ -38,7 +38,7 @@ filesToCopy.forEach(file => {
 });
 
 // Copy directories
-const dirsToCopy = ['data', 'notes'];
+const dirsToCopy = ['data', 'notes', 'housing_exam_hell'];
 dirsToCopy.forEach(dir => {
     const srcDir = path.join(rootDir, dir);
     const destDir = path.join(targetAssetsDir, dir);
