@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ko" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>주관사 2차 시험 문제지옥 (Exam Hell)</title>
+    
+    <!-- Google Fonts Pretendard / Noto Sans KR -->
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    
+    <!-- FontAwesome 6 Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <meta name="theme-color" content="#090d16">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="문제지옥">
+    
+    <!-- Custom Theme Styles -->
+    <link rel="stylesheet" href="css/dark-theme.css">
+    <link rel="stylesheet" href="css/quiz-layout.css">
+    <link rel="stylesheet" href="css/tablet-canvas.css">
+</head>
+<body data-subject="관계법규">
+
+    <!-- Global App Header -->
+    <header class="app-header">
+        <div class="header-content">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <button id="btn-go-home" class="btn-icon" title="문제지옥 홈으로 이동">
+                    <i class="fa-solid fa-house"></i>
+                </button>
+                <a href="../index.html" class="btn-icon" title="강의 노트 뷰어로 이동" style="display:inline-flex; align-items:center; justify-content:center; text-decoration:none; color:inherit;">
+                    <i class="fa-solid fa-book-open"></i>
+                </a>
+                <span id="header-brand-badge" class="brand-badge">관계법규</span>
+                <span id="header-mode-title" class="mode-title">
+                    <i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥
+                </span>
+            </div>
+
+            <div class="header-actions">
+                <div id="header-timer" class="timer-badge">00:00</div>
+                <button id="btn-toggle-pen" class="btn-icon" title="태블릿 필기 모드 (S펜/애플펜슬)">
+                    <i class="fa-solid fa-pen-nib"></i>
+                </button>
+                <button id="btn-open-omr" class="btn-icon" title="OMR 카드 마킹 시트">
+                    <i class="fa-solid fa-table-cells"></i>
+                </button>
+                <button id="btn-fullscreen" class="btn-icon" title="전체화면 전환">
+                    <i class="fa-solid fa-expand"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Blood Gauge Progress Bar -->
+        <div style="max-width: 900px; margin: 10px auto 0;">
+            <div class="blood-progress-container">
+                <div id="blood-progress-fill" class="blood-progress-fill" style="width: 0%;"></div>
+            </div>
+            <div style="display: flex; justify-content: flex-end; margin-top: 4px;">
+                <span id="blood-score-text" style="font-size: 0.72rem; font-weight: 700; color: var(--text-dim);">진행 대기 중</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Floating Stylus Toolbar (Tablet Canvas) -->
+    <div id="stylus-toolbar" class="stylus-toolbar">
+        <button class="stylus-btn active" data-tool="pen" title="펜"><i class="fa-solid fa-pen"></i></button>
+        <button class="stylus-btn" data-tool="eraser" title="지우개"><i class="fa-solid fa-eraser"></i></button>
+        <button class="stylus-btn" id="btn-clear-canvas" title="전체 지우기"><i class="fa-solid fa-trash-can"></i></button>
+    </div>
+
+    <!-- Main Content Area -->
+    <main class="app-container">
+
+        <!-- 1. HOME SCREEN -->
+        <section id="screen-home" class="screen active">
+            <div class="home-hero">
+                <h1>주관사 2차 <span>문제지옥</span> 🔥</h1>
+                <p>3,470문항 정제 기출 데이터셋 기반 5개년 출제비율 시뮬레이션, 오답 가중치 무한 반복 학습 및 태블릿 필기 지원 플랫폼</p>
+            </div>
+
+            <!-- Subject Switcher -->
+            <div class="subject-tabs">
+                <button class="subject-tab-btn active" data-subject="관계법규">
+                    <i class="fa-solid fa-scale-balanced"></i> 주택관리관계법규
+                </button>
+                <button class="subject-tab-btn" data-subject="관리실무">
+                    <i class="fa-solid fa-building-shield"></i> 공동주택관리실무
+                </button>
+            </div>
+
+            <!-- 5 Study Mode Selection Grid -->
+            <div class="mode-grid">
+                <!-- 헬 모드 (무한 풀이) -->
+                <div class="mode-card" data-mode="infinite">
+                    <div class="mode-icon"><i class="fa-solid fa-skull"></i></div>
+                    <h3>헬 모드 (무한 풀이)</h3>
+                    <p>40문항(객관식 24+주관식 16) 세트가 끝없이 연속 생성됩니다. 틀릴 때마다 오답 가중치가 누적되며 피의 게이지가 차오릅니다.</p>
+                    <span class="mode-badge">연속 40문항 단위 무한 생성</span>
+                </div>
+
+                <!-- 복습 학습 (오답 집중) -->
+                <div class="mode-card" data-mode="review">
+                    <div class="mode-icon"><i class="fa-solid fa-rotate-left"></i></div>
+                    <h3>복습 학습 (오답 집중)</h3>
+                    <p>내가 틀렸던 고가중치 약점 문제들을 확률적으로 우선 추출하여 집중 훈련합니다. 맞추면 가중치가 단계별로 감점됩니다.</p>
+                    <span class="mode-badge">오답 가중치 룰렛 샘플링</span>
+                </div>
+
+                <!-- 실전 모의고사 -->
+                <div class="mode-card" data-mode="mock">
+                    <div class="mode-icon"><i class="fa-solid fa-stopwatch"></i></div>
+                    <h3>실전 모의고사 (40분)</h3>
+                    <p>5개년 기출 출제비율을 100% 반영한 40문항 실전 시험입니다. OMR 마킹 시트와 AI 일타 과외 처방전을 제공합니다.</p>
+                    <span class="mode-badge">40문항 / 40분 제한시간</span>
+                </div>
+
+                <!-- 파트별 전수 풀이 -->
+                <div class="mode-card" data-mode="part">
+                    <div class="mode-icon"><i class="fa-solid fa-layer-group"></i></div>
+                    <h3>파트별 전수 풀이</h3>
+                    <p>원하는 특정 단원/법률을 선택하여 해당 파트의 객관식 및 주관식 전 문항을 무작위 순서로 완독 정복합니다.</p>
+                    <span class="mode-badge">단원별 100% 전수 완독</span>
+                </div>
+
+                <!-- 기능추가중 -->
+                <div class="mode-card" data-mode="coming_soon" style="border-style: dashed;">
+                    <div class="mode-icon" style="color: #A855F7;"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                    <h3>기능추가중</h3>
+                    <p>AI 일타 해설챗, 취약 테마별 집중 훈련, 고난도 함정 특강 등 수험생 맞춤형 고급 기능이 업데이트될 예정입니다.</p>
+                    <span class="mode-badge" style="background: rgba(168, 85, 247, 0.15); color: #C084FC;">COMING SOON</span>
+                </div>
+
+                <!-- 오답리스트관리 (보안 잠금) -->
+                <div class="mode-card" data-mode="manage_wrong">
+                    <div class="mode-icon" style="color: #F43F5E;"><i class="fa-solid fa-list-check"></i></div>
+                    <h3>오답리스트 관리 🔒</h3>
+                    <p>누적된 오답 문항을 과목·단원별로 확인하고, 개별 삭제 버튼으로 오답 리스트에서 제외할 수 있습니다.</p>
+                    <span class="mode-badge" style="background: rgba(244, 63, 94, 0.15); color: #FDA4AF;">보안 PIN 잠금</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. QUIZ SCREEN -->
+        <section id="screen-quiz" class="screen">
+            <div id="quiz-card" class="quiz-card card-w1">
+                <!-- Tablet Canvas Overlay -->
+                <div class="canvas-overlay-container">
+                    <canvas id="drawing-canvas"></canvas>
+                </div>
+
+                <!-- Question Header Meta -->
+                <div class="question-meta">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span id="q-num-text" class="q-badge">문항 1 / 40</span>
+                        <span id="q-chapter-badge" style="font-size: 0.8rem; color: var(--text-muted); font-weight: 700;">총칙</span>
+                    </div>
+                    <span id="q-weight-badge" class="weight-badge" style="background: rgba(255,255,255,0.06); color: var(--text-main);">
+                        🌱 기본
+                    </span>
+                </div>
+
+                <!-- Question Title -->
+                <h2 id="q-title-text" class="q-title">문제가 로딩 중입니다...</h2>
+
+                <!-- Passage Box (조건/지문/보기 박스) -->
+                <div id="q-passage-box" class="passage-box" style="display: none;"></div>
+
+                <!-- Multiple Choice (1-5) Container -->
+                <div id="q-options-container" class="options-list"></div>
+
+                <!-- Subjective (단답형/괄호) Container -->
+                <div id="q-subjective-container" class="subjective-container" style="display: none;"></div>
+
+                <!-- Explanation & Tip Card -->
+                <div id="explanation-card" class="explanation-card">
+                    <div class="exp-header">
+                        <span class="exp-title"><i class="fa-solid fa-lightbulb text-amber-400"></i> 정답 및 상세 해설</span>
+                        <button id="btn-retry-q" class="btn-override" style="display: none;" title="오답 기록은 유지한 채 다시 풀기">
+                            <i class="fa-solid fa-rotate-left"></i> 이 문제 다시 풀기
+                        </button>
+                    </div>
+                    <!-- Prominent Target Correct Answer Display -->
+                    <div id="exp-answer-box" class="exp-answer-box"></div>
+                    <p id="exp-body-text" class="exp-body"></p>
+                    <div id="tip-box-text" class="tip-box" style="display: none;"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. RESULT SCREEN -->
+        <section id="screen-result" class="screen">
+            <div class="result-hero">
+                <h1 style="font-size: 1.5rem; font-weight: 800; color: var(--text-muted); margin-bottom: 8px;">시험 및 학습 종료</h1>
+                <div id="res-score-text" class="score-display">85점</div>
+                <div id="res-pass-pill" class="pass-pill pass"><i class="fa-solid fa-circle-check"></i> 최종 합격 (PASS)</div>
+
+                <div class="stats-row">
+                    <div class="stat-box">
+                        <div id="res-correct-count" class="val text-emerald-400">34개</div>
+                        <div class="lbl">맞은 문항</div>
+                    </div>
+                    <div class="stat-box">
+                        <div id="res-wrong-count" class="val text-rose-400">6개</div>
+                        <div class="lbl">틀린 문항</div>
+                    </div>
+                    <div class="stat-box">
+                        <div id="res-time-count" class="val text-sky-400">28분 14초</div>
+                        <div class="lbl">총 소요 시간</div>
+                    </div>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 12px; max-width: 480px; margin: 0 auto;">
+                    <button id="btn-copy-ai-prompt" class="btn-ctrl btn-primary" style="justify-content: center; padding: 14px; font-size: 1rem;">
+                        <i class="fa-solid fa-robot"></i> AI 일타 과외 처방전 복사 (Gemini/ChatGPT용)
+                    </button>
+                    <div style="display: flex; gap: 10px;">
+                        <button id="btn-retry-session" class="btn-ctrl" style="flex: 1; justify-content: center;">
+                            <i class="fa-solid fa-rotate-right"></i> 다시 풀기
+                        </button>
+                        <button id="btn-home-from-result" class="btn-ctrl" style="flex: 1; justify-content: center;">
+                            <i class="fa-solid fa-house"></i> 홈으로 이동
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Sticky Bottom Controller (Quiz Mode) -->
+    <footer id="quiz-bottom-controls" class="quiz-controls">
+        <div class="controls-content">
+            <button id="btn-prev-q" class="btn-ctrl"><i class="fa-solid fa-chevron-left"></i> 이전</button>
+            <button id="btn-toggle-exp" class="btn-ctrl"><i class="fa-solid fa-lightbulb text-amber-400"></i> 정답·해설 (Space)</button>
+            <button id="btn-next-q" class="btn-ctrl btn-primary">다음 <i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+    </footer>
+
+    <!-- MODALS -->
+
+    <!-- OMR Sheet Modal -->
+    <div id="modal-omr" class="modal-overlay">
+        <div class="modal-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <h3 style="font-size: 1.15rem; font-weight: 800;"><i class="fa-solid fa-table-cells text-sky-400"></i> 실전 OMR 마킹 시트</h3>
+                <button class="btn-close-modal btn-icon"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">문항 번호를 클릭하면 해당 문제로 즉시 이동합니다.</p>
+            <div id="omr-grid-container" class="omr-grid"></div>
+        </div>
+    </div>
+
+    <!-- Part Select Modal -->
+    <div id="modal-part-select" class="modal-overlay">
+        <div class="modal-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <h3 style="font-size: 1.15rem; font-weight: 800;"><i class="fa-solid fa-layer-group text-sky-400"></i> 집중 학습할 파트 선택</h3>
+                <button class="btn-close-modal btn-icon"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">원하는 단원을 선택하면 객관식+주관식 전 문항을 무작위로 완독합니다.</p>
+            <div id="part-list-container" style="display: flex; flex-direction: column; gap: 8px;"></div>
+        </div>
+    </div>
+
+    <!-- PIN Auth Modal (Password: 2834) -->
+    <div id="modal-pin-auth" class="modal-overlay">
+        <div class="modal-card" style="max-width: 380px; text-align: center;">
+            <div style="font-size: 2.2rem; color: #F43F5E; margin-bottom: 12px;">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <h3 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 6px;">보안 PIN 비밀번호 인증</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">오답리스트 관리에 접근하려면 비밀번호(4자리)를 입력하세요.</p>
+
+            <form id="form-pin-auth" onsubmit="return false;" style="display: flex; flex-direction: column; gap: 14px;">
+                <input type="password" id="input-pin-code" class="blank-input" style="text-align: center; font-size: 1.8rem; letter-spacing: 0.35em; font-weight: 900; padding: 12px;" maxlength="4" placeholder="••••" autocomplete="off">
+                <div style="display: flex; gap: 10px;">
+                    <button type="button" class="btn-close-modal btn-ctrl" style="flex: 1; justify-content: center;">취소</button>
+                    <button type="submit" id="btn-submit-pin" class="btn-ctrl btn-primary" style="flex: 1; justify-content: center;">확인</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Wrong Answer Manager Modal -->
+    <div id="modal-wrong-manager" class="modal-overlay">
+        <div class="modal-card" style="max-width: 800px; max-height: 90vh;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
+                <div>
+                    <h3 style="font-size: 1.25rem; font-weight: 800; display: flex; align-items: center; gap: 8px;">
+                        <i class="fa-solid fa-list-check text-rose-500"></i> 오답 리스트 관리
+                    </h3>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">
+                        틀린 문제가 등록된 리스트입니다. 우측 <b style="color: #F43F5E;">[삭제]</b> 버튼을 누르면 오답 리스트에서 제외됩니다.
+                    </p>
+                </div>
+                <button class="btn-close-modal btn-icon"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <!-- Filter Bar -->
+            <div class="wrong-filter-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+                <div class="filter-tabs" style="display: flex; gap: 6px;">
+                    <button class="btn-filter active" data-subject="all">전체</button>
+                    <button class="btn-filter" data-subject="관계법규">관계법규</button>
+                    <button class="btn-filter" data-subject="관리실무">관리실무</button>
+                </div>
+                <div id="wrong-summary-count" style="font-size: 0.85rem; font-weight: 700; color: #F8FAFC;">
+                    등록된 오답: <span class="text-rose-400" id="cnt-total-wrong">0</span>개
+                </div>
+            </div>
+
+            <!-- List Container -->
+            <div id="wrong-items-container" class="wrong-items-list" style="display: flex; flex-direction: column; gap: 10px; max-height: 60vh; overflow-y: auto;">
+                <!-- Dynamically rendered list items -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast-msg" class="toast-msg">알림 메시지</div>
+
+    <!-- Master Exam Data Bundle (3,470 Questions) -->
+    <script src="data/exam_bank.js"></script>
+
+    <!-- Application Script -->
+    <script src="js/app.js"></script>
+</body>
+</html>
