@@ -412,6 +412,7 @@
 }
 
 /* Subjective Blank Inputs */
+/* Subjective Blank Inputs & Handwriting Pad */
 .subjective-container {
     background: #0A0F1D;
     border: 1px solid var(--border-base);
@@ -420,15 +421,28 @@
     margin-bottom: 20px;
 }
 
+.blank-row-wrapper {
+    margin-bottom: 16px;
+    background: rgba(19, 27, 46, 0.4);
+    border: 1px solid var(--border-base);
+    border-radius: 10px;
+    padding: 10px 14px;
+    transition: all 0.2s ease;
+}
+
+.blank-row-wrapper:last-child {
+    margin-bottom: 0;
+}
+
+.blank-row-wrapper:focus-within, .blank-row-wrapper.hw-active {
+    border-color: var(--theme-primary);
+    background: rgba(19, 27, 46, 0.8);
+}
+
 .blank-row {
     display: flex;
     align-items: center;
-    gap: 14px;
-    margin-bottom: 14px;
-}
-
-.blank-row:last-child {
-    margin-bottom: 0;
+    gap: 10px;
 }
 
 .blank-label {
@@ -437,6 +451,7 @@
     font-size: 1.15rem;
     width: 44px;
     text-align: center;
+    flex-shrink: 0;
 }
 
 .blank-input {
@@ -444,7 +459,7 @@
     background: #131B2E;
     border: 1.5px solid var(--border-base);
     border-radius: 8px;
-    padding: 12px 16px;
+    padding: 10px 14px;
     font-size: 1.15rem;
     color: #FFF;
     outline: none;
@@ -464,6 +479,146 @@
 .blank-input.wrong {
     border-color: var(--color-wrong);
     background: rgba(244, 63, 94, 0.1);
+}
+
+.btn-toggle-hw {
+    background: #1E293B;
+    border: 1px solid var(--border-base);
+    color: var(--theme-primary);
+    padding: 9px 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+}
+
+.btn-toggle-hw:hover, .btn-toggle-hw.active {
+    background: var(--theme-primary);
+    color: #000;
+    border-color: var(--theme-primary);
+}
+
+.hw-drawer {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed #334155;
+    animation: fadeIn 0.2s ease;
+}
+
+.hw-canvas-box {
+    position: relative;
+    width: 100%;
+    height: 140px;
+    background: #0B1120;
+    border: 1.5px solid #334155;
+    border-radius: 8px;
+    overflow: hidden;
+    touch-action: none;
+}
+
+.hw-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    cursor: crosshair;
+}
+
+.hw-guide-line {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    border-top: 1px dashed rgba(255, 255, 255, 0.15);
+    pointer-events: none;
+}
+
+.hw-status-text {
+    position: absolute;
+    bottom: 6px;
+    right: 10px;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    pointer-events: none;
+}
+
+.hw-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.hw-candidates {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    min-height: 32px;
+}
+
+.hw-cand-label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-weight: 700;
+}
+
+.hw-cand-chip {
+    background: #1E293B;
+    border: 1px solid #334155;
+    color: #F1F5F9;
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.hw-cand-chip:hover, .hw-cand-chip.selected {
+    background: var(--theme-primary);
+    color: #000;
+    border-color: var(--theme-primary);
+}
+
+.hw-btn-group {
+    display: flex;
+    gap: 6px;
+}
+
+.btn-hw-action {
+    background: #1E293B;
+    border: 1px solid var(--border-base);
+    color: var(--text-main);
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.btn-hw-action:hover {
+    background: #334155;
+    color: #FFF;
+}
+
+.btn-hw-done {
+    background: rgba(16, 185, 129, 0.2);
+    border-color: #10B981;
+    color: #34D399;
+}
+.btn-hw-done:hover {
+    background: #10B981;
+    color: #000;
 }
 
 /* Explanation & Tip Box */

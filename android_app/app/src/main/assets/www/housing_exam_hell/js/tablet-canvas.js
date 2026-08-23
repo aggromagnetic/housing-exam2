@@ -109,16 +109,20 @@ export class TabletCanvas {
 
     onPointerDown(e) {
         if (!this.isEnabled) return;
-        e.preventDefault();
 
         if (this.palmRejection && e.pointerType === 'touch' && e.isPrimary === false) return;
 
         this.isDrawing = true;
+        this.pointerDownPos = this.getPos(e);
+        this.pointerDownClient = { x: e.clientX, y: e.clientY };
+        this.pointerDownTime = Date.now();
+        this.pointerMoved = false;
+
         try {
             this.canvas.setPointerCapture(e.pointerId);
         } catch (err) {}
 
-        const pos = this.getPos(e);
+        const pos = this.pointerDownPos;
         this.currentStroke = {
             tool: this.currentTool,
             color: this.penColor,
@@ -133,9 +137,15 @@ export class TabletCanvas {
 
     onPointerMove(e) {
         if (!this.isDrawing || !this.currentStroke) return;
-        e.preventDefault();
 
         const pos = this.getPos(e);
+        if (this.pointerDownPos) {
+            const dist = Math.hypot(pos.x - this.pointerDownPos.x, pos.y - this.pointerDownPos.y);
+            if (dist > 5) {
+                this.pointerMoved = true;
+            }
+        }
+
         this.currentStroke.points.push(pos);
 
         if (this.currentTool === 'eraser') {
@@ -160,10 +170,43 @@ export class TabletCanvas {
     async onPointerUp(e) {
         if (!this.isDrawing) return;
         this.isDrawing = false;
+
+        const stroke = this.currentStroke;
         this.currentStroke = null;
+
         try {
             if (e && e.pointerId) this.canvas.releasePointerCapture(e.pointerId);
         } catch (err) {}
+
+        const duration = Date.now() - (this.pointerDownTime || 0);
+        const totalDist = (stroke && stroke.points && stroke.points.length > 1) ? 
+            Math.hypot(
+                stroke.points[stroke.points.length - 1].x - stroke.points[0].x,
+                stroke.points[stroke.points.length - 1].y - stroke.points[0].y
+            ) : 0;
+
+        // If this was a quick tap (< 8px movement and < 350ms), pass click through to underlying buttons/options/inputs
+        if (!this.pointerMoved && totalDist < 8 && duration < 350) {
+            this.strokes.pop();
+            this.redraw();
+
+            this.canvas.style.pointerEvents = 'none';
+            const clientX = (e && e.clientX) ? e.clientX : (this.pointerDownClient ? this.pointerDownClient.x : 0);
+            const clientY = (e && e.clientY) ? e.clientY : (this.pointerDownClient ? this.pointerDownClient.y : 0);
+            const underEl = document.elementFromPoint(clientX, clientY);
+            this.canvas.style.pointerEvents = 'auto';
+
+            if (underEl) {
+                const targetInteractive = underEl.closest('button, input, textarea, a, .option-item, .blank-input, .btn-ctrl, .btn-ctrl-sm, .btn-override, .color-dot, .stylus-btn, .btn-toggle-hw');
+                if (targetInteractive) {
+                    targetInteractive.click();
+                    if (['INPUT', 'TEXTAREA'].includes(targetInteractive.tagName)) {
+                        targetInteractive.focus();
+                    }
+                    return;
+                }
+            }
+        }
 
         if (this.currentQuestionKey) {
             await IDBStore.saveDrawingStrokes(this.currentQuestionKey, this.strokes);

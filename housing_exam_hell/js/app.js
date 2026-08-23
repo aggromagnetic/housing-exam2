@@ -666,16 +666,20 @@
 
         onPointerDown(e) {
             if (!this.isEnabled) return;
-            e.preventDefault();
 
             if (this.palmRejection && e.pointerType === 'touch' && e.isPrimary === false) return;
 
             this.isDrawing = true;
+            this.pointerDownPos = this.getPos(e);
+            this.pointerDownClient = { x: e.clientX, y: e.clientY };
+            this.pointerDownTime = Date.now();
+            this.pointerMoved = false;
+
             try {
                 this.canvas.setPointerCapture(e.pointerId);
             } catch (err) {}
 
-            const pos = this.getPos(e);
+            const pos = this.pointerDownPos;
             this.currentStroke = {
                 tool: this.currentTool,
                 color: this.penColor,
@@ -690,9 +694,15 @@
 
         onPointerMove(e) {
             if (!this.isDrawing || !this.currentStroke) return;
-            e.preventDefault();
 
             const pos = this.getPos(e);
+            if (this.pointerDownPos) {
+                const dist = Math.hypot(pos.x - this.pointerDownPos.x, pos.y - this.pointerDownPos.y);
+                if (dist > 5) {
+                    this.pointerMoved = true;
+                }
+            }
+
             this.currentStroke.points.push(pos);
 
             if (this.currentTool === 'eraser') {
@@ -717,10 +727,43 @@
         async onPointerUp(e) {
             if (!this.isDrawing) return;
             this.isDrawing = false;
+
+            const stroke = this.currentStroke;
             this.currentStroke = null;
+
             try {
                 if (e && e.pointerId) this.canvas.releasePointerCapture(e.pointerId);
             } catch (err) {}
+
+            const duration = Date.now() - (this.pointerDownTime || 0);
+            const totalDist = (stroke && stroke.points && stroke.points.length > 1) ? 
+                Math.hypot(
+                    stroke.points[stroke.points.length - 1].x - stroke.points[0].x,
+                    stroke.points[stroke.points.length - 1].y - stroke.points[0].y
+                ) : 0;
+
+            // If this was a quick tap (< 8px movement and < 350ms), pass click through to underlying buttons/options/inputs
+            if (!this.pointerMoved && totalDist < 8 && duration < 350) {
+                this.strokes.pop();
+                this.redraw();
+
+                this.canvas.style.pointerEvents = 'none';
+                const clientX = (e && e.clientX) ? e.clientX : (this.pointerDownClient ? this.pointerDownClient.x : 0);
+                const clientY = (e && e.clientY) ? e.clientY : (this.pointerDownClient ? this.pointerDownClient.y : 0);
+                const underEl = document.elementFromPoint(clientX, clientY);
+                this.canvas.style.pointerEvents = 'auto';
+
+                if (underEl) {
+                    const targetInteractive = underEl.closest('button, input, textarea, a, .option-item, .blank-input, .btn-ctrl, .btn-ctrl-sm, .btn-override, .color-dot, .stylus-btn, .btn-toggle-hw');
+                    if (targetInteractive) {
+                        targetInteractive.click();
+                        if (['INPUT', 'TEXTAREA'].includes(targetInteractive.tagName)) {
+                            targetInteractive.focus();
+                        }
+                        return;
+                    }
+                }
+            }
 
             if (this.currentQuestionKey) {
                 await IDBStore.saveDrawingStrokes(this.currentQuestionKey, this.strokes);
@@ -786,6 +829,60 @@
             return this.isEnabled;
         }
     }
+
+    // -------------------------------------------------------------
+    // 4.5. Korean Handwriting Recognition Engine
+    // -------------------------------------------------------------
+    const HandwritingRecognizer = {
+        async recognize(strokes, width = 400, height = 200) {
+            if (!strokes || strokes.length === 0) return [];
+
+            const formattedInk = strokes.map(stroke => {
+                const xs = [];
+                const ys = [];
+                const ts = [];
+                stroke.forEach(pt => {
+                    xs.push(Math.round(pt.x));
+                    ys.push(Math.round(pt.y));
+                    ts.push(Math.round(pt.t || 0));
+                });
+                return [xs, ys, ts];
+            });
+
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 3500);
+
+                const res = await fetch('https://inputtools.google.com/request?itc=ko-t-i0-handwrit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        app_version: 0.4,
+                        api_level: '537.36',
+                        device: 'web',
+                        input_type: '0',
+                        options: 'enable_pre_space',
+                        requests: [{
+                            writing_guide: { writing_area_width: width, writing_area_height: height },
+                            ink: formattedInk,
+                            language: 'ko'
+                        }]
+                    }),
+                    signal: controller.signal
+                });
+                clearTimeout(timeoutId);
+
+                if (!res.ok) return [];
+                const data = await res.json();
+                if (Array.isArray(data) && data[0] === 'SUCCESS' && data[1] && data[1][0] && Array.isArray(data[1][0][1])) {
+                    return data[1][0][1];
+                }
+            } catch (err) {
+                console.warn('Handwriting recognition API error:', err);
+            }
+            return [];
+        }
+    };
 
     // -------------------------------------------------------------
     // 5. OMR Sheet & AI Prompt Generator
@@ -1341,13 +1438,16 @@
         const targetAnswers = q.answers || {};
 
         Object.keys(targetAnswers).forEach((k) => {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'blank-row-wrapper';
+
             const row = document.createElement('div');
             row.className = 'blank-row';
 
             const input = document.createElement('input');
             input.type = 'text';
             input.className = 'blank-input';
-            input.placeholder = `빈칸 [${k}] 정답 입력`;
+            input.placeholder = `빈칸 [${k}] 정답 입력 (터치/키보드/S펜)`;
             input.value = userResponse[k] || '';
             input.dataset.key = k;
 
@@ -1363,7 +1463,8 @@
             input.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter') {
                     e.preventDefault();
-                    const nextInput = row.nextElementSibling?.querySelector('input');
+                    const nextWrapper = wrapper.nextElementSibling;
+                    const nextInput = nextWrapper?.querySelector('input');
                     if (nextInput) {
                         nextInput.focus();
                     } else {
@@ -1372,9 +1473,195 @@
                 }
             });
 
-            row.innerHTML = `<span class="blank-label">${k}</span>`;
+            const btnToggleHW = document.createElement('button');
+            btnToggleHW.type = 'button';
+            btnToggleHW.className = 'btn-toggle-hw';
+            btnToggleHW.innerHTML = `<i class="fa-solid fa-pen-fancy"></i> 필기인식`;
+
+            row.innerHTML = `<span class="blank-label">[${k}]</span>`;
             row.appendChild(input);
-            elements.quiz.subjectiveContainer.appendChild(row);
+            row.appendChild(btnToggleHW);
+            wrapper.appendChild(row);
+
+            // Handwriting Drawer
+            const drawer = document.createElement('div');
+            drawer.className = 'hw-drawer';
+            drawer.style.display = 'none';
+
+            drawer.innerHTML = `
+                <div class="hw-canvas-box">
+                    <canvas class="hw-canvas"></canvas>
+                    <div class="hw-guide-line"></div>
+                    <div class="hw-status-text">여기에 펜/손가락으로 글씨를 쓰면 실시간 자동 인식됩니다</div>
+                </div>
+                <div class="hw-bar">
+                    <div class="hw-candidates">
+                        <span class="hw-cand-label">인식 후보:</span>
+                        <span class="hw-cand-empty" style="font-size: 0.82rem; color: var(--text-muted);">글씨를 작성하세요</span>
+                    </div>
+                    <div class="hw-btn-group">
+                        <button type="button" class="btn-hw-action btn-hw-back" title="한 글자 지우기"><i class="fa-solid fa-delete-left"></i> 지움</button>
+                        <button type="button" class="btn-hw-action btn-hw-clear" title="패드 전체 지우기"><i class="fa-solid fa-trash-can"></i> 전체삭제</button>
+                        <button type="button" class="btn-hw-action btn-hw-done" title="필기 완료"><i class="fa-solid fa-check"></i> 완료</button>
+                    </div>
+                </div>
+            `;
+            wrapper.appendChild(drawer);
+
+            // Setup Handwriting Pad inside Drawer
+            const hwCanvas = drawer.querySelector('.hw-canvas');
+            const candidatesBox = drawer.querySelector('.hw-candidates');
+            const btnBack = drawer.querySelector('.btn-hw-back');
+            const btnClear = drawer.querySelector('.btn-hw-clear');
+            const btnDone = drawer.querySelector('.btn-hw-done');
+
+            let hwCtx = null;
+            let hwStrokes = [];
+            let currentHwStroke = null;
+            let isHwDrawing = false;
+            let hwRecognizeTimer = null;
+
+            function initHwCanvas() {
+                const rect = hwCanvas.parentElement.getBoundingClientRect();
+                const dpr = window.devicePixelRatio || 1;
+                const w = Math.round(rect.width) || 360;
+                const h = Math.round(rect.height) || 140;
+
+                hwCanvas.width = w * dpr;
+                hwCanvas.height = h * dpr;
+                hwCanvas.style.width = w + 'px';
+                hwCanvas.style.height = h + 'px';
+
+                hwCtx = hwCanvas.getContext('2d');
+                hwCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                redrawHwCanvas();
+            }
+
+            function redrawHwCanvas() {
+                if (!hwCtx) return;
+                const dpr = window.devicePixelRatio || 1;
+                hwCtx.clearRect(0, 0, hwCanvas.width / dpr, hwCanvas.height / dpr);
+
+                hwStrokes.forEach(stroke => {
+                    if (!stroke || stroke.length < 2) return;
+                    hwCtx.save();
+                    hwCtx.strokeStyle = '#38BDF8';
+                    hwCtx.lineWidth = 3.5;
+                    hwCtx.lineCap = 'round';
+                    hwCtx.lineJoin = 'round';
+                    hwCtx.beginPath();
+                    hwCtx.moveTo(stroke[0].x, stroke[0].y);
+                    for (let i = 1; i < stroke.length; i++) {
+                        hwCtx.lineTo(stroke[i].x, stroke[i].y);
+                    }
+                    hwCtx.stroke();
+                    hwCtx.restore();
+                });
+            }
+
+            async function triggerRecognition() {
+                if (hwStrokes.length === 0) return;
+                const dpr = window.devicePixelRatio || 1;
+                const w = hwCanvas.width / dpr;
+                const h = hwCanvas.height / dpr;
+
+                candidatesBox.innerHTML = `<span class="hw-cand-label">인식 중...</span>`;
+
+                const candidates = await HandwritingRecognizer.recognize(hwStrokes, w, h);
+                if (candidates && candidates.length > 0) {
+                    const topCand = candidates[0].trim();
+                    input.value = topCand;
+                    if (!state.userAnswers[index]) state.userAnswers[index] = {};
+                    state.userAnswers[index][k] = topCand;
+
+                    candidatesBox.innerHTML = `<span class="hw-cand-label">후보:</span>`;
+                    candidates.slice(0, 6).forEach((cand, cIdx) => {
+                        const chip = document.createElement('button');
+                        chip.type = 'button';
+                        chip.className = `hw-cand-chip ${cIdx === 0 ? 'selected' : ''}`;
+                        chip.textContent = cand;
+                        chip.addEventListener('click', () => {
+                            candidatesBox.querySelectorAll('.hw-cand-chip').forEach(c => c.classList.remove('selected'));
+                            chip.classList.add('selected');
+                            input.value = cand.trim();
+                            if (!state.userAnswers[index]) state.userAnswers[index] = {};
+                            state.userAnswers[index][k] = cand.trim();
+                        });
+                        candidatesBox.appendChild(chip);
+                    });
+                } else {
+                    candidatesBox.innerHTML = `<span class="hw-cand-label">후보:</span><span style="font-size: 0.82rem; color: #F87171;">인식 결과 없음 (다시 작성)</span>`;
+                }
+            }
+
+            hwCanvas.addEventListener('pointerdown', (e) => {
+                e.preventDefault();
+                isHwDrawing = true;
+                try { hwCanvas.setPointerCapture(e.pointerId); } catch (err) {}
+
+                const rect = hwCanvas.getBoundingClientRect();
+                const pt = { x: e.clientX - rect.left, y: e.clientY - rect.top, t: Date.now() };
+                currentHwStroke = [pt];
+                hwStrokes.push(currentHwStroke);
+
+                if (hwRecognizeTimer) clearTimeout(hwRecognizeTimer);
+            });
+
+            hwCanvas.addEventListener('pointermove', (e) => {
+                if (!isHwDrawing || !currentHwStroke) return;
+                e.preventDefault();
+
+                const rect = hwCanvas.getBoundingClientRect();
+                const pt = { x: e.clientX - rect.left, y: e.clientY - rect.top, t: Date.now() };
+                currentHwStroke.push(pt);
+                redrawHwCanvas();
+            });
+
+            hwCanvas.addEventListener('pointerup', (e) => {
+                if (!isHwDrawing) return;
+                isHwDrawing = false;
+                currentHwStroke = null;
+                try { if (e && e.pointerId) hwCanvas.releasePointerCapture(e.pointerId); } catch (err) {}
+
+                if (hwRecognizeTimer) clearTimeout(hwRecognizeTimer);
+                hwRecognizeTimer = setTimeout(() => {
+                    triggerRecognition();
+                }, 450);
+            });
+
+            btnToggleHW.addEventListener('click', () => {
+                const isOpen = drawer.style.display !== 'none';
+                drawer.style.display = isOpen ? 'none' : 'block';
+                btnToggleHW.classList.toggle('active', !isOpen);
+                wrapper.classList.toggle('hw-active', !isOpen);
+
+                if (!isOpen) {
+                    setTimeout(() => initHwCanvas(), 50);
+                }
+            });
+
+            btnBack.addEventListener('click', () => {
+                input.value = input.value.slice(0, -1);
+                if (!state.userAnswers[index]) state.userAnswers[index] = {};
+                state.userAnswers[index][k] = input.value;
+            });
+
+            btnClear.addEventListener('click', () => {
+                hwStrokes = [];
+                redrawHwCanvas();
+                input.value = '';
+                if (!state.userAnswers[index]) state.userAnswers[index] = {};
+                state.userAnswers[index][k] = '';
+                candidatesBox.innerHTML = `<span class="hw-cand-label">후보:</span><span style="font-size: 0.82rem; color: var(--text-muted);">글씨를 작성하세요</span>`;
+            });
+
+            btnDone.addEventListener('click', () => {
+                drawer.style.display = 'none';
+                btnToggleHW.classList.remove('active');
+                wrapper.classList.remove('hw-active');
+            });
+
+            elements.quiz.subjectiveContainer.appendChild(wrapper);
         });
     }
 
