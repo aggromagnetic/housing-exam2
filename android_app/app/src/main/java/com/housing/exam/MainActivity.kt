@@ -153,6 +153,11 @@ class MainActivity : AppCompatActivity() {
         controller.systemBarsBehavior =
             WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         controller.hide(WindowInsetsCompat.Type.systemBars())
+
+        // Re-hide navigation bar after soft keyboard or S-Pen toolbar dismissal
+        window.decorView.postDelayed({
+            controller.hide(WindowInsetsCompat.Type.systemBars())
+        }, 500)
     }
 
     private fun setupBackPressHandler() {
