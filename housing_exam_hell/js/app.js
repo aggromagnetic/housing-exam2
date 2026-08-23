@@ -895,6 +895,9 @@
             questions.forEach((q, idx) => {
                 const btn = document.createElement('button');
                 btn.className = 'omr-cell';
+                if (idx === state.currentIndex) {
+                    btn.classList.add('current');
+                }
 
                 const isAnswered = userAnswers[idx] !== undefined && userAnswers[idx] !== null && userAnswers[idx] !== '';
                 const res = results[idx];
@@ -1886,18 +1889,21 @@
     }
 
     function openOMR() {
-        if (!elements.modals.omr) return;
-        OMRSheet.render(
+        const modal = elements.modals.omr || document.getElementById('modal-omr');
+        const grid = elements.modals.omrGrid || document.getElementById('omr-grid-container');
+        if (!modal || !grid) return;
+
+        OMRSheet.renderGrid(
+            grid,
             state.questions,
             state.userAnswers,
             state.results,
-            state.currentIndex,
             (targetIdx) => {
-                closeModal(elements.modals.omr);
+                closeModal(modal);
                 renderQuestion(targetIdx);
             }
         );
-        elements.modals.omr.classList.add('active');
+        modal.classList.add('active');
     }
 
     function openPartSelectModal() {
@@ -2105,6 +2111,10 @@
         });
 
         elements.header.btnOMR.addEventListener('click', openOMR);
+        if (elements.quiz.qNum) {
+            elements.quiz.qNum.addEventListener('click', openOMR);
+            elements.quiz.qNum.title = '클릭하여 다른 문항 번호로 즉시 이동 (OMR)';
+        }
         elements.header.btnPen.addEventListener('click', () => {
             const isQuizScreen = elements.screens.quiz && elements.screens.quiz.classList.contains('active');
             if (!isQuizScreen) {
