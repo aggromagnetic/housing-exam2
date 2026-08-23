@@ -1,0 +1,104 @@
+/* Housing Exam Hell - Dark Theme & Color System */
+
+:root {
+    --bg-main: #090D16;
+    --bg-card: #131B2E;
+    --bg-card-hover: #1A243D;
+    --bg-input: #0D1322;
+    --border-base: #222F4C;
+    --border-focus: #38BDF8;
+
+    --text-main: #F1F5F9;
+    --text-muted: #94A3B8;
+    --text-dim: #64748B;
+
+    /* Subject Themes (Default: 관계법규 Cyan) */
+    --theme-primary: #38BDF8;
+    --theme-primary-hover: #0EA5E9;
+    --theme-glow: rgba(56, 189, 248, 0.25);
+    --theme-badge-bg: rgba(56, 189, 248, 0.12);
+
+    --color-correct: #10B981;
+    --color-wrong: #F43F5E;
+    --color-warn: #F59E0B;
+
+    /* Spaced Repetition Weight Glows */
+    --glow-w2: rgba(245, 158, 11, 0.3);
+    --glow-w4: rgba(249, 115, 22, 0.45);
+    --glow-w6: rgba(244, 63, 94, 0.6);
+    --glow-w10: rgba(239, 68, 68, 0.85);
+}
+
+/* 관리실무 Emerald Theme Override */
+body[data-subject="관리실무"] {
+    --theme-primary: #34D399;
+    --theme-primary-hover: #10B981;
+    --theme-glow: rgba(52, 211, 153, 0.25);
+    --theme-badge-bg: rgba(52, 211, 153, 0.12);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Pretendard", "Noto Sans KR", "Segoe UI", Roboto, sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+}
+
+/* Weight Badge & Card Glow Effects */
+.card-w1 {
+    border: 1px solid var(--border-base);
+}
+
+.card-w2 {
+    border: 1.5px solid var(--color-warn) !important;
+    box-shadow: 0 0 12px var(--glow-w2);
+}
+
+.card-w4 {
+    border: 2px solid #F97316 !important;
+    box-shadow: 0 0 18px var(--glow-w4);
+}
+
+.card-w6 {
+    border: 2px solid #F43F5E !important;
+    box-shadow: 0 0 24px var(--glow-w6);
+}
+
+.card-w10 {
+    border: 2.5px solid #EF4444 !important;
+    box-shadow: 0 0 30px var(--glow-w10);
+    animation: hellPulse 2s infinite alternate ease-in-out;
+}
+
+@keyframes hellPulse {
+    0% {
+        box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+    }
+    100% {
+        box-shadow: 0 0 35px rgba(239, 68, 68, 0.9), inset 0 0 15px rgba(239, 68, 68, 0.15);
+    }
+}
+
+/* Blood Gauge Progress Bar */
+.blood-progress-container {
+    height: 8px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+}
+
+.blood-progress-fill {
+    height: 100%;
+    transition: width 0.3s ease, background-color 0.4s ease;
+}
