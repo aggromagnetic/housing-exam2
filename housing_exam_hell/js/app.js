@@ -1069,8 +1069,10 @@
                 cntTotalWrong: document.getElementById('cnt-total-wrong'),
                 tabWrongList: document.getElementById('tab-btn-wrong-list'),
                 tabNeedsEdit: document.getElementById('tab-btn-needs-edit'),
+                tabSearchAll: document.getElementById('tab-btn-search-all'),
                 cntWrongTab: document.getElementById('cnt-wrong-tab'),
                 cntNeedsEditTab: document.getElementById('cnt-needs-edit-tab'),
+                inputSearch: document.getElementById('input-wrong-manager-search'),
                 inputPin: document.getElementById('input-pin-code'),
                 formPin: document.getElementById('form-pin-auth')
             },
@@ -1954,7 +1956,7 @@
     }
 
     function generateMockExamMarkdown(subject) {
-        const set = ExamEngine.generateMockSet(subject, state.statsMap);
+        const set = ExamEngine.generateExamSet(subject, state.statsMap);
         if (!set || set.length === 0) {
             showToast('❌ 문제를 불러올 수 없습니다.');
             return;
@@ -2073,6 +2075,464 @@
         showToast(`📥 [${subject}] 실전 모의고사 40제 MD 다운로드 완료!`);
     }
 
+    function openQuestionPreview(q) {
+        if (!elements.modals.questionPreview) return;
+        const modal = elements.modals.questionPreview;
+        applyCustomEdits(q);
+
+        const subjBadge = document.getElementById('prev-q-subject-badge');
+        if (subjBadge) {
+            subjBadge.textContent = q.subject;
+            subjBadge.className = `subject-badge ${q.subject === '관리실무' ? 'gwanri' : 'law'}`;
+        }
+        document.getElementById('prev-q-chapter-text').textContent = q.chapterName || '';
+
+        const formatted = formatQuestionAndPassage(q);
+        document.getElementById('prev-q-title').innerHTML = formatted.title;
+
+        const passBox = document.getElementById('prev-q-passage');
+        if (formatted.passage) {
+            passBox.style.display = 'block';
+            passBox.innerHTML = formatted.passage;
+        } else {
+            passBox.style.display = 'none';
+        }
+
+        const optContainer = document.getElementById('prev-q-options');
+        const subjContainer = document.getElementById('prev-q-subjective');
+
+        if (q.type === 'choice') {
+            optContainer.style.display = 'flex';
+            subjContainer.style.display = 'none';
+            optContainer.innerHTML = '';
+            (q.options || []).forEach((opt, idx) => {
+                const choiceNum = idx + 1;
+                const optDiv = document.createElement('div');
+                optDiv.className = `option-item ${choiceNum === Number(q.answer) ? 'correct' : ''}`;
+                optDiv.innerHTML = `
+                    <span class="opt-num">${choiceNum}</span>
+                    <span class="opt-text">${opt}</span>
+                `;
+                optContainer.appendChild(optDiv);
+            });
+        } else {
+            optContainer.style.display = 'none';
+            subjContainer.style.display = 'block';
+            subjContainer.innerHTML = '';
+            Object.entries(q.answers || {}).forEach(([k, ans]) => {
+                const row = document.createElement('div');
+                row.className = 'blank-row';
+                row.innerHTML = `
+                    <span class="blank-label">[${k}]</span>
+                    <input type="text" class="blank-input correct" value="${ans}" readonly>
+                `;
+                subjContainer.appendChild(row);
+            });
+        }
+
+        // Answer Box
+        let ansHtml = '';
+        if (q.type === 'choice') {
+            const optText = q.options ? q.options[Number(q.answer) - 1] : '';
+            ansHtml = `<span class="exp-answer-badge">정답</span> <span class="exp-answer-val">${q.answer}번 ${optText ? `(${optText})` : ''}</span>`;
+        } else {
+            const ansList = Object.entries(q.answers || {}).map(([k, v]) => `[${k}] <b>${v}</b>`).join(' , ');
+            ansHtml = `<span class="exp-answer-badge">정답</span> <span class="exp-answer-val">${ansList}</span>`;
+        }
+        document.getElementById('prev-q-answer-box').innerHTML = ansHtml;
+        document.getElementById('prev-q-explanation').innerHTML = q.explanation || '(등록된 상세 해설이 없습니다)';
+
+        const tipBox = document.getElementById('prev-q-tip-box');
+        if (q.tip) {
+            tipBox.style.display = 'block';
+            tipBox.innerHTML = `💡 <b>[일타 팁]</b> ${q.tip}`;
+        } else {
+            tipBox.style.display = 'none';
+        }
+
+        const btnEditFromPrev = document.getElementById('btn-edit-from-preview');
+        if (btnEditFromPrev) {
+            btnEditFromPrev.onclick = () => {
+                closeModal(modal);
+                openEditModalForQuestion(q);
+            };
+        }
+
+        modal.classList.add('active');
+    }
+
+    function openEditModalForQuestion(q) {
+        if (!elements.modals.editQuestion) return;
+        applyCustomEdits(q);
+
+        document.getElementById('edit-q-key').value = q.qKey;
+        document.getElementById('edit-q-title').value = q.question || q.title || '';
+        document.getElementById('edit-q-passage').value = q.passage || '';
+
+        const optGroup = document.getElementById('edit-options-group');
+        if (q.type === 'choice') {
+            optGroup.style.display = 'block';
+            for (let i = 1; i <= 5; i++) {
+                const optInput = document.getElementById(`edit-opt-${i}`);
+                if (optInput) {
+                    optInput.value = (q.options && q.options[i - 1]) ? q.options[i - 1] : '';
+                }
+            }
+            document.getElementById('edit-q-answer').value = q.answer || '1';
+        } else {
+            optGroup.style.display = 'none';
+            if (q.answers) {
+                document.getElementById('edit-q-answer').value = Object.entries(q.answers).map(([k, v]) => `${k}=${v}`).join(', ');
+            } else {
+                document.getElementById('edit-q-answer').value = q.answer || '';
+            }
+        }
+
+        document.getElementById('edit-q-explanation').value = q.explanation || '';
+        document.getElementById('edit-q-tip').value = q.tip || '';
+
+        elements.modals.editQuestion.classList.add('active');
+    }
+
+    function openPINAuthModal() {
+        if (!elements.modals.pinAuth) return;
+        elements.modals.inputPin.value = '';
+        elements.modals.pinAuth.classList.add('active');
+        setTimeout(() => elements.modals.inputPin.focus(), 100);
+    }
+
+    function verifyPINAuth() {
+        const pin = (elements.modals.inputPin.value || '').trim();
+        if (pin === '2834' || pin === '0000') {
+            closeModal(elements.modals.pinAuth);
+            openWrongManagerModal();
+            showToast('🔓 오답 및 수정 관리가 열렸습니다.');
+        } else {
+            showToast('❌ 잘못된 PIN 번호입니다. (기본: 2834)');
+            elements.modals.inputPin.value = '';
+            elements.modals.inputPin.focus();
+        }
+    }
+
+    async function openWrongManagerModal() {
+        if (!elements.modals.wrongManager) return;
+        state.statsMap = await IDBStore.getAllStatsMap();
+        state.needsEditMap = await IDBStore.getAllNeedsEditMap();
+        state.wrongManagerTab = 'wrong';
+        state.wrongManagerFilter = 'all';
+
+        if (elements.modals.inputSearch) elements.modals.inputSearch.value = '';
+        if (elements.modals.tabWrongList) elements.modals.tabWrongList.classList.add('active');
+        if (elements.modals.tabNeedsEdit) elements.modals.tabNeedsEdit.classList.remove('active');
+        if (elements.modals.tabSearchAll) elements.modals.tabSearchAll.classList.remove('active');
+
+        renderWrongManagerList('all', 'wrong', '');
+        elements.modals.wrongManager.classList.add('active');
+    }
+
+    function renderWrongManagerList(filterSubject = 'all', tabName = state.wrongManagerTab, searchQuery = '') {
+        if (!elements.modals.wrongList) return;
+        state.wrongManagerTab = tabName;
+        state.wrongManagerFilter = filterSubject;
+        elements.modals.wrongList.innerHTML = '';
+
+        const lawPool = [...ExamEngine.getQuestionPool('관계법규', 'choice'), ...ExamEngine.getQuestionPool('관계법규', 'short')];
+        const gwanriPool = [...ExamEngine.getQuestionPool('관리실무', 'choice'), ...ExamEngine.getQuestionPool('관리실무', 'short')];
+        const allPool = [...lawPool, ...gwanriPool];
+
+        // Total counts for tabs
+        const allWrong = allPool.filter(q => {
+            const stat = state.statsMap[q.qKey];
+            return stat && stat.wrongCount > 0;
+        });
+        const allNeedsEditKeys = Object.keys(state.needsEditMap || {});
+
+        if (elements.modals.cntWrongTab) elements.modals.cntWrongTab.textContent = allWrong.length;
+        if (elements.modals.cntNeedsEditTab) elements.modals.cntNeedsEditTab.textContent = allNeedsEditKeys.length;
+
+        const queryLower = (searchQuery !== undefined ? searchQuery : (elements.modals.inputSearch ? elements.modals.inputSearch.value : '')).trim().toLowerCase();
+
+        const matchesSearch = (q) => {
+            if (!queryLower) return true;
+            const title = (q.question || q.title || '').toLowerCase();
+            const chap = (q.chapterName || '').toLowerCase();
+            const pass = (q.passage || '').toLowerCase();
+            const exp = (q.explanation || '').toLowerCase();
+            const tip = (q.tip || '').toLowerCase();
+            const ans = String(q.answer || '').toLowerCase();
+            const ansObj = JSON.stringify(q.answers || {}).toLowerCase();
+            const idStr = String(q.id || '');
+            return title.includes(queryLower) || chap.includes(queryLower) || pass.includes(queryLower) ||
+                   exp.includes(queryLower) || tip.includes(queryLower) || ans.includes(queryLower) ||
+                   ansObj.includes(queryLower) || idStr === queryLower;
+        };
+
+        if (tabName === 'wrong') {
+            let filtered = allWrong;
+            if (filterSubject !== 'all') {
+                filtered = filtered.filter(q => q.subject === filterSubject);
+            }
+            if (queryLower) {
+                filtered = filtered.filter(matchesSearch);
+            }
+            filtered.sort((a, b) => (state.statsMap[b.qKey]?.weight || 1) - (state.statsMap[a.qKey]?.weight || 1));
+
+            elements.modals.cntTotalWrong.textContent = filtered.length;
+
+            if (filtered.length === 0) {
+                elements.modals.wrongList.innerHTML = `
+                    <div style="text-align: center; padding: 40px 20px; color: var(--text-muted);">
+                        <i class="fa-solid fa-circle-check" style="font-size: 2.5rem; color: #10B981; margin-bottom: 12px; display: block;"></i>
+                        ${queryLower ? '검색된 오답 문제가 없습니다.' : '등록된 오답 문제가 없습니다. 완벽합니다!'}
+                    </div>
+                `;
+                return;
+            }
+
+            filtered.forEach(q => {
+                applyCustomEdits(q);
+                const stat = state.statsMap[q.qKey] || { weight: 1, wrongCount: 0 };
+                const weight = stat.weight || 1;
+                const wrongCount = stat.wrongCount || 0;
+
+                let wText = `Lv.1 보통 (W=1)`;
+                let wColor = '#38BDF8';
+                if (weight >= 10) {
+                    wText = `🔥 Lv.4 지옥 (W=10 / 오답 ${wrongCount}회)`;
+                    wColor = '#EF4444';
+                } else if (weight >= 6) {
+                    wText = `🚨 Lv.3 취약 (W=6 / 오답 ${wrongCount}회)`;
+                    wColor = '#F97316';
+                } else if (weight >= 4) {
+                    wText = `⚠️ Lv.2 주의 (W=4 / 오답 ${wrongCount}회)`;
+                    wColor = '#F59E0B';
+                }
+
+                const cleanChap = q.chapterName.replace(/^CHAPTER\s+\d+\s*/i, '');
+                const card = document.createElement('div');
+                card.className = 'wrong-item-card';
+
+                card.innerHTML = `
+                    <div style="flex: 1; min-width: 0;">
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
+                            <span class="subject-badge ${q.subject === '관리실무' ? 'gwanri' : 'law'}">
+                                ${q.subject}
+                            </span>
+                            <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted);">
+                                ${cleanChap} [문항 ${q.id}] (${q.type === 'choice' ? '객관식' : '주관식'})
+                            </span>
+                            <span style="font-size: 0.75rem; font-weight: 800; color: ${wColor}; background: rgba(255,255,255,0.04); padding: 2px 8px; border-radius: 4px; border: 1px solid ${wColor};">
+                                ${wText}
+                            </span>
+                        </div>
+                        <p style="font-size: 0.9rem; color: #F1F5F9; font-weight: 600; line-height: 1.5; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px;">
+                            ${q.question || q.title}
+                        </p>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 6px; flex-shrink: 0;">
+                        <button class="btn-view-q-detail" title="문제 전체 보기">
+                            <i class="fa-solid fa-eye"></i> 보기
+                        </button>
+                        <button class="btn-reset-single-w" data-qkey="${q.qKey}" title="오답 리스트에서 삭제">
+                            <i class="fa-solid fa-trash-can"></i> 삭제
+                        </button>
+                    </div>
+                `;
+
+                const btnView = card.querySelector('.btn-view-q-detail');
+                btnView.addEventListener('click', () => openQuestionPreview(q));
+
+                const btnReset = card.querySelector('.btn-reset-single-w');
+                btnReset.addEventListener('click', async () => {
+                    await IDBStore.resetQuestionWeight(q.qKey);
+                    state.statsMap[q.qKey] = { weight: 1, wrongCount: 0, tryCount: 0 };
+                    card.classList.add('reset-done');
+                    btnReset.innerHTML = '<i class="fa-solid fa-check"></i> 삭제 완료';
+                    btnReset.disabled = true;
+                    showToast(`[${cleanChap} ${q.id}번] 오답 리스트에서 삭제되었습니다.`);
+
+                    const currentCount = parseInt(elements.modals.cntTotalWrong.textContent || '0', 10);
+                    if (currentCount > 0) {
+                        elements.modals.cntTotalWrong.textContent = currentCount - 1;
+                    }
+                    if (elements.modals.cntWrongTab) {
+                        const tabCnt = parseInt(elements.modals.cntWrongTab.textContent || '0', 10);
+                        if (tabCnt > 0) elements.modals.cntWrongTab.textContent = tabCnt - 1;
+                    }
+                });
+
+                elements.modals.wrongList.appendChild(card);
+            });
+        } else if (tabName === 'needs_edit') {
+            // 'needs_edit' Tab
+            let needsEditList = allNeedsEditKeys.map(k => {
+                const info = state.needsEditMap[k];
+                const pool = info.subject === '관리실무' ? gwanriPool : lawPool;
+                const found = pool.find(item => item.qKey === k);
+                return found || {
+                    qKey: k,
+                    subject: info.subject,
+                    chapterName: info.chapterName,
+                    type: info.type,
+                    question: info.question,
+                    id: '?'
+                };
+            });
+
+            if (filterSubject !== 'all') {
+                needsEditList = needsEditList.filter(q => q.subject === filterSubject);
+            }
+            if (queryLower) {
+                needsEditList = needsEditList.filter(matchesSearch);
+            }
+
+            elements.modals.cntTotalWrong.textContent = needsEditList.length;
+
+            if (needsEditList.length === 0) {
+                elements.modals.wrongList.innerHTML = `
+                    <div style="text-align: center; padding: 40px 20px; color: var(--text-muted);">
+                        <i class="fa-solid fa-circle-check" style="font-size: 2.5rem; color: #38BDF8; margin-bottom: 12px; display: block;"></i>
+                        ${queryLower ? '검색된 수정 필요 문제가 없습니다.' : '플래그된 "수정 필요" 문제가 없습니다.'}
+                    </div>
+                `;
+                return;
+            }
+
+            needsEditList.forEach(q => {
+                applyCustomEdits(q);
+                const cleanChap = (q.chapterName || '').replace(/^CHAPTER\s+\d+\s*/i, '');
+                const card = document.createElement('div');
+                card.className = 'wrong-item-card';
+
+                card.innerHTML = `
+                    <div style="flex: 1; min-width: 0;">
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
+                            <span class="subject-badge ${q.subject === '관리실무' ? 'gwanri' : 'law'}">
+                                ${q.subject}
+                            </span>
+                            <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted);">
+                                ${cleanChap} [문항 ${q.id}] (${q.type === 'choice' ? '객관식' : '주관식'})
+                            </span>
+                            <span style="font-size: 0.75rem; font-weight: 800; color: #F59E0B; background: rgba(245,158,11,0.1); padding: 2px 8px; border-radius: 4px; border: 1px solid #F59E0B;">
+                                🚩 수정 요청됨
+                            </span>
+                        </div>
+                        <p style="font-size: 0.9rem; color: #F1F5F9; font-weight: 600; line-height: 1.5; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px;">
+                            ${q.question || q.title}
+                        </p>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 6px; flex-shrink: 0; flex-wrap: wrap;">
+                        <button class="btn-view-q-detail" title="문제 전체 보기">
+                            <i class="fa-solid fa-eye"></i> 보기
+                        </button>
+                        <button class="btn-quick-edit-q" title="PC에서 문제 직접 수정">
+                            <i class="fa-solid fa-pen-to-square"></i> 수정
+                        </button>
+                        <button class="btn-resolve-needs-edit" title="수정 완료/해제">
+                            <i class="fa-solid fa-check"></i> 해결
+                        </button>
+                    </div>
+                `;
+
+                const btnView = card.querySelector('.btn-view-q-detail');
+                btnView.addEventListener('click', () => openQuestionPreview(q));
+
+                const btnQuickEdit = card.querySelector('.btn-quick-edit-q');
+                btnQuickEdit.addEventListener('click', () => {
+                    openEditModalForQuestion(q);
+                });
+
+                const btnResolve = card.querySelector('.btn-resolve-needs-edit');
+                btnResolve.addEventListener('click', async () => {
+                    await IDBStore.deleteNeedsEdit(q.qKey);
+                    delete state.needsEditMap[q.qKey];
+                    card.classList.add('reset-done');
+                    btnResolve.innerHTML = '<i class="fa-solid fa-check"></i> 해결됨';
+                    btnResolve.disabled = true;
+                    showToast(`[${cleanChap} ${q.id}번] 수정 필요 목록에서 해제되었습니다.`);
+
+                    const currentCount = parseInt(elements.modals.cntTotalWrong.textContent || '0', 10);
+                    if (currentCount > 0) {
+                        elements.modals.cntTotalWrong.textContent = currentCount - 1;
+                    }
+                    if (elements.modals.cntNeedsEditTab) {
+                        const tabCnt = parseInt(elements.modals.cntNeedsEditTab.textContent || '0', 10);
+                        if (tabCnt > 0) elements.modals.cntNeedsEditTab.textContent = tabCnt - 1;
+                    }
+                });
+
+                elements.modals.wrongList.appendChild(card);
+            });
+        } else if (tabName === 'search_all') {
+            // 'search_all' Tab: Search entire 3,470 question pool
+            let pool = allPool;
+            if (filterSubject !== 'all') {
+                pool = pool.filter(q => q.subject === filterSubject);
+            }
+            if (queryLower) {
+                pool = pool.filter(matchesSearch);
+            } else {
+                pool = pool.slice(0, 60);
+            }
+
+            elements.modals.cntTotalWrong.textContent = pool.length;
+
+            if (pool.length === 0) {
+                elements.modals.wrongList.innerHTML = `
+                    <div style="text-align: center; padding: 40px 20px; color: var(--text-muted);">
+                        <i class="fa-solid fa-magnifying-glass" style="font-size: 2.5rem; color: #38BDF8; margin-bottom: 12px; display: block;"></i>
+                        검색 조건에 맞는 문제가 없습니다.
+                    </div>
+                `;
+                return;
+            }
+
+            pool.forEach(q => {
+                applyCustomEdits(q);
+                const cleanChap = (q.chapterName || '').replace(/^CHAPTER\s+\d+\s*/i, '');
+                const isFlagged = !!(state.needsEditMap && state.needsEditMap[q.qKey]);
+                const card = document.createElement('div');
+                card.className = 'wrong-item-card';
+
+                card.innerHTML = `
+                    <div style="flex: 1; min-width: 0;">
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
+                            <span class="subject-badge ${q.subject === '관리실무' ? 'gwanri' : 'law'}">
+                                ${q.subject}
+                            </span>
+                            <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted);">
+                                ${cleanChap} [문항 ${q.id}] (${q.type === 'choice' ? '객관식' : '주관식'})
+                            </span>
+                            ${isFlagged ? '<span style="font-size: 0.75rem; font-weight: 800; color: #F59E0B; background: rgba(245,158,11,0.1); padding: 2px 8px; border-radius: 4px; border: 1px solid #F59E0B;">🚩 수정요청</span>' : ''}
+                            ${q.isCustomEdited ? '<span style="font-size: 0.75rem; font-weight: 800; color: #34D399; background: rgba(52,211,153,0.1); padding: 2px 8px; border-radius: 4px; border: 1px solid #34D399;">✏️ 수정됨</span>' : ''}
+                        </div>
+                        <p style="font-size: 0.9rem; color: #F1F5F9; font-weight: 600; line-height: 1.5; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px;">
+                            ${q.question || q.title}
+                        </p>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 6px; flex-shrink: 0; flex-wrap: wrap;">
+                        <button class="btn-view-q-detail" title="문제 전체 보기">
+                            <i class="fa-solid fa-eye"></i> 보기
+                        </button>
+                        <button class="btn-quick-edit-q" title="PC에서 문제 직접 수정">
+                            <i class="fa-solid fa-pen-to-square"></i> 수정
+                        </button>
+                    </div>
+                `;
+
+                const btnView = card.querySelector('.btn-view-q-detail');
+                btnView.addEventListener('click', () => openQuestionPreview(q));
+
+                const btnQuickEdit = card.querySelector('.btn-quick-edit-q');
+                btnQuickEdit.addEventListener('click', () => {
+                    openEditModalForQuestion(q);
+                });
+
+                elements.modals.wrongList.appendChild(card);
+            });
+        }
+    }
+
     function closeModal(modalEl) {
         if (modalEl) modalEl.classList.remove('active');
     }
@@ -2106,19 +2566,33 @@
         const btnDlGwanri = document.getElementById('btn-dl-md-gwanri');
         if (btnDlGwanri) btnDlGwanri.addEventListener('click', () => generateMockExamMarkdown('관리실무'));
 
-        // 📋 오답 리스트 vs 🚩 수정 필요 문제함 탭 전환
+        // 📋 탭 전환 (오답 리스트 / 수정 필요 문제함 / 전체 검색)
         if (elements.modals.tabWrongList) {
             elements.modals.tabWrongList.addEventListener('click', () => {
+                document.querySelectorAll('.btn-main-tab').forEach(b => b.classList.remove('active'));
                 elements.modals.tabWrongList.classList.add('active');
-                if (elements.modals.tabNeedsEdit) elements.modals.tabNeedsEdit.classList.remove('active');
                 renderWrongManagerList(state.wrongManagerFilter, 'wrong');
             });
         }
         if (elements.modals.tabNeedsEdit) {
             elements.modals.tabNeedsEdit.addEventListener('click', () => {
+                document.querySelectorAll('.btn-main-tab').forEach(b => b.classList.remove('active'));
                 elements.modals.tabNeedsEdit.classList.add('active');
-                if (elements.modals.tabWrongList) elements.modals.tabWrongList.classList.remove('active');
                 renderWrongManagerList(state.wrongManagerFilter, 'needs_edit');
+            });
+        }
+        if (elements.modals.tabSearchAll) {
+            elements.modals.tabSearchAll.addEventListener('click', () => {
+                document.querySelectorAll('.btn-main-tab').forEach(b => b.classList.remove('active'));
+                elements.modals.tabSearchAll.classList.add('active');
+                renderWrongManagerList(state.wrongManagerFilter, 'search_all');
+            });
+        }
+
+        // 🔍 실시간 검색 입력 리스너
+        if (elements.modals.inputSearch) {
+            elements.modals.inputSearch.addEventListener('input', (e) => {
+                renderWrongManagerList(state.wrongManagerFilter, state.wrongManagerTab, e.target.value);
             });
         }
 

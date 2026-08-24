@@ -365,24 +365,33 @@
             </div>
 
             <!-- Top Level Mode Switcher Tabs -->
-            <div style="display: flex; gap: 8px; margin-bottom: 14px; border-bottom: 1px solid #334155; padding-bottom: 10px;">
+            <div style="display: flex; gap: 8px; margin-bottom: 14px; border-bottom: 1px solid #334155; padding-bottom: 10px; flex-wrap: wrap;">
                 <button id="tab-btn-wrong-list" class="btn-main-tab active" data-tab="wrong">
                     <i class="fa-solid fa-triangle-exclamation text-rose-400"></i> 오답 리스트 (<span id="cnt-wrong-tab">0</span>)
                 </button>
                 <button id="tab-btn-needs-edit" class="btn-main-tab" data-tab="needs_edit">
                     <i class="fa-solid fa-flag text-amber-400"></i> 🚩 수정 필요 문제함 (<span id="cnt-needs-edit-tab">0</span>)
                 </button>
+                <button id="tab-btn-search-all" class="btn-main-tab" data-tab="search_all">
+                    <i class="fa-solid fa-magnifying-glass text-sky-400"></i> 🔍 전체 문제 검색·수정
+                </button>
+            </div>
+
+            <!-- Search Input Box -->
+            <div style="margin-bottom: 12px; position: relative;">
+                <input type="text" id="input-wrong-manager-search" class="blank-input" placeholder="🔍 문제 지문, 단원명, 법률 조문, 정답 키워드 검색..." style="width: 100%; padding: 10px 14px 10px 38px; font-size: 0.92rem; border-radius: 10px; background: #0F172A; border: 1.5px solid #334155; color: #FFF;">
+                <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none;"></i>
             </div>
 
             <!-- Filter Bar (Subject) -->
             <div class="wrong-filter-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px;">
                 <div class="filter-tabs" style="display: flex; gap: 6px;">
-                    <button class="btn-filter active" data-subject="all">전체</button>
+                    <button class="btn-filter active" data-subject="all">전체 과목</button>
                     <button class="btn-filter" data-subject="관계법규">관계법규</button>
                     <button class="btn-filter" data-subject="관리실무">관리실무</button>
                 </div>
                 <div id="wrong-summary-count" style="font-size: 0.85rem; font-weight: 700; color: #F8FAFC;">
-                    표시 항목: <span class="text-rose-400" id="cnt-total-wrong">0</span>개
+                    표시 항목: <span class="text-sky-400" id="cnt-total-wrong">0</span>개
                 </div>
             </div>
 
