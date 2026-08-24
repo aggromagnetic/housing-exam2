@@ -1059,7 +1059,8 @@
             screens: {
                 home: document.getElementById('screen-home'),
                 quiz: document.getElementById('screen-quiz'),
-                result: document.getElementById('screen-result')
+                result: document.getElementById('screen-result'),
+                manager: document.getElementById('screen-manager')
             },
             header: {
                 modeTitle: document.getElementById('header-mode-title'),
@@ -1090,6 +1091,41 @@
                 btnToggleExp: document.getElementById('btn-toggle-exp'),
                 btnRetry: document.getElementById('btn-retry-q'),
                 btnFlagNeedsEdit: document.getElementById('btn-flag-needs-edit')
+            },
+            manager: {
+                screen: document.getElementById('screen-manager'),
+                tabWrong: document.getElementById('mgr-tab-wrong'),
+                tabNeedsEdit: document.getElementById('mgr-tab-needs-edit'),
+                tabSearchAll: document.getElementById('mgr-tab-search-all'),
+                cntWrong: document.getElementById('mgr-cnt-wrong'),
+                cntNeedsEdit: document.getElementById('mgr-cnt-needs-edit'),
+                searchInput: document.getElementById('mgr-search-input'),
+                btnSearch: document.getElementById('mgr-btn-search'),
+                btnClearSearch: document.getElementById('mgr-btn-clear-search'),
+                listCount: document.getElementById('mgr-list-count'),
+                itemsList: document.getElementById('mgr-items-list'),
+                editorEmpty: document.getElementById('mgr-editor-empty'),
+                editorForm: document.getElementById('mgr-editor-form'),
+                editQKey: document.getElementById('mgr-edit-q-key'),
+                metaSubject: document.getElementById('mgr-meta-subject'),
+                metaChapter: document.getElementById('mgr-meta-chapter'),
+                metaType: document.getElementById('mgr-meta-type'),
+                metaId: document.getElementById('mgr-meta-id'),
+                flagBadge: document.getElementById('mgr-meta-flag-badge'),
+                editedBadge: document.getElementById('mgr-meta-edited-badge'),
+                btnFlagToggle: document.getElementById('mgr-btn-flag-toggle'),
+                flagText: document.getElementById('mgr-flag-text'),
+                btnCopyAI: document.getElementById('mgr-btn-copy-ai'),
+                btnResetOrig: document.getElementById('mgr-btn-reset-orig'),
+                btnSaveTop: document.getElementById('mgr-btn-save-top'),
+                btnSaveBottom: document.getElementById('mgr-btn-save-bottom'),
+                editTitle: document.getElementById('mgr-edit-title'),
+                editPassage: document.getElementById('mgr-edit-passage'),
+                choiceGroup: document.getElementById('mgr-choice-options-group'),
+                shortGroup: document.getElementById('mgr-short-answers-group'),
+                editShortAns: document.getElementById('mgr-edit-short-ans'),
+                editExp: document.getElementById('mgr-edit-exp'),
+                editTip: document.getElementById('mgr-edit-tip')
             },
             modals: {
                 omr: document.getElementById('modal-omr'),
@@ -1134,6 +1170,18 @@
             }
         });
 
+        const appContainer = document.querySelector('.app-container');
+        if (screenKey === 'manager') {
+            if (elements.body) elements.body.classList.add('manager-mode');
+            if (appContainer) appContainer.classList.add('manager-active');
+            if (elements.header.modeTitle) {
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260824.1235</span>';
+            }
+        } else {
+            if (elements.body) elements.body.classList.remove('manager-mode');
+            if (appContainer) appContainer.classList.remove('manager-active');
+        }
+
         const bottomCtrl = document.getElementById('quiz-bottom-controls');
         if (bottomCtrl) {
             bottomCtrl.style.display = screenKey === 'quiz' ? 'block' : 'none';
@@ -1152,7 +1200,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260824.1105</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260824.1235</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
@@ -2255,8 +2303,8 @@
         const pin = (elements.modals.inputPin.value || '').trim();
         if (pin === '2834' || pin === '0000') {
             closeModal(elements.modals.pinAuth);
-            openWrongManagerModal();
-            showToast('🔓 오답 및 수정 관리가 열렸습니다.');
+            openManagerScreen();
+            showToast('🔓 오답 관리 및 전체 문제 에디터가 열렸습니다.');
         } else {
             showToast('❌ 잘못된 PIN 번호입니다. (기본: 2834)');
             elements.modals.inputPin.value = '';
@@ -2264,27 +2312,40 @@
         }
     }
 
-    async function openWrongManagerModal() {
-        if (!elements.modals.wrongManager) return;
+    // -------------------------------------------------------------
+    // Full-Page Manager & Live Editor (Master-Detail Split View)
+    // -------------------------------------------------------------
+    async function openManagerScreen() {
+        state.mode = 'manager';
+        state.managerTab = 'wrong';
+        state.managerFilter = 'all';
+        state.managerSearchQuery = '';
         state.statsMap = await IDBStore.getAllStatsMap();
         state.needsEditMap = await IDBStore.getAllNeedsEditMap();
-        state.wrongManagerTab = 'wrong';
-        state.wrongManagerFilter = 'all';
 
-        if (elements.modals.inputSearch) elements.modals.inputSearch.value = '';
-        if (elements.modals.tabWrongList) elements.modals.tabWrongList.classList.add('active');
-        if (elements.modals.tabNeedsEdit) elements.modals.tabNeedsEdit.classList.remove('active');
-        if (elements.modals.tabSearchAll) elements.modals.tabSearchAll.classList.remove('active');
+        if (elements.manager.searchInput) {
+            elements.manager.searchInput.value = '';
+            if (elements.manager.btnClearSearch) elements.manager.btnClearSearch.classList.remove('show');
+        }
 
-        renderWrongManagerList('all', 'wrong', '');
-        elements.modals.wrongManager.classList.add('active');
+        document.querySelectorAll('.mgr-tab-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.tab === 'wrong');
+        });
+        document.querySelectorAll('.mgr-pill-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.subject === 'all');
+        });
+
+        showScreen('manager');
+        renderManagerList();
     }
 
-    function renderWrongManagerList(filterSubject = 'all', tabName = state.wrongManagerTab, searchQuery = '') {
-        if (!elements.modals.wrongList) return;
-        state.wrongManagerTab = tabName;
-        state.wrongManagerFilter = filterSubject;
-        elements.modals.wrongList.innerHTML = '';
+    function renderManagerList(tabName = state.managerTab, filterSubj = state.managerFilter, query = state.managerSearchQuery) {
+        state.managerTab = tabName;
+        state.managerFilter = filterSubj;
+        state.managerSearchQuery = query !== undefined ? query : (state.managerSearchQuery || '');
+
+        if (!elements.manager.itemsList) return;
+        elements.manager.itemsList.innerHTML = '';
 
         const lawPool = [...ExamEngine.getQuestionPool('관계법규', 'choice'), ...ExamEngine.getQuestionPool('관계법규', 'short')];
         const gwanriPool = [...ExamEngine.getQuestionPool('관리실무', 'choice'), ...ExamEngine.getQuestionPool('관리실무', 'short')];
@@ -2297,13 +2358,13 @@
         });
         const allNeedsEditKeys = Object.keys(state.needsEditMap || {});
 
-        if (elements.modals.cntWrongTab) elements.modals.cntWrongTab.textContent = allWrong.length;
-        if (elements.modals.cntNeedsEditTab) elements.modals.cntNeedsEditTab.textContent = allNeedsEditKeys.length;
+        if (elements.manager.cntWrong) elements.manager.cntWrong.textContent = allWrong.length;
+        if (elements.manager.cntNeedsEdit) elements.manager.cntNeedsEdit.textContent = allNeedsEditKeys.length;
 
-        const queryLower = (searchQuery !== undefined ? searchQuery : (elements.modals.inputSearch ? elements.modals.inputSearch.value : '')).trim().toLowerCase();
+        const qLower = (state.managerSearchQuery || '').trim().toLowerCase();
 
         const matchesSearch = (q) => {
-            if (!queryLower) return true;
+            if (!qLower) return true;
             const title = (q.question || q.title || '').toLowerCase();
             const chap = (q.chapterName || '').toLowerCase();
             const pass = (q.passage || '').toLowerCase();
@@ -2312,110 +2373,19 @@
             const ans = String(q.answer || '').toLowerCase();
             const ansObj = JSON.stringify(q.answers || {}).toLowerCase();
             const idStr = String(q.id || '');
-            return title.includes(queryLower) || chap.includes(queryLower) || pass.includes(queryLower) ||
-                   exp.includes(queryLower) || tip.includes(queryLower) || ans.includes(queryLower) ||
-                   ansObj.includes(queryLower) || idStr === queryLower;
+            return title.includes(qLower) || chap.includes(qLower) || pass.includes(qLower) ||
+                   exp.includes(qLower) || tip.includes(qLower) || ans.includes(qLower) ||
+                   ansObj.includes(qLower) || idStr === qLower;
         };
 
+        let list = [];
         if (tabName === 'wrong') {
-            let filtered = allWrong;
-            if (filterSubject !== 'all') {
-                filtered = filtered.filter(q => q.subject === filterSubject);
-            }
-            if (queryLower) {
-                filtered = filtered.filter(matchesSearch);
-            }
-            filtered.sort((a, b) => (state.statsMap[b.qKey]?.weight || 1) - (state.statsMap[a.qKey]?.weight || 1));
-
-            elements.modals.cntTotalWrong.textContent = filtered.length;
-
-            if (filtered.length === 0) {
-                elements.modals.wrongList.innerHTML = `
-                    <div style="text-align: center; padding: 40px 20px; color: var(--text-muted);">
-                        <i class="fa-solid fa-circle-check" style="font-size: 2.5rem; color: #10B981; margin-bottom: 12px; display: block;"></i>
-                        ${queryLower ? '검색된 오답 문제가 없습니다.' : '등록된 오답 문제가 없습니다. 완벽합니다!'}
-                    </div>
-                `;
-                return;
-            }
-
-            filtered.forEach(q => {
-                applyCustomEdits(q);
-                const stat = state.statsMap[q.qKey] || { weight: 1, wrongCount: 0 };
-                const weight = stat.weight || 1;
-                const wrongCount = stat.wrongCount || 0;
-
-                let wText = `Lv.1 보통 (W=1)`;
-                let wColor = '#38BDF8';
-                if (weight >= 10) {
-                    wText = `🔥 Lv.4 지옥 (W=10 / 오답 ${wrongCount}회)`;
-                    wColor = '#EF4444';
-                } else if (weight >= 6) {
-                    wText = `🚨 Lv.3 취약 (W=6 / 오답 ${wrongCount}회)`;
-                    wColor = '#F97316';
-                } else if (weight >= 4) {
-                    wText = `⚠️ Lv.2 주의 (W=4 / 오답 ${wrongCount}회)`;
-                    wColor = '#F59E0B';
-                }
-
-                const cleanChap = q.chapterName.replace(/^CHAPTER\s+\d+\s*/i, '');
-                const card = document.createElement('div');
-                card.className = 'wrong-item-card';
-
-                card.innerHTML = `
-                    <div style="flex: 1; min-width: 0;">
-                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
-                            <span class="subject-badge ${q.subject === '관리실무' ? 'gwanri' : 'law'}">
-                                ${q.subject}
-                            </span>
-                            <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted);">
-                                ${cleanChap} [문항 ${q.id}] (${q.type === 'choice' ? '객관식' : '주관식'})
-                            </span>
-                            <span style="font-size: 0.75rem; font-weight: 800; color: ${wColor}; background: rgba(255,255,255,0.04); padding: 2px 8px; border-radius: 4px; border: 1px solid ${wColor};">
-                                ${wText}
-                            </span>
-                        </div>
-                        <p style="font-size: 0.9rem; color: #F1F5F9; font-weight: 600; line-height: 1.5; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px;">
-                            ${q.question || q.title}
-                        </p>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 6px; flex-shrink: 0;">
-                        <button class="btn-view-q-detail" title="문제 전체 보기">
-                            <i class="fa-solid fa-eye"></i> 보기
-                        </button>
-                        <button class="btn-reset-single-w" data-qkey="${q.qKey}" title="오답 리스트에서 삭제">
-                            <i class="fa-solid fa-trash-can"></i> 삭제
-                        </button>
-                    </div>
-                `;
-
-                const btnView = card.querySelector('.btn-view-q-detail');
-                btnView.addEventListener('click', () => openQuestionPreview(q));
-
-                const btnReset = card.querySelector('.btn-reset-single-w');
-                btnReset.addEventListener('click', async () => {
-                    await IDBStore.resetQuestionWeight(q.qKey);
-                    state.statsMap[q.qKey] = { weight: 1, wrongCount: 0, tryCount: 0 };
-                    card.classList.add('reset-done');
-                    btnReset.innerHTML = '<i class="fa-solid fa-check"></i> 삭제 완료';
-                    btnReset.disabled = true;
-                    showToast(`[${cleanChap} ${q.id}번] 오답 리스트에서 삭제되었습니다.`);
-
-                    const currentCount = parseInt(elements.modals.cntTotalWrong.textContent || '0', 10);
-                    if (currentCount > 0) {
-                        elements.modals.cntTotalWrong.textContent = currentCount - 1;
-                    }
-                    if (elements.modals.cntWrongTab) {
-                        const tabCnt = parseInt(elements.modals.cntWrongTab.textContent || '0', 10);
-                        if (tabCnt > 0) elements.modals.cntWrongTab.textContent = tabCnt - 1;
-                    }
-                });
-
-                elements.modals.wrongList.appendChild(card);
-            });
+            list = allWrong;
+            if (filterSubj !== 'all') list = list.filter(q => q.subject === filterSubj);
+            if (qLower) list = list.filter(matchesSearch);
+            list.sort((a, b) => (state.statsMap[b.qKey]?.weight || 1) - (state.statsMap[a.qKey]?.weight || 1));
         } else if (tabName === 'needs_edit') {
-            // 'needs_edit' Tab
-            let needsEditList = allNeedsEditKeys.map(k => {
+            list = allNeedsEditKeys.map(k => {
                 const info = state.needsEditMap[k];
                 const pool = info.subject === '관리실무' ? gwanriPool : lawPool;
                 const found = pool.find(item => item.qKey === k);
@@ -2428,159 +2398,157 @@
                     id: '?'
                 };
             });
-
-            if (filterSubject !== 'all') {
-                needsEditList = needsEditList.filter(q => q.subject === filterSubject);
-            }
-            if (queryLower) {
-                needsEditList = needsEditList.filter(matchesSearch);
-            }
-
-            elements.modals.cntTotalWrong.textContent = needsEditList.length;
-
-            if (needsEditList.length === 0) {
-                elements.modals.wrongList.innerHTML = `
-                    <div style="text-align: center; padding: 40px 20px; color: var(--text-muted);">
-                        <i class="fa-solid fa-circle-check" style="font-size: 2.5rem; color: #38BDF8; margin-bottom: 12px; display: block;"></i>
-                        ${queryLower ? '검색된 수정 필요 문제가 없습니다.' : '플래그된 "수정 필요" 문제가 없습니다.'}
-                    </div>
-                `;
-                return;
-            }
-
-            needsEditList.forEach(q => {
-                applyCustomEdits(q);
-                const cleanChap = (q.chapterName || '').replace(/^CHAPTER\s+\d+\s*/i, '');
-                const card = document.createElement('div');
-                card.className = 'wrong-item-card';
-
-                card.innerHTML = `
-                    <div style="flex: 1; min-width: 0;">
-                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
-                            <span class="subject-badge ${q.subject === '관리실무' ? 'gwanri' : 'law'}">
-                                ${q.subject}
-                            </span>
-                            <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted);">
-                                ${cleanChap} [문항 ${q.id}] (${q.type === 'choice' ? '객관식' : '주관식'})
-                            </span>
-                            <span style="font-size: 0.75rem; font-weight: 800; color: #F59E0B; background: rgba(245,158,11,0.1); padding: 2px 8px; border-radius: 4px; border: 1px solid #F59E0B;">
-                                🚩 수정 요청됨
-                            </span>
-                        </div>
-                        <p style="font-size: 0.9rem; color: #F1F5F9; font-weight: 600; line-height: 1.5; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px;">
-                            ${q.question || q.title}
-                        </p>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 6px; flex-shrink: 0; flex-wrap: wrap;">
-                        <button class="btn-view-q-detail" title="문제 전체 보기">
-                            <i class="fa-solid fa-eye"></i> 보기
-                        </button>
-                        <button class="btn-quick-edit-q" title="PC에서 문제 직접 수정">
-                            <i class="fa-solid fa-pen-to-square"></i> 수정
-                        </button>
-                        <button class="btn-resolve-needs-edit" title="수정 완료/해제">
-                            <i class="fa-solid fa-check"></i> 해결
-                        </button>
-                    </div>
-                `;
-
-                const btnView = card.querySelector('.btn-view-q-detail');
-                btnView.addEventListener('click', () => openQuestionPreview(q));
-
-                const btnQuickEdit = card.querySelector('.btn-quick-edit-q');
-                btnQuickEdit.addEventListener('click', () => {
-                    openEditModalForQuestion(q);
-                });
-
-                const btnResolve = card.querySelector('.btn-resolve-needs-edit');
-                btnResolve.addEventListener('click', async () => {
-                    await IDBStore.deleteNeedsEdit(q.qKey);
-                    delete state.needsEditMap[q.qKey];
-                    card.classList.add('reset-done');
-                    btnResolve.innerHTML = '<i class="fa-solid fa-check"></i> 해결됨';
-                    btnResolve.disabled = true;
-                    showToast(`[${cleanChap} ${q.id}번] 수정 필요 목록에서 해제되었습니다.`);
-
-                    const currentCount = parseInt(elements.modals.cntTotalWrong.textContent || '0', 10);
-                    if (currentCount > 0) {
-                        elements.modals.cntTotalWrong.textContent = currentCount - 1;
-                    }
-                    if (elements.modals.cntNeedsEditTab) {
-                        const tabCnt = parseInt(elements.modals.cntNeedsEditTab.textContent || '0', 10);
-                        if (tabCnt > 0) elements.modals.cntNeedsEditTab.textContent = tabCnt - 1;
-                    }
-                });
-
-                elements.modals.wrongList.appendChild(card);
-            });
+            if (filterSubj !== 'all') list = list.filter(q => q.subject === filterSubj);
+            if (qLower) list = list.filter(matchesSearch);
         } else if (tabName === 'search_all') {
-            // 'search_all' Tab: Search entire 3,470 question pool
-            let pool = allPool;
-            if (filterSubject !== 'all') {
-                pool = pool.filter(q => q.subject === filterSubject);
-            }
-            if (queryLower) {
-                pool = pool.filter(matchesSearch);
+            list = allPool;
+            if (filterSubj !== 'all') list = list.filter(q => q.subject === filterSubj);
+            if (qLower) {
+                list = list.filter(matchesSearch);
             } else {
-                pool = pool.slice(0, 60);
+                list = list.slice(0, 100);
             }
-
-            elements.modals.cntTotalWrong.textContent = pool.length;
-
-            if (pool.length === 0) {
-                elements.modals.wrongList.innerHTML = `
-                    <div style="text-align: center; padding: 40px 20px; color: var(--text-muted);">
-                        <i class="fa-solid fa-magnifying-glass" style="font-size: 2.5rem; color: #38BDF8; margin-bottom: 12px; display: block;"></i>
-                        검색 조건에 맞는 문제가 없습니다.
-                    </div>
-                `;
-                return;
-            }
-
-            pool.forEach(q => {
-                applyCustomEdits(q);
-                const cleanChap = (q.chapterName || '').replace(/^CHAPTER\s+\d+\s*/i, '');
-                const isFlagged = !!(state.needsEditMap && state.needsEditMap[q.qKey]);
-                const card = document.createElement('div');
-                card.className = 'wrong-item-card';
-
-                card.innerHTML = `
-                    <div style="flex: 1; min-width: 0;">
-                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
-                            <span class="subject-badge ${q.subject === '관리실무' ? 'gwanri' : 'law'}">
-                                ${q.subject}
-                            </span>
-                            <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted);">
-                                ${cleanChap} [문항 ${q.id}] (${q.type === 'choice' ? '객관식' : '주관식'})
-                            </span>
-                            ${isFlagged ? '<span style="font-size: 0.75rem; font-weight: 800; color: #F59E0B; background: rgba(245,158,11,0.1); padding: 2px 8px; border-radius: 4px; border: 1px solid #F59E0B;">🚩 수정요청</span>' : ''}
-                            ${q.isCustomEdited ? '<span style="font-size: 0.75rem; font-weight: 800; color: #34D399; background: rgba(52,211,153,0.1); padding: 2px 8px; border-radius: 4px; border: 1px solid #34D399;">✏️ 수정됨</span>' : ''}
-                        </div>
-                        <p style="font-size: 0.9rem; color: #F1F5F9; font-weight: 600; line-height: 1.5; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px;">
-                            ${q.question || q.title}
-                        </p>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 6px; flex-shrink: 0; flex-wrap: wrap;">
-                        <button class="btn-view-q-detail" title="문제 전체 보기">
-                            <i class="fa-solid fa-eye"></i> 보기
-                        </button>
-                        <button class="btn-quick-edit-q" title="PC에서 문제 직접 수정">
-                            <i class="fa-solid fa-pen-to-square"></i> 수정
-                        </button>
-                    </div>
-                `;
-
-                const btnView = card.querySelector('.btn-view-q-detail');
-                btnView.addEventListener('click', () => openQuestionPreview(q));
-
-                const btnQuickEdit = card.querySelector('.btn-quick-edit-q');
-                btnQuickEdit.addEventListener('click', () => {
-                    openEditModalForQuestion(q);
-                });
-
-                elements.modals.wrongList.appendChild(card);
-            });
         }
+
+        if (elements.manager.listCount) elements.manager.listCount.textContent = list.length;
+
+        if (list.length === 0) {
+            elements.manager.itemsList.innerHTML = `
+                <div style="text-align: center; padding: 40px 16px; color: var(--text-muted);">
+                    <i class="fa-solid fa-circle-question" style="font-size: 2.2rem; color: #64748B; margin-bottom: 10px; display: block;"></i>
+                    ${qLower ? `"${qLower}" 검색 결과가 없습니다.` : '목록에 표시할 문제가 없습니다.'}
+                </div>
+            `;
+            if (elements.manager.editorEmpty) elements.manager.editorEmpty.style.display = 'flex';
+            if (elements.manager.editorForm) elements.manager.editorForm.style.display = 'none';
+            return;
+        }
+
+        let selectedFound = false;
+
+        list.forEach((q) => {
+            applyCustomEdits(q);
+            const isSelected = state.currentEditingQuestion && state.currentEditingQuestion.qKey === q.qKey;
+            if (isSelected) selectedFound = true;
+
+            const isFlagged = !!(state.needsEditMap && state.needsEditMap[q.qKey]);
+            const stat = state.statsMap[q.qKey] || { weight: 1, wrongCount: 0 };
+            const cleanChap = (q.chapterName || '').replace(/^CHAPTER\s+\d+\s*/i, '');
+
+            const card = document.createElement('div');
+            card.className = `mgr-item-card ${isSelected ? 'active' : ''}`;
+            card.dataset.qkey = q.qKey;
+
+            let badgeHtml = '';
+            if (isFlagged) {
+                badgeHtml += `<span class="mgr-status-flag">🚩 수정요청</span>`;
+            }
+            if (q.isCustomEdited) {
+                badgeHtml += `<span class="mgr-status-edited">✏️ 수정됨</span>`;
+            }
+            if (stat.wrongCount > 0) {
+                let wColor = '#38BDF8';
+                if (stat.weight >= 10) wColor = '#EF4444';
+                else if (stat.weight >= 6) wColor = '#F97316';
+                else if (stat.weight >= 4) wColor = '#F59E0B';
+                badgeHtml += `<span style="font-size: 0.72rem; font-weight: 800; color: ${wColor}; background: rgba(255,255,255,0.04); padding: 2px 6px; border-radius: 4px; border: 1px solid ${wColor};">오답 ${stat.wrongCount}회</span>`;
+            }
+
+            card.innerHTML = `
+                <div class="mgr-item-header">
+                    <span class="subject-badge ${q.subject === '관리실무' ? 'gwanri' : 'law'}">${q.subject}</span>
+                    <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted);">${cleanChap} [${q.id}번]</span>
+                    <span style="font-size: 0.75rem; color: #64748B;">(${q.type === 'choice' ? '객관식' : '주관식'})</span>
+                    ${badgeHtml}
+                </div>
+                <div class="mgr-item-snippet">${q.question || q.title}</div>
+            `;
+
+            card.addEventListener('click', () => {
+                loadQuestionIntoEditor(q);
+            });
+
+            elements.manager.itemsList.appendChild(card);
+        });
+
+        // Auto-select first item if no matching active item
+        if (!selectedFound && list.length > 0) {
+            loadQuestionIntoEditor(list[0]);
+        }
+    }
+
+    function loadQuestionIntoEditor(q) {
+        if (!q) return;
+        state.currentEditingQuestion = q;
+        applyCustomEdits(q);
+
+        // Highlight active card in left list
+        document.querySelectorAll('.mgr-item-card').forEach(card => {
+            card.classList.toggle('active', card.dataset.qkey === q.qKey);
+        });
+
+        if (elements.manager.editorEmpty) elements.manager.editorEmpty.style.display = 'none';
+        if (elements.manager.editorForm) elements.manager.editorForm.style.display = 'flex';
+
+        // Set Meta Header
+        if (elements.manager.editQKey) elements.manager.editQKey.value = q.qKey;
+        if (elements.manager.metaSubject) {
+            elements.manager.metaSubject.textContent = q.subject;
+            elements.manager.metaSubject.className = `subject-badge ${q.subject === '관리실무' ? 'gwanri' : 'law'}`;
+        }
+        if (elements.manager.metaChapter) {
+            elements.manager.metaChapter.textContent = (q.chapterName || '').replace(/^CHAPTER\s+\d+\s*/i, '');
+        }
+        if (elements.manager.metaType) {
+            elements.manager.metaType.textContent = q.type === 'choice' ? '객관식 5지선다' : '주관식 단답/기입형';
+        }
+        if (elements.manager.metaId) {
+            elements.manager.metaId.textContent = `[문항 ID: ${q.id}]`;
+        }
+
+        const isFlagged = !!(state.needsEditMap && state.needsEditMap[q.qKey]);
+        if (elements.manager.flagBadge) elements.manager.flagBadge.style.display = isFlagged ? 'inline-block' : 'none';
+        if (elements.manager.btnFlagToggle) {
+            elements.manager.btnFlagToggle.classList.toggle('active', isFlagged);
+            if (elements.manager.flagText) elements.manager.flagText.textContent = isFlagged ? '수정요청됨' : '수정필요';
+        }
+        if (elements.manager.editedBadge) {
+            elements.manager.editedBadge.style.display = q.isCustomEdited ? 'inline-block' : 'none';
+        }
+
+        // Fill Form Fields
+        if (elements.manager.editTitle) elements.manager.editTitle.value = q.question || q.title || '';
+        if (elements.manager.editPassage) elements.manager.editPassage.value = q.passage || '';
+
+        if (q.type === 'choice') {
+            if (elements.manager.choiceGroup) elements.manager.choiceGroup.style.display = 'block';
+            if (elements.manager.shortGroup) elements.manager.shortGroup.style.display = 'none';
+
+            for (let i = 1; i <= 5; i++) {
+                const optInput = document.getElementById(`mgr-opt-${i}`);
+                if (optInput) {
+                    optInput.value = (q.options && q.options[i - 1]) || '';
+                }
+            }
+
+            const ansVal = String(q.answer || '1');
+            const targetRadio = document.querySelector(`input[name="mgr-choice-ans-radio"][value="${ansVal}"]`);
+            if (targetRadio) targetRadio.checked = true;
+        } else {
+            if (elements.manager.choiceGroup) elements.manager.choiceGroup.style.display = 'none';
+            if (elements.manager.shortGroup) elements.manager.shortGroup.style.display = 'block';
+
+            if (elements.manager.editShortAns) {
+                if (q.answers) {
+                    elements.manager.editShortAns.value = Object.entries(q.answers).map(([k, v]) => `${k}=${v}`).join(', ');
+                } else {
+                    elements.manager.editShortAns.value = q.answer || '';
+                }
+            }
+        }
+
+        if (elements.manager.editExp) elements.manager.editExp.value = q.explanation || '';
+        if (elements.manager.editTip) elements.manager.editTip.value = q.tip || '';
     }
 
     function closeModal(modalEl) {
@@ -2631,50 +2599,287 @@
                 renderWrongManagerList(state.wrongManagerFilter, 'needs_edit');
             });
         }
-        if (elements.modals.tabSearchAll) {
-            elements.modals.tabSearchAll.addEventListener('click', () => {
-                document.querySelectorAll('.btn-main-tab').forEach(b => b.classList.remove('active'));
-                elements.modals.tabSearchAll.classList.add('active');
-                renderWrongManagerList(state.wrongManagerFilter, 'search_all');
+        // -------------------------------------------------------------
+        // Full-Page Manager & Live Editor Event Listeners
+        // -------------------------------------------------------------
+        // 1. Manager Mode Switcher Tabs
+        document.querySelectorAll('.mgr-tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.mgr-tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                renderManagerList(btn.dataset.tab, state.managerFilter);
+            });
+        });
+
+        // 2. Manager Subject Filter Pills
+        document.querySelectorAll('.mgr-pill-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.mgr-pill-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                renderManagerList(state.managerTab, btn.dataset.subject);
+            });
+        });
+
+        // 3. Manager Search: Enter key, Search button, and Clear button
+        if (elements.manager.searchInput) {
+            elements.manager.searchInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    state.managerSearchQuery = e.target.value.trim();
+                    renderManagerList();
+                }
+            });
+
+            elements.manager.searchInput.addEventListener('input', (e) => {
+                if (elements.manager.btnClearSearch) {
+                    elements.manager.btnClearSearch.classList.toggle('show', !!e.target.value);
+                }
             });
         }
 
-        // 🔍 실시간 검색 입력 리스너
-        if (elements.modals.inputSearch) {
-            elements.modals.inputSearch.addEventListener('input', (e) => {
-                renderWrongManagerList(state.wrongManagerFilter, state.wrongManagerTab, e.target.value);
+        if (elements.manager.btnSearch) {
+            elements.manager.btnSearch.addEventListener('click', () => {
+                if (elements.manager.searchInput) {
+                    state.managerSearchQuery = elements.manager.searchInput.value.trim();
+                }
+                renderManagerList();
             });
         }
 
-        // 🚩 수정 필요 문제 플래그 토글 버튼
-        const btnFlagNeedsEdit = document.getElementById('btn-flag-needs-edit');
-        if (btnFlagNeedsEdit) {
-            btnFlagNeedsEdit.addEventListener('click', async () => {
-                const q = state.questions[state.currentIndex];
+        if (elements.manager.btnClearSearch) {
+            elements.manager.btnClearSearch.addEventListener('click', () => {
+                if (elements.manager.searchInput) {
+                    elements.manager.searchInput.value = '';
+                }
+                state.managerSearchQuery = '';
+                elements.manager.btnClearSearch.classList.remove('show');
+                renderManagerList();
+            });
+        }
+
+        // 4. Manager Live Editor Save Functionality
+        async function saveManagerEditor() {
+            const qKey = elements.manager.editQKey ? elements.manager.editQKey.value : '';
+            if (!qKey) return;
+            const q = findQuestionByQKey(qKey);
+            if (!q) {
+                showToast('❌ 대상 문제를 찾을 수 없습니다.');
+                return;
+            }
+
+            const title = (elements.manager.editTitle.value || '').trim();
+            const passage = (elements.manager.editPassage.value || '').trim();
+            const exp = (elements.manager.editExp.value || '').trim();
+            const tip = (elements.manager.editTip.value || '').trim();
+
+            const editData = {
+                question: title,
+                passage: passage,
+                explanation: exp,
+                tip: tip
+            };
+
+            if (q.type === 'choice') {
+                const opts = [];
+                for (let i = 1; i <= 5; i++) {
+                    const optInput = document.getElementById(`mgr-opt-${i}`);
+                    opts.push(optInput ? optInput.value.trim() : '');
+                }
+                editData.options = opts;
+
+                const selectedRadio = document.querySelector('input[name="mgr-choice-ans-radio"]:checked');
+                editData.answer = selectedRadio ? selectedRadio.value : (q.answer || '1');
+            } else {
+                const rawShort = (elements.manager.editShortAns.value || '').trim();
+                if (rawShort.includes('=')) {
+                    const pairs = rawShort.split(',').map(s => s.trim()).filter(Boolean);
+                    const answersObj = {};
+                    pairs.forEach(p => {
+                        const [k, ...vParts] = p.split('=');
+                        if (k) answersObj[k.trim()] = vParts.join('=').trim();
+                    });
+                    editData.answers = answersObj;
+                    editData.answer = Object.values(answersObj).join(', ');
+                } else {
+                    editData.answer = rawShort;
+                }
+            }
+
+            await IDBStore.saveQuestionEdit(qKey, editData);
+            if (!state.customEdits) state.customEdits = {};
+            state.customEdits[qKey] = editData;
+            applyCustomEdits(q);
+
+            // Update badges and left list card
+            if (elements.manager.editedBadge) elements.manager.editedBadge.style.display = 'inline-block';
+            const activeCard = document.querySelector(`.mgr-item-card[data-qkey="${qKey}"]`);
+            if (activeCard) {
+                const snippet = activeCard.querySelector('.mgr-item-snippet');
+                if (snippet) snippet.textContent = q.question || q.title;
+                const header = activeCard.querySelector('.mgr-item-header');
+                if (header && !header.querySelector('.mgr-status-edited')) {
+                    const badge = document.createElement('span');
+                    badge.className = 'mgr-status-edited';
+                    badge.textContent = '✏️ 수정됨';
+                    header.appendChild(badge);
+                }
+            }
+
+            showToast(`💾 [${q.id}번 문항] 수정사항이 성공적으로 저장되었습니다!`);
+        }
+
+        if (elements.manager.editorForm) {
+            elements.manager.editorForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                saveManagerEditor();
+            });
+        }
+        if (elements.manager.btnSaveTop) {
+            elements.manager.btnSaveTop.addEventListener('click', (e) => {
+                e.preventDefault();
+                saveManagerEditor();
+            });
+        }
+        if (elements.manager.btnSaveBottom) {
+            elements.manager.btnSaveBottom.addEventListener('click', (e) => {
+                e.preventDefault();
+                saveManagerEditor();
+            });
+        }
+
+        // 5. Manager Flag Toggle
+        if (elements.manager.btnFlagToggle) {
+            elements.manager.btnFlagToggle.addEventListener('click', async () => {
+                const qKey = elements.manager.editQKey ? elements.manager.editQKey.value : '';
+                if (!qKey) return;
+                const q = findQuestionByQKey(qKey);
                 if (!q) return;
-                const isFlagged = !!(state.needsEditMap && state.needsEditMap[q.qKey]);
+
+                const isFlagged = !!(state.needsEditMap && state.needsEditMap[qKey]);
                 if (isFlagged) {
-                    await IDBStore.deleteNeedsEdit(q.qKey);
-                    delete state.needsEditMap[q.qKey];
-                    btnFlagNeedsEdit.classList.remove('active');
-                    btnFlagNeedsEdit.innerHTML = '<i class="fa-solid fa-flag"></i> 수정필요';
+                    await IDBStore.deleteNeedsEdit(qKey);
+                    delete state.needsEditMap[qKey];
+                    elements.manager.btnFlagToggle.classList.remove('active');
+                    if (elements.manager.flagText) elements.manager.flagText.textContent = '수정필요';
+                    if (elements.manager.flagBadge) elements.manager.flagBadge.style.display = 'none';
                     showToast('🚩 [수정 필요] 목록에서 제외되었습니다.');
                 } else {
-                    await IDBStore.saveNeedsEdit(q.qKey, q);
-                    state.needsEditMap[q.qKey] = {
-                        qKey: q.qKey,
+                    await IDBStore.saveNeedsEdit(qKey, q);
+                    state.needsEditMap[qKey] = {
+                        qKey: qKey,
                         subject: q.subject,
                         chapterName: q.chapterName,
                         type: q.type,
                         question: q.question || q.title
                     };
-                    btnFlagNeedsEdit.classList.add('active');
-                    btnFlagNeedsEdit.innerHTML = '<i class="fa-solid fa-flag text-amber-400"></i> 수정요청됨';
-                    showToast('🚩 [수정 필요] 목록에 추가되었습니다. (오답리스트 관리 🔒에서 확인 가능)');
+                    elements.manager.btnFlagToggle.classList.add('active');
+                    if (elements.manager.flagText) elements.manager.flagText.textContent = '수정요청됨';
+                    if (elements.manager.flagBadge) elements.manager.flagBadge.style.display = 'inline-block';
+                    showToast('🚩 [수정 필요] 목록에 등록되었습니다.');
+                }
+
+                // Update left list card & counts
+                const allNeedsEditKeys = Object.keys(state.needsEditMap || {});
+                if (elements.manager.cntNeedsEdit) elements.manager.cntNeedsEdit.textContent = allNeedsEditKeys.length;
+                const activeCard = document.querySelector(`.mgr-item-card[data-qkey="${qKey}"]`);
+                if (activeCard) {
+                    const flagTag = activeCard.querySelector('.mgr-status-flag');
+                    if (!isFlagged && !flagTag) {
+                        const header = activeCard.querySelector('.mgr-item-header');
+                        if (header) {
+                            const tag = document.createElement('span');
+                            tag.className = 'mgr-status-flag';
+                            tag.textContent = '🚩 수정요청';
+                            header.appendChild(tag);
+                        }
+                    } else if (isFlagged && flagTag) {
+                        flagTag.remove();
+                    }
                 }
             });
         }
 
+        // 6. Manager Reset to Original
+        if (elements.manager.btnResetOrig) {
+            elements.manager.btnResetOrig.addEventListener('click', async () => {
+                const qKey = elements.manager.editQKey ? elements.manager.editQKey.value : '';
+                if (!qKey) return;
+                const q = findQuestionByQKey(qKey);
+                if (!q) return;
+
+                if (!confirm(`[문항 ${q.id}] 수정 내역을 삭제하고 원본 기출 데이터로 복구하시겠습니까?`)) return;
+
+                await IDBStore.deleteQuestionEdit(qKey);
+                if (state.customEdits) delete state.customEdits[qKey];
+
+                const pool = ExamEngine.getQuestionPool(q.subject, q.type);
+                const raw = pool.find(item => item.qKey === qKey);
+                if (raw) {
+                    q.question = raw.question || raw.title;
+                    q.title = raw.title;
+                    q.passage = raw.passage || '';
+                    if (raw.options) q.options = [...raw.options];
+                    q.answer = raw.answer;
+                    if (raw.answers) q.answers = { ...raw.answers };
+                    q.explanation = raw.explanation;
+                    q.tip = raw.tip;
+                    delete q.isCustomEdited;
+                }
+
+                loadQuestionIntoEditor(q);
+
+                const activeCard = document.querySelector(`.mgr-item-card[data-qkey="${qKey}"]`);
+                if (activeCard) {
+                    const editedBadge = activeCard.querySelector('.mgr-status-edited');
+                    if (editedBadge) editedBadge.remove();
+                    const snippet = activeCard.querySelector('.mgr-item-snippet');
+                    if (snippet) snippet.textContent = q.question || q.title;
+                }
+
+                showToast(`🔄 [${q.id}번 문항] 원본 기출 문제로 복구되었습니다.`);
+            });
+        }
+
+        // 7. Manager AI Verification Prompt Copy
+        if (elements.manager.btnCopyAI) {
+            elements.manager.btnCopyAI.addEventListener('click', () => {
+                const qKey = elements.manager.editQKey ? elements.manager.editQKey.value : '';
+                const q = findQuestionByQKey(qKey);
+                if (!q) return;
+
+                let prompt = `[주택관리사 2차 ${q.subject} 문제 검증 요청]\n`;
+                prompt += `- 단원: ${q.chapterName} (문항 ID: ${q.id})\n`;
+                prompt += `- 유형: ${q.type === 'choice' ? '객관식 5지선다' : '주관식 단답/기입형'}\n\n`;
+                prompt += `[문제]\n${elements.manager.editTitle.value}\n\n`;
+                if (elements.manager.editPassage.value) {
+                    prompt += `[지문/보기 박스]\n${elements.manager.editPassage.value}\n\n`;
+                }
+                if (q.type === 'choice') {
+                    prompt += `[선택 보기]\n`;
+                    for (let i = 1; i <= 5; i++) {
+                        const optVal = (document.getElementById(`mgr-opt-${i}`) || {}).value || '';
+                        prompt += `${['①','②','③','④','⑤'][i-1]} ${optVal}\n`;
+                    }
+                    const selectedRadio = document.querySelector('input[name="mgr-choice-ans-radio"]:checked');
+                    prompt += `\n[정답] ${selectedRadio ? selectedRadio.value : q.answer}번\n`;
+                } else {
+                    prompt += `[정답] ${elements.manager.editShortAns.value}\n`;
+                }
+                prompt += `\n[상세 해설]\n${elements.manager.editExp.value}\n`;
+                if (elements.manager.editTip.value) {
+                    prompt += `\n[핵심 암기 팁]\n${elements.manager.editTip.value}\n`;
+                }
+                prompt += `\n위 문제의 정답과 해설, 최신 개정 법령 반영 여부를 면밀히 검증하고 보완 사항을 알려주세요.`;
+
+                navigator.clipboard.writeText(prompt).then(() => {
+                    showToast('📋 AI 검증용 문제·정답·해설 프롬프트가 복사되었습니다!');
+                }).catch(() => {
+                    showToast('❌ 클립보드 복사 실패');
+                });
+            });
+        }
+
+        // PIN Auth Form Listeners
         if (elements.modals.formPin) {
             elements.modals.formPin.addEventListener('submit', (e) => {
                 e.preventDefault();
@@ -2698,14 +2903,6 @@
             });
         }
 
-        document.querySelectorAll('.wrong-filter-bar .btn-filter').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.wrong-filter-bar .btn-filter').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                renderWrongManagerList(btn.dataset.subject, state.wrongManagerTab);
-            });
-        });
-
         elements.quiz.btnNext.addEventListener('click', nextQuestion);
         elements.quiz.btnPrev.addEventListener('click', prevQuestion);
         elements.quiz.btnToggleExp.addEventListener('click', async () => {
@@ -2721,6 +2918,11 @@
         }
 
         elements.header.btnHome.addEventListener('click', () => {
+            if (state.mode === 'home') return;
+            if (state.mode === 'manager' || (elements.screens.manager && elements.screens.manager.classList.contains('active'))) {
+                showScreen('home');
+                return;
+            }
             if (confirm('학습을 종료하고 메인 화면으로 이동하시겠습니까?')) {
                 clearInterval(state.timerInterval);
                 showScreen('home');
