@@ -1036,6 +1036,123 @@
     color: #FFF;
 }
 
+/* Part Progress Card (Saved Session) */
+.part-progress-card {
+    background: #0F172A;
+    border: 1.5px solid #334155;
+    border-radius: 14px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: all 0.2s ease;
+}
+
+.part-progress-card:hover {
+    border-color: #38BDF8;
+    background: #131E35;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.part-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+}
+
+.part-card-title {
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: #F1F5F9;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.part-progress-badge {
+    font-size: 0.76rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+}
+
+.part-progress-badge.in-progress {
+    background: rgba(245, 158, 11, 0.15);
+    color: #FBBF24;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.part-progress-bar-bg {
+    width: 100%;
+    height: 6px;
+    background: #1E293B;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.part-progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #38BDF8, #818CF8);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.part-card-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 2px;
+}
+
+.btn-part-resume {
+    flex: 2;
+    background: linear-gradient(135deg, #0284C7, #2563EB);
+    color: #FFF;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.btn-part-resume:hover {
+    background: linear-gradient(135deg, #0369A1, #1D4ED8);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
+}
+
+.btn-part-restart {
+    flex: 1;
+    background: #1E293B;
+    color: #94A3B8;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.btn-part-restart:hover {
+    background: #334155;
+    color: #F1F5F9;
+}
+
 /* Mock MD Download Cards */
 .md-dl-card-btn {
     background: #0F172A;
