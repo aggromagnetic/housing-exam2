@@ -34,25 +34,27 @@
         <div class="nav-tabs">
             <button class="nav-btn active" id="btn-tab-viewer" onclick="switchView('viewer')">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
-                강의 노트 뷰어
+                강의노트
             </button>
             <button class="nav-btn" id="btn-tab-quiz" onclick="resumeQuizMode()">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                풀던 퀴즈로 돌아가기
+                풀던 퀴즈
             </button>
             <a href="housing_exam_hell/" class="nav-btn btn-exam-hell-link" style="color: #ef4444; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;" title="3,470문항 5개년 출제비율 시뮬레이션 및 무한 헬모드">
-                🔥 문제지옥 (3,470문항)
+                🔥 문제지옥
             </a>
             <button class="nav-btn" id="btn-tab-result" onclick="switchView('result')" style="display: none;">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                퀴즈 오답 리포트
+                오답 리포트
             </button>
         </div>
 
         <div class="header-actions">
             <div class="search-box">
-                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                <input type="text" id="global-search-input" class="search-input" placeholder="조문, 숫자, 키워드 검색..." onkeyup="handleGlobalSearch(event)">
+                <input type="text" id="global-search-input" class="search-input" placeholder="본문, 조문, 키워드 검색 (Enter)..." onkeydown="handleSearchKeyDown(event)">
+                <button id="btn-global-search" class="btn-search-icon" onclick="triggerGlobalSearch()" title="검색 실행 (Enter)">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                </button>
             </div>
             <button class="btn-quiz-start" onclick="startQuizMode()">
                 🎯 실전 퀴즈 시작 (20문제)
@@ -71,7 +73,10 @@
             <div class="sidebar-header">
                 <div class="sidebar-title-row">
                     <span>📚 강의 노트 목차</span>
-                    <button class="btn-icon" onclick="closeSidebar()" style="width:28px; height:28px;">✕</button>
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                        <button class="btn-editor-open" onclick="openEditorWithPin()" title="주관식 문제 에디터 & 오답/수정 관리 열기">✏️ 문제 관리</button>
+                        <button class="btn-icon" onclick="closeSidebar()" style="width:28px; height:28px;">✕</button>
+                    </div>
                 </div>
                 <div class="subject-filter">
                     <button class="filter-chip active" id="chip-rel" onclick="filterSubject('관계법규')">관계법규 (76)</button>
@@ -112,7 +117,9 @@
                     </div>
                 </div>
 
-                <iframe id="note-frame" class="note-iframe" src="about:blank"></iframe>
+                <div class="note-iframe-container">
+                    <iframe id="note-frame" class="note-iframe" src="about:blank"></iframe>
+                </div>
             </section>
 
             <!-- 2. Quiz Panel -->
@@ -152,15 +159,11 @@
                             </div>
                         </div>
 
-                        <!-- 1. Text Input Container (Used in Keyboard Mode) -->
                         <div id="quiz-inputs-container">
-                            <!-- Rendered dynamically for single or multi-blank -->
                             <input type="text" id="quiz-answer-input" class="quiz-text-input" placeholder="정답을 입력하세요" autocomplete="off" onkeydown="handleQuizEnter(event)">
                         </div>
 
-                        <!-- 2. Stylus & Pen Canvas Container (Used in Pen Mode) -->
                         <div id="quiz-pen-container" class="quiz-pen-container">
-                            <!-- Pen Canvas Toolbar -->
                             <div class="pen-toolbar">
                                 <div class="pen-tool-group">
                                     <button type="button" class="pen-tool-btn active" id="tool-pen" onclick="setPenTool('pen')" title="펜 쓰기 (파란 잉크)">
@@ -188,19 +191,25 @@
                                 </div>
                             </div>
 
-                            <!-- Dynamic Multi / Single Canvas Container -->
                             <div id="quiz-pen-canvases-container" class="quiz-pen-canvases-container">
-                                <!-- Populated dynamically based on single / multiple blanks (㉠, ㉡) -->
                             </div>
                         </div>
                     </div>
 
-                    <!-- Instant Answer & Explanation Box (Initially Hidden) -->
                     <div id="quiz-instant-answer-box" class="quiz-instant-box" style="display: none;">
-                        <div class="quiz-instant-header" id="quiz-instant-header">❌ 오답 처리됨 (정답 및 법정 해설)</div>
+                        <div class="quiz-instant-header-row">
+                            <div class="quiz-instant-header" id="quiz-instant-header">❌ 오답 처리됨 (정답 및 법정 해설)</div>
+                            <div class="quiz-instant-actions-right">
+                                <button type="button" class="btn-q-feedback btn-q-flag" id="btn-q-flag" onclick="flagCurrentQuestionFromQuiz()" title="오답 기록을 취소하고 '수정필요' 목록에 등록합니다">
+                                    🚩 수정필요 (오답취소)
+                                </button>
+                                <button type="button" class="btn-q-feedback btn-q-edit" onclick="openEditorFromQuiz()" title="이 문제를 바로 편집 화면에서 수정합니다">
+                                    ✏️ 즉시 수정
+                                </button>
+                            </div>
+                        </div>
                         <div class="quiz-instant-ans-text" id="quiz-instant-ans-text">정답: </div>
 
-                        <!-- Pen Mode Self-Grading UI -->
                         <div class="pen-self-grade-container" id="pen-self-grade-container" style="display: none;">
                             <div class="self-grade-prompt">👉 내가 쓴 필기와 정답을 비교해 채점해 주세요:</div>
                             <div class="self-grade-btn-row">
@@ -264,6 +273,43 @@
                 </div>
             </section>
 
+            <!-- 5. Question Editor & Management Panel -->
+            <section id="panel-editor" class="view-panel">
+                <div class="editor-layout">
+                    <!-- Left Sidebar: Filter, Search & Question List -->
+                    <aside class="editor-sidebar">
+                        <div class="editor-sidebar-header">
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+                                <div style="font-weight: 700; font-size: 15px; display: flex; align-items: center; gap: 6px;">
+                                    <span>✏️ 문제 관리 & 에디터</span>
+                                </div>
+                                <button class="btn-export-overrides" onclick="exportOverridesJson()" title="수정한 문제 데이터 JSON 다운로드">💾 내보내기</button>
+                            </div>
+
+                            <div class="editor-search-box">
+                                <input type="text" id="editor-search-input" placeholder="문제 번호, 키워드, 정답 검색..." oninput="handleEditorSearch(event)">
+                            </div>
+
+                            <div class="editor-filter-tabs">
+                                <button class="editor-tab-btn active" id="ed-tab-flagged" onclick="setEditorFilter('flagged')">🚩 수정필요 (<span id="count-flagged">0</span>)</button>
+                                <button class="editor-tab-btn" id="ed-tab-wrong" onclick="setEditorFilter('wrong')">❌ 오답목록 (<span id="count-wrong">0</span>)</button>
+                                <button class="editor-tab-btn" id="ed-tab-edited" onclick="setEditorFilter('edited')">✍️ 수정됨 (<span id="count-edited">0</span>)</button>
+                                <button class="editor-tab-btn" id="ed-tab-all" onclick="setEditorFilter('all')">전체 (<span id="count-all">0</span>)</button>
+                            </div>
+                        </div>
+
+                        <div class="editor-q-list" id="editor-q-list-container">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+                    </aside>
+
+                    <!-- Right Workspace: Edit Form & Live Preview -->
+                    <div class="editor-workspace" id="editor-workspace-container">
+                        <!-- Populated dynamically via JS -->
+                    </div>
+                </div>
+            </section>
+
         </main>
     </div>
 
@@ -277,6 +323,10 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
             <span>풀던퀴즈</span>
         </button>
+        <button class="mobile-nav-item" id="m-nav-editor" onclick="openEditorWithPin()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+            <span>문제관리</span>
+        </button>
         <button class="mobile-nav-item" id="m-nav-result" onclick="switchView('result')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
             <span>오답노트</span>
@@ -286,6 +336,24 @@
             <span>검색</span>
         </button>
     </nav>
+
+    <!-- Security PIN Auth Modal -->
+    <div id="modal-pin-auth" class="modal-backdrop" style="display: none;">
+        <div class="modal-pin-card" id="modal-pin-card">
+            <div style="font-size: 36px; margin-bottom: 8px;">🔒</div>
+            <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 6px; color: #fff;">보안 PIN 인증</h3>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">문제 에디터 & 오답 관리에 접근하려면 PIN 비밀번호(4자리)를 입력하세요.</p>
+
+            <form id="form-pin-auth" onsubmit="handlePinSubmit(event)" style="display: flex; flex-direction: column; gap: 14px;">
+                <input type="password" id="input-pin-code" class="pin-code-input" maxlength="4" placeholder="••••" autocomplete="off" inputmode="numeric">
+                <div id="pin-error-msg" style="font-size: 12px; color: #f87171; min-height: 16px; font-weight: 600;"></div>
+                <div style="display: flex; gap: 10px;">
+                    <button type="button" class="btn-secondary" onclick="closePinAuthModal()" style="flex: 1; justify-content: center;">취소</button>
+                    <button type="submit" class="btn-primary" style="flex: 1; justify-content: center; font-weight: 700;">확인</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <script src="data/study_data.js?v=11"></script>
     <script src="app.js?v=11"></script>
