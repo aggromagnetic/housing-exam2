@@ -536,6 +536,7 @@
             dataset.chapters.forEach(chap => {
                 (chap.questions || []).forEach(q => {
                     const matches = this.matchQuestionKeywords({ ...q, chapterName: chap.chapter }, subject);
+                    const isMatch = matches.length > 0;
                     pool.push({
                         ...q,
                         qKey: `${subject}_${type}_${chap.chapter}_${q.id}`,
@@ -544,9 +545,9 @@
                         chapterName: chap.chapter,
                         sourceFile: chap.source_file || '',
                         coreMatches: matches,
-                        topCoreMatch: matches.length > 0 ? matches[0] : null,
-                        isHighYield: false,
-                        primaryCoreItem: null
+                        topCoreMatch: isMatch ? matches[0] : null,
+                        isHighYield: isMatch,
+                        primaryCoreItem: isMatch ? matches[0].item : null
                     });
                 });
             });
@@ -640,10 +641,6 @@
             const selectedSA = [];
             const pickedKeys = new Set(excludeKeysSet);
 
-            // Target exactly ~40% Core 300 questions (10 MC out of 24, 6 SA out of 16 = 16 / 40 questions)
-            let mcHyRemaining = Math.round(24 * highYieldRatio); // 10
-            let saHyRemaining = Math.round(16 * highYieldRatio); // 6
-
             blueprint.forEach(rule => {
                 let targetMc = rule.mc;
                 let targetSa = rule.sa;
@@ -659,74 +656,46 @@
                 const chapterMcList = mcPool.filter(q => rule.pattern.test(q.chapterName));
                 const chapterSaList = saPool.filter(q => rule.pattern.test(q.chapterName));
 
-                // MC Pick: exactly proportional core items
+                // 1) MC: Guaranteed at least 40% high yield from core 300 candidates
                 if (targetMc > 0) {
-                    let hyToPick = 0;
-                    if (mcHyRemaining > 0) {
-                        hyToPick = Math.min(targetMc, Math.ceil(targetMc * highYieldRatio));
-                        hyToPick = Math.min(hyToPick, mcHyRemaining);
-                    }
-
-                    const hyCandidates = chapterMcList.filter(q => q.topCoreMatch !== null).sort((a, b) => (b.topCoreMatch.score - a.topCoreMatch.score));
-                    const pickedHy = this.weightedPick(hyCandidates.slice(0, Math.max(hyToPick * 3, 5)), statsMap, hyToPick, pickedKeys);
+                    const hyCandidates = chapterMcList.filter(q => q.isHighYield);
+                    const targetHyMc = Math.min(hyCandidates.length, Math.ceil(targetMc * highYieldRatio));
+                    const pickedHy = this.weightedPick(hyCandidates, statsMap, targetHyMc, pickedKeys);
 
                     pickedHy.forEach(q => {
                         pickedKeys.add(q.qKey);
-                        selectedMC.push({
-                            ...q,
-                            isHighYield: true,
-                            primaryCoreItem: q.topCoreMatch.item
-                        });
+                        selectedMC.push(q);
                     });
-                    mcHyRemaining -= pickedHy.length;
 
-                    // Pick the rest as STANDARD questions (isHighYield = false)
+                    // 2) Remaining quota picked randomly/weighted from all chapter questions
                     const remainingMcCount = targetMc - pickedHy.length;
                     if (remainingMcCount > 0) {
                         const pickedRest = this.weightedPick(chapterMcList, statsMap, remainingMcCount, pickedKeys);
                         pickedRest.forEach(q => {
                             pickedKeys.add(q.qKey);
-                            selectedMC.push({
-                                ...q,
-                                isHighYield: false,
-                                primaryCoreItem: null
-                            });
+                            selectedMC.push(q);
                         });
                     }
                 }
 
-                // SA Pick: exactly proportional core items
+                // 2) SA: Guaranteed at least 40% high yield from core 300 candidates
                 if (targetSa > 0) {
-                    let hyToPick = 0;
-                    if (saHyRemaining > 0) {
-                        hyToPick = Math.min(targetSa, Math.ceil(targetSa * highYieldRatio));
-                        hyToPick = Math.min(hyToPick, saHyRemaining);
-                    }
-
-                    const hyCandidates = chapterSaList.filter(q => q.topCoreMatch !== null).sort((a, b) => (b.topCoreMatch.score - a.topCoreMatch.score));
-                    const pickedHy = this.weightedPick(hyCandidates.slice(0, Math.max(hyToPick * 3, 5)), statsMap, hyToPick, pickedKeys);
+                    const hyCandidates = chapterSaList.filter(q => q.isHighYield);
+                    const targetHySa = Math.min(hyCandidates.length, Math.ceil(targetSa * highYieldRatio));
+                    const pickedHy = this.weightedPick(hyCandidates, statsMap, targetHySa, pickedKeys);
 
                     pickedHy.forEach(q => {
                         pickedKeys.add(q.qKey);
-                        selectedSA.push({
-                            ...q,
-                            isHighYield: true,
-                            primaryCoreItem: q.topCoreMatch.item
-                        });
+                        selectedSA.push(q);
                     });
-                    saHyRemaining -= pickedHy.length;
 
-                    // Pick the rest as STANDARD questions (isHighYield = false)
+                    // Remaining quota picked from all chapter questions
                     const remainingSaCount = targetSa - pickedHy.length;
                     if (remainingSaCount > 0) {
                         const pickedRest = this.weightedPick(chapterSaList, statsMap, remainingSaCount, pickedKeys);
                         pickedRest.forEach(q => {
                             pickedKeys.add(q.qKey);
-                            selectedSA.push({
-                                ...q,
-                                isHighYield: false,
-                                primaryCoreItem: null
-                            });
+                            selectedSA.push(q);
                         });
                     }
                 }
@@ -736,14 +705,14 @@
                 const remainderAll = this.weightedPick(mcPool, statsMap, 24 - selectedMC.length, pickedKeys);
                 remainderAll.forEach(q => {
                     pickedKeys.add(q.qKey);
-                    selectedMC.push({ ...q, isHighYield: false, primaryCoreItem: null });
+                    selectedMC.push(q);
                 });
             }
             if (selectedSA.length < 16) {
                 const remainderAll = this.weightedPick(saPool, statsMap, 16 - selectedSA.length, pickedKeys);
                 remainderAll.forEach(q => {
                     pickedKeys.add(q.qKey);
-                    selectedSA.push({ ...q, isHighYield: false, primaryCoreItem: null });
+                    selectedSA.push(q);
                 });
             }
 
@@ -788,19 +757,7 @@
                 picked = [...weakItems, ...remaining];
             }
 
-            // Tag top 40% (16 questions) as Core 300 if matched
-            const targetHyCount = Math.round(count * 0.40);
-            let taggedHy = 0;
-
-            const processed = picked.map(q => {
-                if (taggedHy < targetHyCount && q.topCoreMatch !== null) {
-                    taggedHy++;
-                    return { ...q, isHighYield: true, primaryCoreItem: q.topCoreMatch.item };
-                }
-                return { ...q, isHighYield: false, primaryCoreItem: null };
-            });
-
-            return this.shuffleWithAntiClumping(processed);
+            return this.shuffleWithAntiClumping(picked);
         },
 
         generatePartSet(subject, chapterPattern) {
@@ -811,15 +768,7 @@
             const mcMatches = mcPool.filter(q => regex.test(q.chapterName));
             const saMatches = saPool.filter(q => regex.test(q.chapterName));
 
-            const all = [...mcMatches, ...saMatches].map(q => {
-                // In part set, mark questions that strongly match core topics
-                const isStrongCore = q.topCoreMatch && q.topCoreMatch.score >= 3;
-                return {
-                    ...q,
-                    isHighYield: isStrongCore,
-                    primaryCoreItem: isStrongCore ? q.topCoreMatch.item : null
-                };
-            });
+            const all = [...mcMatches, ...saMatches];
             return all.sort(() => Math.random() - 0.5);
         },
 
@@ -835,18 +784,7 @@
             const pickedGwanriSA = this.weightedPick(gwanriSA, statsMap, 8, excludeKeysSet);
 
             const combined = [...pickedLawMC, ...pickedLawSA, ...pickedGwanriMC, ...pickedGwanriSA];
-            
-            // Tag ~40% (16 questions) with Core 300
-            let taggedHy = 0;
-            const processed = combined.map(q => {
-                if (taggedHy < 16 && q.topCoreMatch !== null) {
-                    taggedHy++;
-                    return { ...q, isHighYield: true, primaryCoreItem: q.topCoreMatch.item };
-                }
-                return { ...q, isHighYield: false, primaryCoreItem: null };
-            });
-
-            return this.shuffleWithAntiClumping(processed);
+            return this.shuffleWithAntiClumping(combined);
         },
 
         getChapterList(subject) {
