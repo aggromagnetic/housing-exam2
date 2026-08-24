@@ -1441,47 +1441,76 @@
 /* ==========================================================================
    Full-Page Manager & Live Editor Split View Screen (Master-Detail)
    ========================================================================== */
+
+/* Prevent page-level scrolling entirely when manager is open */
+body.manager-mode {
+    overflow: hidden !important;
+    height: 100vh !important;
+    max-height: 100vh !important;
+}
+
+body.manager-mode .app-header {
+    flex-shrink: 0 !important;
+}
+
+body.manager-mode .app-header .header-content {
+    max-width: 100% !important;
+    padding: 0 4px;
+}
+
 .app-container:has(#screen-manager.active),
 .app-container.manager-active {
-    max-width: 1680px !important;
+    max-width: 100% !important;
     width: 100% !important;
-    padding: 10px 16px 14px !important;
-    height: calc(100vh - 78px) !important;
+    padding: 8px 14px 8px !important;
+    height: calc(100vh - 56px) !important;
+    max-height: calc(100vh - 56px) !important;
+    min-height: 0 !important;
     overflow: hidden !important;
+    box-sizing: border-box !important;
 }
 
 #screen-manager.active {
     display: flex !important;
     flex-direction: column !important;
     height: 100% !important;
+    max-height: 100% !important;
+    min-height: 0 !important;
     width: 100% !important;
     overflow: hidden !important;
 }
 
 .manager-layout {
-    display: flex;
-    gap: 16px;
-    height: 100%;
-    width: 100%;
-    overflow: hidden;
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 14px !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    min-height: 0 !important;
+    width: 100% !important;
+    overflow: hidden !important;
+    align-items: stretch !important;
 }
 
-/* Sidebar (Left Panel) */
+/* Sidebar (Left Panel - 100% Independent Scroll) */
 .manager-sidebar {
-    width: 440px;
-    min-width: 360px;
-    max-width: 480px;
+    width: 380px !important;
+    min-width: 300px !important;
+    max-width: 440px !important;
     background: #0F172A;
     border: 1px solid #1E293B;
-    border-radius: 16px;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    overflow: hidden;
-    flex-shrink: 0;
+    border-radius: 14px;
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+    flex-shrink: 0 !important;
 }
 
 .mgr-tabs-row {
+    flex-shrink: 0 !important;
     display: flex;
     padding: 8px 10px;
     gap: 6px;
@@ -1522,8 +1551,9 @@
 
 /* Search Box */
 .mgr-search-box {
+    flex-shrink: 0 !important;
     position: relative;
-    padding: 10px 12px;
+    padding: 8px 12px;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -1591,10 +1621,11 @@
 
 /* Filter Row */
 .mgr-filter-row {
+    flex-shrink: 0 !important;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 8px 12px;
+    padding: 6px 12px;
     background: #0B1120;
     border-bottom: 1px solid #1E293B;
 }
@@ -1628,14 +1659,33 @@
     color: #94A3B8;
 }
 
-/* Scrollable Items List */
+/* Independent Scrollable Left Items List */
 .mgr-items-list {
-    flex: 1;
-    overflow-y: auto;
-    padding: 10px;
+    flex: 1 1 0% !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    padding: 8px;
     display: flex;
     flex-direction: column;
     gap: 8px;
+}
+
+.mgr-items-list::-webkit-scrollbar {
+    width: 6px;
+}
+.mgr-items-list::-webkit-scrollbar-track {
+    background: #090D16;
+}
+.mgr-items-list::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 4px;
+}
+.mgr-items-list::-webkit-scrollbar-thumb:hover {
+    background: #38BDF8;
 }
 
 .mgr-item-card {
@@ -1678,17 +1728,19 @@
     overflow: hidden;
 }
 
-/* Editor (Right Main Panel) */
+/* Editor (Right Main Panel - 100% Independent Scroll) */
 .manager-editor-panel {
-    flex: 1;
+    flex: 1 1 0% !important;
+    min-width: 0 !important;
     background: #0F172A;
     border: 1px solid #1E293B;
-    border-radius: 16px;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    overflow: hidden;
-    min-width: 0;
+    border-radius: 14px;
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
 }
 
 .mgr-editor-empty {
@@ -1703,20 +1755,23 @@
 }
 
 .mgr-editor-form {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    overflow: hidden;
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
 }
 
 .mgr-editor-header {
-    padding: 12px 18px;
+    flex-shrink: 0 !important;
+    padding: 10px 16px;
     background: #090D16;
     border-bottom: 1px solid #1E293B;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     flex-wrap: wrap;
 }
 
@@ -1807,14 +1862,33 @@
     color: #FDA4AF;
 }
 
-/* Editor Scrollable Body */
+/* Independent Scrollable Editor Body */
 .mgr-editor-body {
-    flex: 1;
-    overflow-y: auto;
-    padding: 20px;
+    flex: 1 1 0% !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    padding: 16px 20px;
     display: flex;
     flex-direction: column;
     gap: 16px;
+}
+
+.mgr-editor-body::-webkit-scrollbar {
+    width: 6px;
+}
+.mgr-editor-body::-webkit-scrollbar-track {
+    background: #090D16;
+}
+.mgr-editor-body::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 4px;
+}
+.mgr-editor-body::-webkit-scrollbar-thumb:hover {
+    background: #38BDF8;
 }
 
 .mgr-form-group {
@@ -1941,7 +2015,8 @@
 }
 
 .mgr-editor-footer {
-    padding: 12px 20px;
+    flex-shrink: 0 !important;
+    padding: 10px 20px;
     background: #090D16;
     border-top: 1px solid #1E293B;
     display: flex;
@@ -1950,30 +2025,9 @@
     gap: 12px;
 }
 
-@media (max-width: 960px) {
-    .app-container:has(#screen-manager.active),
-    .app-container.manager-active {
-        height: auto !important;
-        max-height: none !important;
-        overflow: visible !important;
-    }
-    .manager-layout {
-        flex-direction: column;
-        height: auto;
-        overflow: visible;
-    }
+@media (max-width: 768px) {
     .manager-sidebar {
-        width: 100%;
-        max-width: 100%;
-        height: 380px;
-        position: relative;
-        top: 0;
-    }
-    .manager-editor-panel {
-        width: 100%;
-        height: auto;
-        min-height: 520px;
-        position: relative;
-        top: 0;
+        width: 290px !important;
+        min-width: 250px !important;
     }
 }
