@@ -1104,8 +1104,10 @@
                 btnClearSearch: document.getElementById('mgr-btn-clear-search'),
                 listCount: document.getElementById('mgr-list-count'),
                 itemsList: document.getElementById('mgr-items-list'),
+                editorPanel: document.getElementById('mgr-editor-panel'),
                 editorEmpty: document.getElementById('mgr-editor-empty'),
                 editorForm: document.getElementById('mgr-editor-form'),
+                editorBody: document.getElementById('mgr-editor-body'),
                 editQKey: document.getElementById('mgr-edit-q-key'),
                 metaSubject: document.getElementById('mgr-meta-subject'),
                 metaChapter: document.getElementById('mgr-meta-chapter'),
@@ -1115,6 +1117,8 @@
                 editedBadge: document.getElementById('mgr-meta-edited-badge'),
                 btnFlagToggle: document.getElementById('mgr-btn-flag-toggle'),
                 flagText: document.getElementById('mgr-flag-text'),
+                btnDeleteWrong: document.getElementById('mgr-btn-delete-wrong'),
+                wrongBtnText: document.getElementById('mgr-wrong-btn-text'),
                 btnCopyAI: document.getElementById('mgr-btn-copy-ai'),
                 btnResetOrig: document.getElementById('mgr-btn-reset-orig'),
                 btnSaveTop: document.getElementById('mgr-btn-save-top'),
@@ -1175,7 +1179,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260824.1242</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260824.1438</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -1200,7 +1204,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260824.1242</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260824.1438</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
@@ -2454,15 +2458,52 @@
                 badgeHtml += `<span style="font-size: 0.72rem; font-weight: 800; color: ${wColor}; background: rgba(255,255,255,0.04); padding: 2px 6px; border-radius: 4px; border: 1px solid ${wColor};">오답 ${stat.wrongCount}회</span>`;
             }
 
+            let quickDelBtnHtml = '';
+            if (stat.wrongCount > 0 || tabName === 'wrong') {
+                quickDelBtnHtml = `<button type="button" class="mgr-card-quick-del" title="오답 기록 삭제 (가중치 초기화)"><i class="fa-solid fa-trash-can"></i> 삭제</button>`;
+            }
+
             card.innerHTML = `
                 <div class="mgr-item-header">
                     <span class="subject-badge ${q.subject === '관리실무' ? 'gwanri' : 'law'}">${q.subject}</span>
                     <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted);">${cleanChap} [${q.id}번]</span>
                     <span style="font-size: 0.75rem; color: #64748B;">(${q.type === 'choice' ? '객관식' : '주관식'})</span>
                     ${badgeHtml}
+                    ${quickDelBtnHtml}
                 </div>
                 <div class="mgr-item-snippet">${q.question || q.title}</div>
             `;
+
+            const btnQuickDel = card.querySelector('.mgr-card-quick-del');
+            if (btnQuickDel) {
+                btnQuickDel.addEventListener('click', async (e) => {
+                    e.stopPropagation();
+                    await IDBStore.resetQuestionWeight(q.qKey);
+                    state.statsMap[q.qKey] = { weight: 1, wrongCount: 0, tryCount: 0 };
+                    
+                    if (state.managerTab === 'wrong') {
+                        card.classList.add('reset-done');
+                        setTimeout(() => {
+                            card.remove();
+                            const currentCount = parseInt(elements.manager.listCount.textContent || '0', 10);
+                            if (currentCount > 0) elements.manager.listCount.textContent = currentCount - 1;
+                        }, 300);
+                    } else {
+                        btnQuickDel.remove();
+                        const wBadge = card.querySelector('.mgr-item-header span[style*="border"]');
+                        if (wBadge) wBadge.remove();
+                    }
+
+                    if (elements.manager.cntWrong) {
+                        const cnt = parseInt(elements.manager.cntWrong.textContent || '0', 10);
+                        if (cnt > 0) elements.manager.cntWrong.textContent = cnt - 1;
+                    }
+                    if (state.currentEditingQuestion && state.currentEditingQuestion.qKey === q.qKey) {
+                        if (elements.manager.btnDeleteWrong) elements.manager.btnDeleteWrong.style.display = 'none';
+                    }
+                    showToast(`🗑️ [${cleanChap} ${q.id}번] 오답 기록이 삭제되었습니다.`);
+                });
+            }
 
             card.addEventListener('click', () => {
                 loadQuestionIntoEditor(q);
@@ -2490,6 +2531,16 @@
         if (elements.manager.editorEmpty) elements.manager.editorEmpty.style.display = 'none';
         if (elements.manager.editorForm) elements.manager.editorForm.style.display = 'flex';
 
+        // Auto-reset editor body scroll so new question starts at top
+        if (elements.manager.editorBody) {
+            elements.manager.editorBody.scrollTop = 0;
+        }
+
+        // On mobile/narrow viewports, scroll the editor into view smoothly
+        if (window.innerWidth <= 960 && elements.manager.editorPanel) {
+            elements.manager.editorPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
         // Set Meta Header
         if (elements.manager.editQKey) elements.manager.editQKey.value = q.qKey;
         if (elements.manager.metaSubject) {
@@ -2504,6 +2555,19 @@
         }
         if (elements.manager.metaId) {
             elements.manager.metaId.textContent = `[문항 ID: ${q.id}]`;
+        }
+
+        // Wrong record delete button visibility
+        const stat = state.statsMap[q.qKey] || { weight: 1, wrongCount: 0 };
+        if (elements.manager.btnDeleteWrong) {
+            if (stat.wrongCount > 0) {
+                elements.manager.btnDeleteWrong.style.display = 'inline-flex';
+                if (elements.manager.wrongBtnText) {
+                    elements.manager.wrongBtnText.textContent = `오답 삭제 (${stat.wrongCount}회)`;
+                }
+            } else {
+                elements.manager.btnDeleteWrong.style.display = 'none';
+            }
         }
 
         const isFlagged = !!(state.needsEditMap && state.needsEditMap[q.qKey]);
@@ -2796,6 +2860,47 @@
                         flagTag.remove();
                     }
                 }
+            });
+        }
+
+        // 5-B. Manager Delete Wrong Record
+        if (elements.manager.btnDeleteWrong) {
+            elements.manager.btnDeleteWrong.addEventListener('click', async () => {
+                const qKey = elements.manager.editQKey ? elements.manager.editQKey.value : '';
+                if (!qKey) return;
+                const q = findQuestionByQKey(qKey);
+                if (!q) return;
+
+                if (!confirm(`[문항 ${q.id}] 오답 기록과 가중치를 초기화하시겠습니까?`)) return;
+
+                await IDBStore.resetQuestionWeight(qKey);
+                state.statsMap[qKey] = { weight: 1, wrongCount: 0, tryCount: 0 };
+
+                elements.manager.btnDeleteWrong.style.display = 'none';
+
+                if (elements.manager.cntWrong) {
+                    const cnt = parseInt(elements.manager.cntWrong.textContent || '0', 10);
+                    if (cnt > 0) elements.manager.cntWrong.textContent = cnt - 1;
+                }
+
+                const activeCard = document.querySelector(`.mgr-item-card[data-qkey="${qKey}"]`);
+                if (activeCard) {
+                    if (state.managerTab === 'wrong') {
+                        activeCard.classList.add('reset-done');
+                        setTimeout(() => {
+                            activeCard.remove();
+                            const currentCount = parseInt(elements.manager.listCount.textContent || '0', 10);
+                            if (currentCount > 0) elements.manager.listCount.textContent = currentCount - 1;
+                        }, 300);
+                    } else {
+                        const quickDel = activeCard.querySelector('.mgr-card-quick-del');
+                        if (quickDel) quickDel.remove();
+                        const wBadge = activeCard.querySelector('.mgr-item-header span[style*="border"]');
+                        if (wBadge) wBadge.remove();
+                    }
+                }
+
+                showToast(`🗑️ [${q.id}번 문항] 오답 기록이 삭제되었습니다.`);
             });
         }
 
