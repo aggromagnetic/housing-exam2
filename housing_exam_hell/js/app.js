@@ -1152,7 +1152,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260824.1035</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260824.1105</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
@@ -2197,8 +2197,22 @@
         modal.classList.add('active');
     }
 
+    function findQuestionByQKey(qKey) {
+        if (state.currentEditingQuestion && state.currentEditingQuestion.qKey === qKey) {
+            return state.currentEditingQuestion;
+        }
+        if (state.questions && state.questions.length > 0) {
+            const found = state.questions.find(item => item.qKey === qKey);
+            if (found) return found;
+        }
+        const lawPool = [...ExamEngine.getQuestionPool('관계법규', 'choice'), ...ExamEngine.getQuestionPool('관계법규', 'short')];
+        const gwanriPool = [...ExamEngine.getQuestionPool('관리실무', 'choice'), ...ExamEngine.getQuestionPool('관리실무', 'short')];
+        return [...lawPool, ...gwanriPool].find(item => item.qKey === qKey) || null;
+    }
+
     function openEditModalForQuestion(q) {
-        if (!elements.modals.editQuestion) return;
+        if (!elements.modals.editQuestion || !q) return;
+        state.currentEditingQuestion = q;
         applyCustomEdits(q);
 
         document.getElementById('edit-q-key').value = q.qKey;
@@ -2797,35 +2811,11 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
         const formEditQ = document.getElementById('form-edit-question');
         const btnResetOriginalQ = document.getElementById('btn-reset-original-q');
 
-        if (btnEditQ && modalEditQ) {
+        if (btnEditQ) {
             btnEditQ.addEventListener('click', () => {
                 const q = state.questions[state.currentIndex];
                 if (!q) return;
-
-                document.getElementById('edit-q-key').value = q.qKey;
-                document.getElementById('edit-q-title').value = q.question || q.title || '';
-                document.getElementById('edit-q-passage').value = q.passage || '';
-
-                const optGroup = document.getElementById('edit-options-group');
-                if (q.type === 'choice') {
-                    optGroup.style.display = 'block';
-                    for (let i = 1; i <= 5; i++) {
-                        const optInput = document.getElementById(`edit-opt-${i}`);
-                        if (optInput) {
-                            optInput.value = (q.options && q.options[i - 1]) || '';
-                        }
-                    }
-                    document.getElementById('edit-q-answer').value = q.answer || '1';
-                } else {
-                    optGroup.style.display = 'none';
-                    const ansStr = Object.entries(q.answers || {}).map(([k, v]) => `${k}=${v}`).join(', ');
-                    document.getElementById('edit-q-answer').value = ansStr;
-                }
-
-                document.getElementById('edit-q-explanation').value = q.explanation || '';
-                document.getElementById('edit-q-tip').value = q.tip || '';
-
-                modalEditQ.classList.add('active');
+                openEditModalForQuestion(q);
             });
         }
 
@@ -2833,8 +2823,11 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
             formEditQ.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const qKey = document.getElementById('edit-q-key').value;
-                const q = state.questions[state.currentIndex];
-                if (!q || q.qKey !== qKey) return;
+                const q = findQuestionByQKey(qKey);
+                if (!q) {
+                    showToast('❌ 대상 문제를 찾을 수 없습니다.');
+                    return;
+                }
 
                 const newTitle = document.getElementById('edit-q-title').value.trim();
                 const newPassage = document.getElementById('edit-q-passage').value.trim();
@@ -2870,7 +2863,18 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
                 state.customEdits[qKey] = editData;
                 applyCustomEdits(q);
 
-                renderQuestion(state.currentIndex);
+                // If currently taking a quiz on this question, update current view
+                if (elements.screens.quiz && elements.screens.quiz.classList.contains('active')) {
+                    if (state.questions[state.currentIndex] && state.questions[state.currentIndex].qKey === qKey) {
+                        renderQuestion(state.currentIndex);
+                    }
+                }
+
+                // If wrong & needs-edit manager is open, re-render list so changes appear immediately
+                if (elements.modals.wrongManager && elements.modals.wrongManager.classList.contains('active')) {
+                    renderWrongManagerList(state.wrongManagerFilter, state.wrongManagerTab);
+                }
+
                 closeModal(modalEditQ);
                 showToast('💾 문제 수정사항이 저장되었습니다!');
             });
@@ -2879,8 +2883,8 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
         if (btnResetOriginalQ) {
             btnResetOriginalQ.addEventListener('click', async () => {
                 const qKey = document.getElementById('edit-q-key').value;
-                const q = state.questions[state.currentIndex];
-                if (!q || q.qKey !== qKey) return;
+                const q = findQuestionByQKey(qKey);
+                if (!q) return;
 
                 if (confirm('이 문제의 수정 내역을 삭제하고 원본 기출 데이터로 복구하시겠습니까?')) {
                     await IDBStore.deleteQuestionEdit(qKey);
@@ -2900,7 +2904,16 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
                         q.isCustomEdited = false;
                     }
 
-                    renderQuestion(state.currentIndex);
+                    if (elements.screens.quiz && elements.screens.quiz.classList.contains('active')) {
+                        if (state.questions[state.currentIndex] && state.questions[state.currentIndex].qKey === qKey) {
+                            renderQuestion(state.currentIndex);
+                        }
+                    }
+
+                    if (elements.modals.wrongManager && elements.modals.wrongManager.classList.contains('active')) {
+                        renderWrongManagerList(state.wrongManagerFilter, state.wrongManagerTab);
+                    }
+
                     closeModal(modalEditQ);
                     showToast('🔄 원본 기출 문제로 복구되었습니다.');
                 }
