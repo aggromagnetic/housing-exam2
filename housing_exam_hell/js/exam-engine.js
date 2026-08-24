@@ -135,7 +135,12 @@ export const ExamEngine = {
     /**
      * Get all questions for a subject and type with a unified key
      */
+    _poolCache: {},
+
     getQuestionPool(subject, type) {
+        const cacheKey = `${subject}_${type}`;
+        if (this._poolCache[cacheKey]) return this._poolCache[cacheKey];
+
         const bank = this.getBank();
         if (!bank || !bank.datasets) return [];
 
@@ -150,7 +155,9 @@ export const ExamEngine = {
         dataset.chapters.forEach(chap => {
             (chap.questions || []).forEach(q => {
                 const matches = this.matchQuestionKeywords({ ...q, chapterName: chap.chapter }, subject);
-                const isMatch = matches.length > 0;
+                const topMatch = matches.length > 0 ? matches[0] : null;
+                // 1점은 일반 문제와 동일 취급, 2점 이상일 때 핵심 300선 뱃지 표시
+                const isHighYield = topMatch !== null && topMatch.score >= 2;
                 pool.push({
                     ...q,
                     qKey: `${subject}_${type}_${chap.chapter}_${q.id}`,
@@ -159,13 +166,14 @@ export const ExamEngine = {
                     chapterName: chap.chapter,
                     sourceFile: chap.source_file || '',
                     coreMatches: matches,
-                    topCoreMatch: isMatch ? matches[0] : null,
-                    isHighYield: isMatch,
-                    primaryCoreItem: isMatch ? matches[0].item : null
+                    topCoreMatch: topMatch,
+                    isHighYield: isHighYield,
+                    primaryCoreItem: isHighYield ? topMatch.item : null
                 });
             });
         });
 
+        this._poolCache[cacheKey] = pool;
         return pool;
     },
 
@@ -179,7 +187,15 @@ export const ExamEngine = {
 
         const weights = available.map(it => {
             const stat = statsMap[it.qKey];
-            return stat && stat.weight ? stat.weight : 1;
+            const userWeight = (stat && stat.weight) ? stat.weight : 1;
+            
+            // 적중 점수(score) 비례 확률 가중치:
+            // 5점 -> 5배 (약 25%), 4점 -> 4배 (약 20%), 3점 -> 3배 (약 15%), 2점 -> 2배 (약 10%)
+            // 1점 이하 -> 1배 (일반 문제와 동일 확률 취급)
+            const coreScore = (it.topCoreMatch && it.topCoreMatch.score) ? it.topCoreMatch.score : 1;
+            const scoreWeight = coreScore >= 2 ? coreScore : 1;
+            
+            return userWeight * scoreWeight;
         });
 
         const selected = [];
