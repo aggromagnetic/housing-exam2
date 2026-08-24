@@ -2733,11 +2733,87 @@ function flagCurrentQuestionFromQuiz() {
     showToast('🚩 [수정필요] 목록에 추가되었으며, 오답 페널티가 취소되었습니다!');
 }
 
+// -------------------------------------------------------------
+// Security PIN Authentication (PIN: 2834, Masked & Protected)
+// -------------------------------------------------------------
+let isEditorPinAuthenticated = false;
+let pendingPinSuccessCallback = null;
+
+function openEditorWithPin(targetQuestionId = null) {
+    requirePinAuth(() => {
+        switchView('editor');
+        if (targetQuestionId) {
+            setTimeout(() => selectQuestionForEdit(targetQuestionId), 60);
+        }
+    });
+}
+
+function requirePinAuth(onSuccess) {
+    if (isEditorPinAuthenticated) {
+        if (typeof onSuccess === 'function') onSuccess();
+        return;
+    }
+
+    pendingPinSuccessCallback = onSuccess;
+    const modal = document.getElementById('modal-pin-auth');
+    const input = document.getElementById('input-pin-code');
+    const errMsg = document.getElementById('pin-error-msg');
+    const card = document.getElementById('modal-pin-card');
+
+    if (errMsg) errMsg.textContent = '';
+    if (card) card.classList.remove('shake');
+    if (input) {
+        input.value = '';
+    }
+
+    if (modal) {
+        modal.style.display = 'flex';
+        setTimeout(() => input?.focus?.(), 80);
+    }
+}
+
+function closePinAuthModal() {
+    const modal = document.getElementById('modal-pin-auth');
+    if (modal) modal.style.display = 'none';
+    pendingPinSuccessCallback = null;
+}
+
+function handlePinSubmit(e) {
+    if (e) e.preventDefault();
+    const input = document.getElementById('input-pin-code');
+    const errMsg = document.getElementById('pin-error-msg');
+    const card = document.getElementById('modal-pin-card');
+    const val = input ? input.value.trim() : '';
+
+    if (val === '2834') {
+        isEditorPinAuthenticated = true;
+        closePinAuthModal();
+        showToast('🔓 보안 인증이 완료되었습니다.');
+        if (typeof pendingPinSuccessCallback === 'function') {
+            const cb = pendingPinSuccessCallback;
+            pendingPinSuccessCallback = null;
+            cb();
+        }
+    } else {
+        if (card) {
+            card.classList.remove('shake');
+            void card.offsetWidth;
+            card.classList.add('shake');
+        }
+        if (errMsg) {
+            errMsg.textContent = '비밀번호가 일치하지 않습니다.';
+        }
+        if (input) {
+            input.value = '';
+            input.focus?.();
+        }
+    }
+}
+
 function openEditorFromQuiz() {
     const currentQ = quizQuestions[quizCurrentIndex];
     if (!currentQ) return;
-    switchView('editor');
-    selectQuestionForEdit(currentQ.id);
+    openEditorWithPin(currentQ.id);
 }
 
 function flagQuestionFromList(qId) {
@@ -2778,8 +2854,7 @@ function flagQuestionFromList(qId) {
 }
 
 function openEditorForQuestion(qId) {
-    switchView('editor');
-    selectQuestionForEdit(qId);
+    openEditorWithPin(qId);
 }
 
 function removeSingleWrongStat(qId) {

@@ -40,7 +40,7 @@
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                 풀던 퀴즈로 돌아가기
             </button>
-            <button class="nav-btn" id="btn-tab-editor" onclick="switchView('editor')">
+            <button class="nav-btn" id="btn-tab-editor" onclick="openEditorWithPin()">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                 문제 에디터
             </button>
@@ -78,7 +78,7 @@
                 <div class="sidebar-title-row">
                     <span>📚 강의 노트 목차</span>
                     <div style="display: flex; align-items: center; gap: 6px;">
-                        <button class="btn-editor-open" onclick="switchView('editor')" title="주관식 문제 에디터 & 오답/수정 관리 열기">✏️ 문제 관리</button>
+                        <button class="btn-editor-open" onclick="openEditorWithPin()" title="주관식 문제 에디터 & 오답/수정 관리 열기">✏️ 문제 관리</button>
                         <button class="btn-icon" onclick="closeSidebar()" style="width:28px; height:28px;">✕</button>
                     </div>
                 </div>
@@ -327,7 +327,7 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
             <span>풀던퀴즈</span>
         </button>
-        <button class="mobile-nav-item" id="m-nav-editor" onclick="switchView('editor')">
+        <button class="mobile-nav-item" id="m-nav-editor" onclick="openEditorWithPin()">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
             <span>문제관리</span>
         </button>
@@ -340,6 +340,24 @@
             <span>검색</span>
         </button>
     </nav>
+
+    <!-- Security PIN Auth Modal -->
+    <div id="modal-pin-auth" class="modal-backdrop" style="display: none;">
+        <div class="modal-pin-card" id="modal-pin-card">
+            <div style="font-size: 36px; margin-bottom: 8px;">🔒</div>
+            <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 6px; color: #fff;">보안 PIN 인증</h3>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">문제 에디터 & 오답 관리에 접근하려면 PIN 비밀번호(4자리)를 입력하세요.</p>
+
+            <form id="form-pin-auth" onsubmit="handlePinSubmit(event)" style="display: flex; flex-direction: column; gap: 14px;">
+                <input type="password" id="input-pin-code" class="pin-code-input" maxlength="4" placeholder="••••" autocomplete="off" inputmode="numeric">
+                <div id="pin-error-msg" style="font-size: 12px; color: #f87171; min-height: 16px; font-weight: 600;"></div>
+                <div style="display: flex; gap: 10px;">
+                    <button type="button" class="btn-secondary" onclick="closePinAuthModal()" style="flex: 1; justify-content: center;">취소</button>
+                    <button type="submit" class="btn-primary" style="flex: 1; justify-content: center; font-weight: 700;">확인</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <script src="data/study_data.js?v=11"></script>
     <script src="app.js?v=11"></script>
