@@ -237,6 +237,42 @@
                 delete map[qKey];
                 localStorage.setItem('housing_exam_custom_edits', JSON.stringify(map));
             } catch (e) {}
+        },
+
+        async saveNeedsEdit(qKey, qInfo) {
+            try {
+                const map = JSON.parse(localStorage.getItem('housing_exam_needs_edit') || '{}');
+                map[qKey] = {
+                    qKey,
+                    subject: qInfo.subject,
+                    chapterName: qInfo.chapterName,
+                    type: qInfo.type,
+                    question: qInfo.question || qInfo.title,
+                    flaggedAt: new Date().toISOString()
+                };
+                localStorage.setItem('housing_exam_needs_edit', JSON.stringify(map));
+            } catch (e) {}
+        },
+
+        async getNeedsEdit(qKey) {
+            try {
+                const map = JSON.parse(localStorage.getItem('housing_exam_needs_edit') || '{}');
+                return map[qKey] || null;
+            } catch (e) { return null; }
+        },
+
+        async getAllNeedsEditMap() {
+            try {
+                return JSON.parse(localStorage.getItem('housing_exam_needs_edit') || '{}');
+            } catch (e) { return {}; }
+        },
+
+        async deleteNeedsEdit(qKey) {
+            try {
+                const map = JSON.parse(localStorage.getItem('housing_exam_needs_edit') || '{}');
+                delete map[qKey];
+                localStorage.setItem('housing_exam_needs_edit', JSON.stringify(map));
+            } catch (e) {}
         }
     };
 
@@ -1116,7 +1152,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260824.1035</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
