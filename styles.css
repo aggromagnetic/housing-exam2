@@ -129,7 +129,9 @@ body {
 
 .search-box {
     position: relative;
-    width: 220px;
+    width: 250px;
+    display: flex;
+    align-items: center;
 }
 
 .search-input {
@@ -137,7 +139,7 @@ body {
     background: rgba(30, 41, 59, 0.8);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
-    padding: 8px 12px 8px 34px;
+    padding: 8px 34px 8px 12px;
     color: #fff;
     font-size: 13px;
     outline: none;
@@ -149,13 +151,26 @@ body {
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
 }
 
-.search-icon {
+.btn-search-icon {
     position: absolute;
-    left: 10px;
+    right: 4px;
     top: 50%;
     transform: translateY(-50%);
+    background: transparent;
+    border: none;
     color: var(--text-muted);
-    pointer-events: none;
+    cursor: pointer;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: all 0.15s ease;
+}
+
+.btn-search-icon:hover {
+    color: #60a5fa;
+    background: rgba(59, 130, 246, 0.15);
 }
 
 .btn-quiz-start {

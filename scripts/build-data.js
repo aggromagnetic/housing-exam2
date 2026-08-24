@@ -369,6 +369,8 @@ function parseHtmlNote(fileObj) {
         });
     });
 
+    const cleanBodyText = cleanText(content.replace(/<script[\s\S]*?<\/script>/gi, '').replace(/<style[\s\S]*?<\/style>/gi, ''));
+
     return {
         relativePath: fileObj.relativePath,
         fileName: fileObj.fileName,
@@ -376,6 +378,7 @@ function parseHtmlNote(fileObj) {
         lectureNum,
         title: h1Text,
         subHeadings,
+        bodyText: cleanBodyText,
         quizCount: quizzes.length,
         quizzes
     };
@@ -403,6 +406,7 @@ function main() {
                 lectureNum: result.lectureNum,
                 title: result.title.normalize('NFC'),
                 subHeadings: result.subHeadings.map(sh => sh.normalize('NFC')),
+                bodyText: result.bodyText.normalize('NFC'),
                 quizCount: result.quizCount
             });
             const normQuizzes = result.quizzes.map(q => ({
