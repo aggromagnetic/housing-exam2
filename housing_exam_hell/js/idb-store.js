@@ -312,6 +312,45 @@ export const IDBStore = {
     },
 
     /**
+     * Flag question as Needs Edit (수정 필요 플래그)
+     */
+    async saveNeedsEdit(qKey, qInfo) {
+        try {
+            const map = JSON.parse(localStorage.getItem('housing_exam_needs_edit') || '{}');
+            map[qKey] = {
+                qKey,
+                subject: qInfo.subject || '',
+                chapterName: qInfo.chapterName || '',
+                type: qInfo.type || 'choice',
+                question: qInfo.question || qInfo.title || '',
+                flaggedAt: new Date().toISOString()
+            };
+            localStorage.setItem('housing_exam_needs_edit', JSON.stringify(map));
+            return map[qKey];
+        } catch (e) { return null; }
+    },
+
+    /**
+     * Get all Needs Edit map
+     */
+    async getAllNeedsEditMap() {
+        try {
+            return JSON.parse(localStorage.getItem('housing_exam_needs_edit') || '{}');
+        } catch (e) { return {}; }
+    },
+
+    /**
+     * Delete/Resolve Needs Edit flag
+     */
+    async deleteNeedsEdit(qKey) {
+        try {
+            const map = JSON.parse(localStorage.getItem('housing_exam_needs_edit') || '{}');
+            delete map[qKey];
+            localStorage.setItem('housing_exam_needs_edit', JSON.stringify(map));
+        } catch (e) {}
+    },
+
+    /**
      * Reset all learning statistics
      */
     async resetAllStats() {
