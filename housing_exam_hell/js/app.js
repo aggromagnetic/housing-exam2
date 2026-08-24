@@ -801,8 +801,8 @@
                 }
             }
 
-            if (this.currentQuestionKey) {
-                await IDBStore.saveDrawingStrokes(this.currentQuestionKey, this.strokes);
+            if (this.currentQuestionKey && state.sessionStrokes) {
+                state.sessionStrokes.set(this.currentQuestionKey, [...this.strokes]);
             }
         }
 
@@ -838,17 +838,17 @@
             });
         }
 
-        async loadQuestionStrokes(qKey) {
+        loadQuestionStrokes(qKey) {
             this.currentQuestionKey = qKey;
-            this.strokes = (await IDBStore.getDrawingStrokes(qKey)) || [];
+            this.strokes = (state.sessionStrokes && state.sessionStrokes.get(qKey)) ? [...state.sessionStrokes.get(qKey)] : [];
             this.handleResize();
         }
 
-        async clearCurrentStrokes() {
+        clearCurrentStrokes() {
             this.strokes = [];
             this.redraw();
-            if (this.currentQuestionKey) {
-                await IDBStore.clearDrawingStrokes(this.currentQuestionKey);
+            if (this.currentQuestionKey && state.sessionStrokes) {
+                state.sessionStrokes.delete(this.currentQuestionKey);
             }
             showToast('필기가 모두 지워졌습니다.');
         }
@@ -1032,7 +1032,8 @@
         mockRemainingSeconds: 40 * 60,
 
         isExplanationOpen: false,
-        tabletCanvas: null
+        tabletCanvas: null,
+        sessionStrokes: new Map()
     };
 
     let elements = {};
@@ -1179,7 +1180,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260824.1455</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260824.1510</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -1204,7 +1205,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260824.1455</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260824.1510</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
@@ -1260,6 +1261,7 @@
         state.results = [];
         state.firstAttemptResults = [];
         state.isExplanationOpen = false;
+        if (state.sessionStrokes) state.sessionStrokes.clear();
         state.statsMap = await IDBStore.getAllStatsMap();
 
         if (modeKey === 'infinite') {
@@ -3289,6 +3291,16 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
     window.addEventListener('DOMContentLoaded', async () => {
         initDOMElements();
         await IDBStore.init();
+        
+        // Purge old persistent drawing strokes from IndexedDB to ensure 0 MB storage overhead
+        try {
+            const db = await IDBStore.openDB();
+            if (db && db.objectStoreNames.contains('drawing_strokes')) {
+                const tx = db.transaction('drawing_strokes', 'readwrite');
+                tx.objectStore('drawing_strokes').clear();
+            }
+        } catch (e) {}
+
         state.statsMap = await IDBStore.getAllStatsMap();
         state.customEdits = await IDBStore.getAllQuestionEditsMap();
         state.needsEditMap = await IDBStore.getAllNeedsEditMap();
