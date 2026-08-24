@@ -445,7 +445,7 @@
             } else {
                 return [
                     { pattern: /01.*주택법/, mc: 5, sa: 3 },
-                    { pattern: /02.*공동주택관리법|2-1|2-2/, mc: 5, sa: 3 },
+                    { pattern: /02.*공동주택관리법/, mc: 5, sa: 3 },
                     { pattern: /03.*민간임대주택/, mc: 1, sa: 1 },
                     { pattern: /04.*공공주택/, mc: 1, sa: 1 },
                     { pattern: /05.*건축법/, mc: 4, sa: 3 },
@@ -1179,7 +1179,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260824.1445</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260824.1455</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -1204,7 +1204,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260824.1445</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260824.1455</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
