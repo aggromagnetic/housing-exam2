@@ -412,11 +412,60 @@
     };
 
     // -------------------------------------------------------------
-    // 3. Exam Engine (5-Year Blueprint & Weights)
+    // -------------------------------------------------------------
+    // 3. Exam Engine (5-Year Blueprint & Core 300 Keywords)
     // -------------------------------------------------------------
     const ExamEngine = {
         getBank() {
             return window.HOUSING_EXAM_BANK || null;
+        },
+
+        getCoreKeywordsDB(subject) {
+            if (!window.HOUSING_CORE_KEYWORDS_DB) return [];
+            return window.HOUSING_CORE_KEYWORDS_DB[subject] || [];
+        },
+
+        getTopicKeywords(topic) {
+            const stopWords = new Set(["관한", "기준", "요건", "구분", "비교", "산정", "의무", "절차", "규정", "종류", "범위", "특성", "적용", "경우", "사항", "설치", "관리", "확인"]);
+            return topic
+                .replace(/[\(\)·,\.\/vs\-\+vs\:]/g, " ")
+                .split(/\s+/)
+                .map(t => t.trim())
+                .filter(t => t.length >= 2 && !stopWords.has(t));
+        },
+
+        matchQuestionKeywords(q, subject) {
+            const subjectKeywords = this.getCoreKeywordsDB(subject);
+            if (!subjectKeywords || subjectKeywords.length === 0) return [];
+
+            const fullText = [
+                q.question || "",
+                q.title || "",
+                q.passage || "",
+                (q.options || []).join(" "),
+                q.explanation || "",
+                q.tip || "",
+                q.keyword || ""
+            ].join(" ");
+
+            const matches = [];
+            for (const item of subjectKeywords) {
+                const topicKws = this.getTopicKeywords(item.topic);
+                if (topicKws.length === 0) continue;
+
+                let matchedKws = topicKws.filter(kw => fullText.includes(kw));
+                const hasStrongMatch = matchedKws.some(kw => kw.length >= 4);
+                if (hasStrongMatch || matchedKws.length >= 2) {
+                    matches.push({
+                        item,
+                        matchedKws,
+                        score: matchedKws.length + (hasStrongMatch ? 2 : 0)
+                    });
+                }
+            }
+
+            matches.sort((a, b) => b.score - a.score);
+            return matches;
         },
 
         getQuestionPool(subject, type) {
@@ -433,13 +482,17 @@
             const pool = [];
             dataset.chapters.forEach(chap => {
                 (chap.questions || []).forEach(q => {
+                    const matches = this.matchQuestionKeywords(q, subject);
                     pool.push({
                         ...q,
                         qKey: `${subject}_${type}_${chap.chapter}_${q.id}`,
                         subject,
                         type,
                         chapterName: chap.chapter,
-                        sourceFile: chap.source_file || ''
+                        sourceFile: chap.source_file || '',
+                        coreMatches: matches,
+                        isHighYield: matches.length > 0,
+                        primaryCoreItem: matches.length > 0 ? matches[0].item : null
                     });
                 });
             });
@@ -447,7 +500,7 @@
             return pool;
         },
 
-        weightedPick(items, statsMap, count, excludeKeysSet = new Set()) {
+        weightedPick(items, statsMap = {}, count, excludeKeysSet = new Set()) {
             const available = items.filter(it => !excludeKeysSet.has(it.qKey));
             if (available.length <= count) return available;
 
@@ -500,9 +553,9 @@
                     { pattern: /07.*입주자관리/, mc: 1, sa: 1 },
                     { pattern: /08.*사무.*인사/, mc: 3, sa: 3 },
                     { pattern: /09.*대외업무.*리모델링/, mc: 1, sa: 0 },
-                    { pattern: /11.*회계관리/, mc: 1, sa: 0 },
-                    { pattern: /12.*시설관리/, mc: 9, sa: 6 },
-                    { pattern: /13.*안전관리|14.*환경관리/, mc: 2, sa: 3 }
+                    { pattern: /11.*회계관리|10.*회계관리/, mc: 1, sa: 0 },
+                    { pattern: /12.*시설관리|11.*시설관리/, mc: 9, sa: 6 },
+                    { pattern: /13.*안전관리|14.*환경관리|12.*환경관리/, mc: 2, sa: 3 }
                 ];
             } else {
                 return [
@@ -524,7 +577,7 @@
             }
         },
 
-        generateExamSet(subject, statsMap = {}, excludeKeysSet = new Set()) {
+        generateExamSet(subject, statsMap = {}, excludeKeysSet = new Set(), highYieldRatio = 0.40) {
             const mcPool = this.getQuestionPool(subject, 'choice');
             const saPool = this.getQuestionPool(subject, 'short');
             const blueprint = this.getBlueprint(subject);
@@ -547,23 +600,62 @@
                 const chapterMcList = mcPool.filter(q => rule.pattern.test(q.chapterName));
                 const chapterSaList = saPool.filter(q => rule.pattern.test(q.chapterName));
 
+                // MC Pick with High-Yield Priority (40%+)
                 if (targetMc > 0) {
-                    const picked = this.weightedPick(chapterMcList, statsMap, targetMc, excludeKeysSet);
-                    selectedMC.push(...picked);
+                    const hyMC = chapterMcList.filter(q => q.isHighYield);
+                    const targetHyMc = Math.min(hyMC.length, Math.ceil(targetMc * highYieldRatio));
+
+                    const pickedHy = this.weightedPick(hyMC, statsMap, targetHyMc, excludeKeysSet);
+                    selectedMC.push(...pickedHy);
+
+                    const remainingMcCount = targetMc - pickedHy.length;
+                    if (remainingMcCount > 0) {
+                        const pickedKeys = new Set([...excludeKeysSet, ...pickedHy.map(q => q.qKey)]);
+                        const pickedRest = this.weightedPick(chapterMcList, statsMap, remainingMcCount, pickedKeys);
+                        selectedMC.push(...pickedRest);
+                    }
                 }
+
+                // SA Pick with High-Yield Priority (40%+)
                 if (targetSa > 0) {
-                    const picked = this.weightedPick(chapterSaList, statsMap, targetSa, excludeKeysSet);
-                    selectedSA.push(...picked);
+                    const hySA = chapterSaList.filter(q => q.isHighYield);
+                    const targetHySa = Math.min(hySA.length, Math.ceil(targetSa * highYieldRatio));
+
+                    const pickedHy = this.weightedPick(hySA, statsMap, targetHySa, excludeKeysSet);
+                    selectedSA.push(...pickedHy);
+
+                    const remainingSaCount = targetSa - pickedHy.length;
+                    if (remainingSaCount > 0) {
+                        const pickedKeys = new Set([...excludeKeysSet, ...pickedHy.map(q => q.qKey)]);
+                        const pickedRest = this.weightedPick(chapterSaList, statsMap, remainingSaCount, pickedKeys);
+                        selectedSA.push(...pickedRest);
+                    }
                 }
             });
 
             if (selectedMC.length < 24) {
-                const remainder = this.weightedPick(mcPool, statsMap, 24 - selectedMC.length, new Set([...excludeKeysSet, ...selectedMC.map(q => q.qKey)]));
-                selectedMC.push(...remainder);
+                const pickedKeys = new Set([...excludeKeysSet, ...selectedMC.map(q => q.qKey)]);
+                const hyMcPool = mcPool.filter(q => q.isHighYield);
+                const remainderHy = this.weightedPick(hyMcPool, statsMap, 24 - selectedMC.length, pickedKeys);
+                selectedMC.push(...remainderHy);
+
+                if (selectedMC.length < 24) {
+                    const allPicked = new Set([...excludeKeysSet, ...selectedMC.map(q => q.qKey)]);
+                    const remainderAll = this.weightedPick(mcPool, statsMap, 24 - selectedMC.length, allPicked);
+                    selectedMC.push(...remainderAll);
+                }
             }
             if (selectedSA.length < 16) {
-                const remainder = this.weightedPick(saPool, statsMap, 16 - selectedSA.length, new Set([...excludeKeysSet, ...selectedSA.map(q => q.qKey)]));
-                selectedSA.push(...remainder);
+                const pickedKeys = new Set([...excludeKeysSet, ...selectedSA.map(q => q.qKey)]);
+                const hySaPool = saPool.filter(q => q.isHighYield);
+                const remainderHy = this.weightedPick(hySaPool, statsMap, 16 - selectedSA.length, pickedKeys);
+                selectedSA.push(...remainderHy);
+
+                if (selectedSA.length < 16) {
+                    const allPicked = new Set([...excludeKeysSet, ...selectedSA.map(q => q.qKey)]);
+                    const remainderAll = this.weightedPick(saPool, statsMap, 16 - selectedSA.length, allPicked);
+                    selectedSA.push(...remainderAll);
+                }
             }
 
             // 실전 시험지 순서와 100% 동일하게 정렬:
@@ -596,14 +688,26 @@
             const saPool = this.getQuestionPool(subject, 'short');
             const all = [...mcPool, ...saPool];
 
+            // Prioritize weak high-yield items first!
             const weakItems = all.filter(q => (statsMap[q.qKey]?.weight || 1) >= 2);
+            const weakHy = weakItems.filter(q => q.isHighYield);
+
             if (weakItems.length >= count) {
-                return this.weightedPick(weakItems, statsMap, count);
+                const targetHyCount = Math.min(weakHy.length, Math.ceil(count * 0.5));
+                const pickedHy = this.weightedPick(weakHy, statsMap, targetHyCount);
+                const pickedRest = this.weightedPick(weakItems, statsMap, count - pickedHy.length, new Set(pickedHy.map(q => q.qKey)));
+                return this.shuffleWithAntiClumping([...pickedHy, ...pickedRest]);
             }
 
             const weakSet = new Set(weakItems.map(q => q.qKey));
-            const remaining = this.weightedPick(all, statsMap, count - weakItems.length, weakSet);
-            return this.shuffleWithAntiClumping([...weakItems, ...remaining]);
+            const hyRemaining = all.filter(q => q.isHighYield && !weakSet.has(q.qKey));
+            const targetRemainingHy = Math.min(hyRemaining.length, Math.ceil((count - weakItems.length) * 0.5));
+            const pickedRemainingHy = this.weightedPick(hyRemaining, statsMap, targetRemainingHy, weakSet);
+
+            const allPickedSet = new Set([...weakItems.map(q => q.qKey), ...pickedRemainingHy.map(q => q.qKey)]);
+            const remaining = this.weightedPick(all, statsMap, count - weakItems.length - pickedRemainingHy.length, allPickedSet);
+
+            return this.shuffleWithAntiClumping([...weakItems, ...pickedRemainingHy, ...remaining]);
         },
 
         generatePartSet(subject, chapterPattern) {
@@ -1242,7 +1346,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260824.1610</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260824.1910</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -1267,7 +1371,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260824.1610</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260824.1910</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
@@ -1514,7 +1618,13 @@
         elements.quiz.card.className = `quiz-card card-w${weight >= 10 ? 10 : (weight >= 6 ? 6 : (weight >= 4 ? 4 : (weight >= 2 ? 2 : 1)))}`;
 
         elements.quiz.qNum.textContent = `문항 ${index + 1} / ${state.questions.length}`;
-        elements.quiz.chapterBadge.textContent = q.chapterName.replace(/^CHAPTER\s+\d+\s*/i, '');
+        
+        let chapText = q.chapterName.replace(/^CHAPTER\s+\d+\s*/i, '');
+        if (q.isHighYield && q.primaryCoreItem) {
+            elements.quiz.chapterBadge.innerHTML = `${chapText} <span class="badge-high-yield" title="${q.primaryCoreItem.note}"><i class="fa-solid fa-star text-amber-400"></i> 핵심 300선 #${String(q.primaryCoreItem.id).padStart(3, '0')} ${q.primaryCoreItem.tag}</span>`;
+        } else {
+            elements.quiz.chapterBadge.textContent = chapText;
+        }
 
         let wIcon = '🌱 기본';
         if (weight >= 10) wIcon = '🔥 지옥 (Lv.4)';
@@ -1563,10 +1673,21 @@
             }
         }
 
-        const expText = q.explanation && q.explanation.trim().length > 0 
+        let expText = q.explanation && q.explanation.trim().length > 0 
             ? formatExplanation(q.explanation)
             : (q.type === 'short' ? '본 문항의 조문 및 법령 규정에 따른 정확한 기입 답안은 위와 같습니다.' : '');
-        elements.quiz.expBody.textContent = expText;
+
+        if (q.isHighYield && q.primaryCoreItem) {
+            const calloutHtml = `
+                <div class="core-theme-callout">
+                    <div class="core-theme-title"><i class="fa-solid fa-star text-amber-400"></i> [초고효율 핵심 300선 No.${String(q.primaryCoreItem.id).padStart(3, '0')}] ${q.primaryCoreItem.topic}</div>
+                    <div class="core-theme-note"><b>💡 출제 포인트:</b> ${q.primaryCoreItem.note}</div>
+                </div>
+            `;
+            elements.quiz.expBody.innerHTML = `<div style="white-space: pre-wrap;">${expText}</div>${calloutHtml}`;
+        } else {
+            elements.quiz.expBody.textContent = expText;
+        }
 
         if (q.tip) {
             elements.quiz.tipBox.textContent = `💡 일타 팁: ${q.tip}`;
@@ -2253,7 +2374,8 @@
             if (!q) continue;
             const num = i + 1;
             const formatted = formatQuestionAndPassage(q);
-            md += `#### 【문 ${num}】 (단원: ${q.chapterName}) ${formatted.title}\n\n`;
+            const hyBadge = (q.isHighYield && q.primaryCoreItem) ? ` ⭐ [핵심 300선 No.${q.primaryCoreItem.id} ${q.primaryCoreItem.tag}]` : '';
+            md += `#### 【문 ${num}】 (단원: ${q.chapterName})${hyBadge} ${formatted.title}\n\n`;
             if (formatted.passage) {
                 md += `\`\`\`text\n${formatted.passage}\n\`\`\`\n\n`;
             }
@@ -2273,7 +2395,8 @@
             if (!q) continue;
             const num = i + 1;
             const formatted = formatQuestionAndPassage(q);
-            md += `#### 【문 ${num}】 (단원: ${q.chapterName}) ${formatted.title}\n\n`;
+            const hyBadge = (q.isHighYield && q.primaryCoreItem) ? ` ⭐ [핵심 300선 No.${q.primaryCoreItem.id} ${q.primaryCoreItem.tag}]` : '';
+            md += `#### 【문 ${num}】 (단원: ${q.chapterName})${hyBadge} ${formatted.title}\n\n`;
             if (formatted.passage) {
                 md += `\`\`\`text\n${formatted.passage}\n\`\`\`\n\n`;
             }
@@ -2323,8 +2446,15 @@
                 ansText = Object.entries(q.answers || {}).map(([k, v]) => `**[${k}]** ${v}`).join(', ');
             }
 
-            md += `### 【문 ${num}】 ${q.subject} > ${q.chapterName}\n`;
+            const hyBadge = (q.isHighYield && q.primaryCoreItem) ? ` ⭐ [핵심 300선 #${q.primaryCoreItem.id} ${q.primaryCoreItem.tag}]` : '';
+            md += `### 【문 ${num}】 ${q.subject} > ${q.chapterName}${hyBadge}\n`;
             md += `- **모범 정답**: ${ansText}\n\n`;
+            
+            if (q.isHighYield && q.primaryCoreItem) {
+                md += `> ⭐ **[초고효율 핵심 300선 테마 No.${q.primaryCoreItem.id} ${q.primaryCoreItem.tag}]**: ${q.primaryCoreItem.topic}\n`;
+                md += `> - **출제 포인트**: ${q.primaryCoreItem.note}\n\n`;
+            }
+
             md += `#### [상세 해설 및 근거 조문]\n`;
             md += `${q.explanation ? q.explanation.trim() : '등록된 상세 해설이 없습니다.'}\n\n`;
             if (q.tip) {
@@ -2627,6 +2757,9 @@
             card.dataset.qkey = q.qKey;
 
             let badgeHtml = '';
+            if (q.isHighYield && q.primaryCoreItem) {
+                badgeHtml += `<span class="badge-high-yield mgr-badge" title="${q.primaryCoreItem.topic}">⭐ 핵심 #${q.primaryCoreItem.id}</span>`;
+            }
             if (isFlagged) {
                 badgeHtml += `<span class="mgr-status-flag">🚩 수정요청</span>`;
             }
@@ -2732,7 +2865,11 @@
             elements.manager.metaType.textContent = q.type === 'choice' ? '객관식 5지선다' : '주관식 단답/기입형';
         }
         if (elements.manager.metaId) {
-            elements.manager.metaId.textContent = `[문항 ID: ${q.id}]`;
+            let coreHtml = '';
+            if (q.isHighYield && q.primaryCoreItem) {
+                coreHtml = ` <span class="badge-high-yield mgr-badge" title="${q.primaryCoreItem.note}">⭐ 핵심 300선 #${q.primaryCoreItem.id} ${q.primaryCoreItem.tag}</span>`;
+            }
+            elements.manager.metaId.innerHTML = `[문항 ID: ${q.id}]${coreHtml}`;
         }
 
         // Wrong record delete button visibility
