@@ -163,6 +163,109 @@ function saveLocalStats() {
     }
 }
 
+// -------------------------------------------------------------
+// Question Custom Overrides & Flagging Engine
+// -------------------------------------------------------------
+let quizOverrides = {};
+let flaggedQuestions = {};
+const originalQuizzesMap = {};
+
+function loadQuizOverrides() {
+    try {
+        const savedOv = localStorage.getItem('housing_exam_quiz_overrides');
+        if (savedOv) quizOverrides = JSON.parse(savedOv);
+    } catch (e) {
+        console.error('Error loading quiz overrides:', e);
+        quizOverrides = {};
+    }
+
+    try {
+        const savedFlags = localStorage.getItem('housing_exam_flagged_questions');
+        if (savedFlags) flaggedQuestions = JSON.parse(savedFlags);
+    } catch (e) {
+        console.error('Error loading flagged questions:', e);
+        flaggedQuestions = {};
+    }
+}
+
+function saveQuizOverrides() {
+    try {
+        localStorage.setItem('housing_exam_quiz_overrides', JSON.stringify(quizOverrides));
+    } catch (e) {
+        console.error('Error saving quiz overrides:', e);
+    }
+}
+
+function saveFlaggedQuestions() {
+    try {
+        localStorage.setItem('housing_exam_flagged_questions', JSON.stringify(flaggedQuestions));
+    } catch (e) {
+        console.error('Error saving flagged questions:', e);
+    }
+}
+
+function initializeQuizOverrides() {
+    loadQuizOverrides();
+    if (!studyData || !studyData.quizzes) return;
+
+    studyData.quizzes.forEach(q => {
+        if (!originalQuizzesMap[q.id]) {
+            originalQuizzesMap[q.id] = {
+                question: q.question,
+                answerRaw: q.answerRaw,
+                explanation: q.explanation || ''
+            };
+        }
+
+        if (quizOverrides[q.id]) {
+            const ov = quizOverrides[q.id];
+            if (ov.question !== undefined) q.question = ov.question;
+            if (ov.answerRaw !== undefined) q.answerRaw = ov.answerRaw;
+            if (ov.explanation !== undefined) q.explanation = ov.explanation;
+            q._isEdited = true;
+        } else {
+            q._isEdited = false;
+        }
+
+        q._isFlagged = Boolean(flaggedQuestions[q.id]);
+    });
+}
+
+function showToast(msg) {
+    let toast = document.getElementById('global-toast-notification');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'global-toast-notification';
+        toast.style.cssText = `
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid var(--accent-blue);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 13.5px;
+            font-weight: 700;
+            z-index: 99999;
+            transition: all 0.25s ease;
+            pointer-events: none;
+            opacity: 0;
+        `;
+        document.body.appendChild(toast);
+    }
+    toast.textContent = msg;
+    toast.style.opacity = '1';
+    toast.style.top = '24px';
+    clearTimeout(toast._timeout);
+    toast._timeout = setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.top = '10px';
+    }, 2400);
+}
+
 async function fetchStudyData() {
     try {
         const resp = await fetch('data/study_data.json?v=' + Date.now());
@@ -174,6 +277,7 @@ async function fetchStudyData() {
             studyData = window.STUDY_DATA;
         }
     }
+    initializeQuizOverrides();
     updateFilterChipCounts();
     populateQuizUnitDropdown();
 }
@@ -1671,6 +1775,16 @@ function getUserInputAnswerMap() {
     return map;
 }
 
+function updateQuizInstantFeedbackButtonState(currentQ) {
+    if (!currentQ) return;
+    const btn = document.getElementById('btn-q-flag');
+    if (btn) {
+        const isFlagged = Boolean(flaggedQuestions[currentQ.id]);
+        btn.className = `btn-q-feedback btn-q-flag ${isFlagged ? 'flagged' : ''}`;
+        btn.innerHTML = isFlagged ? '🚩 수정필요 등록됨 (✓)' : '🚩 수정필요 (오답취소)';
+    }
+}
+
 function showInstantAnswer() {
     const currentQ = quizQuestions[quizCurrentIndex];
     if (!currentQ) return;
@@ -1705,6 +1819,7 @@ function showInstantAnswer() {
         lecContextEl.title = `[${currentQ.subject}] ${cleanLecTitle}`;
     }
 
+    updateQuizInstantFeedbackButtonState(currentQ);
     linkBtn.onclick = () => selectLecture(currentQ.noteFileName, currentQ.anchorId);
     box.style.display = 'block';
 }
@@ -1738,6 +1853,7 @@ function checkCurrentQuestionAnswer() {
         headerEl.innerHTML = '💡 법정 정답 확인 및 자가 채점';
         ansTextEl.innerHTML = `법정 정답: <span style="color: #34d399; font-size: 16px;">${escapeHtml(currentQ.answerRaw)}</span>`;
         if (selfGradeBox) selfGradeBox.style.display = 'flex';
+        updateQuizInstantFeedbackButtonState(currentQ);
         linkBtn.onclick = () => selectLecture(currentQ.noteFileName, currentQ.anchorId);
         box.style.display = 'block';
         return;
@@ -1775,6 +1891,7 @@ function checkCurrentQuestionAnswer() {
         ansTextEl.innerHTML = `내 제출답: <span style="color: #f87171;">${escapeHtml(inputVal)}</span> | 법정 정답: <span style="color: #34d399; font-size: 16px;">${escapeHtml(currentQ.answerRaw)}</span>`;
     }
 
+    updateQuizInstantFeedbackButtonState(currentQ);
     linkBtn.onclick = () => selectLecture(currentQ.noteFileName, currentQ.anchorId);
     box.style.display = 'block';
 }
@@ -2042,9 +2159,11 @@ function renderQuizResult(correctCount, totalCount, results) {
         let cleanLecTitle = res.question.lectureTitle || '';
         cleanLecTitle = cleanLecTitle.replace(/^\[+|\]+$/g, '').trim();
 
+        const isFlagged = Boolean(flaggedQuestions[res.question.id]);
+
         itemEl.innerHTML = `
             <div class="result-header-row">
-                <span class="result-q-num">문제 ${idx + 1}</span>
+                <span class="result-q-num">문제 ${idx + 1} (${escapeHtml(res.question.id)})</span>
                 <span class="result-status-badge ${res.isCorrect ? 'correct' : 'wrong'}">
                     ${res.isCorrect ? '⭕ 정답' : '❌ 오답'}
                 </span>
@@ -2059,14 +2178,32 @@ function renderQuizResult(correctCount, totalCount, results) {
                     <span style="width: 80px; color: var(--text-dim);">법정 정답:</span>
                     <span class="real-ans">${escapeHtml(res.question.answerRaw)}</span>
                 </div>
+                ${res.question.explanation ? `
+                    <div style="font-size: 12.5px; color: var(--text-muted); margin-top: 6px; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 6px;">
+                        💡 <strong>해설:</strong> ${escapeHtml(res.question.explanation)}
+                    </div>
+                ` : ''}
             </div>
-            <div class="result-review-row">
+            <div class="result-review-row" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
                 <button type="button" class="btn-deeplink" onclick="selectLecture('${res.question.noteFileName}', '${res.question.anchorId}')">
                     📖 해당 강의 노트 원본 복습하기 ➔
                 </button>
-                <span class="result-lecture-context" title="[${escapeHtml(res.question.subject)}] ${escapeHtml(cleanLecTitle)}">
-                    [${escapeHtml(res.question.subject)}] ${escapeHtml(cleanLecTitle)}
-                </span>
+                <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                    <button type="button" class="btn-q-feedback btn-q-flag ${isFlagged ? 'flagged' : ''}" id="btn-result-flag-${res.question.id}" onclick="flagQuestionFromList('${res.question.id}')" title="오답 기록을 취소하고 '수정필요' 목록에 등록합니다">
+                        ${isFlagged ? '🚩 수정필요 (✓)' : '🚩 수정필요 (오답취소)'}
+                    </button>
+                    <button type="button" class="btn-q-feedback btn-q-edit" onclick="openEditorForQuestion('${res.question.id}')" title="이 문제를 바로 편집 화면에서 수정합니다">
+                        ✏️ 수정
+                    </button>
+                    ${!res.isCorrect ? `
+                        <button type="button" class="btn-clear-wrong-single" id="btn-del-wrong-${res.question.id}" onclick="removeSingleWrongStat('${res.question.id}')" title="오답 횟수 초기화">
+                            🗑️ 오답삭제
+                        </button>
+                    ` : ''}
+                </div>
+            </div>
+            <div style="font-size: 11px; color: var(--text-dim); margin-top: 4px;">
+                [${escapeHtml(res.question.subject)}] ${escapeHtml(cleanLecTitle)}
             </div>
         `;
         container.appendChild(itemEl);
@@ -2549,6 +2686,467 @@ function removeSearchNavigatorBanner() {
 }
 
 // -------------------------------------------------------------
+// Question Editor & Management View Engine
+// -------------------------------------------------------------
+let currentEditorFilter = 'flagged';
+let currentEditorSearch = '';
+let selectedEditorQuestionId = null;
+
+function flagCurrentQuestionFromQuiz() {
+    const currentQ = quizQuestions[quizCurrentIndex];
+    if (!currentQ) return;
+
+    const isAlreadyFlagged = Boolean(flaggedQuestions[currentQ.id]);
+    if (isAlreadyFlagged) {
+        delete flaggedQuestions[currentQ.id];
+        currentQ._isFlagged = false;
+        saveFlaggedQuestions();
+        const btn = document.getElementById('btn-q-flag');
+        if (btn) {
+            btn.className = 'btn-q-feedback btn-q-flag';
+            btn.innerHTML = '🚩 수정필요 (오답취소)';
+        }
+        showToast('🚩 수정필요 등록이 해제되었습니다.');
+        return;
+    }
+
+    flaggedQuestions[currentQ.id] = {
+        flaggedAt: Date.now(),
+        userAns: userAnswers[quizCurrentIndex] || '',
+        reason: '퀴즈 중 수정 필요 등록'
+    };
+    currentQ._isFlagged = true;
+    saveFlaggedQuestions();
+
+    // 오답 페널티 취소
+    if (quizStats[currentQ.id] && quizStats[currentQ.id].wrongCount > 0) {
+        quizStats[currentQ.id].wrongCount = Math.max(0, quizStats[currentQ.id].wrongCount - 1);
+        saveLocalStats();
+    }
+
+    const btn = document.getElementById('btn-q-flag');
+    if (btn) {
+        btn.className = 'btn-q-feedback btn-q-flag flagged';
+        btn.innerHTML = '🚩 수정필요 등록됨 (✓)';
+    }
+
+    showToast('🚩 [수정필요] 목록에 추가되었으며, 오답 페널티가 취소되었습니다!');
+}
+
+function openEditorFromQuiz() {
+    const currentQ = quizQuestions[quizCurrentIndex];
+    if (!currentQ) return;
+    switchView('editor');
+    selectQuestionForEdit(currentQ.id);
+}
+
+function flagQuestionFromList(qId) {
+    const q = (studyData.quizzes || []).find(item => item.id === qId);
+    if (!q) return;
+
+    const isAlreadyFlagged = Boolean(flaggedQuestions[qId]);
+    if (isAlreadyFlagged) {
+        delete flaggedQuestions[qId];
+        q._isFlagged = false;
+        saveFlaggedQuestions();
+        const btn = document.getElementById(`btn-result-flag-${qId}`);
+        if (btn) {
+            btn.className = 'btn-q-feedback btn-q-flag';
+            btn.innerHTML = '🚩 수정필요 (오답취소)';
+        }
+        showToast('🚩 수정필요 등록이 해제되었습니다.');
+    } else {
+        flaggedQuestions[qId] = {
+            flaggedAt: Date.now(),
+            reason: '결과 리포트에서 수정 필요 등록'
+        };
+        q._isFlagged = true;
+        saveFlaggedQuestions();
+
+        if (quizStats[qId] && quizStats[qId].wrongCount > 0) {
+            quizStats[qId].wrongCount = Math.max(0, quizStats[qId].wrongCount - 1);
+            saveLocalStats();
+        }
+
+        const btn = document.getElementById(`btn-result-flag-${qId}`);
+        if (btn) {
+            btn.className = 'btn-q-feedback btn-q-flag flagged';
+            btn.innerHTML = '🚩 수정필요 (✓)';
+        }
+        showToast('🚩 [수정필요] 목록에 추가되었습니다!');
+    }
+}
+
+function openEditorForQuestion(qId) {
+    switchView('editor');
+    selectQuestionForEdit(qId);
+}
+
+function removeSingleWrongStat(qId) {
+    if (quizStats[qId]) {
+        quizStats[qId].wrongCount = 0;
+        saveLocalStats();
+    }
+    const btn = document.getElementById(`btn-del-wrong-${qId}`);
+    if (btn) {
+        btn.outerHTML = `<span style="font-size: 11.5px; color: var(--accent-emerald); font-weight: 700;">✅ 오답기록 삭제됨</span>`;
+    }
+    showToast('🗑️ 오답 기록이 초기화되었습니다.');
+}
+
+function initEditorView() {
+    updateEditorCounts();
+    renderEditorQuestionList();
+}
+
+function updateEditorCounts() {
+    if (!studyData || !studyData.quizzes) return;
+
+    const flaggedCount = Object.keys(flaggedQuestions).length;
+    let wrongCount = 0;
+    Object.keys(quizStats).forEach(k => {
+        if ((quizStats[k]?.wrongCount || 0) > 0) wrongCount++;
+    });
+    const editedCount = Object.keys(quizOverrides).length;
+    const allCount = studyData.quizzes.length;
+
+    const elFlagged = document.getElementById('count-flagged');
+    if (elFlagged) elFlagged.textContent = flaggedCount;
+
+    const elWrong = document.getElementById('count-wrong');
+    if (elWrong) elWrong.textContent = wrongCount;
+
+    const elEdited = document.getElementById('count-edited');
+    if (elEdited) elEdited.textContent = editedCount;
+
+    const elAll = document.getElementById('count-all');
+    if (elAll) elAll.textContent = allCount;
+}
+
+function setEditorFilter(filterName) {
+    currentEditorFilter = filterName;
+    document.querySelectorAll('.editor-tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById(`ed-tab-${filterName}`)?.classList.add('active');
+    renderEditorQuestionList();
+}
+
+function handleEditorSearch(e) {
+    currentEditorSearch = e.target.value.trim().toLowerCase();
+    renderEditorQuestionList();
+}
+
+function getFilteredEditorQuestions() {
+    if (!studyData || !studyData.quizzes) return [];
+
+    let list = studyData.quizzes.filter(q => {
+        if (currentEditorFilter === 'flagged') {
+            return Boolean(flaggedQuestions[q.id]);
+        }
+        if (currentEditorFilter === 'wrong') {
+            return (quizStats[q.id]?.wrongCount || 0) > 0;
+        }
+        if (currentEditorFilter === 'edited') {
+            return Boolean(quizOverrides[q.id]);
+        }
+        return true;
+    });
+
+    if (currentEditorSearch) {
+        list = list.filter(q => {
+            const str = `${q.id} ${q.question} ${q.answerRaw} ${q.lectureTitle || ''} ${q.subject || ''}`.toLowerCase();
+            return str.includes(currentEditorSearch);
+        });
+    }
+
+    return list;
+}
+
+function renderEditorQuestionList() {
+    updateEditorCounts();
+    const container = document.getElementById('editor-q-list-container');
+    if (!container) return;
+
+    const list = getFilteredEditorQuestions();
+    container.innerHTML = '';
+
+    if (list.length === 0) {
+        container.innerHTML = `
+            <div style="padding: 40px 16px; text-align: center; color: var(--text-dim); font-size: 13px;">
+                <div style="font-size: 28px; margin-bottom: 8px;">📭</div>
+                해당 조건의 문항이 없습니다.
+            </div>
+        `;
+        if (!selectedEditorQuestionId) {
+            renderEditorWorkspace(null);
+        }
+        return;
+    }
+
+    list.forEach(q => {
+        const itemEl = document.createElement('div');
+        itemEl.className = `editor-q-item ${q.id === selectedEditorQuestionId ? 'active' : ''}`;
+        itemEl.id = `ed-item-${q.id}`;
+        itemEl.onclick = () => selectQuestionForEdit(q.id);
+
+        const isFlagged = Boolean(flaggedQuestions[q.id]);
+        const isEdited = Boolean(quizOverrides[q.id]);
+        const wrongCount = quizStats[q.id]?.wrongCount || 0;
+
+        let badgesHtml = '';
+        if (isFlagged) badgesHtml += `<span class="editor-badge-flag">🚩 수정필요</span> `;
+        if (isEdited) badgesHtml += `<span class="editor-badge-edited">✍️ 수정됨</span> `;
+        if (wrongCount > 0) badgesHtml += `<span class="editor-badge-wrong">❌ 오답 ${wrongCount}회</span> `;
+
+        itemEl.innerHTML = `
+            <div class="editor-q-item-top">
+                <span class="subject-badge ${q.subject === '관계법규' ? 'rel' : 'prac'}" style="font-size: 10px; padding: 1px 6px;">[${escapeHtml(q.subject)}] ${escapeHtml(q.lectureTitle || '')}</span>
+                <span style="font-size: 11px; color: var(--text-dim); font-weight: 700;">#${q.num || ''}</span>
+            </div>
+            <div class="editor-q-item-title">${escapeHtml(q.question)}</div>
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 4px; margin-top: 4px;">
+                <div class="editor-q-item-ans">정답: ${escapeHtml(q.answerRaw)}</div>
+                <div>${badgesHtml}</div>
+            </div>
+        `;
+        container.appendChild(itemEl);
+    });
+
+    if (!selectedEditorQuestionId || !list.some(q => q.id === selectedEditorQuestionId)) {
+        selectQuestionForEdit(list[0].id);
+    }
+}
+
+function selectQuestionForEdit(qId) {
+    selectedEditorQuestionId = qId;
+    document.querySelectorAll('.editor-q-item').forEach(el => el.classList.remove('active'));
+    document.getElementById(`ed-item-${qId}`)?.classList.add('active');
+
+    const q = (studyData.quizzes || []).find(item => item.id === qId);
+    renderEditorWorkspace(q);
+}
+
+function renderEditorWorkspace(q) {
+    const container = document.getElementById('editor-workspace-container');
+    if (!container) return;
+
+    if (!q) {
+        container.innerHTML = `
+            <div style="padding: 80px 20px; text-align: center; color: var(--text-dim);">
+                <div style="font-size: 40px; margin-bottom: 12px;">✏️</div>
+                <div style="font-size: 16px; font-weight: 700; color: var(--text-main);">수정할 문제를 좌측 목록에서 선택해 주세요.</div>
+            </div>
+        `;
+        return;
+    }
+
+    const isFlagged = Boolean(flaggedQuestions[q.id]);
+    const isEdited = Boolean(quizOverrides[q.id]);
+    const wrongCount = quizStats[q.id]?.wrongCount || 0;
+
+    container.innerHTML = `
+        <div class="editor-form-card">
+            <div class="editor-form-header">
+                <div>
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                        <span class="subject-badge ${q.subject === '관계법규' ? 'rel' : 'prac'}">[${escapeHtml(q.subject)}] ${escapeHtml(q.lectureTitle || '')}</span>
+                        <span style="font-size: 12px; color: var(--text-dim); font-weight: 600;">ID: ${escapeHtml(q.id)}</span>
+                    </div>
+                </div>
+                <div class="ed-form-header-actions">
+                    <button type="button" class="btn-toggle-flag ${isFlagged ? 'active' : ''}" id="btn-form-flag" onclick="toggleFlagForSelectedQuestion()">
+                        ${isFlagged ? '🚩 수정필요 등록됨 (해제)' : '🚩 수정필요 등록'}
+                    </button>
+                    ${wrongCount > 0 ? `
+                        <button type="button" class="btn-clear-wrong-single" onclick="clearWrongForSelectedQuestion()">
+                            🗑️ 오답기록 삭제 (${wrongCount}회)
+                        </button>
+                    ` : ''}
+                    <button type="button" class="btn-revert-original" onclick="revertSelectedQuestionToOriginal()" title="최초 원본 데이터로 되돌리기">
+                        🔄 원본 복원
+                    </button>
+                    <button type="button" class="btn-deeplink" onclick="selectLecture('${q.noteFileName}', '${q.anchorId}')" style="padding: 6px 12px; font-size: 12px;">
+                        📖 본문 강의노트 열기
+                    </button>
+                </div>
+            </div>
+
+            <div class="editor-form-body">
+                <div class="ed-field-group">
+                    <label class="ed-label">📌 질문 본문 (빈칸은 <code>( ㉠ )</code>, <code>( ㉡ )</code> 형식 사용)</label>
+                    <textarea id="ed-input-question" class="ed-textarea" rows="4" placeholder="질문 본문을 입력하세요">${escapeHtml(q.question)}</textarea>
+                </div>
+
+                <div class="ed-field-group">
+                    <label class="ed-label">🎯 모범 답안 (여러 개일 경우: <code>㉠ 100, ㉡ 2</code> 또는 <code>㉠ 사업계획승인권자</code>)</label>
+                    <input type="text" id="ed-input-answer" class="ed-input-text" value="${escapeHtml(q.answerRaw)}" placeholder="예: ㉠ 100, ㉡ 2">
+                    <div class="ed-hint">💡 대체 정답(동의어)은 <code>100(또는 백)</code> 또는 <code>시·도지사(또는 특별시장)</code> 형식으로 괄호 안에 입력하시면 자동 채점됩니다.</div>
+                </div>
+
+                <div class="ed-field-group">
+                    <label class="ed-label">📖 상세 법정 해설 & 일타 팁</label>
+                    <textarea id="ed-input-explanation" class="ed-textarea" rows="4" placeholder="해설 및 관련 법조문, 암기 팁을 입력하세요...">${escapeHtml(q.explanation || '')}</textarea>
+                </div>
+
+                <div class="ed-preview-box">
+                    <label class="ed-label">👁️ 실시간 퀴즈 미리보기</label>
+                    <div class="ed-preview-card" id="ed-preview-card"></div>
+                </div>
+            </div>
+
+            <div class="editor-form-footer">
+                <div id="ed-save-status" class="ed-save-status">
+                    ${isEdited ? '<span style="color: #34d399;">✍️ 사용자에 의해 수정된 문항입니다.</span>' : '<span style="color: var(--text-dim);">원래 기본 문항입니다.</span>'}
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <button class="btn-primary" onclick="saveEditedQuestion()" style="padding: 10px 24px; font-weight: 700; font-size: 14px;">
+                        💾 수정사항 저장
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+
+    const qInput = document.getElementById('ed-input-question');
+    const aInput = document.getElementById('ed-input-answer');
+
+    const updatePreview = () => {
+        const previewEl = document.getElementById('ed-preview-card');
+        if (!previewEl) return;
+        const qVal = qInput ? qInput.value : '';
+        const aVal = aInput ? aInput.value : '';
+        previewEl.innerHTML = `
+            <div style="font-size: 15px; font-weight: 600; margin-bottom: 10px; line-height: 1.6;">${escapeHtml(qVal)}</div>
+            <div style="background: rgba(16, 185, 129, 0.1); border-left: 3px solid #10b981; padding: 8px 12px; border-radius: 4px; font-size: 13px; color: #34d399;">
+                <strong>모범 답안:</strong> ${escapeHtml(aVal)}
+            </div>
+        `;
+    };
+
+    if (qInput) qInput.oninput = updatePreview;
+    if (aInput) aInput.oninput = updatePreview;
+    updatePreview();
+}
+
+function saveEditedQuestion() {
+    if (!selectedEditorQuestionId) return;
+    const q = (studyData.quizzes || []).find(item => item.id === selectedEditorQuestionId);
+    if (!q) return;
+
+    const qInput = document.getElementById('ed-input-question');
+    const aInput = document.getElementById('ed-input-answer');
+    const expInput = document.getElementById('ed-input-explanation');
+
+    const newQuestion = qInput ? qInput.value.trim() : '';
+    const newAnswer = aInput ? aInput.value.trim() : '';
+    const newExp = expInput ? expInput.value.trim() : '';
+
+    if (!newQuestion || !newAnswer) {
+        alert('질문 본문과 정답을 모두 입력해 주세요.');
+        return;
+    }
+
+    q.question = newQuestion;
+    q.answerRaw = newAnswer;
+    q.explanation = newExp;
+    q._isEdited = true;
+
+    quizOverrides[q.id] = {
+        question: newQuestion,
+        answerRaw: newAnswer,
+        explanation: newExp,
+        updatedAt: Date.now()
+    };
+    saveQuizOverrides();
+
+    const statusEl = document.getElementById('ed-save-status');
+    if (statusEl) {
+        statusEl.innerHTML = `<span style="color: #34d399; font-weight: 700;">✅ 저장 완료 (${new Date().toLocaleTimeString()})</span>`;
+    }
+
+    renderEditorQuestionList();
+    showToast('💾 문제 수정사항이 저장되어 즉시 반영되었습니다!');
+}
+
+function revertSelectedQuestionToOriginal() {
+    if (!selectedEditorQuestionId) return;
+    const q = (studyData.quizzes || []).find(item => item.id === selectedEditorQuestionId);
+    if (!q) return;
+
+    const orig = originalQuizzesMap[q.id];
+    if (!orig) {
+        alert('원본 데이터를 찾을 수 없습니다.');
+        return;
+    }
+
+    if (!confirm(`'${q.id}' 문제를 최초 원본 상태로 복원하시겠습니까?`)) {
+        return;
+    }
+
+    delete quizOverrides[q.id];
+    saveQuizOverrides();
+
+    q.question = orig.question;
+    q.answerRaw = orig.answerRaw;
+    q.explanation = orig.explanation;
+    q._isEdited = false;
+
+    renderEditorQuestionList();
+    renderEditorWorkspace(q);
+    showToast('🔄 최초 원본 문제로 복원되었습니다.');
+}
+
+function toggleFlagForSelectedQuestion() {
+    if (!selectedEditorQuestionId) return;
+    const q = (studyData.quizzes || []).find(item => item.id === selectedEditorQuestionId);
+    if (!q) return;
+
+    const isAlreadyFlagged = Boolean(flaggedQuestions[q.id]);
+    if (isAlreadyFlagged) {
+        delete flaggedQuestions[q.id];
+        q._isFlagged = false;
+        showToast('🚩 수정필요 등록이 해제되었습니다.');
+    } else {
+        flaggedQuestions[q.id] = {
+            flaggedAt: Date.now(),
+            reason: '에디터에서 수정 필요 등록'
+        };
+        q._isFlagged = true;
+        showToast('🚩 [수정필요] 목록에 등록되었습니다.');
+    }
+    saveFlaggedQuestions();
+    renderEditorQuestionList();
+    renderEditorWorkspace(q);
+}
+
+function clearWrongForSelectedQuestion() {
+    if (!selectedEditorQuestionId) return;
+    if (quizStats[selectedEditorQuestionId]) {
+        quizStats[selectedEditorQuestionId].wrongCount = 0;
+        saveLocalStats();
+    }
+    renderEditorQuestionList();
+    const q = (studyData.quizzes || []).find(item => item.id === selectedEditorQuestionId);
+    renderEditorWorkspace(q);
+    showToast('🗑️ 오답 기록이 초기화되었습니다.');
+}
+
+function exportOverridesJson() {
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({
+        exportedAt: new Date().toISOString(),
+        totalOverrides: Object.keys(quizOverrides).length,
+        overrides: quizOverrides,
+        flagged: flaggedQuestions
+    }, null, 2));
+    const downloadAnchor = document.createElement('a');
+    downloadAnchor.setAttribute("href", dataStr);
+    downloadAnchor.setAttribute("download", `housing_exam_custom_edits_${Date.now()}.json`);
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    downloadAnchor.remove();
+    showToast('💾 수정본 JSON 데이터가 다운로드되었습니다.');
+}
+
+// -------------------------------------------------------------
 // Navigation & Views
 // -------------------------------------------------------------
 function switchView(viewName) {
@@ -2566,6 +3164,11 @@ function switchView(viewName) {
         document.getElementById('btn-tab-quiz')?.classList.add('active');
         document.getElementById('m-nav-quiz')?.classList.add('active');
         setTimeout(resizeQuizPenCanvas, 60);
+    } else if (viewName === 'editor') {
+        document.getElementById('panel-editor').classList.add('active');
+        document.getElementById('btn-tab-editor')?.classList.add('active');
+        document.getElementById('m-nav-editor')?.classList.add('active');
+        initEditorView();
     } else if (viewName === 'result') {
         document.getElementById('panel-result').classList.add('active');
         document.getElementById('btn-tab-result')?.classList.add('active');

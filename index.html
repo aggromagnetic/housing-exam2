@@ -40,6 +40,10 @@
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                 풀던 퀴즈로 돌아가기
             </button>
+            <button class="nav-btn" id="btn-tab-editor" onclick="switchView('editor')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                문제 에디터
+            </button>
             <a href="housing_exam_hell/" class="nav-btn btn-exam-hell-link" style="color: #ef4444; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;" title="3,470문항 5개년 출제비율 시뮬레이션 및 무한 헬모드">
                 🔥 문제지옥 (3,470문항)
             </a>
@@ -73,7 +77,10 @@
             <div class="sidebar-header">
                 <div class="sidebar-title-row">
                     <span>📚 강의 노트 목차</span>
-                    <button class="btn-icon" onclick="closeSidebar()" style="width:28px; height:28px;">✕</button>
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                        <button class="btn-editor-open" onclick="switchView('editor')" title="주관식 문제 에디터 & 오답/수정 관리 열기">✏️ 문제 관리</button>
+                        <button class="btn-icon" onclick="closeSidebar()" style="width:28px; height:28px;">✕</button>
+                    </div>
                 </div>
                 <div class="subject-filter">
                     <button class="filter-chip active" id="chip-rel" onclick="filterSubject('관계법규')">관계법규 (76)</button>
@@ -114,7 +121,9 @@
                     </div>
                 </div>
 
-                <iframe id="note-frame" class="note-iframe" src="about:blank"></iframe>
+                <div class="note-iframe-container">
+                    <iframe id="note-frame" src="about:blank"></iframe>
+                </div>
             </section>
 
             <!-- 2. Quiz Panel -->
@@ -154,15 +163,11 @@
                             </div>
                         </div>
 
-                        <!-- 1. Text Input Container (Used in Keyboard Mode) -->
                         <div id="quiz-inputs-container">
-                            <!-- Rendered dynamically for single or multi-blank -->
                             <input type="text" id="quiz-answer-input" class="quiz-text-input" placeholder="정답을 입력하세요" autocomplete="off" onkeydown="handleQuizEnter(event)">
                         </div>
 
-                        <!-- 2. Stylus & Pen Canvas Container (Used in Pen Mode) -->
                         <div id="quiz-pen-container" class="quiz-pen-container">
-                            <!-- Pen Canvas Toolbar -->
                             <div class="pen-toolbar">
                                 <div class="pen-tool-group">
                                     <button type="button" class="pen-tool-btn active" id="tool-pen" onclick="setPenTool('pen')" title="펜 쓰기 (파란 잉크)">
@@ -190,19 +195,25 @@
                                 </div>
                             </div>
 
-                            <!-- Dynamic Multi / Single Canvas Container -->
                             <div id="quiz-pen-canvases-container" class="quiz-pen-canvases-container">
-                                <!-- Populated dynamically based on single / multiple blanks (㉠, ㉡) -->
                             </div>
                         </div>
                     </div>
 
-                    <!-- Instant Answer & Explanation Box (Initially Hidden) -->
                     <div id="quiz-instant-answer-box" class="quiz-instant-box" style="display: none;">
-                        <div class="quiz-instant-header" id="quiz-instant-header">❌ 오답 처리됨 (정답 및 법정 해설)</div>
+                        <div class="quiz-instant-header-row">
+                            <div class="quiz-instant-header" id="quiz-instant-header">❌ 오답 처리됨 (정답 및 법정 해설)</div>
+                            <div class="quiz-instant-actions-right">
+                                <button type="button" class="btn-q-feedback btn-q-flag" id="btn-q-flag" onclick="flagCurrentQuestionFromQuiz()" title="오답 기록을 취소하고 '수정필요' 목록에 등록합니다">
+                                    🚩 수정필요 (오답취소)
+                                </button>
+                                <button type="button" class="btn-q-feedback btn-q-edit" onclick="openEditorFromQuiz()" title="이 문제를 바로 편집 화면에서 수정합니다">
+                                    ✏️ 즉시 수정
+                                </button>
+                            </div>
+                        </div>
                         <div class="quiz-instant-ans-text" id="quiz-instant-ans-text">정답: </div>
 
-                        <!-- Pen Mode Self-Grading UI -->
                         <div class="pen-self-grade-container" id="pen-self-grade-container" style="display: none;">
                             <div class="self-grade-prompt">👉 내가 쓴 필기와 정답을 비교해 채점해 주세요:</div>
                             <div class="self-grade-btn-row">
@@ -266,6 +277,43 @@
                 </div>
             </section>
 
+            <!-- 5. Question Editor & Management Panel -->
+            <section id="panel-editor" class="view-panel">
+                <div class="editor-layout">
+                    <!-- Left Sidebar: Filter, Search & Question List -->
+                    <aside class="editor-sidebar">
+                        <div class="editor-sidebar-header">
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+                                <div style="font-weight: 700; font-size: 15px; display: flex; align-items: center; gap: 6px;">
+                                    <span>✏️ 문제 관리 & 에디터</span>
+                                </div>
+                                <button class="btn-export-overrides" onclick="exportOverridesJson()" title="수정한 문제 데이터 JSON 다운로드">💾 내보내기</button>
+                            </div>
+
+                            <div class="editor-search-box">
+                                <input type="text" id="editor-search-input" placeholder="문제 번호, 키워드, 정답 검색..." oninput="handleEditorSearch(event)">
+                            </div>
+
+                            <div class="editor-filter-tabs">
+                                <button class="editor-tab-btn active" id="ed-tab-flagged" onclick="setEditorFilter('flagged')">🚩 수정필요 (<span id="count-flagged">0</span>)</button>
+                                <button class="editor-tab-btn" id="ed-tab-wrong" onclick="setEditorFilter('wrong')">❌ 오답목록 (<span id="count-wrong">0</span>)</button>
+                                <button class="editor-tab-btn" id="ed-tab-edited" onclick="setEditorFilter('edited')">✍️ 수정됨 (<span id="count-edited">0</span>)</button>
+                                <button class="editor-tab-btn" id="ed-tab-all" onclick="setEditorFilter('all')">전체 (<span id="count-all">0</span>)</button>
+                            </div>
+                        </div>
+
+                        <div class="editor-q-list" id="editor-q-list-container">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+                    </aside>
+
+                    <!-- Right Workspace: Edit Form & Live Preview -->
+                    <div class="editor-workspace" id="editor-workspace-container">
+                        <!-- Populated dynamically via JS -->
+                    </div>
+                </div>
+            </section>
+
         </main>
     </div>
 
@@ -278,6 +326,10 @@
         <button class="mobile-nav-item" id="m-nav-quiz" onclick="resumeQuizMode()">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
             <span>풀던퀴즈</span>
+        </button>
+        <button class="mobile-nav-item" id="m-nav-editor" onclick="switchView('editor')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+            <span>문제관리</span>
         </button>
         <button class="mobile-nav-item" id="m-nav-result" onclick="switchView('result')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
