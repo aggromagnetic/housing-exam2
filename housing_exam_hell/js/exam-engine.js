@@ -111,7 +111,7 @@ export const ExamEngine = {
             // 관계법규 (총 14개 법률)
             return [
                 { pattern: /01.*주택법/, mc: 5, sa: 3 },
-                { pattern: /02.*공동주택관리법|2-1|2-2/, mc: 5, sa: 3 },
+                { pattern: /02.*공동주택관리법/, mc: 5, sa: 3 },
                 { pattern: /03.*민간임대주택/, mc: 1, sa: 1 },
                 { pattern: /04.*공공주택/, mc: 1, sa: 1 },
                 { pattern: /05.*건축법/, mc: 4, sa: 3 },
