@@ -984,6 +984,9 @@
         firstAttemptResults: [],
         statsMap: {},
         customEdits: {},
+        needsEditMap: {},
+        wrongManagerTab: 'wrong',
+        wrongManagerFilter: 'all',
 
         infiniteSetCount: 1,
         infiniteUsedKeys: new Set(),
@@ -1049,7 +1052,8 @@
                 btnPrev: document.getElementById('btn-prev-q'),
                 btnNext: document.getElementById('btn-next-q'),
                 btnToggleExp: document.getElementById('btn-toggle-exp'),
-                btnRetry: document.getElementById('btn-retry-q')
+                btnRetry: document.getElementById('btn-retry-q'),
+                btnFlagNeedsEdit: document.getElementById('btn-flag-needs-edit')
             },
             modals: {
                 omr: document.getElementById('modal-omr'),
@@ -1057,10 +1061,16 @@
                 pinAuth: document.getElementById('modal-pin-auth'),
                 wrongManager: document.getElementById('modal-wrong-manager'),
                 editQuestion: document.getElementById('modal-edit-question'),
+                downloadMd: document.getElementById('modal-download-md'),
+                questionPreview: document.getElementById('modal-question-preview'),
                 omrGrid: document.getElementById('omr-grid-container'),
                 partList: document.getElementById('part-list-container'),
                 wrongList: document.getElementById('wrong-items-container'),
                 cntTotalWrong: document.getElementById('cnt-total-wrong'),
+                tabWrongList: document.getElementById('tab-btn-wrong-list'),
+                tabNeedsEdit: document.getElementById('tab-btn-needs-edit'),
+                cntWrongTab: document.getElementById('cnt-wrong-tab'),
+                cntNeedsEditTab: document.getElementById('cnt-needs-edit-tab'),
                 inputPin: document.getElementById('input-pin-code'),
                 formPin: document.getElementById('form-pin-auth')
             },
@@ -1365,6 +1375,16 @@
             elements.quiz.tipBox.style.display = 'block';
         } else {
             elements.quiz.tipBox.style.display = 'none';
+        }
+
+        // Update [수정필요] flag button state
+        const btnFlagNeedsEdit = document.getElementById('btn-flag-needs-edit');
+        if (btnFlagNeedsEdit) {
+            const isFlagged = !!(state.needsEditMap && state.needsEditMap[q.qKey]);
+            btnFlagNeedsEdit.classList.toggle('active', isFlagged);
+            btnFlagNeedsEdit.innerHTML = isFlagged 
+                ? '<i class="fa-solid fa-flag text-amber-400"></i> 수정요청됨'
+                : '<i class="fa-solid fa-flag"></i> 수정필요';
         }
 
         // Show [다시 풀기] button ONLY when problem is graded and INCORRECT!
@@ -1928,127 +1948,129 @@
         elements.modals.partSelect.classList.add('active');
     }
 
-    function openPINAuthModal() {
-        if (!elements.modals.pinAuth) return;
-        elements.modals.inputPin.value = '';
-        elements.modals.pinAuth.classList.add('active');
-        setTimeout(() => elements.modals.inputPin.focus(), 100);
+    function openDownloadMdModal() {
+        if (!elements.modals.downloadMd) return;
+        elements.modals.downloadMd.classList.add('active');
     }
 
-    function verifyPINAuth() {
-        const pin = (elements.modals.inputPin.value || '').trim();
-        if (pin === '2834' || pin === '0000') {
-            closeModal(elements.modals.pinAuth);
-            openWrongManagerModal();
-            showToast('🔓 오답 리스트 관리가 열렸습니다.');
-        } else {
-            showToast('❌ 잘못된 PIN 번호입니다.');
-            elements.modals.inputPin.value = '';
-            elements.modals.inputPin.focus();
-        }
-    }
-
-    async function openWrongManagerModal() {
-        if (!elements.modals.wrongManager) return;
-        state.statsMap = await IDBStore.getAllStatsMap();
-        renderWrongManagerList('all');
-        elements.modals.wrongManager.classList.add('active');
-    }
-
-    function renderWrongManagerList(filterSubject = 'all') {
-        if (!elements.modals.wrongList) return;
-        elements.modals.wrongList.innerHTML = '';
-
-        const lawPool = [...ExamEngine.getQuestionPool('관계법규', 'choice'), ...ExamEngine.getQuestionPool('관계법규', 'short')];
-        const gwanriPool = [...ExamEngine.getQuestionPool('관리실무', 'choice'), ...ExamEngine.getQuestionPool('관리실무', 'short')];
-        let allPool = [...lawPool, ...gwanriPool];
-
-        if (filterSubject !== 'all') {
-            allPool = allPool.filter(q => q.subject === filterSubject);
-        }
-
-        const wrongQuestions = allPool.filter(q => {
-            const stat = state.statsMap[q.qKey];
-            return stat && stat.wrongCount > 0;
-        }).sort((a, b) => {
-            const wA = state.statsMap[a.qKey]?.weight || 1;
-            const wB = state.statsMap[b.qKey]?.weight || 1;
-            return wB - wA;
-        });
-
-        elements.modals.cntTotalWrong.textContent = wrongQuestions.length;
-
-        if (wrongQuestions.length === 0) {
-            elements.modals.wrongList.innerHTML = `
-                <div style="text-align: center; padding: 40px 20px; color: var(--text-muted);">
-                    <i class="fa-solid fa-circle-check" style="font-size: 2.5rem; color: #10B981; margin-bottom: 12px; display: block;"></i>
-                    등록된 오답 문제가 없습니다. 완벽합니다!
-                </div>
-            `;
+    function generateMockExamMarkdown(subject) {
+        const set = ExamEngine.generateMockSet(subject, state.statsMap);
+        if (!set || set.length === 0) {
+            showToast('❌ 문제를 불러올 수 없습니다.');
             return;
         }
 
-        wrongQuestions.forEach(q => {
-            const stat = state.statsMap[q.qKey] || { weight: 1, wrongCount: 0 };
-            const weight = stat.weight || 1;
-            const wrongCount = stat.wrongCount || 0;
+        set.forEach(q => applyCustomEdits(q));
 
-            let wText = `Lv.1 보통 (W=1)`;
-            let wColor = '#38BDF8';
-            if (weight >= 10) {
-                wText = `🔥 Lv.4 지옥 (W=10 / 오답 ${wrongCount}회)`;
-                wColor = '#EF4444';
-            } else if (weight >= 6) {
-                wText = `🚨 Lv.3 취약 (W=6 / 오답 ${wrongCount}회)`;
-                wColor = '#F97316';
-            } else if (weight >= 4) {
-                wText = `⚠️ Lv.2 주의 (W=4 / 오답 ${wrongCount}회)`;
-                wColor = '#F59E0B';
+        const nowStr = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
+        let md = `# 📘 [주택관리사보 2차] 제28회 대비 ${subject} 실전 모의고사 (40문항)\n\n`;
+        md += `- **응시 과목**: 2차 ${subject}\n`;
+        md += `- **문항 구성**: 총 40문항 (객관식 5지선다 24문항 + 주관식 단답/기입형 16문항)\n`;
+        md += `- **시험 시간**: 40분 (문항당 1분 권장)\n`;
+        md += `- **출제 기준**: 한국산업인력공단(Q-Net) 5개년 기출 배점 비율 100% 반영\n`;
+        md += `- **생성 일자**: ${nowStr}\n\n`;
+        md += `---\n\n`;
+
+        md += `## 📄 제1부. [${subject}] 실전 문제지\n\n`;
+
+        // 1. Multiple Choice (1 ~ 24)
+        md += `### Ⅰ. 객관식 5지선다형 (제1번 ~ 제24번)\n\n`;
+        for (let i = 0; i < 24; i++) {
+            const q = set[i];
+            if (!q) continue;
+            const num = i + 1;
+            const formatted = formatQuestionAndPassage(q);
+            md += `#### 【문 ${num}】 (단원: ${q.chapterName}) ${formatted.title}\n\n`;
+            if (formatted.passage) {
+                md += `\`\`\`text\n${formatted.passage}\n\`\`\`\n\n`;
+            }
+            if (q.options && q.options.length > 0) {
+                q.options.forEach((opt, oIdx) => {
+                    const circleNum = `①②③④⑤`[oIdx] || `${oIdx + 1})`;
+                    md += `${circleNum} ${opt}\n`;
+                });
+                md += `\n`;
+            }
+        }
+
+        // 2. Subjective (25 ~ 40)
+        md += `### Ⅱ. 주관식 단답형 및 괄호 기입형 (제25번 ~ 제40번)\n\n`;
+        for (let i = 24; i < 40; i++) {
+            const q = set[i];
+            if (!q) continue;
+            const num = i + 1;
+            const formatted = formatQuestionAndPassage(q);
+            md += `#### 【문 ${num}】 (단원: ${q.chapterName}) ${formatted.title}\n\n`;
+            if (formatted.passage) {
+                md += `\`\`\`text\n${formatted.passage}\n\`\`\`\n\n`;
+            }
+            const blanks = Object.keys(q.answers || {});
+            if (blanks.length > 0) {
+                md += `> **[기입할 빈칸]**: ${blanks.map(k => `[ ${k} ]`).join(', ')}\n\n`;
+            }
+        }
+
+        md += `---\n\n`;
+
+        // Part 2. Answer Table
+        md += `## 🎯 제2부. 정답 일람표 (Answer Key)\n\n`;
+        md += `| 문항 | 정답 | 문항 | 정답 | 문항 | 정답 | 문항 | 정답 |\n`;
+        md += `| :---: | :--- | :---: | :--- | :---: | :--- | :---: | :--- |\n`;
+
+        for (let row = 0; row < 10; row++) {
+            let rowStr = '|';
+            for (let col = 0; col < 4; col++) {
+                const idx = col * 10 + row;
+                const q = set[idx];
+                if (q) {
+                    let ansText = '';
+                    if (q.type === 'choice') {
+                        ansText = `**${q.answer}번**`;
+                    } else {
+                        ansText = Object.entries(q.answers || {}).map(([k, v]) => `[${k}] ${v}`).join(' ');
+                    }
+                    rowStr += ` **${idx + 1}** | ${ansText} |`;
+                } else {
+                    rowStr += ` - | - |`;
+                }
+            }
+            md += `${rowStr}\n`;
+        }
+        md += `\n---\n\n`;
+
+        // Part 3. Detailed Explanations
+        md += `## 💡 제3부. 정답 및 상세 해설 (Explanations & Legal Bases)\n\n`;
+        set.forEach((q, idx) => {
+            const num = idx + 1;
+            let ansText = '';
+            if (q.type === 'choice') {
+                const corrOpt = (q.options && q.options[Number(q.answer) - 1]) ? ` (${q.options[Number(q.answer) - 1]})` : '';
+                ansText = `**${q.answer}번**${corrOpt}`;
+            } else {
+                ansText = Object.entries(q.answers || {}).map(([k, v]) => `**[${k}]** ${v}`).join(', ');
             }
 
-            const cleanChap = q.chapterName.replace(/^CHAPTER\s+\d+\s*/i, '');
-            const card = document.createElement('div');
-            card.className = 'wrong-item-card';
-
-            card.innerHTML = `
-                <div style="flex: 1; min-width: 0;">
-                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
-                        <span style="background: rgba(255,255,255,0.06); color: var(--theme-primary); font-size: 0.75rem; font-weight: 800; padding: 2px 8px; border-radius: 4px;">
-                            ${q.subject}
-                        </span>
-                        <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted);">
-                            ${cleanChap} [문항 ${q.id}] (${q.type === 'choice' ? '객관식' : '주관식'})
-                        </span>
-                        <span style="font-size: 0.75rem; font-weight: 800; color: ${wColor}; background: rgba(255,255,255,0.04); padding: 2px 8px; border-radius: 4px; border: 1px solid ${wColor};">
-                            ${wText}
-                        </span>
-                    </div>
-                    <p style="font-size: 0.9rem; color: #F1F5F9; font-weight: 600; line-height: 1.5; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px;">
-                        ${q.question || q.title}
-                    </p>
-                </div>
-                <button class="btn-reset-single-w" data-qkey="${q.qKey}" title="오답 리스트에서 삭제">
-                    <i class="fa-solid fa-trash-can"></i> 삭제
-                </button>
-            `;
-
-            const btnReset = card.querySelector('.btn-reset-single-w');
-            btnReset.addEventListener('click', async () => {
-                await IDBStore.resetQuestionWeight(q.qKey);
-                state.statsMap[q.qKey] = { weight: 1, wrongCount: 0, tryCount: 0 };
-                card.classList.add('reset-done');
-                btnReset.innerHTML = '<i class="fa-solid fa-check"></i> 삭제 완료';
-                btnReset.disabled = true;
-                showToast(`[${cleanChap} ${q.id}번] 오답 리스트에서 삭제되었습니다.`);
-
-                const currentCount = parseInt(elements.modals.cntTotalWrong.textContent || '0', 10);
-                if (currentCount > 0) {
-                    elements.modals.cntTotalWrong.textContent = currentCount - 1;
-                }
-            });
-
-            elements.modals.wrongList.appendChild(card);
+            md += `### 【문 ${num}】 ${q.subject} > ${q.chapterName}\n`;
+            md += `- **모범 정답**: ${ansText}\n\n`;
+            md += `#### [상세 해설 및 근거 조문]\n`;
+            md += `${q.explanation ? q.explanation.trim() : '등록된 상세 해설이 없습니다.'}\n\n`;
+            if (q.tip) {
+                md += `> 💡 **[일타 족집게 팁]**: ${q.tip}\n\n`;
+            }
+            md += `---\n\n`;
         });
+
+        const blob = new Blob([md], { type: 'text/markdown;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `주택관리사2차_${subject}_실전모의고사_40제.md`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        showToast(`📥 [${subject}] 실전 모의고사 40제 MD 다운로드 완료!`);
     }
 
     function closeModal(modalEl) {
@@ -2067,6 +2089,8 @@
                     showToast('✨ 수험생 맞춤형 고급 기능이 곧 추가될 예정입니다!');
                 } else if (mode === 'manage_wrong') {
                     openPINAuthModal();
+                } else if (mode === 'download_md') {
+                    openDownloadMdModal();
                 } else if (mode === 'part') {
                     openPartSelectModal();
                 } else {
@@ -2074,6 +2098,58 @@
                 }
             });
         });
+
+        // 📥 MD 모의고사 다운로드 버튼
+        const btnDlLaw = document.getElementById('btn-dl-md-law');
+        if (btnDlLaw) btnDlLaw.addEventListener('click', () => generateMockExamMarkdown('관계법규'));
+
+        const btnDlGwanri = document.getElementById('btn-dl-md-gwanri');
+        if (btnDlGwanri) btnDlGwanri.addEventListener('click', () => generateMockExamMarkdown('관리실무'));
+
+        // 📋 오답 리스트 vs 🚩 수정 필요 문제함 탭 전환
+        if (elements.modals.tabWrongList) {
+            elements.modals.tabWrongList.addEventListener('click', () => {
+                elements.modals.tabWrongList.classList.add('active');
+                if (elements.modals.tabNeedsEdit) elements.modals.tabNeedsEdit.classList.remove('active');
+                renderWrongManagerList(state.wrongManagerFilter, 'wrong');
+            });
+        }
+        if (elements.modals.tabNeedsEdit) {
+            elements.modals.tabNeedsEdit.addEventListener('click', () => {
+                elements.modals.tabNeedsEdit.classList.add('active');
+                if (elements.modals.tabWrongList) elements.modals.tabWrongList.classList.remove('active');
+                renderWrongManagerList(state.wrongManagerFilter, 'needs_edit');
+            });
+        }
+
+        // 🚩 수정 필요 문제 플래그 토글 버튼
+        const btnFlagNeedsEdit = document.getElementById('btn-flag-needs-edit');
+        if (btnFlagNeedsEdit) {
+            btnFlagNeedsEdit.addEventListener('click', async () => {
+                const q = state.questions[state.currentIndex];
+                if (!q) return;
+                const isFlagged = !!(state.needsEditMap && state.needsEditMap[q.qKey]);
+                if (isFlagged) {
+                    await IDBStore.deleteNeedsEdit(q.qKey);
+                    delete state.needsEditMap[q.qKey];
+                    btnFlagNeedsEdit.classList.remove('active');
+                    btnFlagNeedsEdit.innerHTML = '<i class="fa-solid fa-flag"></i> 수정필요';
+                    showToast('🚩 [수정 필요] 목록에서 제외되었습니다.');
+                } else {
+                    await IDBStore.saveNeedsEdit(q.qKey, q);
+                    state.needsEditMap[q.qKey] = {
+                        qKey: q.qKey,
+                        subject: q.subject,
+                        chapterName: q.chapterName,
+                        type: q.type,
+                        question: q.question || q.title
+                    };
+                    btnFlagNeedsEdit.classList.add('active');
+                    btnFlagNeedsEdit.innerHTML = '<i class="fa-solid fa-flag text-amber-400"></i> 수정요청됨';
+                    showToast('🚩 [수정 필요] 목록에 추가되었습니다. (오답리스트 관리 🔒에서 확인 가능)');
+                }
+            });
+        }
 
         if (elements.modals.formPin) {
             elements.modals.formPin.addEventListener('submit', (e) => {
@@ -2102,7 +2178,7 @@
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.wrong-filter-bar .btn-filter').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
-                renderWrongManagerList(btn.dataset.subject);
+                renderWrongManagerList(btn.dataset.subject, state.wrongManagerTab);
             });
         });
 
@@ -2390,6 +2466,7 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
         await IDBStore.init();
         state.statsMap = await IDBStore.getAllStatsMap();
         state.customEdits = await IDBStore.getAllQuestionEditsMap();
+        state.needsEditMap = await IDBStore.getAllNeedsEditMap();
 
         const canvasEl = document.getElementById('drawing-canvas');
         const toolbarEl = document.getElementById('stylus-toolbar');

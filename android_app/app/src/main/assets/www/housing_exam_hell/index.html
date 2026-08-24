@@ -132,6 +132,14 @@
                     <span class="mode-badge">단원별 100% 전수 완독</span>
                 </div>
 
+                <!-- 모의고사 MD 내려받기 -->
+                <div class="mode-card" data-mode="download_md">
+                    <div class="mode-icon" style="color: #10B981;"><i class="fa-solid fa-file-arrow-down"></i></div>
+                    <h3>모의고사 MD 다운로드 📥</h3>
+                    <p>실전 40문항 모의고사 문제지와 정답·해설을 완벽한 Markdown(.md) 파일로 즉시 생성하여 내 PC에 내려받습니다.</p>
+                    <span class="mode-badge" style="background: rgba(16, 185, 129, 0.15); color: #34D399;">관계법규 / 관리실무 MD 출력</span>
+                </div>
+
                 <!-- 기능추가중 -->
                 <div class="mode-card" data-mode="coming_soon" style="border-style: dashed;">
                     <div class="mode-icon" style="color: #A855F7;"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
@@ -144,8 +152,8 @@
                 <div class="mode-card" data-mode="manage_wrong">
                     <div class="mode-icon" style="color: #F43F5E;"><i class="fa-solid fa-list-check"></i></div>
                     <h3>오답리스트 관리 🔒</h3>
-                    <p>누적된 오답 문항을 과목·단원별로 확인하고, 개별 삭제 버튼으로 오답 리스트에서 제외할 수 있습니다.</p>
-                    <span class="mode-badge" style="background: rgba(244, 63, 94, 0.15); color: #FDA4AF;">보안 PIN 잠금</span>
+                    <p>누적된 오답 문항 및 수정 필요 문제를 확인하고, 문제 보기·수정·삭제를 편리하게 관리합니다.</p>
+                    <span class="mode-badge" style="background: rgba(244, 63, 94, 0.15); color: #FDA4AF;">보안 PIN 잠금 (2834)</span>
                 </div>
             </div>
         </section>
@@ -186,6 +194,9 @@
                     <div class="exp-header">
                         <span class="exp-title"><i class="fa-solid fa-lightbulb text-amber-400"></i> 정답 및 상세 해설</span>
                         <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                            <button id="btn-flag-needs-edit" class="btn-ctrl-sm" title="태블릿에서 발견한 문제/정답/해설 오류를 '수정 필요 목록'에 플래그합니다.">
+                                <i class="fa-solid fa-flag"></i> 수정필요
+                            </button>
                             <button id="btn-copy-question-ai" class="btn-ctrl-sm" title="문제·보기·정답·해설을 복사하여 AI(Gemini 등) 검증에 활용합니다.">
                                 <i class="fa-solid fa-copy"></i> 복사
                             </button>
@@ -268,6 +279,45 @@
         </div>
     </div>
 
+    <!-- Download Mock MD Modal -->
+    <div id="modal-download-md" class="modal-overlay">
+        <div class="modal-card" style="max-width: 580px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <h3 style="font-size: 1.25rem; font-weight: 800; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-file-arrow-down text-emerald-400"></i> 실전 모의고사 MD 내려받기
+                </h3>
+                <button class="btn-close-modal btn-icon"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 20px; line-height: 1.6;">
+                실제 시험과 동일한 40문항(기출 배점 비율 100% 반영) 문제지와 상세 해설이 포함된 Markdown(.md) 파일을 다운로드합니다.
+            </p>
+            
+            <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px;">
+                <button type="button" id="btn-dl-md-law" class="md-dl-card-btn">
+                    <div style="display: flex; align-items: center; gap: 14px;">
+                        <span class="md-dl-badge law">관계법규</span>
+                        <div style="text-align: left;">
+                            <div style="font-weight: 800; font-size: 1.05rem; color: #FFF;">관계법규 실전 모의고사 40제 MD</div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px;">객관식 24문항 + 주관식 16문항 / 정답표 및 상세 해설 포함</div>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-download text-sky-400" style="font-size: 1.2rem;"></i>
+                </button>
+
+                <button type="button" id="btn-dl-md-gwanri" class="md-dl-card-btn">
+                    <div style="display: flex; align-items: center; gap: 14px;">
+                        <span class="md-dl-badge gwanri">관리실무</span>
+                        <div style="text-align: left;">
+                            <div style="font-weight: 800; font-size: 1.05rem; color: #FFF;">관리실무 실전 모의고사 40제 MD</div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px;">객관식 24문항 + 주관식 16문항 / 정답표 및 상세 해설 포함</div>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-download text-emerald-400" style="font-size: 1.2rem;"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Part Select Modal -->
     <div id="modal-part-select" class="modal-overlay">
         <div class="modal-card">
@@ -287,7 +337,7 @@
                 <i class="fa-solid fa-shield-halved"></i>
             </div>
             <h3 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 6px;">보안 PIN 비밀번호 인증</h3>
-            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">오답리스트 관리에 접근하려면 비밀번호(4자리)를 입력하세요.</p>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">오답 및 수정 필요 관리에 접근하려면 비밀번호(4자리)를 입력하세요.</p>
 
             <form id="form-pin-auth" onsubmit="return false;" style="display: flex; flex-direction: column; gap: 14px;">
                 <input type="password" id="input-pin-code" class="blank-input" style="text-align: center; font-size: 1.8rem; letter-spacing: 0.35em; font-weight: 900; padding: 12px;" maxlength="4" placeholder="••••" autocomplete="off">
@@ -299,36 +349,78 @@
         </div>
     </div>
 
-    <!-- Wrong Answer Manager Modal -->
+    <!-- Wrong & Needs Edit Manager Modal -->
     <div id="modal-wrong-manager" class="modal-overlay">
-        <div class="modal-card" style="max-width: 800px; max-height: 90vh;">
+        <div class="modal-card" style="max-width: 820px; max-height: 90vh;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
                 <div>
                     <h3 style="font-size: 1.25rem; font-weight: 800; display: flex; align-items: center; gap: 8px;">
-                        <i class="fa-solid fa-list-check text-rose-500"></i> 오답 리스트 관리
+                        <i class="fa-solid fa-list-check text-rose-500"></i> 오답 및 수정 필요 관리
                     </h3>
                     <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">
-                        틀린 문제가 등록된 리스트입니다. 우측 <b style="color: #F43F5E;">[삭제]</b> 버튼을 누르면 오답 리스트에서 제외됩니다.
+                        오답 가중치 목록과 태블릿에서 플래그한 수정 필요 문제를 확인·수정합니다.
                     </p>
                 </div>
                 <button class="btn-close-modal btn-icon"><i class="fa-solid fa-xmark"></i></button>
             </div>
 
-            <!-- Filter Bar -->
-            <div class="wrong-filter-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+            <!-- Top Level Mode Switcher Tabs -->
+            <div style="display: flex; gap: 8px; margin-bottom: 14px; border-bottom: 1px solid #334155; padding-bottom: 10px;">
+                <button id="tab-btn-wrong-list" class="btn-main-tab active" data-tab="wrong">
+                    <i class="fa-solid fa-triangle-exclamation text-rose-400"></i> 오답 리스트 (<span id="cnt-wrong-tab">0</span>)
+                </button>
+                <button id="tab-btn-needs-edit" class="btn-main-tab" data-tab="needs_edit">
+                    <i class="fa-solid fa-flag text-amber-400"></i> 🚩 수정 필요 문제함 (<span id="cnt-needs-edit-tab">0</span>)
+                </button>
+            </div>
+
+            <!-- Filter Bar (Subject) -->
+            <div class="wrong-filter-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px;">
                 <div class="filter-tabs" style="display: flex; gap: 6px;">
                     <button class="btn-filter active" data-subject="all">전체</button>
                     <button class="btn-filter" data-subject="관계법규">관계법규</button>
                     <button class="btn-filter" data-subject="관리실무">관리실무</button>
                 </div>
                 <div id="wrong-summary-count" style="font-size: 0.85rem; font-weight: 700; color: #F8FAFC;">
-                    등록된 오답: <span class="text-rose-400" id="cnt-total-wrong">0</span>개
+                    표시 항목: <span class="text-rose-400" id="cnt-total-wrong">0</span>개
                 </div>
             </div>
 
             <!-- List Container -->
-            <div id="wrong-items-container" class="wrong-items-list" style="display: flex; flex-direction: column; gap: 10px; max-height: 60vh; overflow-y: auto;">
+            <div id="wrong-items-container" class="wrong-items-list" style="display: flex; flex-direction: column; gap: 10px; max-height: 55vh; overflow-y: auto;">
                 <!-- Dynamically rendered list items -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Question Detail Preview Modal -->
+    <div id="modal-question-preview" class="modal-overlay">
+        <div class="modal-card" style="max-width: 750px; max-height: 90vh; overflow-y: auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span id="prev-q-subject-badge" class="weight-badge" style="background: rgba(56,189,248,0.15); color: #38BDF8;">관계법규</span>
+                    <span id="prev-q-chapter-text" style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted);">총칙</span>
+                </div>
+                <button class="btn-close-modal btn-icon"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <h3 id="prev-q-title" style="font-size: 1.15rem; font-weight: 700; line-height: 1.6; margin-bottom: 14px; color: #FFF;"></h3>
+            <div id="prev-q-passage" class="passage-box" style="display: none; margin-bottom: 16px;"></div>
+            <div id="prev-q-options" class="options-list" style="margin-bottom: 16px;"></div>
+            <div id="prev-q-subjective" class="subjective-container" style="display: none; margin-bottom: 16px;"></div>
+
+            <div class="explanation-card" style="display: block; margin-top: 14px;">
+                <div class="exp-title" style="margin-bottom: 8px;"><i class="fa-solid fa-lightbulb text-amber-400"></i> 정답 및 상세 해설</div>
+                <div id="prev-q-answer-box" class="exp-answer-box" style="margin-bottom: 10px;"></div>
+                <div id="prev-q-explanation" class="exp-body" style="margin-bottom: 10px;"></div>
+                <div id="prev-q-tip-box" class="tip-box" style="display: none;"></div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 20px;">
+                <button type="button" id="btn-edit-from-preview" class="btn-ctrl btn-primary">
+                    <i class="fa-solid fa-pen-to-square"></i> 문제 수정
+                </button>
+                <button type="button" class="btn-close-modal btn-ctrl">닫기</button>
             </div>
         </div>
     </div>

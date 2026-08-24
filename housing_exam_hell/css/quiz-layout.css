@@ -1010,6 +1010,129 @@
     to { opacity: 1; transform: translateY(0); }
 }
 
+/* Part Item Button (Dark Theme) */
+.part-item-btn {
+    background: #0F172A;
+    border: 1.5px solid #1E293B;
+    border-radius: 12px;
+    padding: 14px 18px;
+    color: #F1F5F9;
+    font-size: 1rem;
+    font-weight: 700;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+}
+
+.part-item-btn:hover {
+    background: #1E293B;
+    border-color: var(--theme-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    color: #FFF;
+}
+
+/* Mock MD Download Cards */
+.md-dl-card-btn {
+    background: #0F172A;
+    border: 1.5px solid #1E293B;
+    border-radius: 14px;
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.md-dl-card-btn:hover {
+    background: #182238;
+    border-color: var(--theme-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
+}
+
+.md-dl-badge {
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    flex-shrink: 0;
+}
+
+.md-dl-badge.law {
+    background: rgba(56, 189, 248, 0.15);
+    color: #38BDF8;
+    border: 1px solid rgba(56, 189, 248, 0.35);
+}
+
+.md-dl-badge.gwanri {
+    background: rgba(52, 211, 153, 0.15);
+    color: #34D399;
+    border: 1px solid rgba(52, 211, 153, 0.35);
+}
+
+/* Wrong & Needs-Edit Top Main Tabs */
+.btn-main-tab {
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--text-muted);
+    padding: 8px 16px;
+    font-size: 0.95rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-main-tab:hover {
+    color: #FFF;
+}
+
+.btn-main-tab.active {
+    color: var(--theme-primary);
+    border-bottom-color: var(--theme-primary);
+}
+
+/* Subject Badges (Law vs Gwanri) */
+.subject-badge {
+    font-size: 0.75rem;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.subject-badge.law {
+    background: rgba(56, 189, 248, 0.15) !important;
+    color: #38BDF8 !important;
+    border: 1px solid rgba(56, 189, 248, 0.35) !important;
+}
+
+.subject-badge.gwanri {
+    background: rgba(52, 211, 153, 0.15) !important;
+    color: #34D399 !important;
+    border: 1px solid rgba(52, 211, 153, 0.35) !important;
+}
+
+/* Flag Needs Edit Active State */
+#btn-flag-needs-edit.active {
+    background: rgba(245, 158, 11, 0.2) !important;
+    border-color: #F59E0B !important;
+    color: #FBBF24 !important;
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
+}
+
 /* Filter Tabs */
 .btn-filter {
     background: #0F172A;
@@ -1024,16 +1147,16 @@
 }
 
 .btn-filter.active {
-    background: rgba(244, 63, 94, 0.15);
-    border-color: #F43F5E;
-    color: #FDA4AF;
+    background: rgba(56, 189, 248, 0.15);
+    border-color: #38BDF8;
+    color: #38BDF8;
 }
 
 .btn-filter:hover {
-    border-color: #F43F5E;
+    border-color: var(--theme-primary);
 }
 
-/* Wrong Item Card */
+/* Wrong & Needs-Edit Item Card */
 .wrong-item-card {
     background: #0B1120;
     border: 1px solid #1E293B;
@@ -1057,6 +1180,28 @@
     text-decoration: line-through;
 }
 
+.btn-view-q-detail {
+    background: #1E293B;
+    border: 1px solid #334155;
+    color: #E2E8F0;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.btn-view-q-detail:hover {
+    background: #334155;
+    color: #FFF;
+    border-color: var(--theme-primary);
+}
+
 .btn-reset-single-w {
     background: rgba(244, 63, 94, 0.15);
     border: 1px solid #F43F5E;
@@ -1076,6 +1221,50 @@
 .btn-reset-single-w:hover {
     background: #F43F5E;
     color: #FFF;
+    transform: scale(1.05);
+}
+
+.btn-quick-edit-q {
+    background: rgba(56, 189, 248, 0.15);
+    border: 1px solid #38BDF8;
+    color: #38BDF8;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 800;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.btn-quick-edit-q:hover {
+    background: #38BDF8;
+    color: #000;
+    transform: scale(1.05);
+}
+
+.btn-resolve-needs-edit {
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid #10B981;
+    color: #34D399;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 800;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.btn-resolve-needs-edit:hover {
+    background: #10B981;
+    color: #000;
     transform: scale(1.05);
 }
 
