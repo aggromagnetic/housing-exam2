@@ -2070,56 +2070,102 @@ function renderQuizResult(correctCount, totalCount, results) {
 }
 
 // -------------------------------------------------------------
-// Global Search (Enhanced Smart Multi-Token Search Engine)
+// Global Search (Enhanced Smart Multi-Token Full-Text Search Engine)
 // -------------------------------------------------------------
+function handleSearchKeyDown(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        triggerGlobalSearch();
+    }
+}
+
+// Kept for backward compatibility
 function handleGlobalSearch(e) {
-    const query = e.target.value.trim();
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        triggerGlobalSearch();
+    }
+}
+
+function triggerGlobalSearch() {
+    const input = document.getElementById('global-search-input');
+    const query = input ? input.value.trim() : '';
     if (!query) {
         if (currentView === 'search') switchView('viewer');
         return;
     }
-
-    if (e.key === 'Enter' || query.length >= 2) {
-        performSearch(query);
-    }
+    performSearch(query);
 }
 
 function normalizeForSearch(str) {
     if (!str) return '';
-    return str.toLowerCase().replace(/[\s\cdot·,.\(\)\[\]\-_:;]/g, '');
+    return str.toLowerCase().replace(/[\s\cdot·,.\(\)\[\]\-_:;`"'~!?/\\*#]/g, '');
 }
 
 function highlightSearchTerms(text, tokens) {
     if (!text || !tokens || tokens.length === 0) return escapeHtml(text);
     let escapedText = escapeHtml(text);
     tokens.forEach(t => {
-        if (!t) return;
-        const escToken = escapeHtml(t);
+        if (!t || t.trim().length === 0) return;
+        const escToken = escapeHtml(t.trim());
         const regex = new RegExp(`(${escToken.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
         escapedText = escapedText.replace(regex, '<mark class="search-highlight">$1</mark>');
     });
     return escapedText;
 }
 
+function extractSnippets(bodyText, tokens, normTokens) {
+    if (!bodyText) return [];
+    const snippets = [];
+    const normBody = normalizeForSearch(bodyText);
+
+    tokens.forEach((tok, idx) => {
+        const normTok = normTokens[idx];
+        if (!normTok) return;
+
+        let pos = bodyText.indexOf(tok);
+        if (pos !== -1) {
+            const start = Math.max(0, pos - 45);
+            const end = Math.min(bodyText.length, pos + tok.length + 65);
+            let snippet = bodyText.substring(start, end).replace(/\s+/g, ' ').trim();
+            if (start > 0) snippet = '...' + snippet;
+            if (end < bodyText.length) snippet = snippet + '...';
+            snippets.push(snippet);
+        } else if (normBody.includes(normTok)) {
+            const normPos = normBody.indexOf(normTok);
+            const approxPos = Math.floor((normPos / normBody.length) * bodyText.length);
+            const start = Math.max(0, approxPos - 45);
+            const end = Math.min(bodyText.length, approxPos + 80);
+            let snippet = bodyText.substring(start, end).replace(/\s+/g, ' ').trim();
+            if (start > 0) snippet = '...' + snippet;
+            if (end < bodyText.length) snippet = snippet + '...';
+            snippets.push(snippet);
+        }
+    });
+
+    return Array.from(new Set(snippets)).slice(0, 3);
+}
+
 function performSearch(rawQuery) {
-    const trimmed = rawQuery.trim().toLowerCase();
+    const trimmed = rawQuery.trim();
     if (!trimmed) return;
 
-    // Split query by whitespace into search tokens (e.g. "주택 수용" -> ["주택", "수용"])
+    // Split query by whitespace into search tokens (e.g. "보일러 공동연도" -> ["보일러", "공동연도"])
     const tokens = trimmed.split(/\s+/).filter(Boolean);
     const normalizedTokens = tokens.map(t => normalizeForSearch(t));
 
     const matchedLectures = [];
 
-    studyData.lectures.forEach(lec => {
+    (studyData.lectures || []).forEach(lec => {
         let matchScore = 0;
         const matches = [];
         const matchedTokensSet = new Set();
 
         const lecTitleNorm = normalizeForSearch(lec.title);
         const lecFileNorm = normalizeForSearch(lec.fileName);
+        const lecBodyNorm = normalizeForSearch(lec.bodyText || '');
 
-        // Check Lecture Title
+        // 1. Check Lecture Title (Highest Priority)
         let titleTokensHit = 0;
         normalizedTokens.forEach((normT, idx) => {
             if (lecTitleNorm.includes(normT) || lecFileNorm.includes(normT)) {
@@ -2128,15 +2174,15 @@ function performSearch(rawQuery) {
             }
         });
         if (titleTokensHit === normalizedTokens.length) {
-            matchScore += 100 + (titleTokensHit * 10);
+            matchScore += 120 + (titleTokensHit * 15);
             matches.push({ type: 'title', text: `강의 제목: ${lec.title}` });
         } else if (titleTokensHit > 0) {
-            matchScore += titleTokensHit * 15;
-            matches.push({ type: 'title', text: `강의 제목(부분): ${lec.title}` });
+            matchScore += titleTokensHit * 25;
+            matches.push({ type: 'title', text: `강의 제목(일부): ${lec.title}` });
         }
 
-        // Check SubHeadings (Sub-sections)
-        lec.subHeadings.forEach(sh => {
+        // 2. Check SubHeadings (Sub-sections)
+        (lec.subHeadings || []).forEach(sh => {
             const shNorm = normalizeForSearch(sh);
             let shHit = 0;
             normalizedTokens.forEach((normT, idx) => {
@@ -2146,19 +2192,35 @@ function performSearch(rawQuery) {
                 }
             });
             if (shHit === normalizedTokens.length) {
-                matchScore += 50 + (shHit * 5);
+                matchScore += 60 + (shHit * 5);
                 matches.push({ type: 'sub', text: `소단원 목차: ${sh}` });
             } else if (shHit > 0) {
-                matchScore += shHit * 8;
+                matchScore += shHit * 10;
                 matches.push({ type: 'sub', text: `소단원 목차: ${sh}` });
             }
         });
 
-        // Check Related Quizzes
-        const relatedQuizzes = studyData.quizzes.filter(q => q.noteFileName === lec.fileName);
+        // 3. Check Full Body Text (Core Feature for deep retrieval)
+        let bodyTokensHit = 0;
+        normalizedTokens.forEach((normT, idx) => {
+            if (lecBodyNorm.includes(normT)) {
+                bodyTokensHit++;
+                matchedTokensSet.add(tokens[idx]);
+            }
+        });
+        if (bodyTokensHit > 0) {
+            matchScore += (bodyTokensHit === normalizedTokens.length ? 40 : 0) + (bodyTokensHit * 15);
+            const snippets = extractSnippets(lec.bodyText, tokens, normalizedTokens);
+            snippets.forEach(snip => {
+                matches.push({ type: 'body', text: `본문 내용: ${snip}` });
+            });
+        }
+
+        // 4. Check Related Quizzes
+        const relatedQuizzes = (studyData.quizzes || []).filter(q => q.noteFileName === lec.fileName || q.noteFileName === lec.relativePath);
         let quizMatchesCount = 0;
         relatedQuizzes.forEach(q => {
-            const qNorm = normalizeForSearch(q.question + ' ' + q.answerRaw);
+            const qNorm = normalizeForSearch(q.question + ' ' + (q.answerRaw || ''));
             let qHit = 0;
             normalizedTokens.forEach((normT, idx) => {
                 if (qNorm.includes(normT)) {
@@ -2168,25 +2230,51 @@ function performSearch(rawQuery) {
             });
             if (qHit === normalizedTokens.length) {
                 matchScore += 30;
-                if (quizMatchesCount < 3) {
+                if (quizMatchesCount < 2) {
                     matches.push({ type: 'quiz', text: `퀴즈 ${q.num}번: ${q.question}` });
                     quizMatchesCount++;
                 }
             } else if (qHit > 0) {
-                matchScore += qHit * 3;
-                if (quizMatchesCount < 2) {
+                matchScore += qHit * 5;
+                if (quizMatchesCount < 1) {
                     matches.push({ type: 'quiz', text: `퀴즈 ${q.num}번: ${q.question}` });
                     quizMatchesCount++;
                 }
             }
         });
 
-        // Lecture passes if ALL search tokens are matched somewhere in the lecture
+        // Lecture passes if ALL search tokens are matched somewhere in title/sub/body/quiz
         const allTokensMatched = tokens.every(t => matchedTokensSet.has(t));
         if (allTokensMatched && matchScore > 0) {
             matchedLectures.push({ lec, matchScore, matches, matchedTokens: Array.from(matchedTokensSet) });
         }
     });
+
+    // Fallback: If 0 results with strict AND, search with partial OR matches
+    if (matchedLectures.length === 0 && tokens.length > 1) {
+        (studyData.lectures || []).forEach(lec => {
+            let matchScore = 0;
+            const matches = [];
+            const matchedTokensSet = new Set();
+            const lecTitleNorm = normalizeForSearch(lec.title);
+            const lecBodyNorm = normalizeForSearch(lec.bodyText || '');
+
+            normalizedTokens.forEach((normT, idx) => {
+                if (lecTitleNorm.includes(normT) || lecBodyNorm.includes(normT)) {
+                    matchScore += 10;
+                    matchedTokensSet.add(tokens[idx]);
+                }
+            });
+
+            if (matchScore > 0) {
+                const snippets = extractSnippets(lec.bodyText, tokens, normalizedTokens);
+                snippets.forEach(snip => {
+                    matches.push({ type: 'body', text: `본문 내용: ${snip}` });
+                });
+                matchedLectures.push({ lec, matchScore, matches, matchedTokens: Array.from(matchedTokensSet) });
+            }
+        });
+    }
 
     // Sort matched lectures by matchScore descending
     matchedLectures.sort((a, b) => b.matchScore - a.matchScore);
