@@ -425,13 +425,62 @@
             return window.HOUSING_CORE_KEYWORDS_DB[subject] || [];
         },
 
-        getTopicKeywords(topic) {
-            const stopWords = new Set(["관한", "기준", "요건", "구분", "비교", "산정", "의무", "절차", "규정", "종류", "범위", "특성", "적용", "경우", "사항", "설치", "관리", "확인"]);
-            return topic
-                .replace(/[\(\)·,\.\/vs\-\+vs\:]/g, " ")
+        GENERIC_STOP_WORDS: new Set([
+            "공동주택", "주택", "주택법", "건축법", "공동주택관리법", "관리실무", "관계법규",
+            "관리", "관리의", "기준", "요건", "구분", "비교", "산정", "의무", "절차", "규정",
+            "종류", "범위", "특성", "적용", "경우", "사항", "설치", "확인", "대상", "내용",
+            "대통령령", "국토교통부령", "시장", "군수", "구청장", "시도지사", "장관", "특별시장",
+            "광역시장", "특별자치시", "도지사", "특별자치도", "방법", "조치", "행위", "제외",
+            "포함", "관련", "대하여", "따른", "의한", "모두", "옳은", "옳지", "틀린", "것은",
+            "골라", "다음", "아래", "설명", "규정된", "해당하는", "이하", "이상", "초과", "미만",
+            "비율", "조문", "출제", "빈출", "유력", "주관식", "객관식"
+        ]),
+
+        extractDistinctiveKeywords(topic, note) {
+            const text = (topic || "") + " " + (note || "");
+            return Array.from(new Set(text
+                .replace(/[\(\)·,\.\/vs\-\+vs\:\[\]\<\>\"\'\?\!~]/g, " ")
                 .split(/\s+/)
-                .map(t => t.trim())
-                .filter(t => t.length >= 2 && !stopWords.has(t));
+                .map(w => w.trim())
+                .filter(w => w.length >= 2 && !this.GENERIC_STOP_WORDS.has(w))));
+        },
+
+        isCategoryMatch(chapterName, itemCategory) {
+            if (!itemCategory) return true;
+            const chap = (chapterName || "").replace(/^CHAPTER\s+\d+\s*/i, "").trim();
+            const cat = itemCategory.trim();
+
+            if (chap.includes(cat) || cat.includes(chap)) return true;
+            
+            // Specific mappings for 관계법규
+            if (cat === "주택법" && chap.includes("주택법")) return true;
+            if (cat.includes("공동주택관리법") && chap.includes("공동주택관리법")) return true;
+            if (cat === "건축법" && chap.includes("건축법")) return true;
+            if (cat.includes("민간임대") && chap.includes("민간임대")) return true;
+            if (cat.includes("공공주택") && chap.includes("공공주택")) return true;
+            if (cat.includes("정비") && chap.includes("정비")) return true;
+            if (cat.includes("시설물의안전") && (chap.includes("시설물의") || chap.includes("시특법") || chap.includes("안전점검"))) return true;
+            if (cat.includes("전기사업") && chap.includes("전기")) return true;
+            if (cat.includes("승강기") && chap.includes("승강기")) return true;
+            if (cat.includes("소방기본") && chap.includes("소방기본")) return true;
+            if (cat.includes("화재") && chap.includes("화재")) return true;
+            if (cat.includes("소방시설") && chap.includes("소방시설")) return true;
+            if (cat.includes("집합건물") && chap.includes("집합건물")) return true;
+
+            // 관리실무 mappings
+            if (cat.includes("주택의") && chap.includes("주택의")) return true;
+            if (cat.includes("관리기준") && (chap.includes("총칙") || chap.includes("관리기준"))) return true;
+            if (cat.includes("관리방법") && chap.includes("관리방법")) return true;
+            if (cat.includes("관리조직") && chap.includes("관리조직")) return true;
+            if (cat.includes("주택관리사") && chap.includes("주택관리사")) return true;
+            if (cat.includes("입주자관리") && chap.includes("입주자관리")) return true;
+            if (cat.includes("사무") && (chap.includes("사무") || chap.includes("인사"))) return true;
+            if (cat.includes("대외업무") && (chap.includes("대외업무") || chap.includes("리모델링"))) return true;
+            if (cat.includes("회계관리") && chap.includes("회계관리")) return true;
+            if (cat.includes("시설관리") && chap.includes("시설관리")) return true;
+            if (cat.includes("환경안전방재") && (chap.includes("안전관리") || chap.includes("환경관리"))) return true;
+
+            return false;
         },
 
         matchQuestionKeywords(q, subject) {
@@ -450,16 +499,20 @@
 
             const matches = [];
             for (const item of subjectKeywords) {
-                const topicKws = this.getTopicKeywords(item.topic);
-                if (topicKws.length === 0) continue;
+                if (!this.isCategoryMatch(q.chapterName, item.category)) continue;
 
-                let matchedKws = topicKws.filter(kw => fullText.includes(kw));
-                const hasStrongMatch = matchedKws.some(kw => kw.length >= 4);
-                if (hasStrongMatch || matchedKws.length >= 2) {
+                const distinctiveKws = this.extractDistinctiveKeywords(item.topic, item.note);
+                if (distinctiveKws.length === 0) continue;
+
+                const matched = distinctiveKws.filter(kw => fullText.includes(kw));
+                const strongMatch = matched.some(kw => kw.length >= 4);
+                const multiMatch = matched.filter(kw => kw.length >= 3).length >= 2;
+
+                if (strongMatch || multiMatch) {
                     matches.push({
                         item,
-                        matchedKws,
-                        score: matchedKws.length + (hasStrongMatch ? 2 : 0)
+                        matched,
+                        score: matched.length + (strongMatch ? 2 : 0)
                     });
                 }
             }
@@ -482,7 +535,7 @@
             const pool = [];
             dataset.chapters.forEach(chap => {
                 (chap.questions || []).forEach(q => {
-                    const matches = this.matchQuestionKeywords(q, subject);
+                    const matches = this.matchQuestionKeywords({ ...q, chapterName: chap.chapter }, subject);
                     pool.push({
                         ...q,
                         qKey: `${subject}_${type}_${chap.chapter}_${q.id}`,
@@ -491,8 +544,9 @@
                         chapterName: chap.chapter,
                         sourceFile: chap.source_file || '',
                         coreMatches: matches,
-                        isHighYield: matches.length > 0,
-                        primaryCoreItem: matches.length > 0 ? matches[0].item : null
+                        topCoreMatch: matches.length > 0 ? matches[0] : null,
+                        isHighYield: false,
+                        primaryCoreItem: null
                     });
                 });
             });
@@ -584,6 +638,11 @@
 
             const selectedMC = [];
             const selectedSA = [];
+            const pickedKeys = new Set(excludeKeysSet);
+
+            // Target exactly ~40% Core 300 questions (10 MC out of 24, 6 SA out of 16 = 16 / 40 questions)
+            let mcHyRemaining = Math.round(24 * highYieldRatio); // 10
+            let saHyRemaining = Math.round(16 * highYieldRatio); // 6
 
             blueprint.forEach(rule => {
                 let targetMc = rule.mc;
@@ -600,62 +659,92 @@
                 const chapterMcList = mcPool.filter(q => rule.pattern.test(q.chapterName));
                 const chapterSaList = saPool.filter(q => rule.pattern.test(q.chapterName));
 
-                // MC Pick with High-Yield Priority (40%+)
+                // MC Pick: exactly proportional core items
                 if (targetMc > 0) {
-                    const hyMC = chapterMcList.filter(q => q.isHighYield);
-                    const targetHyMc = Math.min(hyMC.length, Math.ceil(targetMc * highYieldRatio));
+                    let hyToPick = 0;
+                    if (mcHyRemaining > 0) {
+                        hyToPick = Math.min(targetMc, Math.ceil(targetMc * highYieldRatio));
+                        hyToPick = Math.min(hyToPick, mcHyRemaining);
+                    }
 
-                    const pickedHy = this.weightedPick(hyMC, statsMap, targetHyMc, excludeKeysSet);
-                    selectedMC.push(...pickedHy);
+                    const hyCandidates = chapterMcList.filter(q => q.topCoreMatch !== null).sort((a, b) => (b.topCoreMatch.score - a.topCoreMatch.score));
+                    const pickedHy = this.weightedPick(hyCandidates.slice(0, Math.max(hyToPick * 3, 5)), statsMap, hyToPick, pickedKeys);
 
+                    pickedHy.forEach(q => {
+                        pickedKeys.add(q.qKey);
+                        selectedMC.push({
+                            ...q,
+                            isHighYield: true,
+                            primaryCoreItem: q.topCoreMatch.item
+                        });
+                    });
+                    mcHyRemaining -= pickedHy.length;
+
+                    // Pick the rest as STANDARD questions (isHighYield = false)
                     const remainingMcCount = targetMc - pickedHy.length;
                     if (remainingMcCount > 0) {
-                        const pickedKeys = new Set([...excludeKeysSet, ...pickedHy.map(q => q.qKey)]);
                         const pickedRest = this.weightedPick(chapterMcList, statsMap, remainingMcCount, pickedKeys);
-                        selectedMC.push(...pickedRest);
+                        pickedRest.forEach(q => {
+                            pickedKeys.add(q.qKey);
+                            selectedMC.push({
+                                ...q,
+                                isHighYield: false,
+                                primaryCoreItem: null
+                            });
+                        });
                     }
                 }
 
-                // SA Pick with High-Yield Priority (40%+)
+                // SA Pick: exactly proportional core items
                 if (targetSa > 0) {
-                    const hySA = chapterSaList.filter(q => q.isHighYield);
-                    const targetHySa = Math.min(hySA.length, Math.ceil(targetSa * highYieldRatio));
+                    let hyToPick = 0;
+                    if (saHyRemaining > 0) {
+                        hyToPick = Math.min(targetSa, Math.ceil(targetSa * highYieldRatio));
+                        hyToPick = Math.min(hyToPick, saHyRemaining);
+                    }
 
-                    const pickedHy = this.weightedPick(hySA, statsMap, targetHySa, excludeKeysSet);
-                    selectedSA.push(...pickedHy);
+                    const hyCandidates = chapterSaList.filter(q => q.topCoreMatch !== null).sort((a, b) => (b.topCoreMatch.score - a.topCoreMatch.score));
+                    const pickedHy = this.weightedPick(hyCandidates.slice(0, Math.max(hyToPick * 3, 5)), statsMap, hyToPick, pickedKeys);
 
+                    pickedHy.forEach(q => {
+                        pickedKeys.add(q.qKey);
+                        selectedSA.push({
+                            ...q,
+                            isHighYield: true,
+                            primaryCoreItem: q.topCoreMatch.item
+                        });
+                    });
+                    saHyRemaining -= pickedHy.length;
+
+                    // Pick the rest as STANDARD questions (isHighYield = false)
                     const remainingSaCount = targetSa - pickedHy.length;
                     if (remainingSaCount > 0) {
-                        const pickedKeys = new Set([...excludeKeysSet, ...pickedHy.map(q => q.qKey)]);
                         const pickedRest = this.weightedPick(chapterSaList, statsMap, remainingSaCount, pickedKeys);
-                        selectedSA.push(...pickedRest);
+                        pickedRest.forEach(q => {
+                            pickedKeys.add(q.qKey);
+                            selectedSA.push({
+                                ...q,
+                                isHighYield: false,
+                                primaryCoreItem: null
+                            });
+                        });
                     }
                 }
             });
 
             if (selectedMC.length < 24) {
-                const pickedKeys = new Set([...excludeKeysSet, ...selectedMC.map(q => q.qKey)]);
-                const hyMcPool = mcPool.filter(q => q.isHighYield);
-                const remainderHy = this.weightedPick(hyMcPool, statsMap, 24 - selectedMC.length, pickedKeys);
-                selectedMC.push(...remainderHy);
-
-                if (selectedMC.length < 24) {
-                    const allPicked = new Set([...excludeKeysSet, ...selectedMC.map(q => q.qKey)]);
-                    const remainderAll = this.weightedPick(mcPool, statsMap, 24 - selectedMC.length, allPicked);
-                    selectedMC.push(...remainderAll);
-                }
+                const remainderAll = this.weightedPick(mcPool, statsMap, 24 - selectedMC.length, pickedKeys);
+                remainderAll.forEach(q => {
+                    pickedKeys.add(q.qKey);
+                    selectedMC.push({ ...q, isHighYield: false, primaryCoreItem: null });
+                });
             }
             if (selectedSA.length < 16) {
-                const pickedKeys = new Set([...excludeKeysSet, ...selectedSA.map(q => q.qKey)]);
-                const hySaPool = saPool.filter(q => q.isHighYield);
-                const remainderHy = this.weightedPick(hySaPool, statsMap, 16 - selectedSA.length, pickedKeys);
-                selectedSA.push(...remainderHy);
-
-                if (selectedSA.length < 16) {
-                    const allPicked = new Set([...excludeKeysSet, ...selectedSA.map(q => q.qKey)]);
-                    const remainderAll = this.weightedPick(saPool, statsMap, 16 - selectedSA.length, allPicked);
-                    selectedSA.push(...remainderAll);
-                }
+                const remainderAll = this.weightedPick(saPool, statsMap, 16 - selectedSA.length, pickedKeys);
+                remainderAll.forEach(q => {
+                    pickedKeys.add(q.qKey);
+                    selectedSA.push({ ...q, isHighYield: false, primaryCoreItem: null });
+                });
             }
 
             // 실전 시험지 순서와 100% 동일하게 정렬:
@@ -688,26 +777,30 @@
             const saPool = this.getQuestionPool(subject, 'short');
             const all = [...mcPool, ...saPool];
 
-            // Prioritize weak high-yield items first!
             const weakItems = all.filter(q => (statsMap[q.qKey]?.weight || 1) >= 2);
-            const weakHy = weakItems.filter(q => q.isHighYield);
+            let picked = [];
 
             if (weakItems.length >= count) {
-                const targetHyCount = Math.min(weakHy.length, Math.ceil(count * 0.5));
-                const pickedHy = this.weightedPick(weakHy, statsMap, targetHyCount);
-                const pickedRest = this.weightedPick(weakItems, statsMap, count - pickedHy.length, new Set(pickedHy.map(q => q.qKey)));
-                return this.shuffleWithAntiClumping([...pickedHy, ...pickedRest]);
+                picked = this.weightedPick(weakItems, statsMap, count);
+            } else {
+                const weakSet = new Set(weakItems.map(q => q.qKey));
+                const remaining = this.weightedPick(all, statsMap, count - weakItems.length, weakSet);
+                picked = [...weakItems, ...remaining];
             }
 
-            const weakSet = new Set(weakItems.map(q => q.qKey));
-            const hyRemaining = all.filter(q => q.isHighYield && !weakSet.has(q.qKey));
-            const targetRemainingHy = Math.min(hyRemaining.length, Math.ceil((count - weakItems.length) * 0.5));
-            const pickedRemainingHy = this.weightedPick(hyRemaining, statsMap, targetRemainingHy, weakSet);
+            // Tag top 40% (16 questions) as Core 300 if matched
+            const targetHyCount = Math.round(count * 0.40);
+            let taggedHy = 0;
 
-            const allPickedSet = new Set([...weakItems.map(q => q.qKey), ...pickedRemainingHy.map(q => q.qKey)]);
-            const remaining = this.weightedPick(all, statsMap, count - weakItems.length - pickedRemainingHy.length, allPickedSet);
+            const processed = picked.map(q => {
+                if (taggedHy < targetHyCount && q.topCoreMatch !== null) {
+                    taggedHy++;
+                    return { ...q, isHighYield: true, primaryCoreItem: q.topCoreMatch.item };
+                }
+                return { ...q, isHighYield: false, primaryCoreItem: null };
+            });
 
-            return this.shuffleWithAntiClumping([...weakItems, ...pickedRemainingHy, ...remaining]);
+            return this.shuffleWithAntiClumping(processed);
         },
 
         generatePartSet(subject, chapterPattern) {
@@ -718,7 +811,15 @@
             const mcMatches = mcPool.filter(q => regex.test(q.chapterName));
             const saMatches = saPool.filter(q => regex.test(q.chapterName));
 
-            const all = [...mcMatches, ...saMatches];
+            const all = [...mcMatches, ...saMatches].map(q => {
+                // In part set, mark questions that strongly match core topics
+                const isStrongCore = q.topCoreMatch && q.topCoreMatch.score >= 3;
+                return {
+                    ...q,
+                    isHighYield: isStrongCore,
+                    primaryCoreItem: isStrongCore ? q.topCoreMatch.item : null
+                };
+            });
             return all.sort(() => Math.random() - 0.5);
         },
 
@@ -728,7 +829,6 @@
             const gwanriMC = this.getQuestionPool('관리실무', 'choice');
             const gwanriSA = this.getQuestionPool('관리실무', 'short');
 
-            // 20 관계법규 (12 MC + 8 SA) + 20 관리실무 (12 MC + 8 SA) = 40 questions
             const pickedLawMC = this.weightedPick(lawMC, statsMap, 12, excludeKeysSet);
             const pickedLawSA = this.weightedPick(lawSA, statsMap, 8, excludeKeysSet);
             const pickedGwanriMC = this.weightedPick(gwanriMC, statsMap, 12, excludeKeysSet);
@@ -736,14 +836,17 @@
 
             const combined = [...pickedLawMC, ...pickedLawSA, ...pickedGwanriMC, ...pickedGwanriSA];
             
-            if (combined.length < 40) {
-                const allPool = [...lawMC, ...lawSA, ...gwanriMC, ...gwanriSA];
-                const usedKeys = new Set([...excludeKeysSet, ...combined.map(q => q.qKey)]);
-                const remainder = this.weightedPick(allPool, statsMap, 40 - combined.length, usedKeys);
-                combined.push(...remainder);
-            }
+            // Tag ~40% (16 questions) with Core 300
+            let taggedHy = 0;
+            const processed = combined.map(q => {
+                if (taggedHy < 16 && q.topCoreMatch !== null) {
+                    taggedHy++;
+                    return { ...q, isHighYield: true, primaryCoreItem: q.topCoreMatch.item };
+                }
+                return { ...q, isHighYield: false, primaryCoreItem: null };
+            });
 
-            return this.shuffleWithAntiClumping(combined);
+            return this.shuffleWithAntiClumping(processed);
         },
 
         getChapterList(subject) {
@@ -2757,8 +2860,9 @@
             card.dataset.qkey = q.qKey;
 
             let badgeHtml = '';
-            if (q.isHighYield && q.primaryCoreItem) {
-                badgeHtml += `<span class="badge-high-yield mgr-badge" title="${q.primaryCoreItem.topic}">⭐ 핵심 #${q.primaryCoreItem.id}</span>`;
+            const coreMatch = q.topCoreMatch && q.topCoreMatch.score >= 3 ? q.topCoreMatch.item : null;
+            if (coreMatch) {
+                badgeHtml += `<span class="badge-high-yield mgr-badge" title="${coreMatch.topic}">⭐ 핵심 #${coreMatch.id}</span>`;
             }
             if (isFlagged) {
                 badgeHtml += `<span class="mgr-status-flag">🚩 수정요청</span>`;
@@ -2866,8 +2970,9 @@
         }
         if (elements.manager.metaId) {
             let coreHtml = '';
-            if (q.isHighYield && q.primaryCoreItem) {
-                coreHtml = ` <span class="badge-high-yield mgr-badge" title="${q.primaryCoreItem.note}">⭐ 핵심 300선 #${q.primaryCoreItem.id} ${q.primaryCoreItem.tag}</span>`;
+            const coreMatch = q.topCoreMatch && q.topCoreMatch.score >= 3 ? q.topCoreMatch.item : null;
+            if (coreMatch) {
+                coreHtml = ` <span class="badge-high-yield mgr-badge" title="${coreMatch.note}">⭐ 핵심 300선 #${coreMatch.id} ${coreMatch.tag}</span>`;
             }
             elements.manager.metaId.innerHTML = `[문항 ID: ${q.id}]${coreHtml}`;
         }
