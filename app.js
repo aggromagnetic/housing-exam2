@@ -289,7 +289,7 @@ function renderLectureList() {
     });
 }
 
-function selectLecture(fileNameOrPath, anchorId = null) {
+function selectLecture(fileNameOrPath, anchorId = null, highlightQuery = null) {
     if (!fileNameOrPath) return;
     const targetNorm = fileNameOrPath.normalize('NFC');
     const lec = studyData.lectures.find(l => 
@@ -337,6 +337,13 @@ function selectLecture(fileNameOrPath, anchorId = null) {
         applyThemeToIframe();
         if (clozeMaskEnabled) {
             applyClozeMaskToIframe();
+        }
+        if (highlightQuery) {
+            setTimeout(() => {
+                highlightTermsInIframe(iframe, highlightQuery);
+            }, 120);
+        } else {
+            removeSearchNavigatorBanner();
         }
     };
 
@@ -2306,7 +2313,7 @@ function renderSearchResults(rawQuery, tokens, results) {
         const itemEl = document.createElement('div');
         itemEl.className = 'result-item';
         itemEl.style.cssText = 'cursor: pointer; transition: all 0.2s ease; margin-bottom: 12px;';
-        itemEl.onclick = () => selectLecture(lec.fileName);
+        itemEl.onclick = () => selectLecture(lec.fileName, null, rawQuery);
 
         // Deduplicate matches text for clean display
         const uniqueMatches = [];
@@ -2336,6 +2343,209 @@ function renderSearchResults(rawQuery, tokens, results) {
         `;
         container.appendChild(itemEl);
     });
+}
+
+// -------------------------------------------------------------
+// In-Note Search Term Highlighting & Navigation (Iframe Injection)
+// -------------------------------------------------------------
+let currentSearchHighlightIndex = 0;
+let currentSearchHighlightElements = [];
+
+function highlightTermsInIframe(iframe, query) {
+    if (!iframe || !query) return;
+    try {
+        const doc = iframe.contentDocument || iframe.contentWindow?.document;
+        if (!doc || !doc.body) return;
+
+        // Clean previous highlights
+        doc.querySelectorAll('.search-term-mark').forEach(m => {
+            const parent = m.parentNode;
+            if (parent) {
+                parent.replaceChild(doc.createTextNode(m.textContent), m);
+                parent.normalize();
+            }
+        });
+
+        // Remove previous navigator banner
+        removeSearchNavigatorBanner();
+
+        // Inject highlight styles into iframe
+        let styleEl = doc.getElementById('search-highlight-style');
+        if (!styleEl) {
+            styleEl = doc.createElement('style');
+            styleEl.id = 'search-highlight-style';
+            styleEl.innerHTML = `
+                .search-term-mark {
+                    background: #fde047 !important;
+                    color: #000 !important;
+                    font-weight: 800 !important;
+                    padding: 2px 5px !important;
+                    border-radius: 4px !important;
+                    box-shadow: 0 0 10px rgba(253, 224, 71, 0.8) !important;
+                    border: 1.5px solid #ca8a04 !important;
+                    display: inline-block !important;
+                    transition: all 0.2s ease !important;
+                }
+                .search-term-mark.active-focus {
+                    background: #38bdf8 !important;
+                    color: #000 !important;
+                    border-color: #0284c7 !important;
+                    outline: 3px solid #0284c7 !important;
+                    box-shadow: 0 0 18px rgba(56, 189, 248, 1) !important;
+                    transform: scale(1.08) !important;
+                }
+            `;
+            doc.head.appendChild(styleEl);
+        }
+
+        const tokens = query.trim().split(/\s+/).filter(Boolean);
+        if (tokens.length === 0) return;
+
+        // Build regex matching any of the search tokens
+        const regexStr = '(' + tokens.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|') + ')';
+        const regex = new RegExp(regexStr, 'gi');
+
+        // Walk text nodes safely
+        const walker = doc.createTreeWalker(doc.body, NodeFilter.SHOW_TEXT, {
+            acceptNode: (node) => {
+                if (!node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+                const parentTag = node.parentElement ? node.parentElement.tagName.toUpperCase() : '';
+                if (['SCRIPT', 'STYLE', 'MARK', 'NOSCRIPT', 'TEXTAREA'].includes(parentTag)) {
+                    return NodeFilter.FILTER_REJECT;
+                }
+                if (regex.test(node.nodeValue)) {
+                    regex.lastIndex = 0;
+                    return NodeFilter.FILTER_ACCEPT;
+                }
+                return NodeFilter.FILTER_REJECT;
+            }
+        });
+
+        const nodesToReplace = [];
+        let currentNode;
+        while ((currentNode = walker.nextNode())) {
+            nodesToReplace.push(currentNode);
+        }
+
+        nodesToReplace.forEach(node => {
+            const parent = node.parentNode;
+            if (!parent) return;
+
+            const text = node.nodeValue;
+            const fragment = doc.createDocumentFragment();
+            let lastIdx = 0;
+            regex.lastIndex = 0;
+
+            let match;
+            while ((match = regex.exec(text)) !== null) {
+                const matchStart = match.index;
+                const matchEnd = regex.lastIndex;
+
+                if (matchStart > lastIdx) {
+                    fragment.appendChild(doc.createTextNode(text.substring(lastIdx, matchStart)));
+                }
+
+                const mark = doc.createElement('mark');
+                mark.className = 'search-term-mark';
+                mark.textContent = match[0];
+                fragment.appendChild(mark);
+
+                lastIdx = matchEnd;
+            }
+
+            if (lastIdx < text.length) {
+                fragment.appendChild(doc.createTextNode(text.substring(lastIdx)));
+            }
+
+            parent.replaceChild(fragment, node);
+        });
+
+        const marks = Array.from(doc.querySelectorAll('.search-term-mark'));
+        currentSearchHighlightElements = marks;
+        currentSearchHighlightIndex = 0;
+
+        if (marks.length > 0) {
+            marks[0].classList.add('active-focus');
+            setTimeout(() => {
+                marks[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 250);
+
+            showSearchNavigatorBanner(query, marks.length);
+        }
+    } catch (e) {
+        console.error('Error highlighting terms in iframe:', e);
+    }
+}
+
+function showSearchNavigatorBanner(query, count) {
+    removeSearchNavigatorBanner();
+
+    const banner = document.createElement('div');
+    banner.id = 'search-nav-floating-banner';
+    banner.style.cssText = `
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        background: rgba(15, 23, 42, 0.95);
+        backdrop-filter: blur(10px);
+        border: 1px solid #38bdf8;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        color: #f1f5f9;
+        padding: 10px 16px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 13px;
+        font-weight: 700;
+        z-index: 1000;
+        animation: fadeIn 0.25s ease;
+    `;
+
+    banner.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 6px;">
+            <span style="color: #fde047;">🔍</span>
+            <span>'<strong>${escapeHtml(query)}</strong>' 강조 (<span id="search-nav-curr">1</span>/${count})</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 6px;">
+            <button id="btn-search-nav-prev" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff; border-radius: 6px; padding: 4px 8px; cursor: pointer; font-size: 12px;" title="이전 위치">▲</button>
+            <button id="btn-search-nav-next" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff; border-radius: 6px; padding: 4px 8px; cursor: pointer; font-size: 12px;" title="다음 위치">▼</button>
+            <button id="btn-search-nav-close" style="background: transparent; border: none; color: #94a3b8; cursor: pointer; font-size: 14px; padding: 2px 6px;" title="강조 닫기">✕</button>
+        </div>
+    `;
+
+    document.body.appendChild(banner);
+
+    const btnPrev = document.getElementById('btn-search-nav-prev');
+    const btnNext = document.getElementById('btn-search-nav-next');
+    const btnClose = document.getElementById('btn-search-nav-close');
+
+    if (btnPrev) btnPrev.onclick = () => navigateSearchHighlight(-1);
+    if (btnNext) btnNext.onclick = () => navigateSearchHighlight(1);
+    if (btnClose) btnClose.onclick = () => removeSearchNavigatorBanner();
+}
+
+function navigateSearchHighlight(direction) {
+    if (!currentSearchHighlightElements || currentSearchHighlightElements.length === 0) return;
+
+    currentSearchHighlightElements[currentSearchHighlightIndex]?.classList.remove('active-focus');
+    currentSearchHighlightIndex = (currentSearchHighlightIndex + direction + currentSearchHighlightElements.length) % currentSearchHighlightElements.length;
+
+    const activeEl = currentSearchHighlightElements[currentSearchHighlightIndex];
+    if (activeEl) {
+        activeEl.classList.add('active-focus');
+        activeEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    const currLabel = document.getElementById('search-nav-curr');
+    if (currLabel) {
+        currLabel.textContent = currentSearchHighlightIndex + 1;
+    }
+}
+
+function removeSearchNavigatorBanner() {
+    const banner = document.getElementById('search-nav-floating-banner');
+    if (banner) banner.remove();
 }
 
 // -------------------------------------------------------------
