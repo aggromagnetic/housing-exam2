@@ -433,15 +433,29 @@
             "광역시장", "특별자치시", "도지사", "특별자치도", "방법", "조치", "행위", "제외",
             "포함", "관련", "대하여", "따른", "의한", "모두", "옳은", "옳지", "틀린", "것은",
             "골라", "다음", "아래", "설명", "규정된", "해당하는", "이하", "이상", "초과", "미만",
-            "비율", "조문", "출제", "빈출", "유력", "주관식", "객관식"
+            "비율", "조문", "출제", "빈출", "유력", "주관식", "객관식", "사람", "이내", "시작",
+            "시작한", "예외", "사람에", "있음", "없음", "가능", "불가", "특례", "관련된", "대한"
         ]),
+
+        SUFFIX_2CHAR_REGEX: /(으로|에서|에게|부터|까지|마다|따라|따른|관한|대한|위한|통해|대해)$/,
+        SUFFIX_1CHAR_REGEX: /(은|는|이|을|를|의|에|와|과|도|만|상|별|등|용)$/,
+
+        cleanWord(w) {
+            if (!w) return "";
+            let cleaned = w.trim();
+            cleaned = cleaned.replace(this.SUFFIX_2CHAR_REGEX, "");
+            if (cleaned.length >= 3) {
+                cleaned = cleaned.replace(this.SUFFIX_1CHAR_REGEX, "");
+            }
+            return cleaned.trim();
+        },
 
         extractDistinctiveKeywords(topic, note) {
             const text = (topic || "") + " " + (note || "");
             return Array.from(new Set(text
                 .replace(/[\(\)·,\.\/vs\-\+vs\:\[\]\<\>\"\'\?\!~]/g, " ")
                 .split(/\s+/)
-                .map(w => w.trim())
+                .map(w => this.cleanWord(w))
                 .filter(w => w.length >= 2 && !this.GENERIC_STOP_WORDS.has(w))));
         },
 
@@ -505,14 +519,16 @@
                 if (distinctiveKws.length === 0) continue;
 
                 const matched = distinctiveKws.filter(kw => fullText.includes(kw));
-                const strongMatch = matched.some(kw => kw.length >= 4);
-                const multiMatch = matched.filter(kw => kw.length >= 3).length >= 2;
+                const strongMatchCount = matched.filter(kw => kw.length >= 4).length;
+                const mediumMatchCount = matched.filter(kw => kw.length >= 3).length;
 
-                if (strongMatch || multiMatch) {
+                // 유효 적중 조건: 4글자 이상 고유어 적중, 3글자 이상 2개 이상 복합 적중, 또는 총 3개 이상 키워드 적중
+                if (strongMatchCount >= 1 || mediumMatchCount >= 2 || matched.length >= 3) {
+                    const score = matched.length + (strongMatchCount * 2) + mediumMatchCount;
                     matches.push({
                         item,
                         matched,
-                        score: matched.length + (strongMatch ? 2 : 0)
+                        score
                     });
                 }
             }
