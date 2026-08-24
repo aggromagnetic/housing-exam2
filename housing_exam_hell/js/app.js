@@ -277,6 +277,68 @@
     };
 
     // -------------------------------------------------------------
+    // Part Progress Save & Resume Manager (Local Storage)
+    // -------------------------------------------------------------
+    const PartProgressManager = {
+        getKey(subject, chapter) {
+            return `housing_part_progress_${subject}_${chapter}`;
+        },
+
+        saveProgress(subject, chapter, state) {
+            if (!subject || !chapter || !state || !state.questions || state.questions.length === 0) return;
+            try {
+                let answeredCount = 0;
+                let correctCount = 0;
+                let wrongCount = 0;
+
+                state.results.forEach(res => {
+                    if (res !== undefined && res !== null) {
+                        answeredCount++;
+                        if (res.isCorrect) correctCount++;
+                        else wrongCount++;
+                    }
+                });
+
+                const data = {
+                    subject,
+                    chapter,
+                    currentIndex: state.currentIndex,
+                    totalQuestions: state.questions.length,
+                    answeredCount,
+                    correctCount,
+                    wrongCount,
+                    userAnswers: state.userAnswers,
+                    results: state.results,
+                    firstAttemptResults: state.firstAttemptResults,
+                    elapsedSeconds: state.elapsedSeconds || 0,
+                    questionKeys: state.questions.map(q => q.qKey),
+                    updatedAt: new Date().toISOString()
+                };
+
+                localStorage.setItem(this.getKey(subject, chapter), JSON.stringify(data));
+            } catch (e) {
+                console.error('Failed to save part progress:', e);
+            }
+        },
+
+        getProgress(subject, chapter) {
+            try {
+                const raw = localStorage.getItem(this.getKey(subject, chapter));
+                if (!raw) return null;
+                return JSON.parse(raw);
+            } catch (e) {
+                return null;
+            }
+        },
+
+        clearProgress(subject, chapter) {
+            try {
+                localStorage.removeItem(this.getKey(subject, chapter));
+            } catch (e) {}
+        }
+    };
+
+    // -------------------------------------------------------------
     // 2. Grader & Text Normalizer
     // -------------------------------------------------------------
     const Grader = {
@@ -1180,7 +1242,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260824.1510</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260824.1610</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -1205,7 +1267,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260824.1510</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260824.1610</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
@@ -1291,6 +1353,7 @@
         } else if (modeKey === 'part') {
             state.questions = ExamEngine.generatePartSet(state.subject, partPattern);
             state.questions.forEach(applyCustomEdits);
+            PartProgressManager.saveProgress(state.subject, partPattern, state);
             if (elements.header.modeTitle) {
                 elements.header.modeTitle.innerHTML = `<i class="fa-solid fa-layer-group text-purple-400"></i> 파트별 전수 완독`;
             }
@@ -1304,6 +1367,49 @@
         startTimer(modeKey === 'mock');
         showScreen('quiz');
         renderQuestion(0);
+    }
+
+    async function resumePart(subject, chapter) {
+        const prog = PartProgressManager.getProgress(subject, chapter);
+        if (!prog || !prog.questionKeys || prog.questionKeys.length === 0) {
+            startMode('part', chapter);
+            return;
+        }
+
+        const allPool = [
+            ...ExamEngine.getQuestionPool(subject, 'choice'),
+            ...ExamEngine.getQuestionPool(subject, 'short')
+        ];
+        const poolMap = new Map(allPool.map(q => [q.qKey, q]));
+
+        const restoredQuestions = prog.questionKeys.map(k => poolMap.get(k)).filter(Boolean);
+        if (restoredQuestions.length === 0) {
+            startMode('part', chapter);
+            return;
+        }
+
+        state.mode = 'part';
+        state.currentPartPattern = chapter;
+        state.questions = restoredQuestions;
+        state.questions.forEach(applyCustomEdits);
+
+        state.currentIndex = Math.min(prog.currentIndex || 0, state.questions.length - 1);
+        state.userAnswers = prog.userAnswers || [];
+        state.results = prog.results || [];
+        state.firstAttemptResults = prog.firstAttemptResults || [];
+        state.isExplanationOpen = false;
+        if (state.sessionStrokes) state.sessionStrokes.clear();
+        state.statsMap = await IDBStore.getAllStatsMap();
+
+        if (elements.header.modeTitle) {
+            elements.header.modeTitle.innerHTML = `<i class="fa-solid fa-layer-group text-purple-400"></i> 파트별 전수 완독 (이어풀기)`;
+        }
+
+        startTimer(false);
+        state.elapsedSeconds = prog.elapsedSeconds || 0;
+        showScreen('quiz');
+        renderQuestion(state.currentIndex);
+        showToast(`💾 [${chapter}] ${state.currentIndex + 1}번 문항부터 이어풀기를 시작합니다.`);
     }
 
     function startTimer(isCountdown = false) {
@@ -1828,6 +1934,10 @@
         renderQuestion(idx);
         toggleExplanation(true);
         triggerVisualFeedback(gradeRes.isCorrect);
+
+        if (state.mode === 'part') {
+            PartProgressManager.saveProgress(state.subject, state.currentPartPattern, state);
+        }
     }
 
     function triggerVisualFeedback(isCorrect) {
@@ -1928,6 +2038,9 @@
     function nextQuestion() {
         if (state.currentIndex < state.questions.length - 1) {
             renderQuestion(state.currentIndex + 1);
+            if (state.mode === 'part') {
+                PartProgressManager.saveProgress(state.subject, state.currentPartPattern, state);
+            }
         } else {
             if (state.mode === 'infinite') {
                 state.infiniteSetCount++;
@@ -1953,11 +2066,18 @@
     function prevQuestion() {
         if (state.currentIndex > 0) {
             renderQuestion(state.currentIndex - 1);
+            if (state.mode === 'part') {
+                PartProgressManager.saveProgress(state.subject, state.currentPartPattern, state);
+            }
         }
     }
 
     async function finishSession() {
         clearInterval(state.timerInterval);
+
+        if (state.mode === 'part') {
+            PartProgressManager.clearProgress(state.subject, state.currentPartPattern);
+        }
 
         let correctCount = 0;
         let wrongCount = 0;
@@ -2023,18 +2143,79 @@
         elements.modals.partList.innerHTML = '';
 
         const chapters = ExamEngine.getChapterList(state.subject);
+        const mcPool = ExamEngine.getQuestionPool(state.subject, 'choice');
+        const saPool = ExamEngine.getQuestionPool(state.subject, 'short');
+
         chapters.forEach(c => {
-            const btn = document.createElement('button');
-            btn.className = 'part-item-btn';
-            btn.innerHTML = `
-                <span><i class="fa-solid fa-book-bookmark text-sky-400"></i> ${c.chapter}</span>
-                <i class="fa-solid fa-chevron-right text-slate-500"></i>
-            `;
-            btn.addEventListener('click', () => {
-                closeModal(elements.modals.partSelect);
-                startMode('part', c.chapter);
-            });
-            elements.modals.partList.appendChild(btn);
+            const regex = new RegExp(c.chapter);
+            const totalCount = mcPool.filter(q => regex.test(q.chapterName)).length + saPool.filter(q => regex.test(q.chapterName)).length;
+            const prog = PartProgressManager.getProgress(state.subject, c.chapter);
+
+            // Check if there is valid unfinished progress to resume
+            if (prog && prog.questionKeys && prog.questionKeys.length > 0 && prog.currentIndex > 0 && prog.currentIndex < prog.totalQuestions) {
+                const currentNum = prog.currentIndex + 1;
+                const pct = Math.round((currentNum / prog.totalQuestions) * 100);
+                const card = document.createElement('div');
+                card.className = 'part-progress-card';
+                card.innerHTML = `
+                    <div class="part-card-header">
+                        <div class="part-card-title">
+                            <i class="fa-solid fa-book-bookmark text-sky-400"></i> ${c.chapter}
+                        </div>
+                        <span class="part-progress-badge in-progress">
+                            <i class="fa-solid fa-floppy-disk text-amber-400"></i> 진행중 ${currentNum}/${prog.totalQuestions}번 (${pct}%)
+                        </span>
+                    </div>
+                    <div class="part-progress-bar-bg">
+                        <div class="part-progress-bar-fill" style="width: ${pct}%;"></div>
+                    </div>
+                    <div class="part-card-actions">
+                        <button type="button" class="btn-part-resume">
+                            <i class="fa-solid fa-play"></i> 이어풀기 (${currentNum}번부터)
+                        </button>
+                        <button type="button" class="btn-part-restart">
+                            <i class="fa-solid fa-rotate-left"></i> 처음부터
+                        </button>
+                    </div>
+                `;
+
+                const btnResume = card.querySelector('.btn-part-resume');
+                btnResume.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    closeModal(elements.modals.partSelect);
+                    resumePart(state.subject, c.chapter);
+                });
+
+                const btnRestart = card.querySelector('.btn-part-restart');
+                btnRestart.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (confirm(`[${c.chapter}]\n기존에 저장된 풀이 기록(${currentNum}번까지)을 초기화하고 1번부터 새로 시작하시겠습니까?`)) {
+                        PartProgressManager.clearProgress(state.subject, c.chapter);
+                        closeModal(elements.modals.partSelect);
+                        startMode('part', c.chapter);
+                    }
+                });
+
+                elements.modals.partList.appendChild(card);
+            } else {
+                const btn = document.createElement('button');
+                btn.className = 'part-item-btn';
+                btn.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <i class="fa-solid fa-book-bookmark text-sky-400"></i>
+                        <span>${c.chapter}</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 0.8rem; color: #94A3B8;">전체 ${totalCount}문항</span>
+                        <i class="fa-solid fa-chevron-right text-slate-500"></i>
+                    </div>
+                `;
+                btn.addEventListener('click', () => {
+                    closeModal(elements.modals.partSelect);
+                    startMode('part', c.chapter);
+                });
+                elements.modals.partList.appendChild(btn);
+            }
         });
 
         elements.modals.partSelect.classList.add('active');
@@ -3025,6 +3206,15 @@
                 showScreen('home');
                 return;
             }
+            if (state.mode === 'part') {
+                PartProgressManager.saveProgress(state.subject, state.currentPartPattern, state);
+                if (confirm(`💾 [${state.currentPartPattern}]\n현재 ${state.currentIndex + 1}번 문항까지의 풀이 진행 상황이 자동 저장되었습니다.\n\n메인 화면으로 나가시겠습니까? (언제든 이어서 풀 수 있습니다)`)) {
+                    clearInterval(state.timerInterval);
+                    showScreen('home');
+                    showToast(`💾 [${state.currentPartPattern}] 진행 상황이 안전하게 저장되었습니다.`);
+                }
+                return;
+            }
             if (confirm('학습을 종료하고 메인 화면으로 이동하시겠습니까?')) {
                 clearInterval(state.timerInterval);
                 showScreen('home');
@@ -3285,6 +3475,13 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
                 }
             });
         }
+
+        // Auto-save part progress on window unload / refresh
+        window.addEventListener('beforeunload', () => {
+            if (state.mode === 'part' && state.currentPartPattern) {
+                PartProgressManager.saveProgress(state.subject, state.currentPartPattern, state);
+            }
+        });
     }
 
     // App Initialization on DOM Load
