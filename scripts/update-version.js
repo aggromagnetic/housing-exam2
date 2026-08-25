@@ -36,7 +36,7 @@ function updateVersions() {
         content = content.replace(/(href="css\/[^"]+?\.css)(?:\?v=\d+)?(")/g, `$1?v=${cacheVer}$2`);
 
         // Update JS cache busters
-        content = content.replace(/(src="(?:data\/exam_bank\.js|data\/core_keywords_db\.js|js\/app\.js))(?:\?v=\d+)?(")/g, `$1?v=${cacheVer}$2`);
+        content = content.replace(/(src="(?:data\/exam_bank\.js|data\/core_keywords_db\.js|js\/cloud-sync\.js|js\/app\.js))(?:\?v=\d+)?(")/g, `$1?v=${cacheVer}$2`);
 
         // Update version tag in header
         content = content.replace(/v\.0\.\d{6}\.\d{4}/g, verString);
