@@ -1482,6 +1482,38 @@
 
     let elements = {};
 
+    const HANGUL_CIRCLED_ORDER = [
+        '㉠','㉡','㉢','㉣','㉤','㉥','㉦','㉧','㉨','㉩','㉪','㉫','㉬','㉭',
+        'ㄱ','ㄴ','ㄷ','ㄹ','ㅁ','ㅂ','ㅅ','ㅇ','ㅈ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ',
+        '①','②','③','④','⑤','⑥','⑦','⑧','⑨','⑩',
+        '1','2','3','4','5','6','7','8','9','10',
+        'A','B','C','D','E'
+    ];
+
+    function sortSubjectiveEntries(entries) {
+        if (!entries || !Array.isArray(entries)) return [];
+        return [...entries].sort(([kA], [kB]) => {
+            const cleanA = String(kA).replace(/[\(\)\[\]\s]/g, '');
+            const cleanB = String(kB).replace(/[\(\)\[\]\s]/g, '');
+            const idxA = HANGUL_CIRCLED_ORDER.indexOf(cleanA);
+            const idxB = HANGUL_CIRCLED_ORDER.indexOf(cleanB);
+            if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+            if (idxA !== -1) return -1;
+            if (idxB !== -1) return 1;
+            return cleanA.localeCompare(cleanB, 'ko');
+        });
+    }
+
+    function getSortedAnswersObject(answersObj) {
+        if (!answersObj || typeof answersObj !== 'object') return {};
+        const sorted = {};
+        const entries = sortSubjectiveEntries(Object.entries(answersObj));
+        entries.forEach(([k, v]) => {
+            sorted[k] = v;
+        });
+        return sorted;
+    }
+
     function applyCustomEdits(q) {
         if (!q || !q.qKey || !state.customEdits) return q;
         const custom = state.customEdits[q.qKey];
@@ -1490,7 +1522,7 @@
             if (custom.passage !== undefined) q.passage = custom.passage;
             if (custom.options !== undefined) q.options = [...custom.options];
             if (custom.answer !== undefined) q.answer = custom.answer;
-            if (custom.answers !== undefined) q.answers = { ...custom.answers };
+            if (custom.answers !== undefined) q.answers = getSortedAnswersObject(custom.answers);
             if (custom.explanation !== undefined) q.explanation = custom.explanation;
             if (custom.tip !== undefined) q.tip = custom.tip;
             q.isCustomEdited = true;
@@ -1629,7 +1661,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260825.2259</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260826.0038</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -1654,7 +1686,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260825.2259</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260826.0038</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
@@ -1973,7 +2005,7 @@
                     <span class="exp-answer-val">${q.answer}번 <span style="font-weight: 500; font-size: 0.9rem; color: #CBD5E1;">(${optText})</span></span>
                 `;
             } else {
-                const pills = Object.entries(q.answers || {}).map(([k, v]) => `
+                const pills = sortSubjectiveEntries(Object.entries(q.answers || {})).map(([k, v]) => `
                     <span class="exp-blank-pill">[${k}] <b>${v}</b></span>
                 `).join('');
                 elements.quiz.expAnswerBox.innerHTML = `
@@ -2089,7 +2121,7 @@
         const res = state.results[index];
         const targetAnswers = q.answers || {};
 
-        Object.keys(targetAnswers).forEach((k) => {
+        sortSubjectiveEntries(Object.entries(targetAnswers)).forEach(([k]) => {
             const wrapper = document.createElement('div');
             wrapper.className = 'blank-row-wrapper';
 
@@ -2710,7 +2742,7 @@
             if (formatted.passage) {
                 md += `\`\`\`text\n${formatted.passage}\n\`\`\`\n\n`;
             }
-            const blanks = Object.keys(q.answers || {});
+            const blanks = sortSubjectiveEntries(Object.entries(q.answers || {})).map(([k]) => k);
             if (blanks.length > 0) {
                 md += `> **[기입할 빈칸]**: ${blanks.map(k => `[ ${k} ]`).join(', ')}\n\n`;
             }
@@ -2733,7 +2765,7 @@
                     if (q.type === 'choice') {
                         ansText = `**${q.answer}번**`;
                     } else {
-                        ansText = Object.entries(q.answers || {}).map(([k, v]) => `[${k}] ${v}`).join(' ');
+                        ansText = sortSubjectiveEntries(Object.entries(q.answers || {})).map(([k, v]) => `[${k}] ${v}`).join(' ');
                     }
                     rowStr += ` **${idx + 1}** | ${ansText} |`;
                 } else {
@@ -2753,7 +2785,7 @@
                 const corrOpt = (q.options && q.options[Number(q.answer) - 1]) ? ` (${q.options[Number(q.answer) - 1]})` : '';
                 ansText = `**${q.answer}번**${corrOpt}`;
             } else {
-                ansText = Object.entries(q.answers || {}).map(([k, v]) => `**[${k}]** ${v}`).join(', ');
+                ansText = sortSubjectiveEntries(Object.entries(q.answers || {})).map(([k, v]) => `**[${k}]** ${v}`).join(', ');
             }
 
             const hyBadge = (q.isHighYield && q.primaryCoreItem) ? ` ⭐ [핵심 300선 #${q.primaryCoreItem.id} ${q.primaryCoreItem.tag}]` : '';
@@ -2847,7 +2879,7 @@
             const optText = q.options ? q.options[Number(q.answer) - 1] : '';
             ansHtml = `<span class="exp-answer-badge">정답</span> <span class="exp-answer-val">${q.answer}번 ${optText ? `(${optText})` : ''}</span>`;
         } else {
-            const ansList = Object.entries(q.answers || {}).map(([k, v]) => `[${k}] <b>${v}</b>`).join(' , ');
+            const ansList = sortSubjectiveEntries(Object.entries(q.answers || {})).map(([k, v]) => `[${k}] <b>${v}</b>`).join(' , ');
             ansHtml = `<span class="exp-answer-badge">정답</span> <span class="exp-answer-val">${ansList}</span>`;
         }
         document.getElementById('prev-q-answer-box').innerHTML = ansHtml;
@@ -2907,7 +2939,7 @@
         } else {
             optGroup.style.display = 'none';
             if (q.answers) {
-                document.getElementById('edit-q-answer').value = Object.entries(q.answers).map(([k, v]) => `${k}=${v}`).join(', ');
+                document.getElementById('edit-q-answer').value = sortSubjectiveEntries(Object.entries(q.answers)).map(([k, v]) => `${k}=${v}`).join(', ');
             } else {
                 document.getElementById('edit-q-answer').value = q.answer || '';
             }
@@ -3231,7 +3263,7 @@
 
             if (elements.manager.editShortAns) {
                 if (q.answers) {
-                    elements.manager.editShortAns.value = Object.entries(q.answers).map(([k, v]) => `${k}=${v}`).join(', ');
+                    elements.manager.editShortAns.value = sortSubjectiveEntries(Object.entries(q.answers)).map(([k, v]) => `${k}=${v}`).join(', ');
                 } else {
                     elements.manager.editShortAns.value = q.answer || '';
                 }
@@ -3389,8 +3421,9 @@
                         const [k, ...vParts] = p.split('=');
                         if (k) answersObj[k.trim()] = vParts.join('=').trim();
                     });
-                    editData.answers = answersObj;
-                    editData.answer = Object.values(answersObj).join(', ');
+                    const sortedAnswers = getSortedAnswersObject(answersObj);
+                    editData.answers = sortedAnswers;
+                    editData.answer = Object.values(sortedAnswers).join(', ');
                 } else {
                     editData.answer = rawShort;
                 }
@@ -3827,7 +3860,7 @@
                     const corrOpt = (q.options && q.options[Number(q.answer) - 1]) ? ` (${q.options[Number(q.answer) - 1]})` : '';
                     ansText = `${q.answer}번${corrOpt}`;
                 } else {
-                    ansText = Object.entries(q.answers || {}).map(([k, v]) => `[${k}] ${v}`).join(', ');
+                    ansText = sortSubjectiveEntries(Object.entries(q.answers || {})).map(([k, v]) => `[${k}] ${v}`).join(', ');
                 }
 
                 const fullPrompt = `[주택관리사보 2차 기출·모의 문제 검증 요청]
@@ -3905,10 +3938,12 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
                 } else {
                     const newAnswers = {};
                     newAns.split(',').forEach(pair => {
-                        const [k, v] = pair.split('=').map(s => s.trim());
-                        if (k && v) newAnswers[k] = v;
+                        const [k, ...vParts] = pair.split('=').map(s => s.trim());
+                        if (k && vParts.length) newAnswers[k] = vParts.join('=').trim();
                     });
-                    editData.answers = newAnswers;
+                    const sortedAnswers = getSortedAnswersObject(newAnswers);
+                    editData.answers = sortedAnswers;
+                    editData.answer = Object.values(sortedAnswers).join(', ');
                 }
 
                 await IDBStore.saveQuestionEdit(qKey, editData);
