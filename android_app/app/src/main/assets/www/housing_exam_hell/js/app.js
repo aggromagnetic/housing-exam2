@@ -142,6 +142,7 @@
                     tx.objectStore('question_stats').put(stat);
                 } catch (e) {}
             }
+            if (window.CloudSync) window.CloudSync.schedulePush();
             return stat;
         },
 
@@ -160,6 +161,7 @@
                     tx.objectStore('question_stats').put(stat);
                 } catch (e) {}
             }
+            if (window.CloudSync) window.CloudSync.schedulePush();
             return stat;
         },
 
@@ -205,6 +207,7 @@
                     createdAt: new Date().toISOString()
                 });
             } catch (e) {}
+            if (window.CloudSync) window.CloudSync.schedulePush();
         },
 
         async saveQuestionEdit(qKey, editData) {
@@ -216,6 +219,7 @@
                 };
                 localStorage.setItem('housing_exam_custom_edits', JSON.stringify(map));
             } catch (e) {}
+            if (window.CloudSync) window.CloudSync.schedulePush();
         },
 
         async getQuestionEdit(qKey) {
@@ -237,6 +241,7 @@
                 delete map[qKey];
                 localStorage.setItem('housing_exam_custom_edits', JSON.stringify(map));
             } catch (e) {}
+            if (window.CloudSync) window.CloudSync.schedulePush();
         },
 
         async saveNeedsEdit(qKey, qInfo) {
@@ -252,6 +257,7 @@
                 };
                 localStorage.setItem('housing_exam_needs_edit', JSON.stringify(map));
             } catch (e) {}
+            if (window.CloudSync) window.CloudSync.schedulePush();
         },
 
         async getNeedsEdit(qKey) {
@@ -273,6 +279,7 @@
                 delete map[qKey];
                 localStorage.setItem('housing_exam_needs_edit', JSON.stringify(map));
             } catch (e) {}
+            if (window.CloudSync) window.CloudSync.schedulePush();
         },
 
         async exportBackupJSON() {
@@ -1454,7 +1461,8 @@
                 btnPen: document.getElementById('btn-toggle-pen'),
                 btnFullscreen: document.getElementById('btn-fullscreen'),
                 btnOMR: document.getElementById('btn-open-omr'),
-                btnHome: document.getElementById('btn-go-home')
+                btnHome: document.getElementById('btn-go-home'),
+                btnCloudSync: document.getElementById('btn-cloud-sync')
             },
             quiz: {
                 card: document.getElementById('quiz-card'),
@@ -1565,7 +1573,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260825.1802</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260825.1824</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -1590,7 +1598,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260825.1802</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260825.1824</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
@@ -3849,6 +3857,30 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
             });
         });
 
+        // Cloud Sync Header Button Trigger
+        if (elements.header.btnCloudSync) {
+            elements.header.btnCloudSync.addEventListener('click', async () => {
+                if (!window.CloudSync || !window.CloudSync.isInitialized) {
+                    showToast('⚡ 오프라인 로컬 저장 모드');
+                    return;
+                }
+                showToast('🔄 클라우드 데이터 실시간 동기화 중...');
+                const ok = await window.CloudSync.pullFromCloud();
+                if (ok) {
+                    await window.CloudSync.pushToCloud();
+                    state.statsMap = await IDBStore.getAllStatsMap();
+                    state.customEdits = await IDBStore.getAllQuestionEditsMap();
+                    state.needsEditMap = await IDBStore.getAllNeedsEditMap();
+                    if (state.currentScreen === 'manager') {
+                        renderManagerList();
+                    }
+                    showToast('☁️ 태블릿/PC 클라우드 동기화 완료!');
+                } else {
+                    showToast('⚡ 오프라인 상태 (로컬 저장 유지)');
+                }
+            });
+        }
+
         document.querySelectorAll('.btn-close-modal').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const modal = e.target.closest('.modal-overlay');
@@ -3926,6 +3958,39 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
         initEventListeners();
         setSubject(state.subject);
         showScreen('home');
+
+        // Initialize Firebase Realtime Cloud Sync
+        if (window.CloudSync) {
+            window.CloudSync.init();
+            window.CloudSync.onStatusChange(async (status, lastTime) => {
+                if (status === 'synced') {
+                    state.statsMap = await IDBStore.getAllStatsMap();
+                    state.customEdits = await IDBStore.getAllQuestionEditsMap();
+                    state.needsEditMap = await IDBStore.getAllNeedsEditMap();
+                    if (state.currentScreen === 'manager') {
+                        renderManagerList();
+                    }
+                }
+                if (elements.header && elements.header.btnCloudSync) {
+                    const icon = elements.header.btnCloudSync.querySelector('i');
+                    if (icon) {
+                        if (status === 'synced') {
+                            icon.className = 'fa-solid fa-cloud text-emerald-400';
+                            elements.header.btnCloudSync.title = `클라우드 실시간 동기화 완료 (${lastTime ? lastTime.toLocaleTimeString() : '최신'}) - 클릭 시 즉시 동기화`;
+                        } else if (status === 'syncing') {
+                            icon.className = 'fa-solid fa-arrows-rotate fa-spin text-amber-400';
+                            elements.header.btnCloudSync.title = '클라우드 데이터 동기화 중...';
+                        } else if (status === 'error') {
+                            icon.className = 'fa-solid fa-cloud-bolt text-rose-400';
+                            elements.header.btnCloudSync.title = '클라우드 연결 대기 (로컬 저장 모드)';
+                        } else {
+                            icon.className = 'fa-solid fa-cloud text-slate-400';
+                            elements.header.btnCloudSync.title = '오프라인 로컬 저장 모드';
+                        }
+                    }
+                }
+            });
+        }
     });
 
 })();
