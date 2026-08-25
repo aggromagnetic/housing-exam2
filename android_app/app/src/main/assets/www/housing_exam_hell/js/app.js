@@ -1629,7 +1629,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260825.2217</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260825.2259</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -1654,7 +1654,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260825.2217</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260825.2259</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
@@ -3777,6 +3777,37 @@
                 document.exitFullscreen().catch(() => {});
             }
         });
+
+        // 🚩 수정 필요 플래그 토글 버튼 핸들러
+        const btnFlagNeedsEdit = document.getElementById('btn-flag-needs-edit');
+        if (btnFlagNeedsEdit) {
+            btnFlagNeedsEdit.addEventListener('click', async () => {
+                const q = state.questions[state.currentIndex];
+                if (!q) return;
+
+                const isFlagged = !!(state.needsEditMap && state.needsEditMap[q.qKey]);
+                if (isFlagged) {
+                    await IDBStore.deleteNeedsEdit(q.qKey);
+                    delete state.needsEditMap[q.qKey];
+                    btnFlagNeedsEdit.classList.remove('active');
+                    btnFlagNeedsEdit.innerHTML = '<i class="fa-solid fa-flag"></i> 수정필요';
+                    showToast(`🏳️ [${q.id}번 문항] 수정 필요 플래그가 해제되었습니다.`);
+                } else {
+                    await IDBStore.saveNeedsEdit(q.qKey, q);
+                    state.needsEditMap[q.qKey] = {
+                        qKey: q.qKey,
+                        subject: q.subject,
+                        chapterName: q.chapterName,
+                        type: q.type,
+                        question: q.question || q.title,
+                        flaggedAt: new Date().toISOString()
+                    };
+                    btnFlagNeedsEdit.classList.add('active');
+                    btnFlagNeedsEdit.innerHTML = '<i class="fa-solid fa-flag text-amber-400"></i> 수정요청됨';
+                    showToast(`🚩 [${q.id}번 문항] 수정 필요 목록에 등록되었습니다. (에디터 2834에서 확인 가능)`);
+                }
+            });
+        }
 
         // 📋 AI 검증용 문제·정답·해설 복사 버튼
         const btnCopyQAI = document.getElementById('btn-copy-question-ai');
