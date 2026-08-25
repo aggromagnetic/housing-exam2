@@ -28,15 +28,16 @@ function normalizeChapter(rawChapter, subject) {
         return 'CHAPTER 01 주택법';
     } else {
         // 관리실무
-        if (/주택의.*정의|용어/i.test(text)) return 'CHAPTER 01 주택의 정의 및 종류';
-        if (/총칙|관리기준/i.test(text)) return 'CHAPTER 02 총칙 및 관리기준';
-        if (/관리방법/i.test(text)) return 'CHAPTER 03 공동주택의 관리방법';
-        if (/관리조직|입주자대표회의/i.test(text)) return 'CHAPTER 04 관리조직 및 입주자대표회의';
-        if (/주택관리사/i.test(text)) return 'CHAPTER 05 주택관리사 제도';
-        if (/입주자관리|규약/i.test(text)) return 'CHAPTER 07 입주자관리 및 규약';
-        if (/사무|인사/i.test(text)) return 'CHAPTER 08 사무 및 인사관리';
-        if (/대외업무|리모델링/i.test(text)) return 'CHAPTER 09 대외업무 및 리모델링';
-        if (/회계관리/i.test(text)) return 'CHAPTER 10 회계관리';
+        if (/01|주택의.*정의|용어/i.test(text)) return 'CHAPTER 01 주택의 정의 및 종류';
+        if (/02|총칙|관리기준|관리규약|공동주거관리이론/i.test(text)) return 'CHAPTER 02 총칙 및 관리규약';
+        if (/03|관리방법/i.test(text)) return 'CHAPTER 03 공동주택의 관리방법';
+        if (/04|관리조직|입주자대표회의|선거관리/i.test(text)) return 'CHAPTER 04 관리조직 및 입주자대표회의';
+        if (/05|주택관리사/i.test(text)) return 'CHAPTER 05 주택관리사제도';
+        if (/06|벌칙/i.test(text)) return 'CHAPTER 06 공동주택관리법상 벌칙사항';
+        if (/07|입주자관리|규약/i.test(text)) return 'CHAPTER 07 입주자관리 및 자치규약';
+        if (/08|사무|인사|노동/i.test(text)) return 'CHAPTER 08 사무 및 인사관리';
+        if (/09|대외업무|리모델링/i.test(text)) return 'CHAPTER 09 대외업무 및 리모델링';
+        if (/10.*회계|11.*회계|회계관리/i.test(text)) return 'CHAPTER 10 공동주택회계관리';
         if (/시설관리/i.test(text)) return 'CHAPTER 11 시설관리';
         if (/환경|안전관리|방재/i.test(text)) return 'CHAPTER 12 환경 및 안전관리';
         return 'CHAPTER 11 시설관리';

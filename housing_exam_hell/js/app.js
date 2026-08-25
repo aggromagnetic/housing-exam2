@@ -632,16 +632,17 @@
 
             // 관리실무 mappings
             if (cat.includes("주택의") && chap.includes("주택의")) return true;
-            if (cat.includes("관리기준") && (chap.includes("총칙") || chap.includes("관리기준"))) return true;
+            if (cat.includes("관리기준") && (chap.includes("총칙") || chap.includes("관리기준") || chap.includes("관리규약"))) return true;
             if (cat.includes("관리방법") && chap.includes("관리방법")) return true;
-            if (cat.includes("관리조직") && chap.includes("관리조직")) return true;
+            if (cat.includes("관리조직") && (chap.includes("관리조직") || chap.includes("입주자대표회의"))) return true;
             if (cat.includes("주택관리사") && chap.includes("주택관리사")) return true;
-            if (cat.includes("입주자관리") && chap.includes("입주자관리")) return true;
-            if (cat.includes("사무") && (chap.includes("사무") || chap.includes("인사"))) return true;
+            if (cat.includes("벌칙") && chap.includes("벌칙")) return true;
+            if (cat.includes("입주자관리") && (chap.includes("입주자관리") || chap.includes("자치규약") || chap.includes("규약"))) return true;
+            if (cat.includes("사무") && (chap.includes("사무") || chap.includes("인사") || chap.includes("노동"))) return true;
             if (cat.includes("대외업무") && (chap.includes("대외업무") || chap.includes("리모델링"))) return true;
             if (cat.includes("회계관리") && chap.includes("회계관리")) return true;
             if (cat.includes("시설관리") && chap.includes("시설관리")) return true;
-            if (cat.includes("환경안전방재") && (chap.includes("안전관리") || chap.includes("환경관리"))) return true;
+            if (cat.includes("환경안전방재") && (chap.includes("환경") || chap.includes("안전"))) return true;
 
             return false;
         },
@@ -787,12 +788,13 @@
                     { pattern: /03.*관리방법/, mc: 2, sa: 1 },
                     { pattern: /04.*관리조직/, mc: 2, sa: 2 },
                     { pattern: /05.*주택관리사/, mc: 1, sa: 0 },
+                    { pattern: /06.*벌칙/, mc: 0, sa: 1, randomSwap: true },
                     { pattern: /07.*입주자관리/, mc: 1, sa: 1 },
                     { pattern: /08.*사무.*인사/, mc: 3, sa: 3 },
-                    { pattern: /09.*대외업무.*리모델링/, mc: 1, sa: 0 },
-                    { pattern: /11.*회계관리|10.*회계관리/, mc: 1, sa: 0 },
-                    { pattern: /12.*시설관리|11.*시설관리/, mc: 9, sa: 6 },
-                    { pattern: /13.*안전관리|14.*환경관리|12.*환경관리/, mc: 2, sa: 3 }
+                    { pattern: /09.*대외업무/, mc: 1, sa: 0 },
+                    { pattern: /10.*회계관리/, mc: 1, sa: 0 },
+                    { pattern: /11.*시설관리/, mc: 9, sa: 6 },
+                    { pattern: /12.*환경.*안전/, mc: 2, sa: 3 }
                 ];
             } else {
                 return [
@@ -1573,7 +1575,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260825.1824</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260825.1845</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -1598,7 +1600,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260825.1824</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260825.1845</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
