@@ -107,6 +107,13 @@ const CloudSync = {
                     });
                 }
 
+                // 4. Merge deleted questions
+                if (Array.isArray(cloudData.deletedKeys)) {
+                    const localDel = JSON.parse(localStorage.getItem("housing_exam_deleted_keys") || "[]");
+                    const mergedDel = Array.from(new Set([...localDel, ...cloudData.deletedKeys]));
+                    localStorage.setItem("housing_exam_deleted_keys", JSON.stringify(mergedDel));
+                }
+
                 this.lastSyncTime = new Date();
                 this.syncStatus = "synced";
                 console.log("✅ Cloud pull & merge complete at", this.lastSyncTime.toLocaleTimeString());
@@ -155,13 +162,15 @@ const CloudSync = {
 
             const customEdits = JSON.parse(localStorage.getItem("housing_exam_custom_edits") || "{}");
             const needsEditMap = JSON.parse(localStorage.getItem("housing_exam_needs_edit") || "{}");
+            const deletedKeys = JSON.parse(localStorage.getItem("housing_exam_deleted_keys") || "[]");
 
             const payload = {
                 updatedAt: new Date().toISOString(),
                 stats,
                 history,
                 customEdits,
-                needsEditMap
+                needsEditMap,
+                deletedKeys
             };
 
             const docRef = this.db.collection("exam_hell_sync").doc(SYNC_USER_DOC);

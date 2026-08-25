@@ -282,6 +282,33 @@
             if (window.CloudSync) window.CloudSync.schedulePush();
         },
 
+        async saveDeletedKey(qKey) {
+            try {
+                const arr = JSON.parse(localStorage.getItem('housing_exam_deleted_keys') || '[]');
+                if (!arr.includes(qKey)) {
+                    arr.push(qKey);
+                    localStorage.setItem('housing_exam_deleted_keys', JSON.stringify(arr));
+                }
+            } catch (e) {}
+            if (window.CloudSync) window.CloudSync.schedulePush();
+        },
+
+        async restoreDeletedKey(qKey) {
+            try {
+                let arr = JSON.parse(localStorage.getItem('housing_exam_deleted_keys') || '[]');
+                arr = arr.filter(k => k !== qKey);
+                localStorage.setItem('housing_exam_deleted_keys', JSON.stringify(arr));
+            } catch (e) {}
+            if (window.CloudSync) window.CloudSync.schedulePush();
+        },
+
+        async getDeletedKeysSet() {
+            try {
+                const arr = JSON.parse(localStorage.getItem('housing_exam_deleted_keys') || '[]');
+                return new Set(arr);
+            } catch (e) { return new Set(); }
+        },
+
         async exportBackupJSON() {
             const db = await openDB();
             let stats = [];
@@ -301,9 +328,11 @@
 
             let customEdits = {};
             let needsEditMap = {};
+            let deletedKeys = [];
             try {
                 customEdits = JSON.parse(localStorage.getItem('housing_exam_custom_edits') || '{}');
                 needsEditMap = JSON.parse(localStorage.getItem('housing_exam_needs_edit') || '{}');
+                deletedKeys = JSON.parse(localStorage.getItem('housing_exam_deleted_keys') || '[]');
             } catch (e) {}
 
             return {
@@ -312,7 +341,8 @@
                 stats,
                 history,
                 customEdits,
-                needsEditMap
+                needsEditMap,
+                deletedKeys
             };
         },
 
@@ -353,6 +383,14 @@
                     const existing = JSON.parse(localStorage.getItem('housing_exam_needs_edit') || '{}');
                     const merged = { ...existing, ...backupData.needsEditMap };
                     localStorage.setItem('housing_exam_needs_edit', JSON.stringify(merged));
+                } catch (e) {}
+            }
+
+            if (Array.isArray(backupData.deletedKeys)) {
+                try {
+                    const existing = JSON.parse(localStorage.getItem('housing_exam_deleted_keys') || '[]');
+                    const merged = Array.from(new Set([...existing, ...backupData.deletedKeys]));
+                    localStorage.setItem('housing_exam_deleted_keys', JSON.stringify(merged));
                 } catch (e) {}
             }
 
@@ -692,7 +730,12 @@
 
         getQuestionPool(subject, type) {
             const cacheKey = `${subject}_${type}`;
-            if (this._poolCache[cacheKey]) return this._poolCache[cacheKey];
+            if (this._poolCache[cacheKey]) {
+                const cached = this._poolCache[cacheKey];
+                return (state && state.deletedKeysSet && state.deletedKeysSet.size > 0)
+                    ? cached.filter(q => !state.deletedKeysSet.has(q.qKey))
+                    : cached;
+            }
 
             const bank = this.getBank();
             if (!bank || !bank.datasets) return [];
@@ -727,7 +770,9 @@
             });
 
             this._poolCache[cacheKey] = pool;
-            return pool;
+            return (state && state.deletedKeysSet && state.deletedKeysSet.size > 0)
+                ? pool.filter(q => !state.deletedKeysSet.has(q.qKey))
+                : pool;
         },
 
         weightedPick(items, statsMap = {}, count, excludeKeysSet = new Set()) {
@@ -1522,6 +1567,7 @@
                 wrongBtnText: document.getElementById('mgr-wrong-btn-text'),
                 btnCopyAI: document.getElementById('mgr-btn-copy-ai'),
                 btnResetOrig: document.getElementById('mgr-btn-reset-orig'),
+                btnDeleteQ: document.getElementById('mgr-btn-delete-q'),
                 btnSaveTop: document.getElementById('mgr-btn-save-top'),
                 btnSaveBottom: document.getElementById('mgr-btn-save-bottom'),
                 editTitle: document.getElementById('mgr-edit-title'),
@@ -1583,7 +1629,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260825.1942</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260825.2203</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -1608,7 +1654,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260825.1942</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260825.2203</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
@@ -3526,6 +3572,27 @@
             });
         }
 
+        // 7-1. Manager Delete / Exclude Question from All Exams
+        if (elements.manager.btnDeleteQ) {
+            elements.manager.btnDeleteQ.addEventListener('click', async () => {
+                const qKey = elements.manager.editQKey ? elements.manager.editQKey.value : '';
+                const q = findQuestionByQKey(qKey);
+                if (!q) return;
+
+                if (confirm(`[${q.subject} - 문항 ID: ${q.id}]\n정말로 이 문제를 모든 모의고사 및 문제풀이에서 제외(삭제)하시겠습니까?\n\n* 삭제 후에도 언제든 백업 복원 등으로 다시 되살릴 수 있습니다.`)) {
+                    await IDBStore.saveDeletedKey(qKey);
+                    state.deletedKeysSet = await IDBStore.getDeletedKeysSet();
+                    ExamEngine._poolCache = {};
+
+                    showToast(`🗑️ [${q.id}번 문항] 모든 모의고사 출제에서 제외되었습니다.`);
+                    
+                    if (state.currentScreen === 'manager') {
+                        renderManagerList();
+                    }
+                }
+            });
+        }
+
         // 7. Manager AI Verification Prompt Copy
         if (elements.manager.btnCopyAI) {
             elements.manager.btnCopyAI.addEventListener('click', () => {
@@ -3985,6 +4052,7 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
         state.statsMap = await IDBStore.getAllStatsMap();
         state.customEdits = await IDBStore.getAllQuestionEditsMap();
         state.needsEditMap = await IDBStore.getAllNeedsEditMap();
+        state.deletedKeysSet = await IDBStore.getDeletedKeysSet();
 
         const canvasEl = document.getElementById('drawing-canvas');
         const toolbarEl = document.getElementById('stylus-toolbar');
@@ -4004,6 +4072,8 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
                     state.statsMap = await IDBStore.getAllStatsMap();
                     state.customEdits = await IDBStore.getAllQuestionEditsMap();
                     state.needsEditMap = await IDBStore.getAllNeedsEditMap();
+                    state.deletedKeysSet = await IDBStore.getDeletedKeysSet();
+                    ExamEngine._poolCache = {};
                     if (state.currentScreen === 'manager') {
                         renderManagerList();
                     }
