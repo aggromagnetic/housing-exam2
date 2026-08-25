@@ -221,20 +221,35 @@ export const IDBStore = {
      */
     async exportBackupJSON() {
         const db = await openDB();
-        const stats = await new Promise(r => {
-            const tx = db.transaction('question_stats', 'readonly');
-            tx.objectStore('question_stats').getAll().onsuccess = e => r(e.target.result || []);
-        });
-        const history = await new Promise(r => {
-            const tx = db.transaction('session_history', 'readonly');
-            tx.objectStore('session_history').getAll().onsuccess = e => r(e.target.result || []);
-        });
+        let stats = [];
+        let history = [];
+        if (db) {
+            try {
+                stats = await new Promise(r => {
+                    const tx = db.transaction('question_stats', 'readonly');
+                    tx.objectStore('question_stats').getAll().onsuccess = e => r(e.target.result || []);
+                });
+                history = await new Promise(r => {
+                    const tx = db.transaction('session_history', 'readonly');
+                    tx.objectStore('session_history').getAll().onsuccess = e => r(e.target.result || []);
+                });
+            } catch (e) {}
+        }
+
+        let customEdits = {};
+        let needsEditMap = {};
+        try {
+            customEdits = JSON.parse(localStorage.getItem('housing_exam_custom_edits') || '{}');
+            needsEditMap = JSON.parse(localStorage.getItem('housing_exam_needs_edit') || '{}');
+        } catch (e) {}
 
         return {
-            version: 1,
+            version: 2,
             exportedAt: new Date().toISOString(),
             stats,
-            history
+            history,
+            customEdits,
+            needsEditMap
         };
     },
 
@@ -242,29 +257,46 @@ export const IDBStore = {
      * Import user statistics and histories from JSON
      */
     async importBackupJSON(backupData) {
-        if (!backupData || !Array.isArray(backupData.stats)) {
+        if (!backupData) {
             throw new Error('올바르지 않은 백업 데이터 포맷입니다.');
         }
 
         const db = await openDB();
-        const tx = db.transaction(['question_stats', 'session_history'], 'readwrite');
-
-        const statsStore = tx.objectStore('question_stats');
-        for (const item of backupData.stats) {
-            statsStore.put(item);
+        if (db) {
+            try {
+                const tx = db.transaction(['question_stats', 'session_history'], 'readwrite');
+                if (Array.isArray(backupData.stats)) {
+                    const statsStore = tx.objectStore('question_stats');
+                    for (const item of backupData.stats) {
+                        statsStore.put(item);
+                    }
+                }
+                if (Array.isArray(backupData.history)) {
+                    const historyStore = tx.objectStore('session_history');
+                    for (const sess of backupData.history) {
+                        historyStore.put(sess);
+                    }
+                }
+            } catch (e) {}
         }
 
-        if (Array.isArray(backupData.history)) {
-            const historyStore = tx.objectStore('session_history');
-            for (const sess of backupData.history) {
-                historyStore.put(sess);
-            }
+        if (backupData.customEdits && typeof backupData.customEdits === 'object') {
+            try {
+                const existing = JSON.parse(localStorage.getItem('housing_exam_custom_edits') || '{}');
+                const merged = { ...existing, ...backupData.customEdits };
+                localStorage.setItem('housing_exam_custom_edits', JSON.stringify(merged));
+            } catch (e) {}
         }
 
-        return new Promise((resolve, reject) => {
-            tx.oncomplete = () => resolve(true);
-            tx.onerror = () => reject(tx.error);
-        });
+        if (backupData.needsEditMap && typeof backupData.needsEditMap === 'object') {
+            try {
+                const existing = JSON.parse(localStorage.getItem('housing_exam_needs_edit') || '{}');
+                const merged = { ...existing, ...backupData.needsEditMap };
+                localStorage.setItem('housing_exam_needs_edit', JSON.stringify(merged));
+            } catch (e) {}
+        }
+
+        return true;
     },
 
     /**

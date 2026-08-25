@@ -17,9 +17,9 @@
     <meta name="apple-mobile-web-app-title" content="문제지옥">
     
     <!-- Custom Theme Styles -->
-    <link rel="stylesheet" href="css/dark-theme.css?v=2608251758">
-    <link rel="stylesheet" href="css/quiz-layout.css?v=2608251758">
-    <link rel="stylesheet" href="css/tablet-canvas.css?v=2608251758">
+    <link rel="stylesheet" href="css/dark-theme.css?v=2608251802">
+    <link rel="stylesheet" href="css/quiz-layout.css?v=2608251802">
+    <link rel="stylesheet" href="css/tablet-canvas.css?v=2608251802">
 </head>
 <body data-subject="관계법규">
 
@@ -35,7 +35,7 @@
                 </a>
                 <span id="header-brand-badge" class="brand-badge">관계법규</span>
                 <span id="header-mode-title" class="mode-title">
-                    <i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260825.1758</span>
+                    <i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260825.1802</span>
                 </span>
             </div>
 
@@ -268,7 +268,7 @@
                             <i class="fa-solid fa-flag text-amber-400"></i> 수정필요 (<span id="mgr-cnt-needs-edit">0</span>)
                         </button>
                         <button type="button" class="mgr-tab-btn" data-tab="search_all" id="mgr-tab-search-all">
-                            <i class="fa-solid fa-database text-sky-400"></i> 전체 검색 (3,470)
+                            <i class="fa-solid fa-database text-sky-400"></i> 전체 검색 (3,900)
                         </button>
                     </div>
 
@@ -278,6 +278,17 @@
                         <input type="text" id="mgr-search-input" class="mgr-search-input" placeholder="🔍 검색어 입력 후 Enter..." autocomplete="off">
                         <button type="button" id="mgr-btn-clear-search" class="mgr-clear-btn" title="검색어 지우기"><i class="fa-solid fa-xmark"></i></button>
                         <button type="button" id="mgr-btn-search" class="mgr-search-btn" title="검색 실행">검색</button>
+                    </div>
+
+                    <!-- Backup & Restore Buttons Row -->
+                    <div style="display: flex; gap: 6px; padding: 0 4px 8px 4px; border-bottom: 1px solid rgba(255,255,255,0.06);">
+                        <button type="button" id="btn-export-backup" class="mgr-pill-btn" style="flex: 1; justify-content: center; background: rgba(56,189,248,0.12); color: #38BDF8; border-color: rgba(56,189,248,0.3); font-size: 0.74rem; padding: 4px 8px; display: inline-flex; align-items: center; gap: 4px;" title="수정한 문제, 오답 통계, 학습 기록을 JSON 파일로 내보내기">
+                            <i class="fa-solid fa-file-arrow-down"></i> 데이터 백업
+                        </button>
+                        <button type="button" id="btn-import-backup" class="mgr-pill-btn" style="flex: 1; justify-content: center; background: rgba(52,211,153,0.12); color: #34D399; border-color: rgba(52,211,153,0.3); font-size: 0.74rem; padding: 4px 8px; display: inline-flex; align-items: center; gap: 4px;" title="백업 파일(.json)을 불러와 복원">
+                            <i class="fa-solid fa-file-arrow-up"></i> 백업 복원
+                        </button>
+                        <input type="file" id="file-import-backup" accept=".json" style="display: none;">
                     </div>
 
                     <!-- Filter Bar -->
@@ -679,12 +690,12 @@
     <div id="toast-msg" class="toast-msg">알림 메시지</div>
 
     <!-- Master Exam Data Bundle (3,470 Questions) -->
-    <script src="data/exam_bank.js?v=2608251758"></script>
+    <script src="data/exam_bank.js?v=2608251802"></script>
 
     <!-- Core Keywords 300 DB (관계법규 300 + 관리실무 300) -->
-    <script src="data/core_keywords_db.js?v=2608251758"></script>
+    <script src="data/core_keywords_db.js?v=2608251802"></script>
 
     <!-- Application Script -->
-    <script src="js/app.js?v=2608251758"></script>
+    <script src="js/app.js?v=2608251802"></script>
 </body>
 </html>

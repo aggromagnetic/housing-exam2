@@ -273,6 +273,83 @@
                 delete map[qKey];
                 localStorage.setItem('housing_exam_needs_edit', JSON.stringify(map));
             } catch (e) {}
+        },
+
+        async exportBackupJSON() {
+            const db = await openDB();
+            let stats = [];
+            let history = [];
+            if (db) {
+                try {
+                    stats = await new Promise(r => {
+                        const tx = db.transaction('question_stats', 'readonly');
+                        tx.objectStore('question_stats').getAll().onsuccess = e => r(e.target.result || []);
+                    });
+                    history = await new Promise(r => {
+                        const tx = db.transaction('session_history', 'readonly');
+                        tx.objectStore('session_history').getAll().onsuccess = e => r(e.target.result || []);
+                    });
+                } catch (e) {}
+            }
+
+            let customEdits = {};
+            let needsEditMap = {};
+            try {
+                customEdits = JSON.parse(localStorage.getItem('housing_exam_custom_edits') || '{}');
+                needsEditMap = JSON.parse(localStorage.getItem('housing_exam_needs_edit') || '{}');
+            } catch (e) {}
+
+            return {
+                version: 2,
+                exportedAt: new Date().toISOString(),
+                stats,
+                history,
+                customEdits,
+                needsEditMap
+            };
+        },
+
+        async importBackupJSON(backupData) {
+            if (!backupData) {
+                throw new Error('올바르지 않은 백업 데이터 포맷입니다.');
+            }
+
+            const db = await openDB();
+            if (db) {
+                try {
+                    const tx = db.transaction(['question_stats', 'session_history'], 'readwrite');
+                    if (Array.isArray(backupData.stats)) {
+                        const statsStore = tx.objectStore('question_stats');
+                        for (const item of backupData.stats) {
+                            statsStore.put(item);
+                        }
+                    }
+                    if (Array.isArray(backupData.history)) {
+                        const historyStore = tx.objectStore('session_history');
+                        for (const sess of backupData.history) {
+                            historyStore.put(sess);
+                        }
+                    }
+                } catch (e) {}
+            }
+
+            if (backupData.customEdits && typeof backupData.customEdits === 'object') {
+                try {
+                    const existing = JSON.parse(localStorage.getItem('housing_exam_custom_edits') || '{}');
+                    const merged = { ...existing, ...backupData.customEdits };
+                    localStorage.setItem('housing_exam_custom_edits', JSON.stringify(merged));
+                } catch (e) {}
+            }
+
+            if (backupData.needsEditMap && typeof backupData.needsEditMap === 'object') {
+                try {
+                    const existing = JSON.parse(localStorage.getItem('housing_exam_needs_edit') || '{}');
+                    const merged = { ...existing, ...backupData.needsEditMap };
+                    localStorage.setItem('housing_exam_needs_edit', JSON.stringify(merged));
+                } catch (e) {}
+            }
+
+            return true;
         }
     };
 
@@ -1435,7 +1512,10 @@
                 shortGroup: document.getElementById('mgr-short-answers-group'),
                 editShortAns: document.getElementById('mgr-edit-short-ans'),
                 editExp: document.getElementById('mgr-edit-exp'),
-                editTip: document.getElementById('mgr-edit-tip')
+                editTip: document.getElementById('mgr-edit-tip'),
+                btnExportBackup: document.getElementById('btn-export-backup'),
+                btnImportBackup: document.getElementById('btn-import-backup'),
+                fileImportBackup: document.getElementById('file-import-backup')
             },
             modals: {
                 omr: document.getElementById('modal-omr'),
@@ -1485,7 +1565,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260825.1758</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260825.1802</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -1510,7 +1590,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260825.1758</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260825.1802</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
@@ -3437,6 +3517,63 @@
                 }).catch(() => {
                     showToast('❌ 클립보드 복사 실패');
                 });
+            });
+        }
+
+        // 8. Manager Backup & Restore Handlers
+        if (elements.manager.btnExportBackup) {
+            elements.manager.btnExportBackup.addEventListener('click', async () => {
+                try {
+                    const backup = await IDBStore.exportBackupJSON();
+                    const jsonStr = JSON.stringify(backup, null, 2);
+                    const blob = new Blob([jsonStr], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    const dateStr = new Date().toISOString().slice(0, 10);
+                    a.href = url;
+                    a.download = `주관사2차_문제지옥_학습데이터백업_${dateStr}.json`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    showToast('📥 학습 데이터 백업 파일(.json)이 저장되었습니다.');
+                } catch (e) {
+                    alert('백업 생성 중 오류가 발생했습니다: ' + e.message);
+                }
+            });
+        }
+
+        if (elements.manager.btnImportBackup && elements.manager.fileImportBackup) {
+            elements.manager.btnImportBackup.addEventListener('click', () => {
+                elements.manager.fileImportBackup.value = '';
+                elements.manager.fileImportBackup.click();
+            });
+
+            elements.manager.fileImportBackup.addEventListener('change', async (e) => {
+                const file = e.target.files && e.target.files[0];
+                if (!file) return;
+
+                if (!confirm(`[${file.name}] 백업 파일의 수정된 문제와 학습 기록을 복원하시겠습니까?`)) {
+                    return;
+                }
+
+                try {
+                    const text = await file.text();
+                    const data = JSON.parse(text);
+                    await IDBStore.importBackupJSON(data);
+                    
+                    // Reload state
+                    state.customEdits = await IDBStore.getAllQuestionEditsMap();
+                    state.needsEditMap = await IDBStore.getAllNeedsEditMap();
+                    state.statsMap = await IDBStore.getAllStatsMap();
+
+                    showToast('✅ 백업 데이터가 성공적으로 복원되었습니다.');
+                    if (state.currentScreen === 'manager') {
+                        renderManagerList();
+                    }
+                } catch (err) {
+                    alert('백업 파일 복원 실패: ' + err.message);
+                }
             });
         }
 
