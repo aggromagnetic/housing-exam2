@@ -1661,7 +1661,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260826.0038</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260826.0043</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -1686,7 +1686,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260826.0038</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260826.0043</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
@@ -1892,9 +1892,7 @@
 
         if (combinedPassage) {
             combinedPassage = combinedPassage
-                .replace(/(?<=[.!?\)\】\」\』])\s+([①②③④⑤⑥⑦⑧⑨⑩])(?![번호항목등\~\,\.\)\］\】])/g, '\n$1')
-                .replace(/([^\n(（\[\s])\s*([㉠㉡㉢㉣㉤㉥])(?!\s*[\)）\]])/g, '$1\n$2')
-                .replace(/(?<=[.!?\)\】\」\』])\s+(\b\d+\.\s+)/g, '\n$1')
+                .replace(/\r\n/g, '\n')
                 .replace(/\n{3,}/g, '\n\n')
                 .trim();
         }
@@ -1908,9 +1906,7 @@
     function formatExplanation(text) {
         if (!text) return '';
         return text
-            .replace(/(?<=[.!?\)\】\」\』])\s+([①②③④⑤⑥⑦⑧⑨⑩])(?![번호항목등\~\,\.\)\］\】])/g, '\n$1')
-            .replace(/([^\n(（\[\s])\s*([㉠㉡㉢㉣㉤㉥])(?!\s*[\)）\]])/g, '$1\n$2')
-            .replace(/(?<=[.!?\)\】\」\』])\s+(\b\d+\.\s+)/g, '\n$1')
+            .replace(/\r\n/g, '\n')
             .replace(/\n{3,}/g, '\n\n')
             .trim();
     }
