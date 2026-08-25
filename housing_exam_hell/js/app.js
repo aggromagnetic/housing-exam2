@@ -956,18 +956,19 @@
             return all.sort(() => Math.random() - 0.5);
         },
 
-        generateInfiniteHellSet(statsMap = {}, excludeKeysSet = new Set()) {
-            const lawMC = this.getQuestionPool('관계법규', 'choice');
-            const lawSA = this.getQuestionPool('관계법규', 'short');
-            const gwanriMC = this.getQuestionPool('관리실무', 'choice');
-            const gwanriSA = this.getQuestionPool('관리실무', 'short');
+        generateInfiniteHellSet(statsMap = {}, excludeKeysSet = new Set(), highYieldRatio = 0.40) {
+            // 1. 관계법규 40문항 (객관식 24 + 주관식 16: 14대 법률 블루프린트 100% 반영)
+            const lawSet = this.generateExamSet('관계법규', statsMap, excludeKeysSet, highYieldRatio);
+            
+            // 2. 중복 방지를 위한 키 누적
+            const lawKeys = new Set(excludeKeysSet);
+            lawSet.forEach(q => lawKeys.add(q.qKey));
 
-            const pickedLawMC = this.weightedPick(lawMC, statsMap, 12, excludeKeysSet);
-            const pickedLawSA = this.weightedPick(lawSA, statsMap, 8, excludeKeysSet);
-            const pickedGwanriMC = this.weightedPick(gwanriMC, statsMap, 12, excludeKeysSet);
-            const pickedGwanriSA = this.weightedPick(gwanriSA, statsMap, 8, excludeKeysSet);
+            // 3. 관리실무 40문항 (객관식 24 + 주관식 16: 12대 단원 블루프린트 100% 반영)
+            const gwanriSet = this.generateExamSet('관리실무', statsMap, lawKeys, highYieldRatio);
 
-            const combined = [...pickedLawMC, ...pickedLawSA, ...pickedGwanriMC, ...pickedGwanriSA];
+            // 4. 총 80문항 융합 및 군집 방지 셔플 (관계법규 + 관리실무 50:50)
+            const combined = [...lawSet, ...gwanriSet];
             return this.shuffleWithAntiClumping(combined);
         },
 
@@ -1326,6 +1327,10 @@
                     btn.classList.add('current');
                 }
 
+                if (state.mode === 'infinite') {
+                    btn.classList.add(q.subject === '관계법규' ? 'omr-law-cell' : 'omr-gwanri-cell');
+                }
+
                 const isAnswered = userAnswers[idx] !== undefined && userAnswers[idx] !== null && userAnswers[idx] !== '';
                 const res = results[idx];
 
@@ -1335,7 +1340,10 @@
                     btn.classList.add('answered');
                 }
 
+                const subLabel = state.mode === 'infinite' ? `<span style="font-size: 0.62rem; font-weight: 700; color: ${q.subject === '관계법규' ? '#38BDF8' : '#34D399'}; opacity: 0.9;">${q.subject === '관계법규' ? '법규' : '실무'}</span>` : '';
+
                 btn.innerHTML = `
+                    ${subLabel}
                     <span class="num">${idx + 1}</span>
                     <span class="status-icon">${
                         res !== undefined 
@@ -1575,7 +1583,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260825.1845</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260825.1914</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -1600,7 +1608,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260825.1845</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260825.1914</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
@@ -1662,14 +1670,14 @@
         if (modeKey === 'infinite') {
             state.infiniteSetCount = 1;
             state.infiniteUsedKeys.clear();
-            // 헬 모드: 과목(관계법규+관리실무) 및 유형(객관식+주관식) 전격 융합 40문항 셔플 세트
+            // 헬 모드: 과목(관계법규+관리실무 50:50) 및 전 단원 블루프린트 100% 반영 80문항 융합 세트
             state.questions = ExamEngine.generateInfiniteHellSet(state.statsMap, state.infiniteUsedKeys);
             state.questions.forEach(q => {
                 applyCustomEdits(q);
                 state.infiniteUsedKeys.add(q.qKey);
             });
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = `<i class="fa-solid fa-skull text-rose-500"></i> 무한 헬 모드 (세트 1: 1~40번)`;
+                elements.header.modeTitle.innerHTML = `<i class="fa-solid fa-skull text-rose-500"></i> 무한 헬 모드 (세트 1: 1~80번)`;
             }
         } else if (modeKey === 'review') {
             state.questions = ExamEngine.generateReviewSet(state.subject, state.statsMap, 40);
@@ -1846,7 +1854,34 @@
 
         elements.quiz.card.className = `quiz-card card-w${weight >= 10 ? 10 : (weight >= 6 ? 6 : (weight >= 4 ? 4 : (weight >= 2 ? 2 : 1)))}`;
 
-        elements.quiz.qNum.textContent = `문항 ${index + 1} / ${state.questions.length}`;
+        if (state.mode === 'infinite') {
+            const isLaw = q.subject === '관계법규';
+            const numColor = isLaw ? '#38BDF8' : '#34D399';
+            const badgeBg = isLaw ? 'rgba(56, 189, 248, 0.18)' : 'rgba(52, 211, 153, 0.18)';
+            const badgeBorder = isLaw ? 'rgba(56, 189, 248, 0.35)' : 'rgba(52, 211, 153, 0.35)';
+            const badgeText = isLaw ? '관계법규' : '관리실무';
+
+            elements.quiz.qNum.innerHTML = `
+                <span style="background: ${badgeBg}; color: ${numColor}; border: 1px solid ${badgeBorder}; padding: 2px 7px; border-radius: 4px; font-size: 0.75rem; font-weight: 800; margin-right: 6px; vertical-align: middle;">${badgeText}</span>
+                <span style="color: ${numColor}; font-weight: 900;">문항 ${index + 1}</span>
+                <span style="color: #94A3B8; font-size: 0.85rem; font-weight: 500;"> / ${state.questions.length}</span>
+            `;
+
+            if (elements.header.brandBadge) {
+                elements.header.brandBadge.textContent = q.subject;
+                elements.header.brandBadge.style.color = numColor;
+                elements.header.brandBadge.style.borderColor = badgeBorder;
+                elements.header.brandBadge.style.backgroundColor = badgeBg;
+            }
+        } else {
+            elements.quiz.qNum.textContent = `문항 ${index + 1} / ${state.questions.length}`;
+            if (elements.header.brandBadge) {
+                elements.header.brandBadge.textContent = state.subject;
+                elements.header.brandBadge.style.color = '';
+                elements.header.brandBadge.style.borderColor = '';
+                elements.header.brandBadge.style.backgroundColor = '';
+            }
+        }
         
         let chapText = q.chapterName.replace(/^CHAPTER\s+\d+\s*/i, '');
         if (q.isHighYield && q.primaryCoreItem) {
@@ -2401,9 +2436,9 @@
                         state.infiniteUsedKeys.add(q.qKey);
                     });
                     state.questions.push(...nextSet);
-                    showToast(`🔥 [헬 모드 ${state.infiniteSetCount}세트] 40문항 추가 소환!`);
+                    showToast(`🔥 [헬 모드 ${state.infiniteSetCount}세트] 80문항 추가 소환!`);
                     if (elements.header.modeTitle) {
-                        elements.header.modeTitle.innerHTML = `<i class="fa-solid fa-skull text-rose-500"></i> 무한 헬 모드 (세트 ${state.infiniteSetCount}: ${state.questions.length - 39}~${state.questions.length}번)`;
+                        elements.header.modeTitle.innerHTML = `<i class="fa-solid fa-skull text-rose-500"></i> 무한 헬 모드 (세트 ${state.infiniteSetCount}: ${state.questions.length - 79}~${state.questions.length}번)`;
                     }
                     renderQuestion(state.currentIndex + 1);
                     return;

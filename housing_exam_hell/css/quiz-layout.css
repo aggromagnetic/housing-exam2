@@ -919,6 +919,20 @@
     color: #FB7185;
 }
 
+.omr-cell.omr-law-cell {
+    border-top: 3px solid #38BDF8;
+}
+.omr-cell.omr-law-cell .num {
+    color: #38BDF8;
+}
+
+.omr-cell.omr-gwanri-cell {
+    border-top: 3px solid #34D399;
+}
+.omr-cell.omr-gwanri-cell .num {
+    color: #34D399;
+}
+
 /* Result Screen */
 .result-hero {
     text-align: center;
