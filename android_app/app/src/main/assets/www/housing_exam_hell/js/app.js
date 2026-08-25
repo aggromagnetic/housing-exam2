@@ -434,7 +434,11 @@
             "포함", "관련", "대하여", "따른", "의한", "모두", "옳은", "옳지", "틀린", "것은",
             "골라", "다음", "아래", "설명", "규정된", "해당하는", "이하", "이상", "초과", "미만",
             "비율", "조문", "출제", "빈출", "유력", "주관식", "객관식", "사람", "이내", "시작",
-            "시작한", "예외", "사람에", "있음", "없음", "가능", "불가", "특례", "관련된", "대한"
+            "시작한", "예외", "사람에", "있음", "없음", "가능", "불가", "특례", "관련된", "대한",
+            "받아야", "하는", "받은", "정기적", "신청", "소유자", "결과", "기한", "설비", "공사",
+            "안전관리", "안전관리법", "관리법", "시행규칙", "시행령", "법률", "규칙", "조례",
+            "실시", "통보", "작성", "제출", "보고", "검사", "점검", "정기검사", "자체점검", "수시검사",
+            "어느", "하나", "각호", "해당", "규정", "또는", "위한", "통해", "대해", "암기", "시기"
         ]),
 
         SUFFIX_2CHAR_REGEX: /(으로|에서|에게|부터|까지|마다|따라|따른|관한|대한|위한|통해|대해)$/,
@@ -457,6 +461,67 @@
                 .split(/\s+/)
                 .map(w => this.cleanWord(w))
                 .filter(w => w.length >= 2 && !this.GENERIC_STOP_WORDS.has(w))));
+        },
+
+        checkSubcategoryRequirement(category, fullText) {
+            if (!category) return true;
+            const cat = category.trim();
+
+            if (cat.includes("승강기")) {
+                return /승강기|엘리베이터|에스컬레이터|무빙워크|리프트|덤웨이터|권상기|조속기/i.test(fullText);
+            }
+            if (cat.includes("전기사업") || cat.includes("전기설비")) {
+                return /전기|전력|변전|수전|발전|배전|전압|전류|자가용|배선|접지|누전/i.test(fullText);
+            }
+            if (cat.includes("가스")) {
+                return /가스|도시가스|LPG|LNG|가스누설|가스배관/i.test(fullText);
+            }
+            if (cat.includes("소방") || cat.includes("화재")) {
+                return /소방|화재|소화|스프링클러|감지기|유도등|경보|비상벨|방화/i.test(fullText);
+            }
+            if (cat.includes("급수")) {
+                return /급수|수조|저수조|수도|수질|물탱크|부스터|수격|워터해머|크로스커넥션|위생점검|급수관/i.test(fullText);
+            }
+            if (cat.includes("급탕")) {
+                return /급탕|온수|가열기|서큘레이터|리버스|환수관/i.test(fullText);
+            }
+            if (cat.includes("난방") || cat.includes("보일러")) {
+                return /난방|보일러|방열기|라디에이터|지역난방|개별난방|중앙난방|열교환기|팽창탱크|난방코일/i.test(fullText);
+            }
+            if (cat.includes("오수") || cat.includes("정화조")) {
+                return /오수|정화조|하수|BOD|생물학적|침전|폭기|부패탱크/i.test(fullText);
+            }
+            if (cat.includes("배수") || cat.includes("통기") || cat.includes("환기")) {
+                return /배수|통기|환기|트랩|봉수|루프통기|각개통기|드레인|환기설비|송풍기/i.test(fullText);
+            }
+            if (cat.includes("회계")) {
+                return /회계|예산|결산|재무제표|대차대조표|손익계산서|관리비|잡수입|장기수선충당금|예치금|감사/i.test(fullText);
+            }
+            if (cat.includes("노동") || cat.includes("인사") || cat.includes("사무")) {
+                return /근로|임금|퇴직|퇴직금|휴가|연차|취업규칙|근로계약|최저임금|수습|산업재해|고용보험|국민연금|건강보험|노동조합/i.test(fullText);
+            }
+            if (cat.includes("주택관리사")) {
+                return /주택관리사|보증보험|공제|자격증|손해배상책임|배치신고|행정처분|자격취소|자격정지/i.test(fullText);
+            }
+            if (cat.includes("입주자대표회의") || cat.includes("선거관리위원회")) {
+                return /입주자대표회의|동별\s*대표자|선거관리위원회|임원|회장|감사|해임|의결/i.test(fullText);
+            }
+            if (cat.includes("민간임대")) {
+                return /민간임대|임대사업자|임차인대표회의|임대보증금|임대차계약|표준임대차|특별수선충당금/i.test(fullText);
+            }
+            if (cat.includes("공공주택")) {
+                return /공공주택|공공임대|영구임대|국민임대|행복주택|장기전세|통합공공임대|임대의무기간/i.test(fullText);
+            }
+            if (cat.includes("정비") || cat.includes("도시및주거환경")) {
+                return /정비사업|재건축|재개발|주거환경개선|조합설립|관리처분|사업시행|안전진단/i.test(fullText);
+            }
+            if (cat.includes("시설물의안전") || cat.includes("시특법")) {
+                return /시설물|시특법|안전점검|정밀안전진단|제1종|제2종|제3종|중대한\s*결함/i.test(fullText);
+            }
+            if (cat.includes("집합건물")) {
+                return /집합건물|구분소유|관리단|관리인|규약|관리단집회|공용부분|대지사용권/i.test(fullText);
+            }
+            return true;
         },
 
         isCategoryMatch(chapterName, itemCategory) {
@@ -514,6 +579,7 @@
             const matches = [];
             for (const item of subjectKeywords) {
                 if (!this.isCategoryMatch(q.chapterName, item.category)) continue;
+                if (!this.checkSubcategoryRequirement(item.category, fullText)) continue;
 
                 const distinctiveKws = this.extractDistinctiveKeywords(item.topic, item.note);
                 if (distinctiveKws.length === 0) continue;
