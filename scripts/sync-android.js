@@ -4,6 +4,11 @@ const path = require('path');
 const rootDir = path.resolve(__dirname, '..');
 const targetAssetsDir = path.join(rootDir, 'android_app', 'app', 'src', 'main', 'assets', 'www');
 
+const { updateVersions } = require('./update-version');
+
+// 0. Auto-update version and cache busters across HTML/JS files
+updateVersions();
+
 console.log('🔄 Syncing web assets to Android assets folder...');
 console.log('Source:', rootDir);
 console.log('Target:', targetAssetsDir);
