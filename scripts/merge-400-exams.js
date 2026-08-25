@@ -56,6 +56,15 @@ function mergeAll() {
         return;
     }
 
+    // 1. Remove previous '특강_' questions to ensure 100% clean idempotent merge
+    Object.keys(examBank.datasets).forEach(k => {
+        const ds = examBank.datasets[k];
+        ds.chapters.forEach(c => {
+            c.questions = c.questions.filter(q => !String(q.id).startsWith('특강_'));
+            c.total_count = c.questions.length;
+        });
+    });
+
     let addedCount = 0;
 
     files.forEach(file => {
@@ -67,7 +76,7 @@ function mergeAll() {
 
         console.log(`\nMerging ${questions.length} questions from ${file} (${subject} / ${teacher})...`);
 
-        questions.forEach(q => {
+        questions.forEach((q, qIndex) => {
             const isChoice = q.type === 'choice' || (Array.isArray(q.options) && q.options.length >= 2);
             const datasetKey = subject === '관리실무'
                 ? (isChoice ? 'gwanri_mc' : 'gwanri_sa')
@@ -92,9 +101,15 @@ function mergeAll() {
                 dataset.chapters.push(chapterObj);
             }
 
-            // Generate clean ID within chapter
-            const nextNum = chapterObj.questions.length + 1;
-            const newId = `특강_${teacher}_${String(q.id || nextNum).padStart(2, '0')}`;
+            // Generate clean unique ID with MC/SA tags within chapter
+            const typeTag = isChoice ? 'MC' : 'SA';
+            const cleanQId = String(q.id || (qIndex + 1)).replace(/^0+/, '') || String(qIndex + 1);
+            let newId = `특강_${teacher}_${typeTag}_${cleanQId.padStart(2, '0')}`;
+            let dupCount = 1;
+            while (chapterObj.questions.some(item => item.id === newId)) {
+                dupCount++;
+                newId = `특강_${teacher}_${typeTag}_${cleanQId.padStart(2, '0')}_${dupCount}`;
+            }
 
             const formattedQ = {
                 id: newId,
