@@ -14,6 +14,12 @@ export const OMRSheet = {
             const btn = document.createElement('button');
             btn.className = 'omr-cell';
             
+            if (q.subject === '관계법규') {
+                btn.classList.add('omr-law-cell');
+            } else if (q.subject === '관리실무') {
+                btn.classList.add('omr-gwanri-cell');
+            }
+
             const isAnswered = userAnswers[idx] !== undefined && userAnswers[idx] !== null && userAnswers[idx] !== '';
             const res = results[idx]; // { isCorrect, ... }
 
@@ -23,7 +29,10 @@ export const OMRSheet = {
                 btn.classList.add('answered');
             }
 
+            const subLabel = `<span style="font-size: 0.62rem; font-weight: 700; color: ${q.subject === '관계법규' ? '#38BDF8' : '#34D399'}; opacity: 0.9;">${q.subject === '관계법규' ? '법규' : '실무'}</span>`;
+
             btn.innerHTML = `
+                ${subLabel}
                 <span class="num">${idx + 1}</span>
                 <span class="status-icon">${
                     res !== undefined 

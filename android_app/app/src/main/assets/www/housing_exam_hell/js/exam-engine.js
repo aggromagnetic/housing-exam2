@@ -489,20 +489,21 @@ export const ExamEngine = {
     },
 
     /**
-     * Generate Infinite Hell Mode Set (40 questions: Mixed Subjects + Mixed MC/SA + Fully Shuffled)
+     * Generate Infinite Hell Mode Set (80 questions: Mixed 40 Law + 40 Gwanri, Blueprint Guaranteed)
      */
-    generateInfiniteHellSet(statsMap = {}, excludeKeysSet = new Set()) {
-        const lawMC = this.getQuestionPool('관계법규', 'choice');
-        const lawSA = this.getQuestionPool('관계법규', 'short');
-        const gwanriMC = this.getQuestionPool('관리실무', 'choice');
-        const gwanriSA = this.getQuestionPool('관리실무', 'short');
+    generateInfiniteHellSet(statsMap = {}, excludeKeysSet = new Set(), highYieldRatio = 0.40) {
+        // 1. 관계법규 40문항 (객관식 24 + 주관식 16: 14대 법률 블루프린트 100% 반영)
+        const lawSet = this.generateExamSet('관계법규', statsMap, excludeKeysSet, highYieldRatio);
+        
+        // 2. 중복 방지를 위한 키 누적
+        const lawKeys = new Set(excludeKeysSet);
+        lawSet.forEach(q => lawKeys.add(q.qKey));
 
-        const pickedLawMC = this.weightedPick(lawMC, statsMap, 12, excludeKeysSet);
-        const pickedLawSA = this.weightedPick(lawSA, statsMap, 8, excludeKeysSet);
-        const pickedGwanriMC = this.weightedPick(gwanriMC, statsMap, 12, excludeKeysSet);
-        const pickedGwanriSA = this.weightedPick(gwanriSA, statsMap, 8, excludeKeysSet);
+        // 3. 관리실무 40문항 (객관식 24 + 주관식 16: 12대 단원 블루프린트 100% 반영)
+        const gwanriSet = this.generateExamSet('관리실무', statsMap, lawKeys, highYieldRatio);
 
-        const combined = [...pickedLawMC, ...pickedLawSA, ...pickedGwanriMC, ...pickedGwanriSA];
+        // 4. 총 80문항 융합 및 군집 방지 셔플 (관계법규 + 관리실무 50:50)
+        const combined = [...lawSet, ...gwanriSet];
         return this.shuffleWithAntiClumping(combined);
     },
 
