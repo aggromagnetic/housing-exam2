@@ -262,14 +262,14 @@ export const ExamEngine = {
 
         const weights = available.map(it => {
             const stat = statsMap[it.qKey];
-            const userWeight = (stat && stat.weight) ? stat.weight : 1;
+            const userWeight = (stat && stat.weight) ? stat.weight : 1.0;
             
-            // 적중 점수(score) 비례 확률 가중치:
-            // score >= 4 (⭐ 뱃지 부착, 초핵심): 4배
-            // score === 3 (준핵심 빈출, 뱃지 미부착): 2.5배
-            // score <= 2 (일반/지엽, 뱃지 미부착): 1배
+            // 적중 점수(score) 비례 확률 가중치 (완만한 스케일링, 최대 5.4배 캡):
+            // score >= 4 (⭐ 뱃지 부착, 초핵심): 1.8배
+            // score === 3 (준핵심 빈출, 뱃지 미부착): 1.3배
+            // score <= 2 (일반/지엽, 뱃지 미부착): 1.0배
             const coreScore = (it.topCoreMatch && it.topCoreMatch.score) ? it.topCoreMatch.score : 1;
-            const scoreWeight = coreScore >= 4 ? 4 : (coreScore === 3 ? 2.5 : 1);
+            const scoreWeight = coreScore >= 4 ? 1.8 : (coreScore === 3 ? 1.3 : 1.0);
             
             return userWeight * scoreWeight;
         });
