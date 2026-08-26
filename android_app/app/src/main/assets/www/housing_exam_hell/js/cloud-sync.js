@@ -81,14 +81,7 @@ const CloudSync = {
                 // 1. Merge custom question edits
                 if (cloudData.customEdits && typeof cloudData.customEdits === "object") {
                     const localEdits = JSON.parse(localStorage.getItem("housing_exam_custom_edits") || "{}");
-                    const mergedEdits = { ...localEdits };
-                    
-                    Object.entries(cloudData.customEdits).forEach(([k, cEdit]) => {
-                        const lEdit = mergedEdits[k];
-                        if (!lEdit || (cEdit.editedAt && (!lEdit.editedAt || cEdit.editedAt >= lEdit.editedAt))) {
-                            mergedEdits[k] = cEdit;
-                        }
-                    });
+                    const mergedEdits = { ...localEdits, ...cloudData.customEdits };
                     localStorage.setItem("housing_exam_custom_edits", JSON.stringify(mergedEdits));
                 }
 
