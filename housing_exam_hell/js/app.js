@@ -104,16 +104,15 @@
 
             if (!isCorrect) {
                 existing.wrongCount = (existing.wrongCount || 0) + 1;
-                if (existing.wrongCount === 1) existing.weight = 2;
-                else if (existing.wrongCount === 2) existing.weight = 4;
-                else if (existing.wrongCount === 3) existing.weight = 6;
-                else existing.weight = 10;
+                if (existing.wrongCount === 1) existing.weight = 1.5;
+                else if (existing.wrongCount === 2) existing.weight = 2.0;
+                else if (existing.wrongCount === 3) existing.weight = 2.5;
+                else existing.weight = 3.0;
             } else {
                 existing.correctCount = (existing.correctCount || 0) + 1;
-                if (existing.weight === 10) existing.weight = 6;
-                else if (existing.weight === 6) existing.weight = 4;
-                else if (existing.weight === 4) existing.weight = 2;
-                else existing.weight = 1;
+                if (existing.weight >= 2.5) existing.weight = 2.0;
+                else if (existing.weight >= 2.0) existing.weight = 1.5;
+                else existing.weight = 1.0;
             }
 
             if (db) {
@@ -129,10 +128,9 @@
             const stat = await this.getQuestionStat(qKey);
             if (!stat) return null;
             stat.wrongCount = Math.max(0, (stat.wrongCount || 1) - 1);
-            if (stat.weight === 10) stat.weight = 6;
-            else if (stat.weight === 6) stat.weight = 4;
-            else if (stat.weight === 4) stat.weight = 2;
-            else stat.weight = 1;
+            if (stat.weight >= 2.5) stat.weight = 2.0;
+            else if (stat.weight >= 2.0) stat.weight = 1.5;
+            else stat.weight = 1.0;
             stat.lastResult = true;
 
             const db = await openDB();
@@ -874,14 +872,14 @@
 
             const weights = available.map(it => {
                 const stat = statsMap[it.qKey];
-                const userWeight = (stat && stat.weight) ? stat.weight : 1;
+                const userWeight = (stat && stat.weight) ? stat.weight : 1.0;
                 
-                // 적중 점수(score) 비례 확률 가중치:
-                // score >= 4 (⭐ 뱃지 부착, 초핵심): 4배
-                // score === 3 (준핵심 빈출, 뱃지 미부착): 2.5배
-                // score <= 2 (일반/지엽, 뱃지 미부착): 1배
+                // 적중 점수(score) 비례 확률 가중치 (완만한 스케일링, 최대 5.4배 캡):
+                // score >= 4 (⭐ 뱃지 부착, 초핵심): 1.8배
+                // score === 3 (준핵심 빈출, 뱃지 미부착): 1.3배
+                // score <= 2 (일반/지엽, 뱃지 미부착): 1.0배
                 const coreScore = (it.topCoreMatch && it.topCoreMatch.score) ? it.topCoreMatch.score : 1;
-                const scoreWeight = coreScore >= 4 ? 4 : (coreScore === 3 ? 2.5 : 1);
+                const scoreWeight = coreScore >= 4 ? 1.8 : (coreScore === 3 ? 1.3 : 1.0);
                 
                 return userWeight * scoreWeight;
             });
@@ -1755,7 +1753,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260826.1914</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260826.1921</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -1780,7 +1778,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260826.1914</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260826.1921</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
@@ -2024,7 +2022,7 @@
         const stat = state.statsMap[q.qKey] || { weight: 1, wrongCount: 0 };
         const weight = stat.weight || 1;
 
-        elements.quiz.card.className = `quiz-card card-w${weight >= 10 ? 10 : (weight >= 6 ? 6 : (weight >= 4 ? 4 : (weight >= 2 ? 2 : 1)))}`;
+        elements.quiz.card.className = `quiz-card card-w${weight >= 3.0 ? 10 : (weight >= 2.5 ? 6 : (weight >= 2.0 ? 4 : (weight >= 1.5 ? 2 : 1)))}`;
 
         if (state.mode === 'infinite') {
             const isLaw = q.subject === '관계법규';
