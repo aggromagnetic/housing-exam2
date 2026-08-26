@@ -774,15 +774,16 @@
             const subjectKeywords = this.getCoreKeywordsDB(subject);
             if (!subjectKeywords || subjectKeywords.length === 0) return [];
 
+            // Search question, title, passage, answers ONLY (excluding explanation/tip to prevent dilution)
+            const ansText = q.answers ? Object.values(q.answers).join(' ') : (q.answer || '');
             const fullText = [
-                q.question || "",
-                q.title || "",
-                q.passage || "",
-                (q.options || []).join(" "),
-                q.explanation || "",
-                q.tip || "",
-                q.keyword || ""
-            ].join(" ");
+                q.question || '',
+                q.title || '',
+                q.passage || '',
+                ansText,
+                (q.options || []).join(' '),
+                q.keyword || ''
+            ].join(' ');
 
             const matches = [];
             for (const item of subjectKeywords) {
@@ -793,21 +794,28 @@
                 if (distinctiveKws.length === 0) continue;
 
                 const matched = distinctiveKws.filter(kw => fullText.includes(kw));
-                const strongMatchCount = matched.filter(kw => kw.length >= 4).length;
-                const mediumMatchCount = matched.filter(kw => kw.length >= 3).length;
+                const exactTopicMatch = item.topic && fullText.includes(item.topic);
 
-                // 유효 적중 조건: 4글자 이상 고유어 적중, 3글자 이상 2개 이상 복합 적중, 또는 총 3개 이상 키워드 적중
-                if (strongMatchCount >= 1 || mediumMatchCount >= 2 || matched.length >= 3) {
-                    const score = matched.length + (strongMatchCount * 2) + mediumMatchCount;
+                let score = 0;
+                if (exactTopicMatch) score += 3;
+                if (matched.length >= 3) score += 3;
+                else if (matched.length === 2) score += 2;
+                else if (matched.length === 1) score += 1;
+
+                const isChapterMatch = this.isCategoryMatch(q.chapterName, item.category);
+                if (isChapterMatch && score > 0) score += 1;
+
+                if (score >= 2) {
                     matches.push({
                         item,
                         matched,
-                        score
+                        score,
+                        isChapterMatch
                     });
                 }
             }
 
-            matches.sort((a, b) => b.score - a.score);
+            matches.sort((a, b) => b.score - a.score || (b.isChapterMatch ? 1 : 0) - (a.isChapterMatch ? 1 : 0));
             return matches;
         },
 
@@ -837,8 +845,8 @@
                 (chap.questions || []).forEach(q => {
                     const matches = this.matchQuestionKeywords({ ...q, chapterName: chap.chapter }, subject);
                     const topMatch = matches.length > 0 ? matches[0] : null;
-                    // 1점은 일반 문제와 동일 취급, 2점 이상일 때 핵심 300선 뱃지 표시
-                    const isHighYield = topMatch !== null && topMatch.score >= 2;
+                    // ⭐ 핵심 300선 뱃지는 score >= 4 (상위 ~36% 초핵심)에만 부착
+                    const isHighYield = topMatch !== null && topMatch.score >= 4;
                     pool.push({
                         ...q,
                         qKey: `${subject}_${type}_${chap.chapter}_${q.id}`,
@@ -869,10 +877,11 @@
                 const userWeight = (stat && stat.weight) ? stat.weight : 1;
                 
                 // 적중 점수(score) 비례 확률 가중치:
-                // 5점 -> 5배 (약 25%), 4점 -> 4배 (약 20%), 3점 -> 3배 (약 15%), 2점 -> 2배 (약 10%)
-                // 1점 이하 -> 1배 (일반 문제와 동일 확률 취급)
+                // score >= 4 (⭐ 뱃지 부착, 초핵심): 4배
+                // score === 3 (준핵심 빈출, 뱃지 미부착): 2.5배
+                // score <= 2 (일반/지엽, 뱃지 미부착): 1배
                 const coreScore = (it.topCoreMatch && it.topCoreMatch.score) ? it.topCoreMatch.score : 1;
-                const scoreWeight = coreScore >= 2 ? coreScore : 1;
+                const scoreWeight = coreScore >= 4 ? 4 : (coreScore === 3 ? 2.5 : 1);
                 
                 return userWeight * scoreWeight;
             });
@@ -1746,7 +1755,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260826.1850</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260826.1914</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -1771,7 +1780,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260826.1850</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260826.1914</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
