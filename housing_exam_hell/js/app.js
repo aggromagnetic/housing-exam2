@@ -464,6 +464,22 @@
     // 2. Grader & Text Normalizer
     // -------------------------------------------------------------
     const Grader = {
+        parseFraction(str) {
+            if (!str) return null;
+            const clean = String(str).replace(/[\s\(\)\[\]]/g, '').trim();
+            // 1. "5분의 4" -> numerator: 4, denominator: 5 -> 4/5
+            const hangulMatch = clean.match(/^(\d+)분의(\d+)$/);
+            if (hangulMatch) {
+                return { num: parseInt(hangulMatch[2], 10), den: parseInt(hangulMatch[1], 10) };
+            }
+            // 2. "4/5" -> numerator: 4, denominator: 5 -> 4/5
+            const slashMatch = clean.match(/^(\d+)\/(\d+)$/);
+            if (slashMatch) {
+                return { num: parseInt(slashMatch[1], 10), den: parseInt(slashMatch[2], 10) };
+            }
+            return null;
+        },
+
         normalizeText(str) {
             if (str === null || str === undefined) return '';
             return String(str)
@@ -474,15 +490,84 @@
                 .trim();
         },
 
+        getAnswerVariants(targetStr) {
+            if (!targetStr) return [];
+            const parts = String(targetStr).split(/[,|]|\b또는\b/).map(s => s.trim()).filter(Boolean);
+            const variants = [];
+
+            parts.forEach(part => {
+                const frac = this.parseFraction(part);
+                if (frac) {
+                    variants.push(`${frac.num}/${frac.den}`);
+                    variants.push(`${frac.den}분의${frac.num}`);
+                } else {
+                    if (part.includes('/') && !part.match(/\d+\/\d+/)) {
+                        part.split('/').forEach(sub => {
+                            const norm = this.normalizeText(sub);
+                            if (norm) variants.push(norm);
+                        });
+                    } else {
+                        const norm = this.normalizeText(part);
+                        if (norm) variants.push(norm);
+                    }
+                }
+            });
+
+            return Array.from(new Set(variants));
+        },
+
         isMatch(userAnswer, targetAnswer) {
+            if (!userAnswer || !targetAnswer) return false;
+
+            // 1. Fraction comparison (e.g. "4/5" vs "5분의 4")
+            const userFrac = this.parseFraction(userAnswer);
+            const targetVariants = this.getAnswerVariants(targetAnswer);
+            const isTargetFraction = targetVariants.some(v => this.parseFraction(v) !== null);
+
+            if (userFrac) {
+                const userFracKey = `${userFrac.num}/${userFrac.den}`;
+                return targetVariants.some(v => {
+                    const targetFrac = this.parseFraction(v);
+                    if (targetFrac) {
+                        return userFrac.num === targetFrac.num && userFrac.den === targetFrac.den;
+                    }
+                    return v === userFracKey || v === `${userFrac.den}분의${userFrac.num}`;
+                });
+            }
+
+            if (isTargetFraction && !userFrac) {
+                return false;
+            }
+
+            // 2. Pure Number / Text comparison
             const normUser = this.normalizeText(userAnswer);
             if (!normUser) return false;
 
-            const variants = String(targetAnswer).split(/[\/,|]/).map(v => this.normalizeText(v)).filter(Boolean);
-            if (variants.length === 0) {
-                variants.push(this.normalizeText(targetAnswer));
-            }
-            return variants.some(v => v === normUser || normUser.includes(v) || v.includes(normUser));
+            const isUserNum = /^\d+$/.test(normUser);
+
+            return targetVariants.some(targetVar => {
+                const normTarget = this.normalizeText(targetVar);
+                const isTargetNum = /^\d+$/.test(normTarget);
+
+                // Numbers must strictly match exactly
+                if (isUserNum || isTargetNum) {
+                    return normUser === normTarget;
+                }
+
+                // Exact text match
+                if (normUser === normTarget) return true;
+
+                // Long term fuzzy match (length >= 4 and >= 75% coverage)
+                if (normTarget.length >= 4 && normUser.length >= 4) {
+                    if (normTarget.includes(normUser) || normUser.includes(normTarget)) {
+                        const minLen = Math.min(normUser.length, normTarget.length);
+                        const maxLen = Math.max(normUser.length, normTarget.length);
+                        if (minLen / maxLen >= 0.75) return true;
+                    }
+                }
+
+                return false;
+            });
         },
 
         grade(question, userResponse) {
@@ -500,7 +585,7 @@
                 };
             } else {
                 const targetAnswers = question.answers || {};
-                const keys = Object.keys(targetAnswers);
+                const keys = sortSubjectiveEntries(Object.entries(targetAnswers)).map(([k]) => k);
 
                 if (keys.length === 0) {
                     return { isCorrect: false, details: {}, userSummary: '', correctSummary: '' };
@@ -1661,7 +1746,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260826.0053</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260826.1530</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -1686,7 +1771,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260826.0053</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260826.1530</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';

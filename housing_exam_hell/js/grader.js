@@ -4,12 +4,20 @@
  */
 
 export const Grader = {
-    /**
-     * Clean and normalize Korean text for flexible grading:
-     * - Strips all whitespaces, periods, commas, quotes
-     * - Normalizes hangul symbols (㉠, ㉡, etc.)
-     * - Lowercases alphabets
-     */
+    parseFraction(str) {
+        if (!str) return null;
+        const clean = String(str).replace(/[\s\(\)\[\]]/g, '').trim();
+        const hangulMatch = clean.match(/^(\d+)분의(\d+)$/);
+        if (hangulMatch) {
+            return { num: parseInt(hangulMatch[2], 10), den: parseInt(hangulMatch[1], 10) };
+        }
+        const slashMatch = clean.match(/^(\d+)\/(\d+)$/);
+        if (slashMatch) {
+            return { num: parseInt(slashMatch[1], 10), den: parseInt(slashMatch[2], 10) };
+        }
+        return null;
+    },
+
     normalizeText(str) {
         if (str === null || str === undefined) return '';
         return String(str)
@@ -20,28 +28,81 @@ export const Grader = {
             .trim();
     },
 
-    /**
-     * Check if user answer matches target answer allowing synonyms / variants
-     */
+    getAnswerVariants(targetStr) {
+        if (!targetStr) return [];
+        const parts = String(targetStr).split(/[,|]|\b또는\b/).map(s => s.trim()).filter(Boolean);
+        const variants = [];
+
+        parts.forEach(part => {
+            const frac = this.parseFraction(part);
+            if (frac) {
+                variants.push(`${frac.num}/${frac.den}`);
+                variants.push(`${frac.den}분의${frac.num}`);
+            } else {
+                if (part.includes('/') && !part.match(/\d+\/\d+/)) {
+                    part.split('/').forEach(sub => {
+                        const norm = this.normalizeText(sub);
+                        if (norm) variants.push(norm);
+                    });
+                } else {
+                    const norm = this.normalizeText(part);
+                    if (norm) variants.push(norm);
+                }
+            }
+        });
+
+        return Array.from(new Set(variants));
+    },
+
     isMatch(userAnswer, targetAnswer) {
+        if (!userAnswer || !targetAnswer) return false;
+
+        const userFrac = this.parseFraction(userAnswer);
+        const targetVariants = this.getAnswerVariants(targetAnswer);
+        const isTargetFraction = targetVariants.some(v => this.parseFraction(v) !== null);
+
+        if (userFrac) {
+            const userFracKey = `${userFrac.num}/${userFrac.den}`;
+            return targetVariants.some(v => {
+                const targetFrac = this.parseFraction(v);
+                if (targetFrac) {
+                    return userFrac.num === targetFrac.num && userFrac.den === targetFrac.den;
+                }
+                return v === userFracKey || v === `${userFrac.den}분의${userFrac.num}`;
+            });
+        }
+
+        if (isTargetFraction && !userFrac) {
+            return false;
+        }
+
         const normUser = this.normalizeText(userAnswer);
         if (!normUser) return false;
 
-        // Target answer might contain multiple acceptable variants separated by / or , or |
-        const variants = String(targetAnswer).split(/[\/,|]/).map(v => this.normalizeText(v)).filter(Boolean);
-        if (variants.length === 0) {
-            variants.push(this.normalizeText(targetAnswer));
-        }
+        const isUserNum = /^\d+$/.test(normUser);
 
-        return variants.some(v => v === normUser || normUser.includes(v) || v.includes(normUser));
+        return targetVariants.some(targetVar => {
+            const normTarget = this.normalizeText(targetVar);
+            const isTargetNum = /^\d+$/.test(normTarget);
+
+            if (isUserNum || isTargetNum) {
+                return normUser === normTarget;
+            }
+
+            if (normUser === normTarget) return true;
+
+            if (normTarget.length >= 4 && normUser.length >= 4) {
+                if (normTarget.includes(normUser) || normUser.includes(normTarget)) {
+                    const minLen = Math.min(normUser.length, normTarget.length);
+                    const maxLen = Math.max(normUser.length, normTarget.length);
+                    if (minLen / maxLen >= 0.75) return true;
+                }
+            }
+
+            return false;
+        });
     },
 
-    /**
-     * Grade a single question (Choice or Subjective)
-     * @param {Object} question
-     * @param {number|Object} userResponse - Choice index (1-5) or Subjective map { "㉠": "답" }
-     * @returns {Object} { isCorrect, details, correctSummary, userSummary }
-     */
     grade(question, userResponse) {
         if (question.type === 'choice') {
             const userChoice = parseInt(userResponse, 10);
@@ -56,7 +117,6 @@ export const Grader = {
                 correctSummary: `${targetChoice}번`
             };
         } else {
-            // Subjective / Short answer with blank keys: { "㉠": "...", "㉡": "..." }
             const targetAnswers = question.answers || {};
             const keys = Object.keys(targetAnswers);
 
@@ -82,7 +142,6 @@ export const Grader = {
                     correct: targetVal,
                     isCorrect: match
                 };
-
                 userParts.push(`[${k}] ${userVal || '(공란)'}`);
                 correctParts.push(`[${k}] ${targetVal}`);
             });
