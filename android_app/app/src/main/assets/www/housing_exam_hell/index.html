@@ -17,9 +17,9 @@
     <meta name="apple-mobile-web-app-title" content="문제지옥">
     
     <!-- Custom Theme Styles -->
-    <link rel="stylesheet" href="css/dark-theme.css?v=2608272131">
-    <link rel="stylesheet" href="css/quiz-layout.css?v=2608272131">
-    <link rel="stylesheet" href="css/tablet-canvas.css?v=2608272131">
+    <link rel="stylesheet" href="css/dark-theme.css?v=2608272134">
+    <link rel="stylesheet" href="css/quiz-layout.css?v=2608272134">
+    <link rel="stylesheet" href="css/tablet-canvas.css?v=2608272134">
 </head>
 <body data-subject="관계법규">
 
@@ -35,7 +35,7 @@
                 </a>
                 <span id="header-brand-badge" class="brand-badge">관계법규</span>
                 <span id="header-mode-title" class="mode-title">
-                    <i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260827.2131</span>
+                    <i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260827.2134</span>
                 </span>
             </div>
 
@@ -272,6 +272,9 @@
                         </button>
                         <button type="button" class="mgr-tab-btn" data-tab="needs_edit" id="mgr-tab-needs-edit">
                             <i class="fa-solid fa-flag text-amber-400"></i> 수정필요 (<span id="mgr-cnt-needs-edit">0</span>)
+                        </button>
+                        <button type="button" class="mgr-tab-btn" data-tab="custom_edits" id="mgr-tab-custom-edits">
+                            <i class="fa-solid fa-pen-to-square text-emerald-400"></i> 수정완료 (<span id="mgr-cnt-custom-edits">0</span>)
                         </button>
                         <button type="button" class="mgr-tab-btn" data-tab="search_all" id="mgr-tab-search-all">
                             <i class="fa-solid fa-database text-sky-400"></i> 전체 검색 (3,900)
@@ -566,6 +569,9 @@
                 <button id="tab-btn-needs-edit" class="btn-main-tab" data-tab="needs_edit">
                     <i class="fa-solid fa-flag text-amber-400"></i> 🚩 수정 필요 문제함 (<span id="cnt-needs-edit-tab">0</span>)
                 </button>
+                <button id="tab-btn-custom-edits" class="btn-main-tab" data-tab="custom_edits">
+                    <i class="fa-solid fa-pen-to-square text-emerald-400"></i> ✏️ 수정완료된 문제 (<span id="cnt-custom-edits-tab">0</span>)
+                </button>
                 <button id="tab-btn-search-all" class="btn-main-tab" data-tab="search_all">
                     <i class="fa-solid fa-magnifying-glass text-sky-400"></i> 🔍 전체 문제 검색·수정
                 </button>
@@ -701,15 +707,15 @@
     <!-- Firebase SDK (Compat) for Realtime Cloud Sync -->
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-    <script src="js/cloud-sync.js?v=2608272131"></script>
+    <script src="js/cloud-sync.js?v=2608272134"></script>
 
     <!-- Master Exam Data Bundle (3,900 Questions) -->
-    <script src="data/exam_bank.js?v=2608272131"></script>
+    <script src="data/exam_bank.js?v=2608272134"></script>
 
     <!-- Core Keywords 300 DB (관계법규 300 + 관리실무 300) -->
-    <script src="data/core_keywords_db.js?v=2608272131"></script>
+    <script src="data/core_keywords_db.js?v=2608272134"></script>
 
     <!-- Application Script -->
-    <script src="js/app.js?v=2608272131"></script>
+    <script src="js/app.js?v=2608272134"></script>
 </body>
 </html>
