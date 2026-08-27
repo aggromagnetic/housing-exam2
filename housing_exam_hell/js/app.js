@@ -211,13 +211,17 @@
         async saveQuestionEdit(qKey, editData) {
             try {
                 const map = JSON.parse(localStorage.getItem('housing_exam_custom_edits') || '{}');
-                map[qKey] = {
+                const item = {
                     ...editData,
-                    editedAt: new Date().toISOString()
+                    editedAt: editData.editedAt || new Date().toISOString()
                 };
+                map[qKey] = item;
                 localStorage.setItem('housing_exam_custom_edits', JSON.stringify(map));
-            } catch (e) {}
-            if (window.CloudSync) window.CloudSync.schedulePush();
+                if (window.CloudSync) window.CloudSync.schedulePush();
+                return item;
+            } catch (e) {
+                return editData;
+            }
         },
 
         async getQuestionEdit(qKey) {
@@ -3146,17 +3150,19 @@
 
         const matchesSearch = (q) => {
             if (!qLower) return true;
+            applyCustomEdits(q);
             const title = (q.question || q.title || '').toLowerCase();
             const chap = (q.chapterName || '').toLowerCase();
             const pass = (q.passage || '').toLowerCase();
+            const opts = Array.isArray(q.options) ? q.options.join(' ').toLowerCase() : '';
             const exp = (q.explanation || '').toLowerCase();
             const tip = (q.tip || '').toLowerCase();
             const ans = String(q.answer || '').toLowerCase();
             const ansObj = JSON.stringify(q.answers || {}).toLowerCase();
             const idStr = String(q.id || '');
             return title.includes(qLower) || chap.includes(qLower) || pass.includes(qLower) ||
-                   exp.includes(qLower) || tip.includes(qLower) || ans.includes(qLower) ||
-                   ansObj.includes(qLower) || idStr === qLower;
+                   opts.includes(qLower) || exp.includes(qLower) || tip.includes(qLower) ||
+                   ans.includes(qLower) || ansObj.includes(qLower) || idStr === qLower;
         };
 
         let list = [];
@@ -3181,6 +3187,11 @@
             });
             if (filterSubj !== 'all') list = list.filter(q => q.subject === filterSubj);
             if (qLower) list = list.filter(matchesSearch);
+            list.sort((a, b) => {
+                const timeA = new Date(state.needsEditMap[a.qKey]?.flaggedAt || 0).getTime();
+                const timeB = new Date(state.needsEditMap[b.qKey]?.flaggedAt || 0).getTime();
+                return timeB - timeA;
+            });
         } else if (tabName === 'custom_edits') {
             list = allCustomEditsKeys.map(k => {
                 const isGwanri = k.startsWith('관리실무');
@@ -3198,6 +3209,11 @@
             });
             if (filterSubj !== 'all') list = list.filter(q => q.subject === filterSubj);
             if (qLower) list = list.filter(matchesSearch);
+            list.sort((a, b) => {
+                const timeA = new Date(state.customEdits[a.qKey]?.editedAt || 0).getTime();
+                const timeB = new Date(state.customEdits[b.qKey]?.editedAt || 0).getTime();
+                return timeB - timeA;
+            });
         } else if (tabName === 'search_all') {
             if (!qLower) {
                 list = [];
@@ -3364,15 +3380,32 @@
             elements.manager.metaType.textContent = q.type === 'choice' ? '객관식 5지선다' : '주관식 단답/기입형';
         }
         if (elements.manager.metaId) {
-            let coreHtml = '';
-            const coreMatch = q.topCoreMatch && q.topCoreMatch.score >= 5 ? q.topCoreMatch.item : null;
-            if (coreMatch) {
-                const isSuper = (q.topScore >= 6 || (q.topCoreMatch && q.topCoreMatch.score >= 6));
-                const badgeClass = isSuper ? 'badge-high-yield mgr-badge badge-tier-super' : 'badge-high-yield mgr-badge';
-                const badgeIcon = isSuper ? '🔥 초특급' : '⭐ 핵심 300선';
-                coreHtml = ` <span class="${badgeClass}" title="${coreMatch.note}">${badgeIcon} #${coreMatch.id} ${coreMatch.tag}</span>`;
+            let topMatch = q.topCoreMatch;
+            let topScore = q.topScore;
+            if (topScore === undefined) {
+                const matches = ExamEngine.matchQuestionKeywords(q, q.subject);
+                topMatch = matches.length > 0 ? matches[0] : null;
+                topScore = topMatch ? topMatch.score : 0;
             }
-            elements.manager.metaId.innerHTML = `[문항 ID: ${q.id}]${coreHtml}`;
+
+            let scoreHtml = '';
+            if (topScore >= 6 && topMatch && topMatch.item) {
+                const matchKeywords = (topMatch.matched && topMatch.matched.length > 0) ? `매칭: ${topMatch.matched.join(', ')}` : '';
+                const matchTip = [topMatch.item.topic, matchKeywords, topMatch.item.note].filter(Boolean).join(' | ').replace(/"/g, '&quot;');
+                scoreHtml = ` <span class="badge-high-yield mgr-badge badge-tier-super" title="${matchTip}">[Score: ${topScore}/7 🔥초특급 #${topMatch.item.id}]</span>`;
+            } else if (topScore === 5 && topMatch && topMatch.item) {
+                const matchKeywords = (topMatch.matched && topMatch.matched.length > 0) ? `매칭: ${topMatch.matched.join(', ')}` : '';
+                const matchTip = [topMatch.item.topic, matchKeywords, topMatch.item.note].filter(Boolean).join(' | ').replace(/"/g, '&quot;');
+                scoreHtml = ` <span class="badge-high-yield mgr-badge" title="${matchTip}">[Score: 5/7 ⭐핵심 #${topMatch.item.id}]</span>`;
+            } else if (topScore >= 2 && topMatch && topMatch.item) {
+                const matchKeywords = (topMatch.matched && topMatch.matched.length > 0) ? `매칭: ${topMatch.matched.join(', ')}` : '';
+                const matchTip = [topMatch.item.topic, matchKeywords].filter(Boolean).join(' | ').replace(/"/g, '&quot;');
+                scoreHtml = ` <span class="mgr-badge-score-mid" title="${matchTip}">[Score: ${topScore}/7 #${topMatch.item.id}]</span>`;
+            } else {
+                scoreHtml = ` <span class="mgr-badge-score-low" title="핵심 300선 매칭 키워드 없음">[Score: ${topScore || 0}/7]</span>`;
+            }
+
+            elements.manager.metaId.innerHTML = `[문항 ID: ${q.id}]${scoreHtml}`;
         }
 
         // Wrong record delete button visibility
@@ -3591,9 +3624,9 @@
                 }
             }
 
-            await IDBStore.saveQuestionEdit(qKey, editData);
+            const savedItem = await IDBStore.saveQuestionEdit(qKey, editData);
             if (!state.customEdits) state.customEdits = {};
-            state.customEdits[qKey] = editData;
+            state.customEdits[qKey] = savedItem || editData;
             applyCustomEdits(q);
 
             // Update badges and left list card
@@ -4111,8 +4144,9 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
                     editData.answer = Object.values(sortedAnswers).join(', ');
                 }
 
-                await IDBStore.saveQuestionEdit(qKey, editData);
-                state.customEdits[qKey] = editData;
+                const savedItem = await IDBStore.saveQuestionEdit(qKey, editData);
+                if (!state.customEdits) state.customEdits = {};
+                state.customEdits[qKey] = savedItem || editData;
                 applyCustomEdits(q);
 
                 // If currently taking a quiz on this question, update current view

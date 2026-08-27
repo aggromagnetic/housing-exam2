@@ -2238,3 +2238,33 @@ body.manager-mode .app-header .header-content {
     font-size: 0.82rem;
     margin-top: 2px;
 }
+
+.mgr-badge-score-mid {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(56, 189, 248, 0.1);
+    color: #38BDF8;
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    padding: 2px 7px;
+    border-radius: 5px;
+    font-size: 0.73rem;
+    font-weight: 700;
+    font-family: monospace, sans-serif;
+    vertical-align: middle;
+}
+
+.mgr-badge-score-low {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(148, 163, 184, 0.08);
+    color: #94A3B8;
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    padding: 2px 7px;
+    border-radius: 5px;
+    font-size: 0.73rem;
+    font-weight: 600;
+    font-family: monospace, sans-serif;
+    vertical-align: middle;
+}

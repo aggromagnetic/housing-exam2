@@ -305,12 +305,16 @@ export const IDBStore = {
     async saveQuestionEdit(qKey, editData) {
         try {
             const map = JSON.parse(localStorage.getItem('housing_exam_custom_edits') || '{}');
-            map[qKey] = {
+            const item = {
                 ...editData,
-                editedAt: new Date().toISOString()
+                editedAt: editData.editedAt || new Date().toISOString()
             };
+            map[qKey] = item;
             localStorage.setItem('housing_exam_custom_edits', JSON.stringify(map));
-        } catch (e) {}
+            return item;
+        } catch (e) {
+            return editData;
+        }
     },
 
     /**
