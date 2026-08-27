@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 - 제76강 완벽 정밀 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+            letter-spacing: -0.05em;
+        }
+        
+        h1 {
+            font-size: 12pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        /* 토너 절약 4색 시각 강조 클래스 (배경색 배제) */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #16803d; 
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #6d28d9; 
+        }
+        
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        ol.quiz-list {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+            line-height: 2.1;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        /* 하단 정답표 3단 그리드 배치 */
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px 15px;
+        }
+
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        제76강. 승강기 사고·고장 법정 기준, 감염병 예방 소독, 신·재생에너지, 실내공기질 및 먹는물 수질기준 정밀 학습 노트
+    </h1>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        1. 승강기 중대한 사고·고장의 법정 분류 기준, 통보 의무 및 운행정지 명령권자
+    </h2>
+    <ul>
+        <li><strong>★ 승강기 중대한 사고 및 고장의 법정 통보 의무 (★출제 1순위)</strong>:
+            <br>&rarr; 관리주체(또는 승강기 안전관리자)는 승강기로 인하여 <span class="highlight-red">중대한 사고</span> 또는 <span class="highlight-purple">중대한 고장</span>이 발생한 사실을 알게 된 경우 지체 없이 <span class="highlight-red">한국승강기안전공단</span>에 통보하여야 함.
+        </li>
+        <li><strong>★ 법정 중대한 사고 3가지 기준 (★주관식 최다 출제 수치)</strong>:
+            <ol>
+                <li><span class="highlight-red">★ 사망자 발생</span>: 사망자가 발생한 사고 (사망자 수 불문).</li>
+                <li><span class="highlight-purple">★ 입원 치료 부상</span>: 사고 발생일부터 7일 이내에 실시된 의사의 최초 진단 결과 <span class="highlight-purple">1주 이상의 입원 치료</span>가 필요한 부상자가 발생한 사고.</li>
+                <li><span class="highlight-blue">★ 통원/일반 치료 부상</span>: 사고 발생일부터 7일 이내에 실시된 의사의 최초 진단 결과 <span class="highlight-blue">3주 이상의 치료</span>가 필요한 부상자가 발생한 사고.</li>
+            </ol>
+        </li>
+        <li><strong>★ 법정 중대한 고장 5가지 및 정전·천재지변 예외 특례 (★함정 지문 주의)</strong>:
+            <ol>
+                <li>출입문이 <span class="highlight-red">열린 상태에서 승강기가 운행</span>되는 경우.</li>
+                <li>출입문이 <span class="highlight-red">이탈되거나 파손</span>되어 승강기가 운행되지 않는 경우.</li>
+                <li>승강기가 <span class="highlight-purple">최상층 또는 최하층을 지나</span> 계속 운행되는 경우.</li>
+                <li><span class="highlight-blue">★ 지정층 미운행 고장</span>: 승강기가 정지하여야 하는 층으로 운행되지 않은 경우. (단, <span class="highlight-blue">정전이나 천재지변</span>으로 인하여 발생한 경우는 중대한 고장에서 <span class="highlight-blue">제외</span>함!).</li>
+                <li><span class="highlight-green">★ 갇힘 고장</span>: 승강기가 운행 중 정지된 고장으로서 이용자가 운반구에 갇히게 되는 경우. (단, <span class="highlight-green">정전이나 천재지변</span>으로 인하여 발생한 경우는 중대한 고장에서 <span class="highlight-green">제외</span>함!).</li>
+            </ol>
+        </li>
+        <li><strong>★ 행정처분 - 승강기 운행정지 명령권자 (★출제 핵심)</strong>:
+            <br>&rarr; 행정안전부장관이 직접 운행정지를 명하는 것이 아니라, 관할 <span class="highlight-red">특별자치시장·특별자치도지사·시장·군수·구청장</span>이 해당 승강기의 운행정지를 명함. (※ 행정안전부장관이 운행정지를 명한다는 지문은 100% 오답!).
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 22%;">구분 항목</th>
+                <th style="width: 48%;">법정 세부 요건 및 기준 수치</th>
+                <th style="width: 30%;">수험 핵심 포인트</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th><span class="highlight-red">중대한 사고</span></th>
+                <td>사망자 발생 / <span class="highlight-purple">1주 이상 입원치료</span> / <span class="highlight-blue">3주 이상 치료</span></td>
+                <td>1주(입원), 3주(치료) 주관식 단골</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-purple">중대한 고장</span></th>
+                <td>문 열림 운행, 문 이탈·파손, 최상/최하층 초과, 갇힘 등</td>
+                <td><span class="highlight-purple">정전·천재지변</span> 원인 시 고장 제외</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-blue">운행정지 명령</span></th>
+                <td><span class="highlight-blue">특별자치시장·지사·시장·군수·구청장</span> 명함</td>
+                <td>행정안전부장관 명함 오답 출제</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        2. 감염병예방법상 소독 방법 5가지, 의무 설치 대상 및 계절별 소독 실시 주기
+    </h2>
+    <ul>
+        <li><strong>★ 법정 소독의 방법 5가지 (감염병예방법 시행규칙 제36조)</strong>:
+            <br>&rarr; ① <span class="highlight-blue">소각</span>, ② <span class="highlight-purple">증기소독</span>, ③ <span class="highlight-red">끓는 물 소독</span>, ④ <span class="highlight-green">약물소독</span>, ⑤ <span class="highlight-blue">일광소독</span>.
+        </li>
+        <li><strong>★ 공동주택 소독 의무 설치 대상 및 법정 주체</strong>:
+            <br>&rarr; 의무 설치 대상: <span class="highlight-red">300세대 이상</span> 공동주택. (의무관리대상 공동주택).
+            <br>&rarr; 소독 의무 주체: 공동주택의 <span class="highlight-purple">관리운영자(관리주체)</span>. (소독업 신고자에게 위탁 실시가 원칙이나, 주택관리업자가 소독 장비를 갖춘 경우 직접 실시 가능). 위반 시 100만원 이하 과태료.
+        </li>
+        <li><strong>★ 하절기 vs 동절기 법정 소독 실시 주기 (★최다 출제 주관식 수치)</strong>:
+            <ol>
+                <li><span class="highlight-red">★ 하절기 (4월 ~ 9월)</span>: 수인성 감염병 발생 위험이 높아 <span class="highlight-red">3개월에 1회 이상</span> 실시.</li>
+                <li><span class="highlight-blue">★ 동절기 (10월 ~ 3월)</span>: <span class="highlight-blue">6개월에 1회 이상</span> 실시.</li>
+            </ol>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+        3. 신에너지 및 재생에너지 개발·이용·보급 촉진법상 법정 구분 2종 정밀 비교
+    </h2>
+    <ul>
+        <li><strong>★ 신에너지 (New Energy) 3가지 (★주관식 단골)</strong>:
+            <br>&rarr; 기존의 화석연료를 변환시키거나 수소·산소 등의 화학반응을 통하여 전기 또는 열을 이용하는 에너지.
+            <br>&rarr; 종류 3가지: ① <span class="highlight-red">수소에너지</span>, ② <span class="highlight-red">연료전지</span>, ③ <span class="highlight-red">석탄을 액화·가스화한 에너지</span>(중질산사유 가스화 포함). (※ 암기 팁: 수소, 연료전지, 석탄액화).
+        </li>
+        <li><strong>★ 재생에너지 (Renewable Energy) 7가지</strong>:
+            <br>&rarr; 햇빛, 물, 지열, 강수, 생물유기체 등을 포함하는 재생 가능한 에너지를 변환시켜 이용하는 에너지.
+            <br>&rarr; 종류 7가지: ① <span class="highlight-blue">태양에너지</span>(태양열·태양광), ② <span class="highlight-blue">풍력</span>, ③ <span class="highlight-blue">수력</span>, ④ <span class="highlight-blue">해양에너지</span>, ⑤ <span class="highlight-blue">지열에너지</span>, ⑥ <span class="highlight-purple">바이오에너지</span>, ⑦ <span class="highlight-purple">폐기물에너지</span>.
+        </li>
+        <li><strong>★ 절대 예외 함정 (신·재생에너지 어디에도 해당하지 않는 4가지)</strong>:
+            <br>&rarr; <span class="highlight-red">석유, 석탄, 원자력, 천연가스(LNG)</span>는 신에너지도 아니고 재생에너지도 아님! (객관식 오답 단골 출제).
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">에너지 구분</th>
+                <th style="width: 50%;">법정 세부 종류 및 항목</th>
+                <th style="width: 25%;">수험 핵심 출제 함정</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th><span class="highlight-red">신에너지</span></th>
+                <td><span class="highlight-red">수소에너지, 연료전지, 석탄 액화·가스화</span></td>
+                <td>화석연료 변환 기술</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-blue">재생에너지</span></th>
+                <td><span class="highlight-blue">태양, 풍력, 수력, 해양, 지열, 바이오, 폐기물</span></td>
+                <td>재생 가능한 자연 에너지</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-purple">해당 없음 (일반)</span></th>
+                <td><span class="highlight-purple">석유, 석탄, 원자력, 천연가스</span></td>
+                <td>신·재생에너지 분류 절대 금지</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        4. 실내공기질 관리법상 신축 공동주택 측정·공고 기한, 7대 측정한목 및 권고기준
+    </h2>
+    <ul>
+        <li><strong>★ 법정 적용 대상 공동주택 및 측정 주체</strong>:
+            <br>&rarr; 적용 대상: <span class="highlight-red">100세대 이상</span>인 공동주택 (아파트, 연립주택, 기숙사).
+            <br>&rarr; 측정 주체 및 공고 기한: 신축 공동주택의 시공자는 실내공기질을 측정하여 그 결과를 <span class="highlight-purple">주민 입주 7일 전부터 60일간</span> 주민들이 잘 볼 수 있는 장소(관리사무소 및 각 동 게시판 등)에 공고하여야 함. (※ 입주 개시 '후' 공고는 오답!).
+        </li>
+        <li><strong>★ 신축 공동주택 실내공기질 측정 7대 항목 (★암기 공식: 벤스 자일톨 폼 라돈)</strong>:
+            <br>&rarr; ① <span class="highlight-blue">폼알데하이드</span>, ② <span class="highlight-blue">벤젠</span>, ③ <span class="highlight-blue">톨루엔</span>, ④ <span class="highlight-blue">에틸벤젠</span>, ⑤ <span class="highlight-blue">자일렌</span>, ⑥ <span class="highlight-blue">스티렌</span>, ⑦ <span class="highlight-purple">라돈</span>. (※ 휘발성유기화합물(TVOC) 및 이산화질소는 신축 측정 7대 항목에 미포함!).
+        </li>
+        <li><strong>★ 신축 공동주택 실내공기질 법정 권고기준 수치 (★주관식/객관식 최다 출제)</strong>:
+            <ol>
+                <li><span class="highlight-red">★ 폼알데하이드 (CB H₂O)</span>: <span class="highlight-red">210 ㎍/㎥ 이하</span>.</li>
+                <li><span class="highlight-purple">★ 벤젠 (C₆H₆)</span>: <span class="highlight-purple">30 ㎍/㎥ 이하</span>.</li>
+                <li><span class="highlight-blue">★ 톨루엔 (C₇H₈)</span>: <span class="highlight-blue">1,000 ㎍/㎥ 이하</span>.</li>
+                <li><span class="highlight-green">★ 에틸벤젠</span>: <span class="highlight-green">360 ㎍/㎥ 이하</span>.</li>
+                <li><span class="highlight-red">★ 자일렌</span>: <span class="highlight-red">700 ㎍/㎥ 이하</span>.</li>
+                <li><span class="highlight-purple">★ 스티렌</span>: <span class="highlight-purple">300 ㎍/㎥ 이하</span>.</li>
+                <li><span class="highlight-blue">★ 라돈 (Rn)</span>: <span class="highlight-blue">148 Bq/㎥ 이하</span>.</li>
+            </ol>
+        </li>
+        <li><strong>★ 오염물질 방출 건축자재 고시기준 (방출품목별 수치)</strong>:
+            <br>&rarr; 접착제, 페인트, 실란트, 퍼티, 벽지, 바닥재: 폼알데하이드 <span class="highlight-red">0.02 mg/㎡·h 이하</span>, 톨루엔 <span class="highlight-purple">0.08 mg/㎡·h 이하</span>.
+            <br>&rarr; 목질판상제품(합판 등): 폼알데하이드 <span class="highlight-red">0.05 mg/㎡·h 이하</span>, 톨루엔 <span class="highlight-purple">0.08 mg/㎡·h 이하</span>.
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">측정 항목 명칭</th>
+                <th style="width: 35%;">법정 권고기준 수치 (㎍/㎥)</th>
+                <th style="width: 40%;">수험 암기 팁 및 출제 포인트</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th><span class="highlight-red">폼알데하이드</span></th>
+                <td><span class="highlight-red">210 ㎍/㎥ 이하</span></td>
+                <td>이백십 암기 (210)</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-purple">벤젠 / 스티렌</span></th>
+                <td>벤젠 <span class="highlight-purple">30</span> / 스티렌 <span class="highlight-purple">300 ㎍/㎥ 이하</span></td>
+                <td>2자 30 / 3자 300 암기</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-blue">톨루엔 / 자일렌</span></th>
+                <td>톨루엔 <span class="highlight-blue">1,000</span> / 자일렌 <span class="highlight-blue">700 ㎍/㎥ 이하</span></td>
+                <td>톨루엔 1000 / 자일렌 700</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-green">에틸벤젠 / 라돈</span></th>
+                <td>에틸 <span class="highlight-green">360 ㎍/㎥</span> / 라돈 <span class="highlight-green">148 Bq/㎥</span></td>
+                <td>라돈 단위 Bq/㎥ 유의</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+        5. 먹는물 수질기준 6가지 구분 및 미생물·유해영향 무기물·심리적 영향물질 수치
+    </h2>
+    <ul>
+        <li><strong>★ 먹는물 수질기준 6가지 법정 분류 (먹는물 수질기준 및 검사 등에 관한 규칙 별표 1)</strong>:
+            <br>&rarr; ① <span class="highlight-blue">미생물에 관한 기준</span>, ② <span class="highlight-red">건강상 유해영향 무기물질에 관한 기준</span>, ③ <span class="highlight-purple">건강상 유해영향 유기물질에 관한 기준</span>, ④ <span class="highlight-green">소독제 및 소독부산물에 관한 기준</span>, ⑤ <span class="highlight-blue">심리적 유해영향 물질에 관한 기준</span>, ⑥ <span class="highlight-purple">방사능에 관한 기준</span>.
+        </li>
+        <li><strong>★ 1) 미생물에 관한 법정 수질기준 (★단골 기출)</strong>:
+            <ol>
+                <li><span class="highlight-blue">★ 일반세균</span>: 1 mL 중 <span class="highlight-blue">100 CFU 이하</span>일 것.</li>
+                <li><span class="highlight-red">★ 총대장균군 / 대장균 또는 분원성 대장균군</span>: 100 mL에서 <span class="highlight-red">검출되지 아니할 것</span>.</li>
+            </ol>
+        </li>
+        <li><strong>★ 2) 건강상 유해영향 무기물질 주요 기준</strong>:
+            <br>&rarr; 납(Pb): <span class="highlight-red">0.01 mg/L 이하</span> / 수은(Hg): <span class="highlight-red">0.001 mg/L 이하</span> / 시안(CN): <span class="highlight-red">0.01 mg/L 이하</span> / 불소: <span class="highlight-purple">1.5 mg/L 이하</span> / 질산성질소: <span class="highlight-purple">10 mg/L 이하</span>.
+        </li>
+        <li><strong>★ 3) 심리적 유해영향 물질 주요 수치 (★주관식 최다 기출)</strong>:
+            <ol>
+                <li><span class="highlight-red">★ 경도 (Hardness)</span>: <span class="highlight-red">1,000 mg/L 이하</span>. (단, <span class="highlight-red">수돗물의 경우 300 mg/L 이하</span>).</li>
+                <li><span class="highlight-purple">★ 동 (Cu)</span>: <span class="highlight-purple">1 mg/L 이하</span>.</li>
+                <li><span class="highlight-blue">★ 색도</span>: <span class="highlight-blue">5도 이하</span>.</li>
+                <li><span class="highlight-green">★ 수소이온농도 (pH)</span>: <span class="highlight-green">pH 5.8 이상 8.5 이하</span>.</li>
+                <li><span class="highlight-red">★ 염소이온 (Cl⁻)</span>: <span class="highlight-red">250 mg/L 이하</span>.</li>
+                <li><span class="highlight-purple">★ 증발잔류물</span>: <span class="highlight-purple">500 mg/L 이하</span>.</li>
+                <li><span class="highlight-blue">★ 탁도 (Turbidity)</span>: <span class="highlight-blue">1 NTU 이하</span>. (단, <span class="highlight-blue">수돗물의 경우 0.5 NTU 이하</span>).</li>
+            </ol>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+        6. 주택건설기준상 실외소음도 소음방지 대책 법정 기준
+    </h2>
+    <ul>
+        <li><strong>★ 주택건설기준상 실외소음도 기준 (주택건설기준 등에 관한 규정 제9조)</strong>:
+            <br>&rarr; 공동주택을 건설하는 지점의 실외소음도는 <span class="highlight-red">65데시벨(65 dB) 미만</span>이어야 함.
+            <br>&rarr; 실외소음도가 <span class="highlight-red">65 dB 이상</span>인 경우 방음벽, 방음숲 등의 방음시설을 설치하여 건설지점의 소음도가 <span class="highlight-purple">65 dB 미만</span>(실내소음도 적용 시 <span class="highlight-blue">45 dB 이하</span>)이 되도록 조치하여야 함.
+        </li>
+    </ul>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+            💡 [수험 핵심 팁] 제76강 실전 출제 포인트 & 함정 방지 최종 체크
+        </div>
+        <ul>
+            <li><strong>승강기 사고·고장 핵심 수치</strong>: 중대한 사고 = 사망자, <span class="highlight-purple">1주 이상 입원치료</span>, <span class="highlight-blue">3주 이상 치료</span> / 정전·천재지변 원인 고장 = 중대한 고장에서 <span class="highlight-red">제외</span> / 운행정지 명령 = <span class="highlight-blue">시·군·구청장</span> (행안부장관 X).</li>
+            <li><strong>소독 수치 묶음</strong>: 소독 방법 5가지 = <span class="highlight-blue">소각, 증기, 끓는물, 약물, 일광</span> / 의무대상 = <span class="highlight-red">300세대 이상</span> / 하절기(4~9월) = <span class="highlight-red">3개월에 1회 이상</span> / 동절기(10~3월) = <span class="highlight-blue">6개월에 1회 이상</span>.</li>
+            <li><strong>신·재생에너지 구분</strong>: 신에너지 3가지 = <span class="highlight-red">수소, 연료전지, 석탄액화가스화</span> / 석유·석탄·원자력·천연가스는 신·재생에너지 <span class="highlight-purple">아님</span>!</li>
+            <li><strong>실내공기질 & 수질 수치</strong>: 공고 = 입주 <span class="highlight-purple">7일 전부터 60일간</span> / 폼알데하이드 = <span class="highlight-red">210 ㎍/㎥</span> / 벤젠 = <span class="highlight-purple">30</span>, 스티렌 = <span class="highlight-purple">300</span> / 톨루엔 = <span class="highlight-blue">1,000</span>, 자일렌 = <span class="highlight-blue">700</span> / 일반세균 = <span class="highlight-blue">100 CFU</span>, 대장균 = <span class="highlight-red">불검출</span> / 수돗물 경도 = <span class="highlight-red">300 mg/L</span>, pH = <span class="highlight-green">5.8~8.5</span>, 염소이온 = <span class="highlight-red">250 mg/L</span>, 증발잔류물 = <span class="highlight-purple">500 mg/L</span>, 수돗물 탁도 = <span class="highlight-blue">0.5 NTU</span>.</li>
+        </ul>
+    </div>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>주관식 단답형 및 빈칸 채우기 실전 훈련</h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡, ㉢)에 들어갈 알맞은 핵심 용어나 법정 수치, 단위를 아래 빈칸에 직접 작성해 보십시오.</p>
+
+    <ol class="quiz-list">
+        <li>
+            승강기 중대한 사고 중 부상자의 기준은 7일 이내 의사의 최초 진단 결과 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )주 이상의 입원치료 또는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )주 이상의 치료가 필요한 경우이다.
+        </li>
+        <li>
+            승강기 고장 중 정지해야 하는 층으로 운행되지 않거나 갇힘 고장이 발생하더라도 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이나 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )(으)로 인하여 발생한 경우에는 중대한 고장에서 제외한다.
+        </li>
+        <li>
+            승강기 안전검사에 불합격한 승강기 등의 운행정지 명령은 행정안전부장관이 아닌 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )·( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )·시장·군수·구청장이 명한다.
+        </li>
+        <li>
+            감염병예방법령상 법정 소독의 방법 5가지는 소각, ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ), 끓는 물 소독, ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ), 일광소독이다.
+        </li>
+        <li>
+            감염병예방법령상 공동주택 중 소독을 의무적으로 실시하여야 하는 대상은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )세대 이상인 공동주택이다.
+        </li>
+        <li>
+            공동주택의 소독 실시 주기는 4월부터 9월까지는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )개월에 1회 이상, 10월부터 3월까지는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )개월에 1회 이상 실시하여야 한다.
+        </li>
+        <li>
+            신에너지 및 재생에너지 개발·이용·보급 촉진법상 신에너지 3가지는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )에너지, ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ), 석탄을 액화·가스화한 에너지이다.
+        </li>
+        <li>
+            태양, 풍력, 수력, 해양, 지열, 바이오 및 폐기물 에너지는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )에너지에 해당하며, 석유·석탄·원자력·천연가스는 이에 해당하지 아니한다.
+        </li>
+        <li>
+            실내공기질 관리법령상 실내공기질 측정 및 공고 의무 대상 신축 공동주택은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )세대 이상인 공동주택이다.
+        </li>
+        <li>
+            신축 공동주택의 시공자는 실내공기질 측정결과를 주민 입주 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 전부터 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일간 주민들이 잘 볼 수 있는 장소에 공고하여야 한다.
+        </li>
+        <li>
+            신축 공동주택의 실내공기질 권고기준 중 폼알데하이드는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) ㎍/㎥ 이하, 벤젠은 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) ㎍/㎥ 이하이어야 한다.
+        </li>
+        <li>
+            신축 공동주택의 실내공기질 권고기준 중 톨루엔은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) ㎍/㎥ 이하, 라돈은 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) Bq/㎥ 이하이어야 한다.
+        </li>
+        <li>
+            오염물질 방출 건축자재 고시기준 중 접착제 및 페인트의 폼알데하이드 방출량은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) mg/㎡·h 이하, 톨루엔 방출량은 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) mg/㎡·h 이하이어야 한다.
+        </li>
+        <li>
+            오염물질 방출 건축자재 고시기준 중 목질판상제품의 폼알데하이드 방출량은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) mg/㎡·h 이하이어야 한다.
+        </li>
+        <li>
+            먹는물 수질기준 중 일반세균 및 대장균군이 속하는 분류 항목은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )에 관한 기준이다.
+        </li>
+        <li>
+            먹는물 수질기준 중 일반세균은 1 mL 중 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) CFU 이하이어야 하고, 총대장균군은 100 mL에서 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )되지 아니하여야 한다.
+        </li>
+        <li>
+            먹는물 수질기준 중 건강상 유해영향 무기물질인 납은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) mg/L 이하, 수은은 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) mg/L 이하이어야 한다.
+        </li>
+        <li>
+            먹는물 수질기준 중 심리적 유해영향 물질인 경도는 수돗물의 경우 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) mg/L 이하, 염소이온은 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) mg/L 이하이어야 한다.
+        </li>
+        <li>
+            먹는물 수질기준 중 수소이온농도는 pH ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 이상 pH ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 이하이어야 하고, 증발잔류물은 ( ㉢&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) mg/L 이하이어야 한다.
+        </li>
+        <li>
+            주택건설기준 등에 관한 규정상 공동주택을 건설하는 지점의 실외소음도는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) dB 미만이어야 한다.
+        </li>
+    </ol>
+
+    <div style="font-size: 9.5pt; color: #666666; margin-top: 30px; padding: 15px; border-top: 1px dashed #666666; line-height: 1.8;">
+        <strong style="display: block; margin-bottom: 10px; color: #333333;">[제76강 주관식 단답형 정답 리스트]</strong>
+        <div class="answer-grid">
+            <div><strong>1.</strong> ㉠ 1, ㉡ 3</div>
+            <div><strong>2.</strong> ㉠ 정전, ㉡ 천재지변</div>
+            <div><strong>3.</strong> ㉠ 특별자치시장, ㉡ 특별자치도지사</div>
+            <div><strong>4.</strong> ㉠ 증기소독, ㉡ 약물소독</div>
+            <div><strong>5.</strong> ㉠ 300</div>
+            <div><strong>6.</strong> ㉠ 3, ㉡ 6</div>
+            <div><strong>7.</strong> ㉠ 수소, ㉡ 연료전지</div>
+            <div><strong>8.</strong> ㉠ 재생</div>
+            <div><strong>9.</strong> ㉠ 100</div>
+            <div><strong>10.</strong> ㉠ 7, ㉡ 60</div>
+            <div><strong>11.</strong> ㉠ 210, ㉡ 30</div>
+            <div><strong>12.</strong> ㉠ 1,000, ㉡ 148</div>
+            <div><strong>13.</strong> ㉠ 0.02, ㉡ 0.08</div>
+            <div><strong>14.</strong> ㉠ 0.05</div>
+            <div><strong>15.</strong> ㉠ 미생물</div>
+            <div><strong>16.</strong> ㉠ 100, ㉡ 검출</div>
+            <div><strong>17.</strong> ㉠ 0.01, ㉡ 0.001</div>
+            <div><strong>18.</strong> ㉠ 300, ㉡ 250</div>
+            <div><strong>19.</strong> ㉠ 5.8, ㉡ 8.5, ㉢ 500</div>
+            <div><strong>20.</strong> ㉠ 65</div>
+        </div>
+    </div>
+
+</body>
+</html>
