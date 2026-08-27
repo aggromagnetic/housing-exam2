@@ -1652,6 +1652,7 @@
                 bloodBar: document.getElementById('blood-progress-fill'),
                 bloodScoreText: document.getElementById('blood-score-text'),
                 btnPen: document.getElementById('btn-toggle-pen'),
+                btnManager: document.getElementById('btn-open-manager'),
                 btnFullscreen: document.getElementById('btn-fullscreen'),
                 btnOMR: document.getElementById('btn-open-omr'),
                 btnHome: document.getElementById('btn-go-home'),
@@ -1767,7 +1768,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260827.1937</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260827.2131</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -1792,7 +1793,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260827.1937</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260827.2131</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
@@ -3902,6 +3903,9 @@
         });
 
         elements.header.btnOMR.addEventListener('click', openOMR);
+        if (elements.header.btnManager) {
+            elements.header.btnManager.addEventListener('click', openPINAuthModal);
+        }
         if (elements.quiz.qNum) {
             elements.quiz.qNum.addEventListener('click', openOMR);
             elements.quiz.qNum.title = '클릭하여 다른 문항 번호로 즉시 이동 (OMR)';
