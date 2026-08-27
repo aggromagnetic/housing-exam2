@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 - 제75강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+            letter-spacing: -0.05em;
+        }
+        
+        h1 {
+            font-size: 12pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        /* 토너 절약 4색 시각 강조 클래스 (배경색 배제) */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #16803d; 
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #6d28d9; 
+        }
+        
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        ol.quiz-list {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+            line-height: 2.1;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        /* 하단 정답표 3단 그리드 배치 */
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px 15px;
+        }
+
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        제75강. 승강기 안전관리 법령(사후관리·선임통보·책임보험·자체점검·안전검사 3종) 정밀 학습 노트
+    </h1>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        1. 승강기 제조·수입업자 사후관리, 설치신고 및 승강기 안전관리자 법정 선임·교육 기준
+    </h2>
+    <ul>
+        <li><strong>★ 승강기 부품 사후관리 3대 핵심 수치 (★출제 1순위)</strong>:
+            <ol>
+                <li><span class="highlight-red">★ 부품 및 장비등 제공기간</span>: 제조·수입업자는 동일한 형식의 유지관리용 부품 및 장비등을 최종 판매하거나 양도한 날부터 <span class="highlight-red">10년 이상</span> 제공할 수 있어야 함. (※ 주관식 단골 수치).</li>
+                <li><span class="highlight-blue">★ 법정 품질보증기간</span>: 사후관리 품질보증기간은 <span class="highlight-blue">3년 이상</span>으로 하며, 이 기간 내 관리주체가 정상 관리했음에도 고장·결함 발생 시 제조업자등이 <span class="highlight-blue">무상 정비(무상 보증)</span>하여야 함. (실비 청구 지문 오답!).</li>
+                <li><span class="highlight-purple">★ 부품 제공 요청 시 처리기한</span>: 관리주체등이 부품 제공을 요청한 경우 특별한 사유가 없으면 <span class="highlight-purple">2일 이내</span>에 그 요청에 따라야 함.</li>
+            </ol>
+        </li>
+        <li><strong>★ 승강기 설치신고 기관 및 법정 신고기한</strong>:
+            <br>&rarr; 설치공사업자는 승강기 설치를 끝낸 날부터 <span class="highlight-red">10일 이내</span>에 한국승강기안전공단(시·도지사가 위탁한 기관)에 <span class="highlight-red">설치신고</span>를 해야 함. (※ 15일 X, 인가 X, 행정안전부장관 직접 신고 X).
+        </li>
+        <li><strong>★ 승강기 안전관리자 선임·통보 및 교육 규정 (★출제 단골)</strong>:
+            <ol>
+                <li><span class="highlight-purple">★ 선임 원칙 및 예외 특례</span>: 관리주체는 승강기 안전관리자를 선임하여 관리해야 함. 단, <span class="highlight-purple">관리주체가 직접 승강기를 관리하는 경우에는 별도로 안전관리자를 선임하지 아니함</span>. (※ 직접 관리 시에도 선임해야 한다는 지문 오답!).</li>
+                <li><span class="highlight-red">★ 선임·변경 통보 절차</span>: 관리주체는 안전관리자를 선임하거나 직접 관리하게 된 경우, 또는 변경된 날부터 <span class="highlight-red">30일 이내</span>에 <span class="highlight-red">행정안전부장관에게 통보</span>하여야 함. (※ '신고'가 아닌 '통보'임을 명심!).</li>
+                <li><span class="highlight-green">★ 관리교육 주기 및 신규교육 기한</span>:
+                    <br>&rarr; 정기교육: 직전 교육 이수일부터 <span class="highlight-green">3년마다</span> 정기적으로 이수.
+                    <br>&rarr; 신규/변경교육: 선임되거나 변경된 날부터 <span class="highlight-green">3개월 이내</span>에 교육을 이수할 것. (※ 관리주체가 법인인 경우 대표자가 교육 대상임).</li>
+            </ol>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        2. 승강기 사고배상 책임보험 법정 보상한도액 및 정보망 입력 기한
+    </h2>
+    <ul>
+        <li><strong>★ 승강기 사고배상 책임보험 의무 가입</strong>:
+            <br>&rarr; 승강기 관리주체는 승강기 사고로 인한 타인의 생명·신체·재산상 손해를 보상하기 위해 <span class="highlight-blue">책임보험(승강기 사고배상책임보험)</span>에 의무적으로 가입하여야 함. (설치검사를 받은 날, 관리주체 변경일, 보험 만료일 전에 가입).
+        </li>
+        <li><strong>★ 책임보험 법정 최소 보상한도액 (★주관식/객관식 최다 출제)</strong>:
+            <ol>
+                <li><span class="highlight-red">★ 사망 시 보상한도</span>: 1인당 <span class="highlight-red">8천만원</span>. (단, 사망에 따른 실손해액이 2천만원 미만인 경우에는 <span class="highlight-red">2천만원</span>을 최저 한도액으로 함).</li>
+                <li><span class="highlight-purple">★ 부상 및 후유장애</span>: 1인당 상해 등급별 / 후유장애 등급별 법정 보험금액.</li>
+                <li><span class="highlight-green">★ 재산피해 보상한도</span>: 사고당 <span class="highlight-green">1천만원</span>. (※ 사망 최저한도 2,000만원과 재산피해 1,000만원의 수치 혼동 절대 주의!).</li>
+            </ol>
+        </li>
+        <li><strong>★ 책임보험 가입 사실 정보망 입력 기한</strong>:
+            <br>&rarr; 책임보험에 가입한 관리주체는 보험 판매자로 하여금 가입한 날부터 <span class="highlight-red">14일 이내</span>에 <span class="highlight-red">승강기안전종합정보망에 입력</span>하도록 해야 함. (※ 자체점검 결과 입력기한인 10일과 구별!).
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.4a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+        3. 승강기 자체점검(월 1회), 결과 입력·보수 및 점검주기 조정 규정
+    </h2>
+    <ul>
+        <li><strong>★ 자체점검 실시 주기 및 결과 정보망 입력 (★출제 핵심)</strong>:
+            <ol>
+                <li><span class="highlight-red">★ 법정 점검 주기</span>: 관리주체는 승강기 안전에 관한 자체점검을 <span class="highlight-red">월 1회 이상</span> 실시해야 함. (※ 분기 1회 X, 월 2회 X).</li>
+                <li><span class="highlight-blue">★ 결과 분류 3단계</span>: 자체점검 담당자는 점검 결과를 <span class="highlight-blue">양호</span>, <span class="highlight-blue">주의관찰</span>, <span class="highlight-blue">긴급수리</span> 3단계로 구분하여 관리주체에게 통보함.</li>
+                <li><span class="highlight-purple">★ 승강기안전종합정보망 입력 기한</span>: 관리주체는 자체점검 후 <span class="highlight-purple">10일 이내</span>에 결과를 <span class="highlight-purple">승강기안전종합정보망에 입력</span>해야 함.</li>
+            </ol>
+        </li>
+        <li><strong>★ 결함 발생 시 즉시 보수 및 운행중지 의무 (★위반 시 500만원 이하 과태료)</strong>:
+            <br>&rarr; 결함을 알게 된 경우 <span class="highlight-red">즉시 보수</span>하여야 하며, 보수가 끝나기 전까지 해당 승강기를 <span class="highlight-red">절대 운행하여서는 아니 됨</span>. (※ 임시운행필증 발급 후 운행 허용 지문은 100% 오답!).
+        </li>
+        <li><strong>★ 자체점검 담당자 자격 및 대행 자격</strong>:
+            <br>&rarr; 담당자 자격: 승강기 관련 자격증 소지자 또는 <span class="highlight-green">실무경력 3년 이상</span>인 자로서 법정 지정 교육을 이수한 사람.
+            <br>&rarr; 대행 허용: 관리주체가 스스로 점검하기 어려운 경우 등록된 <span class="highlight-green">승강기 유지관리업자에게 대행</span>하게 할 수 있음.
+        </li>
+        <li><strong>★ 자체점검 면제 대상 및 선진기법 적용 시 점검주기 조정</strong>:
+            <ol>
+                <li><span class="highlight-blue">★ 자체점검 면제 사유</span>: &bull; 안전검사에 불합격한 승강기, &bull; 안전검사가 연기된 승강기. (※ 운행이 정지되므로 점검 면제).</li>
+                <li><span class="highlight-purple">★ 원격관리 등 선진기법 적용 시 주기 조정</span>: 원격관리 기능이 있는 승강기는 자체점검 주기를 <span class="highlight-purple">3개월 범위 내</span>로 조정(연장)할 수 있음.
+                    <br>&rarr; <span class="highlight-red">★ 주기 조정 불허 예외 3가지</span>: ① 설치검사 후 <span class="highlight-red">15년이 지난</span> 승강기, ② 최근 <span class="highlight-red">3년 이내 중대한 사고</span> 발생 승강기, ③ 최근 <span class="highlight-red">1년 이내 중대한 고장이 3회 이상</span> 발생 승강기.</li>
+            </ol>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+        4. 승강기 안전검사 3종(정기·수시·정밀안전검사) 및 법정 주기·특례 규정
+    </h2>
+    <ul>
+        <li><strong>★ 승강기 안전검사 주관 기관 및 3가지 종류 (★임시검사는 존재하지 않음)</strong>:
+            <br>&rarr; 관리주체는 <span class="highlight-red">행정안전부장관</span>(한국승강기안전공단에 위탁)이 실시하는 안전검사를 받아야 함. (국토교통부장관 X, 산업통상자원부장관 X).
+            <br>&rarr; 안전검사의 종류 3가지: ① <span class="highlight-blue">정기검사</span>, ② <span class="highlight-purple">수시검사</span>, ③ <span class="highlight-red">정밀안전검사</span>.
+        </li>
+        <li><strong>★ 1) 정기검사 법정 주기 및 도래일 전후 검사기간</strong>:
+            <ol>
+                <li><span class="highlight-blue">★ 기본 검사주기</span>: 법령상 <span class="highlight-blue">2년 이하</span>로 하되, 승강기 종류 및 노후도에 따라 다르게 규정함.
+                    <br>&bull; 원칙: <span class="highlight-blue">1년마다</span> 실시.
+                    <br>&bull; 단축(6개월마다): 설치검사 후 <span class="highlight-red">25년이 지난 승강기</span>, 중대한 사고/고장 발생 후 <span class="highlight-red">2년이 지나지 않은 승강기</span>.
+                    <br>&bull; 연장(2년마다): 화물용·자동차용·소형화물용(덤웨이터) 엘리베이터, 단독주택 승강기.</li>
+                <li><span class="highlight-purple">★ 정기검사 받능 기간</span>: 정기검사 주기 도래일 <span class="highlight-purple">전후 각각 30일 이내</span>에 받아야 함.</li>
+            </ol>
+        </li>
+        <li><strong>★ 2) 수시검사 법정 사유 및 피난용 전환 면제 특례</strong>:
+            <ol>
+                <li><span class="highlight-purple">★ 수시검사 사유 4가지</span>:
+                    <br>&bull; 승강기 종류, 제어방식, 정격속도, 정격용량 또는 왕복운행거리를 <span class="highlight-purple">변경한 경우</span>.
+                    <br>&bull; 승강기의 <span class="highlight-purple">제어반 또는 구동기를 교체한 경우</span>.
+                    <br>&bull; 승강기에 사고가 발생하여 수리한 경우. (단, 결함으로 인한 중대한 사고/고장은 정밀안전검사 대상!).
+                    <br>&bull; 관리주체가 요청하는 경우.</li>
+                <li><span class="highlight-green">★ 수시검사 면제 특례</span>: 검사기준이 완화되는 변경(예: <span class="highlight-green">피난용 엘리베이터를 승객용 엘리베이터로 변경하는 경우</span>)은 수시검사를 받지 아니함.</li>
+            </ol>
+        </li>
+        <li><strong>★ 3) 정밀안전검사 의무 대상 및 15년/3년 주기 (★출제 1순위)</strong>:
+            <ol>
+                <li><span class="highlight-red">★ 정밀안전검사 3대 사유</span>:
+                    <br>&bull; 설치검사를 받은 날부터 <span class="highlight-red">15년이 지난 경우</span>.
+                    <br>&bull; 승강기 결함으로 <span class="highlight-red">중대한 사고 또는 중대한 고장이 발생한 경우</span>.
+                    <br>&bull; 정기/수시검사 결과 <span class="highlight-red">결함 원인이 불명확한 경우</span>.</li>
+                <li><span class="highlight-purple">★ 15년 경과 후 정기적 검사주기</span>: 설치검사 후 15년이 지난 승강기는 최초 정밀안전검사를 받은 후 <span class="highlight-purple">3년마다 정기적으로 정밀안전검사</span>를 받아야 함. (※ 2년 X, 5년 X).</li>
+                <li><span class="highlight-green">★ 정기검사 면제 특례</span>: <span class="highlight-green">정밀안전검사를 받은 해에는 해당 연도의 정기검사를 면제함</span>.</li>
+                <li><span class="highlight-blue">★ 불합격 시 재검사 기한</span>: 안전검사에 불합격한 승강기는 불합격 통보를 받은 날부터 <span class="highlight-blue">4개월 이내</span>에 재검사를 받아야 함.</li>
+            </ol>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 20%;">안전검사 구분</th>
+                <th style="width: 50%;">법정 검사 사유 및 세부 기준</th>
+                <th style="width: 30%;">수험 핵심 출제 포인트</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th><span class="highlight-blue">정기검사</span></th>
+                <td>설치검사 후 정기적 실시 (원칙 <span class="highlight-blue">1년</span> / 25년 경과시 <span class="highlight-red">6개월</span> / 화물용 <span class="highlight-blue">2년</span>)</td>
+                <td>도래일 <span class="highlight-blue">전후 각각 30일 이내</span> 검사</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-purple">수시검사</span></th>
+                <td>종류·속도·용량 변경, <span class="highlight-purple">제어반·구동기 교체</span>, 사고 수리 시</td>
+                <td>피난용&rarr;승객용 변경 시 <span class="highlight-purple">검사 면제</span></td>
+            </tr>
+            <tr>
+                <th><span class="highlight-red">정밀안전검사</span></th>
+                <td>설치 후 <span class="highlight-red">15년 경과</span>, <span class="highlight-red">중대 사고/고장</span> 발생, 결함원인 불명확 시</td>
+                <td>15년 경과 후 <span class="highlight-red">3년마다</span> / 정기검사 면제</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+            💡 [수험 핵심 팁] 제75강 실전 출제 포인트 & 함정 방지 최종 체크
+        </div>
+        <ul>
+            <li><strong>사후관리 & 선임 핵심 수치</strong>: 부품 제공기간 = <span class="highlight-red">10년 이상</span> / 품질보증기간 = <span class="highlight-blue">3년 이상</span> (무상 정비!) / 요청 시 제공기한 = <span class="highlight-purple">2일 이내</span> / 설치신고 = <span class="highlight-red">10일 이내</span> (공단) / 안전관리자 선임·변경 통보 = <span class="highlight-red">30일 이내</span> (<span class="highlight-red">행정안전부장관</span>, 관리주체 직접 관리 시 선임 면제!) / 교육 = 정기 <span class="highlight-green">3년마다</span>, 신규 <span class="highlight-green">3개월 이내</span>.</li>
+            <li><strong>책임보험 수치 암기</strong>: 사망 = 1인당 <span class="highlight-red">8천만원</span> (최저한도 <span class="highlight-red">2천만원</span>) / 재산피해 = 사고당 <span class="highlight-green">1천만원</span> / 정보망 입력기한 = 가입 후 <span class="highlight-red">14일 이내</span>.</li>
+            <li><strong>자체점검 핵심 규정</strong>: 점검 주기 = <span class="highlight-red">월 1회 이상</span> / 점검 결과 3단계 = <span class="highlight-blue">양호, 주의관찰, 긴급수리</span> / 정보망 입력 = <span class="highlight-purple">10일 이내</span> / 결함 시 = <span class="highlight-red">즉시 보수</span> (완료 전 운행 절대 불가! 위반 시 500만원 이하 과태료) / 담당자 실무경력 = <span class="highlight-green">3년 이상</span>.</li>
+            <li><strong>안전검사 3종 & 주요 수치</strong>: 검사 종류 = <span class="highlight-blue">정기·수시·정밀안전검사</span> (행안부장관 주관) / 정기검사 기간 = 도래일 <span class="highlight-blue">전후 각각 30일 이내</span> / 25년 경과 및 중대사고 2년 미만 = <span class="highlight-red">6개월마다</span> / 정밀안전검사 = 설치 후 <span class="highlight-red">15년 경과</span> 및 <span class="highlight-red">중대 사고·고장</span> (이후 <span class="highlight-purple">3년마다</span> 실시, 당해 연도 정기검사 면제!) / 불합격 재검사 기한 = <span class="highlight-blue">4개월 이내</span>.</li>
+        </ul>
+    </div>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>주관식 단답형 및 빈칸 채우기 실전 훈련</h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡, ㉢)에 들어갈 알맞은 핵심 용어나 법정 수치, 단위를 아래 빈칸에 직접 작성해 보십시오.</p>
+
+    <ol class="quiz-list">
+        <li>
+            승강기 제조·수입업자는 동일한 형식의 유지관리용 부품 및 장비등을 최종 판매하거나 양도한 날부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년 이상 제공할 수 있어야 한다.
+        </li>
+        <li>
+            승강기 유지관리용 부품의 품질보증기간은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년 이상으로 하며, 이 기간 내 관리주체가 정상 관리했음에도 고장 발생 시 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )(으)로 정비하여야 한다.
+        </li>
+        <li>
+            제조·수입업자는 관리주체 등으로부터 승강기 유지관리용 부품 등의 제공을 요청받은 경우 특별한 이유가 없으면 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이내에 그 요청에 따라야 한다.
+        </li>
+        <li>
+            승강기 설치공사업자는 승강기 설치를 끝낸 날부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이내에 공단에 승강기의 설치신고를 해야 한다.
+        </li>
+        <li>
+            승강기 관리주체는 안전관리자를 선임하였을 때에는 선임되거나 변경된 날부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이내에 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )에게 그 사실을 통보하여야 한다.
+        </li>
+        <li>
+            승강기 안전관리자는 직전 승강기 관리교육을 받은 날부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년마다 정기교육을 받아야 하며, 신규 또는 변경 선임된 경우 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )개월 이내에 교육을 이수해야 한다.
+        </li>
+        <li>
+            승강기 사고배상 책임보험의 보상한도액 중 사망의 경우에는 1인당 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )만원이며, 사망 실손해액이 2천만원 미만인 경우에는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )만원을 한도액으로 한다.
+        </li>
+        <li>
+            승강기 사고배상 책임보험의 보상한도액 중 재산피해의 경우에는 사고당 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )만원이다.
+        </li>
+        <li>
+            책임보험에 가입한 승강기 관리주체는 가입 사실을 가입한 날부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이내에 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )에 입력하게 해야 한다.
+        </li>
+        <li>
+            승강기 관리주체는 승강기 안전에 관한 자체점검을 월 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )회 이상 실시하여야 한다.
+        </li>
+        <li>
+            자체점검 담당자는 점검을 마치면 결과를 양호, ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ), 긴급수리로 구분하여 관리주체에 통보하고, 관리주체는 점검 후 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이내에 정보망에 입력해야 한다.
+        </li>
+        <li>
+            관리주체는 자체점검 결과 승강기에 결함이 있다는 사실을 알았을 경우 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) 보수하여야 하며, 보수가 끝날 때까지 운행을 중지하여야 한다.
+        </li>
+        <li>
+            자체점검을 담당하는 사람은 승강기 관련 자격증 소지자 또는 해당 분야 실무경력이 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년 이상인 사람이어야 한다.
+        </li>
+        <li>
+            원격 관리 기능이 있는 승강기는 자체점검 주기를 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )개월 범위에서 조정할 수 있으나, 설치검사 후 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년이 지난 승강기는 주기 조정을 할 수 없다.
+        </li>
+        <li>
+            승강기 안전검사의 종류 3가지는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ), ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ), ( ㉢&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이다.
+        </li>
+        <li>
+            승강기 정기검사 주기는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년 이하로 하되, 설치검사를 받은 날부터 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년이 지난 승강기는 정기검사 주기를 6개월로 한다.
+        </li>
+        <li>
+            승강기 정기검사는 검사주기 도래일 전후 각각 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )일 이내에 받아야 한다.
+        </li>
+        <li>
+            승강기의 제어반 또는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )을(를) 교체하거나, 승강기 종류·속도·용량을 변경한 경우에는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )검사를 받아야 한다.
+        </li>
+        <li>
+            승강기는 설치검사를 받은 날부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년이 지난 경우 정밀안전검사를 받고, 그 후 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년마다 정기적으로 정밀안전검사를 받아야 한다.
+        </li>
+        <li>
+            승강기 안전검사에 불합격한 승강기의 재검사 기간은 불합격 통보를 받은 날부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )개월 이내이어야 한다.
+        </li>
+    </ol>
+
+    <div style="font-size: 9.5pt; color: #666666; margin-top: 30px; padding: 15px; border-top: 1px dashed #666666; line-height: 1.8;">
+        <strong style="display: block; margin-bottom: 10px; color: #333333;">[제75강 주관식 단답형 정답 리스트]</strong>
+        <div class="answer-grid">
+            <div><strong>1.</strong> ㉠ 10</div>
+            <div><strong>2.</strong> ㉠ 3, ㉡ 무상</div>
+            <div><strong>3.</strong> ㉠ 2</div>
+            <div><strong>4.</strong> ㉠ 10</div>
+            <div><strong>5.</strong> ㉠ 30, ㉡ 행정안전부장관</div>
+            <div><strong>6.</strong> ㉠ 3, ㉡ 3</div>
+            <div><strong>7.</strong> ㉠ 8,000(또는 8천), ㉡ 2,000(또는 2천)</div>
+            <div><strong>8.</strong> ㉠ 1,000(또는 1천)</div>
+            <div><strong>9.</strong> ㉠ 14, ㉡ 승강기안전종합정보망</div>
+            <div><strong>10.</strong> ㉠ 1</div>
+            <div><strong>11.</strong> ㉠ 주의관찰, ㉡ 10</div>
+            <div><strong>12.</strong> ㉠ 즉시</div>
+            <div><strong>13.</strong> ㉠ 3</div>
+            <div><strong>14.</strong> ㉠ 3, ㉡ 15</div>
+            <div><strong>15.</strong> ㉠ 정기검사, ㉡ 수시검사, ㉢ 정밀안전검사</div>
+            <div><strong>16.</strong> ㉠ 2, ㉡ 25</div>
+            <div><strong>17.</strong> ㉠ 30</div>
+            <div><strong>18.</strong> ㉠ 구동기, ㉡ 수시</div>
+            <div><strong>19.</strong> ㉠ 15, ㉡ 3</div>
+            <div><strong>20.</strong> ㉠ 4</div>
+        </div>
+    </div>
+
+</body>
+</html>
+`

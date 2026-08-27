@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 - 제77강 완벽 정밀 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+            letter-spacing: -0.05em;
+        }
+        
+        h1 {
+            font-size: 12pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        /* 토너 절약 4색 시각 강조 클래스 */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #16803d; 
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #6d28d9; 
+        }
+        
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        ol.quiz-list {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+            line-height: 2.1;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        /* 하단 정답표 3단 그리드 배치 */
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px 15px;
+        }
+
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        제77강. 공동주택 층간소음 법정 기준(범위·수치·700세대 개정·매년 4시간 교육·잡수입 부담) 및 건축물 에너지절약설계기준 정밀 학습 노트
+    </h1>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        1. 공동주택 층간소음의 법정 범위, 데시벨 수치 기준, 700세대 개정, 매년 4시간 교육, 잡수입 부담 및 층간소음관리위원회
+    </h2>
+    <ul>
+        <li><strong>★ 공동주택 층간소음 법정 범위 및 소관 부처 (★출제 1순위)</strong>:
+            <br>&rarr; 주무 부처: <span class="highlight-blue">국토교통부 및 기후에너지환경부</span> 공동부령으로 규정함.
+            <br>&rarr; 법정 인정 범위:
+            <br>&bull; <span class="highlight-red">직접타격 소음</span>: 뛰거나 걷는 동작, 물건 떨어뜨리기 등으로 인하여 발생하는 소음.
+            <br>&bull; <span class="highlight-red">공기전달 소음</span>: 텔레비전, 음향기기 등의 사용으로 인하여 발생하는 소음.
+            <br>&bull; <span class="highlight-blue">벽간소음 및 대각선 세대 소음</span>: 벽을 공유하는 인접 세대 및 대각선 위치에 있는 세대 간 소음도 층간소음 인정 범위에 <span class="highlight-blue">포함</span>됨.
+            <br>&rarr; <span class="highlight-purple">★ 절대 제외 대상 (단골 출제 함정)</span>: 욕실, 화장실, 다용도실 등에서 발생하는 <span class="highlight-purple">급배수 소음(물 내려가는 소리)</span>은 층간소음 범위에서 철저히 제외함.
+        </li>
+        <li><strong>★ 직접타격소음 vs 공기전달소음 데시벨(dB) 법정 기준 수치 (★암기 공식: 야간 34, 52, 40)</strong>:
+            <ol>
+                <li><span class="highlight-red">★ 직접타격소음 1분간 등가소음도(L<sub>eq</sub>)</span>:
+                    <br>&bull; <span class="highlight-red">야간 (22시 ~ 06시)</span>: <span class="highlight-red">34 dB(A) 이하</span>.
+                    <br>&bull; <span class="highlight-red">주간 (06시 ~ 22시)</span>: <span class="highlight-red">39 dB(A) 이하</span> (야간 수치 34 dB에 5 dB 강화/더함 적용).
+                </li>
+                <li><span class="highlight-purple">★ 직접타격소음 최고소음도(L<sub>max</sub>)</span>:
+                    <br>&bull; <span class="highlight-purple">야간</span>: <span class="highlight-purple">52 dB(A) 이하</span>.
+                    <br>&bull; <span class="highlight-purple">주간</span>: <span class="highlight-purple">57 dB(A) 이하</span> (야간 수치 52 dB에 5 dB 더함 적용).
+                    <br>&bull; 초과 판정: 1시간에 <span class="highlight-purple">3회 이상</span> 초과 시 기준 위반으로 판정.
+                </li>
+                <li><span class="highlight-blue">★ 공기전달소음 5분간 등가소음도(L<sub>eq</sub>)</span>:
+                    <br>&bull; <span class="highlight-blue">야간</span>: <span class="highlight-blue">40 dB(A) 이하</span>.
+                    <br>&bull; <span class="highlight-blue">주간</span>: <span class="highlight-blue">45 dB(A) 이하</span>.
+                </li>
+                <li><span class="highlight-green">★ 측정 평가 산정 기준</span>: 측정 항목 중 <span class="highlight-green">가장 높은 값</span>을 기준으로 평가함.
+                </li>
+            </ol>
+        </li>
+        <li><strong>★ 층간소음 처리 절차 및 분쟁조정 기관</strong>:
+            <br>&rarr; 피해 입주자 알림 &rarr; <span class="highlight-blue">관리주체</span> 사실관계 조사 및 차단 조치 권고 &rarr; 입주자 협조 의무.
+            <br>&rarr; 관리주체의 조치에도 불구하고 분쟁 지속 시: <span class="highlight-green">층간소음관리위원회</span> &rarr; <span class="highlight-green">중앙/지방 공동주택관리분쟁조정위원회</span> 또는 <span class="highlight-green">환경분쟁조정 및 피해구제 위원회</span>(환경분쟁조정 및 피해구제 등에 관한 법률)에 조정 신청.
+        </li>
+        <li><strong>★ 층간소음관리위원회 의무 설치 세대수, 구성원 자격, 교육시간 및 운영 재원</strong>:
+            <br>&rarr; 의무 구성 기준: <span class="highlight-red">700세대 이상</span> 공동주택에는 층간소음 예방 및 분쟁 조정을 위하여 <span class="highlight-red">층간소음관리위원회</span>를 의무적으로 구성하여야 함. (※ 임의 구성은 전체 공동주택 가능).
+            <br>&rarr; 세대수 구분 정리 (★출제 핵심): <span class="highlight-blue">300세대</span>(의무관리, 공개, 서면동의) / <span class="highlight-purple">500세대</span>(어린이안전보호구역, 결로방지, 주민공동시설) / <span class="highlight-red">700세대</span>(층간소음관리위원회 의무화, 성능등급 표시).
+            <br>&rarr; 구성원 자격: 입주자대표회의/임차인대표회의 구성원, 선거관리위원회 위원, 관리사무소장, 주민단체 추천자, 지자체 추천자. (※ 관리사무소장, 선거관리위원, 입대의 구성원은 '추천받은 자'가 아니라 본인 직책으로 직접 구성원).
+            <br>&rarr; <span class="highlight-red">★ 위원 법정 의무 교육시간</span>: 층간소음관리위원회의 구성원은 <span class="highlight-red">10일 전</span>에 공고된 교육 일정에 따라 <span class="highlight-red">매년 4시간의 교육(층간소음 예방 및 분쟁조정 교육)</span>을 의무적으로 이수하여야 함.
+            <br>&rarr; <span class="highlight-purple">★ 교육방식 및 수강비용 재원</span>: <span class="highlight-purple">집합교육</span>을 원칙으로 하되 일부 온라인 교육 허용. 위원회 교육 수강비용 및 운영경비는 공동주택 관리비의 <span class="highlight-purple">잡수입</span>에서 부담함.
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">소음 구분 항목</th>
+                <th style="width: 35%;">주간 (06시 ~ 22시)</th>
+                <th style="width: 35%;">야간 (22시 ~ 06시)</th>
+                <th style="width: 5%;">비고</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th><span class="highlight-red">직접타격 (1분간 L<sub>eq</sub>)</span></th>
+                <td><span class="highlight-red">39 dB(A) 이하</span></td>
+                <td><span class="highlight-red">34 dB(A) 이하</span></td>
+                <td>주간-5dB</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-purple">직접타격 (최고소음도 L<sub>max</sub>)</span></th>
+                <td><span class="highlight-purple">57 dB(A) 이하</span></td>
+                <td><span class="highlight-purple">52 dB(A) 이하</span></td>
+                <td>1시간 3회</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-blue">공기전달 (5분간 L<sub>eq</sub>)</span></th>
+                <td><span class="highlight-blue">45 dB(A) 이하</span></td>
+                <td><span class="highlight-blue">40 dB(A) 이하</span></td>
+                <td>5분 측정</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+        2. 건축물 에너지절약설계기준 주요 용어의 정의 및 기술적 개념 정밀 정리
+    </h2>
+    <ul>
+        <li><strong>★ 에너지절약설계기준 핵심 용어 정의 (★주관식 단골 출제)</strong>:
+            <ol>
+                <li><span class="highlight-blue">★ 기밀성 창/문</span>: 통기량이 5 m³/h·m² 미만인 창 및 문.</li>
+                <li><span class="highlight-purple">★ 외단열</span>: 단열재를 구조체의 실외측에 설치하며 모서리 부위(열교 부위)를 포함하여 시공하는 공법.</li>
+                <li><span class="highlight-red">★ 방습층</span>: 습한 공기가 침투하여 결로가 발생하는 것을 방지하기 위하여 설치하는 층.
+                    <br>&rarr; <span class="highlight-red">★ 법정 방습 성능 수치</span>: 투습도가 24시간당 <span class="highlight-red">30 g 이하</span>이거나, 투습저항이 <span class="highlight-red">0.28 이하</span>인 특수층을 말함 (암기 공문: 방습층 30살은 28청춘).
+                </li>
+                <li><span class="highlight-green">★ 평균 열관류율</span>: 바닥, 지붕, 외벽 등의 열관류율 계산 시 <span class="highlight-green">중심선</span> 치수를 기준으로 산정함. (내부선/외부선 적용 시 X).</li>
+                <li><span class="highlight-blue">★ 투광부</span>: 창문 면적의 <span class="highlight-blue">50% 이상</span>이 투과재로 구성된 부분을 말함.</li>
+                <li><span class="highlight-purple">★ 위험률 (Risk Rate)</span>: 1년 중 가장 덥거나 추운 최악의 상태 1시간/일정 비율을 제외하여 경제적으로 설비 용량을 결정하는 지표.</li>
+                <li><span class="highlight-red">★ 대수분할 운전 (대수제어)</span>: 부하 상태에 따라 기기를 여러 대 조합하여 가동 대수를 조절·운전하는 방식.</li>
+                <li><span class="highlight-blue">★ 비례제어 운전</span>: 기기의 출력값과 목표값의 편차에 비례하여 입력량/출력량을 연속적으로 조절하는 방식.</li>
+                <li><span class="highlight-green">★ 열회수형 환기장치</span>: 실내 공기를 배출할 때 배출되는 열을 회수하여 공급 외기로 전달하는 장치.</li>
+                <li><span class="highlight-purple">★ 이코노마이저 시스템</span>: 겨울철이나 중간기에 실내 외기온도가 낮을 때 냉방기를 작동시키는 대신 시원한 외기를 직접 도입하여 실내를 냉방하는 환기 제어 방식.</li>
+                <li><span class="highlight-red">★ 중앙집중식 냉·난방 60% 기준</span>: 냉·난방 면적의 <span class="highlight-red">60% 이상</span>을 중앙집중식 설비로 공급할 때 적용되는 구획·계량 제어 기준.</li>
+                <li><span class="highlight-blue">★ 커미셔닝 (Commissioning)</span>: 건물 설비 시스템의 설계부터 공사 완료, 운전 성능 유지 여부를 종합 검증하고 문서화하는 품질 관리 과정.</li>
+                <li><span class="highlight-purple">★ 커패시터(진상 콘덴서)</span>: 전력 역률 개선을 위하여 부하와 <span class="highlight-purple">병렬</span>로 연결하는 장치. (직렬 연결 시 X).</li>
+                <li><span class="highlight-green">★ 수용률</span>: 부하설비용량 합계에 대한 최대수요전력의 비율.</li>
+                <li><span class="highlight-red">★ 최대수요전력</span>: 수용가에서 일정 기간 중 사용 전력의 최고 사용량.</li>
+                <li><span class="highlight-blue">★ 인버터 (가변속 제어기)</span>: 전동기(모터)의 회전수를 부하에 맞춰 가변속 운전하는 장치.</li>
+                <li><span class="highlight-purple">★ 일괄소등 스위치</span>: 층 또는 구역 단위 전등을 한 번에 제어·소등하는 스위치.</li>
+                <li><span class="highlight-green">★ 회생제동장치</span>: 승강기 하강 시 모터가 발전기로 작동하여 생산된 전력을 다른 회로에 전력으로 재활용하는 장치.</li>
+                <li><span class="highlight-red">★ BEMS (건물에너지관리시스템)</span>: Building Energy Management System (녹색건축물 조성 지원법 제6조의2).</li>
+            </ol>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M19 21V5a2 2 0 0 0-2 2H7a2 2 0 0 0-2 2v16"></path><path d="M9 7h6"></path><path d="M9 11h6"></path></svg>
+        3. 건축물 단열, 방습층, 방풍구조 및 바닥난방 세부 기술기준
+    </h2>
+    <ul>
+        <li><strong>★ 바닥난방 부위 단열재 열저항 비율 수치</strong>:
+            <br>&rarr; 바닥난방 부위에 설치되는 단열재는 온수배관 하부와 슬래브(바탕층) 사이에 설치하며, 구성재의 열저항 합계는 해당 바닥에 요구되는 총 열저항의 <span class="highlight-red">60% 이상</span>이어야 함.
+        </li>
+        <li><strong>★ 방습층 설치 위치 및 이음매 겹침 폭 기준 (★최다 출제)</strong>:
+            <ol>
+                <li><span class="highlight-red">★ 방습층 설치 위치</span>: 단열재 내부로 습기가 침투하여 내부 결로가 생기는 것을 방지하기 위해 방습층은 반드시 단열재의 <span class="highlight-red">실내측</span>에 설치할 것. (※ 실외측 설치 시 100% 오답!).</li>
+                <li><span class="highlight-blue">★ 이음매 밀착 및 겹침 수치</span>:
+                    <br>&bull; 단열재 이음부는 재단 밀착 시공하거나 2장을 엇갈리게 시공함.
+                    <br>&bull; 일반 이음매 겹침 폭: <span class="highlight-blue">100 mm 이상</span> 중첩시킬 것.
+                    <br>&bull; 모서리(우각부) 부위 겹침 폭: <span class="highlight-purple">150 mm 이상</span> 중첩시킬 것.
+                </li>
+            </ol>
+        </li>
+        <li><strong>★ 방풍구조(방풍실) 설치 예외 법정 규정</strong>:
+            <br>&rarr; 외기에 직접 면하고 1층 또는 지상으로 연결된 출입문은 방풍구조로 하는 것이 원칙임.
+            <br>&rarr; <span class="highlight-purple">★ 방풍구조 설치 예외 대상</span>:
+            <br>&bull; ① <span class="highlight-purple">주택의 출입문</span> (단, <span class="highlight-red">기숙사의 출입문은 방풍구조 설치 대상에 포함</span>됨).
+            <br>&bull; ② 너비 <span class="highlight-purple">1.2 m 이하</span>인 출입문.
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">기술 및 설비 구분</th>
+                <th style="width: 45%;">법정 핵심 수치 및 세부 기술기준</th>
+                <th style="width: 30%;">수험 출제 핵심 포인트</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th><span class="highlight-red">방습층 위치 / 겹침</span></th>
+                <td>단열재의 <span class="highlight-red">실내측</span> 설치 / 일반 <span class="highlight-red">100 mm</span>, 모서리 <span class="highlight-red">150 mm 이상</span></td>
+                <td>실내측 / 100mm, 150mm 수치</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-blue">방풍구조 예외</span></th>
+                <td><span class="highlight-blue">주택 출입문</span>(기숙사 제외) / 너비 <span class="highlight-blue">1.2 m 이하</span> 출입문</td>
+                <td>기숙사 포함 / 1.2 m 수치</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-purple">바닥난방 단열 비율</span></th>
+                <td>배관 하부~슬래브 단열재 열저항 <span class="highlight-purple">60% 이상</span></td>
+                <td>60% 수치 단독 기출</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-green">중앙집중 제어 비율</span></th>
+                <td>중앙집중식 냉·난방 구획계량 제어 <span class="highlight-green">60% 이상</span> 적용</td>
+                <td>60% 수치 단독 기출</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+            💡 [수험 핵심 팁] 제77강 실전 출제 포인트 & 함정 방지 최종 체크
+        </div>
+        <ul>
+            <li><strong>층간소음 수치 & 700세대 & 4시간 & 잡수입</strong>: 직접타격 1분 <span class="highlight-red">주간 39 dB / 야간 34 dB</span>, 최고소음 <span class="highlight-purple">주간 57 dB / 야간 52 dB</span> (1시간 3회 초과 시 위반) / 공기전달 5분 <span class="highlight-blue">주간 45 dB / 야간 40 dB</span> / 벽간·대각선 소음 포함, 급배수 소음은 제외! / 층간소음관리위원회 = <span class="highlight-red">700세대 이상</span> 의무화 / 위원 교육 = <span class="highlight-red">10일 전 공고, 매년 4시간 이수</span> / 수강비용 및 운영경비 = <span class="highlight-purple">잡수입</span> 부담! / 소관 = <span class="highlight-blue">국토교통부·기후에너지환경부</span>.</li>
+            <li><strong>세대수 법정 구분</strong>: 공개/서면동의 = <span class="highlight-blue">300세대</span> / 층간소음관리위원회 = <span class="highlight-red">700세대</span> / 기타 주요 의무(결로방지, 주민공동시설 등) = <span class="highlight-purple">500세대</span>.</li>
+            <li><strong>단열·방습 & 설비 제어 기술</strong>: 방습층 = 단열재 <span class="highlight-red">실내측</span>, 일반 겹침 <span class="highlight-red">100 mm 이상</span>, 모서리 <span class="highlight-red">150 mm 이상</span>, 성능 = 투습도 <span class="highlight-red">30 g 이하</span>, 투습저항 <span class="highlight-red">0.28 이상</span> / 방풍 예외 = 주택 출입문(기숙사 제외), 너비 <span class="highlight-blue">1.2 m 이하</span> / 제어 = <span class="highlight-purple">대수분할운전</span>, <span class="highlight-purple">비례제어운전</span>, 이코노마이저, 중앙집중 제어 <span class="highlight-green">60% 이상</span>, 바닥난방 열저항 <span class="highlight-green">60% 이상</span> / 역률개선 콘덴서 = <span class="highlight-purple">병렬</span> 연결.</li>
+        </ul>
+    </div>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>주관식 단답형 및 빈칸 채우기 실전 훈련</h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡, ㉢)에 들어갈 알맞은 핵심 용어나 법정 수치, 단위를 아래 빈칸에 직접 작성해 보십시오.</p>
+
+    <ol class="quiz-list">
+        <li>
+            공동주택 층간소음 범위 중 직접타격소음의 1분간 등가소음도 기준은 주간 ( ㉠ )dB(A) 이하, 야간 ( ㉡ )dB(A) 이하이어야 한다.
+        </li>
+        <li>
+            공동주택 층간소음 범위 중 직접타격소음의 최고소음도(L<sub>max</sub>) 기준은 주간 ( ㉠ )dB(A) 이하, 야간 ( ㉡ )dB(A) 이하이어야 한다.
+        </li>
+        <li>
+            공동주택 층간소음 범위 중 공기전달소음의 5분간 등가소음도 기준은 주간 ( ㉠ )dB(A) 이하, 야간 ( ㉡ )dB(A) 이하이어야 한다.
+        </li>
+        <li>
+            공동주택관리법령상 층간소음 예방 및 조정을 위한 층간소음관리위원회를 의무적으로 구성하여야 하는 공동주택 규모는 ( ㉠ )세대 이상이며, 위원회의 구성원은 매년 ( ㉡ )시간의 층간소음 예방 및 분쟁조정 교육을 이수하여야 한다.
+        </li>
+        <li>
+            공동주택관리법 시행령에 따라 층간소음관리위원회 구성원의 층간소음예방등교육 수강비용 및 위원회 운영에 필요한 경비는 공동주택 관리비의 ( ㉠ )에서 부담한다.
+        </li>
+        <li>
+            공동주택의 욕실, 화장실 및 다용도실 등에서 발생하는 ( ㉠ ) 소음은 법정 층간소음 범위에서 제외된다.
+        </li>
+        <li>
+            공동주택 층간소음의 법정 범위 및 기준을 규정하는 공동부령의 주무 부처는 국토교통부 및 ( ㉠ )이다.
+        </li>
+        <li>
+            건축물 에너지절약설계기준상 방습층의 성능 기준은 투습도가 24시간당 ( ㉠ )g 이하이거나, 투습저항이 ( ㉡ ) 이상인 특수층이어야 한다.
+        </li>
+        <li>
+            건축물 에너지절약설계기준상 평균 열관류율 산정 시 기준이 되는 건축물 치수는 ( ㉠ )선 기준이다.
+        </li>
+        <li>
+            건축물 에너지절약설계기준상 창문 면적의 ( ㉠ )% 이상이 투과재로 구성된 문을 투광부라 한다.
+        </li>
+        <li>
+            단열재 부위에 설치하는 방습층은 습기가 단열재 내부로 침투하는 것을 방지하기 위하여 단열재의 ( ㉠ )측에 설치하여야 한다.
+        </li>
+        <li>
+            방습층 시공 시 일반 이음매 부분의 겹침 폭은 최소 ( ㉠ )mm 이상, 모서리(우각부) 부위는 최소 ( ㉡ )mm 이상이어야 한다.
+        </li>
+        <li>
+            건축물 출입구의 방풍구조 설치 예외 대상이 되는 출입문의 너비 기준은 ( ㉠ )m 이하이다.
+        </li>
+        <li>
+            부하 변동에 대응하여 펌프나 보일러 등의 가동 대수를 조절하여 에너지를 절감하는 운전 방식을 ( ㉠ ) 운전이라 한다.
+        </li>
+        <li>
+            기기의 출력값과 목표값의 편차에 비례하여 입력량이나 출력량을 연속적으로 조절하는 방식을 ( ㉠ ) 운전이라 한다.
+        </li>
+        <li>
+            겨울철이나 중간기에 실내 외기온도가 낮을 때 냉방기를 작동시키는 대신 시원한 외기를 직접 도입하여 냉방하는 환기 제어 방식을 ( ㉠ ) 시스템이라 한다.
+        </li>
+        <li>
+            중앙집중식 냉·난방설비 설치 시 개별 제어 및 계량 시스템을 구획 또는 동별로 ( ㉠ )% 이상 적용하여야 한다.
+        </li>
+        <li>
+            전력 역률을 개선하기 위하여 진상 콘덴서(커패시터)를 부하와 ( ㉠ )로 연결하여 설치하여야 한다.
+        </li>
+        <li>
+            건물 설비가 설계 목적대로 성능을 발휘하는지 검증하고 조정하는 종합 품질 관리 과정을 ( ㉠ )(이 )라 한다.
+        </li>
+        <li>
+            바닥난방 부위에 설치되는 단열재는 온수배관 하부와 슬래브 사이에 설치하며, 열저항 합계는 해당 바닥 요구 총 열저항의 ( ㉠ )% 이상이어야 한다.
+        </li>
+    </ol>
+
+    <div style="font-size: 9.5pt; color: #666666; margin-top: 30px; padding: 15px; border-top: 1px dashed #666666; line-height: 1.8;">
+        <strong style="display: block; margin-bottom: 10px; color: #333333;">[제77강 주관식 단답형 정답 리스트]</strong>
+        <div class="answer-grid">
+            <div><strong>1.</strong> ㉠ 39, ㉡ 34</div>
+            <div><strong>2.</strong> ㉠ 57, ㉡ 52</div>
+            <div><strong>3.</strong> ㉠ 45, ㉡ 40</div>
+            <div><strong>4.</strong> ㉠ 700, ㉡ 4</div>
+            <div><strong>5.</strong> ㉠ 잡수입</div>
+            <div><strong>6.</strong> ㉠ 급배수</div>
+            <div><strong>7.</strong> ㉠ 기후에너지환경부</div>
+            <div><strong>8.</strong> ㉠ 30, ㉡ 0.28</div>
+            <div><strong>9.</strong> ㉠ 중심</div>
+            <div><strong>10.</strong> ㉠ 50</div>
+            <div><strong>11.</strong> ㉠ 실내</div>
+            <div><strong>12.</strong> ㉠ 100, ㉡ 150</div>
+            <div><strong>13.</strong> ㉠ 1.2</div>
+            <div><strong>14.</strong> ㉠ 대수분할(또는 대수제어)</div>
+            <div><strong>15.</strong> ㉠ 비례제어</div>
+            <div><strong>16.</strong> ㉠ 이코노마이저</div>
+            <div><strong>17.</strong> ㉠ 60</div>
+            <div><strong>18.</strong> ㉠ 병렬</div>
+            <div><strong>19.</strong> ㉠ 커미셔닝</div>
+            <div><strong>20.</strong> ㉠ 60</div>
+        </div>
+    </div>
+
+</body>
+</html>
