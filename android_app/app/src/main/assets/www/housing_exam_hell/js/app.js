@@ -1681,9 +1681,11 @@
                 screen: document.getElementById('screen-manager'),
                 tabWrong: document.getElementById('mgr-tab-wrong'),
                 tabNeedsEdit: document.getElementById('mgr-tab-needs-edit'),
+                tabCustomEdits: document.getElementById('mgr-tab-custom-edits'),
                 tabSearchAll: document.getElementById('mgr-tab-search-all'),
                 cntWrong: document.getElementById('mgr-cnt-wrong'),
                 cntNeedsEdit: document.getElementById('mgr-cnt-needs-edit'),
+                cntCustomEdits: document.getElementById('mgr-cnt-custom-edits'),
                 searchInput: document.getElementById('mgr-search-input'),
                 btnSearch: document.getElementById('mgr-btn-search'),
                 btnClearSearch: document.getElementById('mgr-btn-clear-search'),
@@ -1734,9 +1736,11 @@
                 cntTotalWrong: document.getElementById('cnt-total-wrong'),
                 tabWrongList: document.getElementById('tab-btn-wrong-list'),
                 tabNeedsEdit: document.getElementById('tab-btn-needs-edit'),
+                tabCustomEdits: document.getElementById('tab-btn-custom-edits'),
                 tabSearchAll: document.getElementById('tab-btn-search-all'),
                 cntWrongTab: document.getElementById('cnt-wrong-tab'),
                 cntNeedsEditTab: document.getElementById('cnt-needs-edit-tab'),
+                cntCustomEditsTab: document.getElementById('cnt-custom-edits-tab'),
                 inputSearch: document.getElementById('input-wrong-manager-search'),
                 inputPin: document.getElementById('input-pin-code'),
                 formPin: document.getElementById('form-pin-auth')
@@ -1768,7 +1772,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260827.2131</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260827.2134</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -1793,7 +1797,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260827.2131</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260827.2134</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
@@ -3096,6 +3100,7 @@
         state.managerSearchQuery = '';
         state.statsMap = await IDBStore.getAllStatsMap();
         state.needsEditMap = await IDBStore.getAllNeedsEditMap();
+        state.customEdits = await IDBStore.getAllQuestionEditsMap();
 
         if (elements.manager.searchInput) {
             elements.manager.searchInput.value = '';
@@ -3131,9 +3136,11 @@
             return stat && stat.wrongCount > 0;
         });
         const allNeedsEditKeys = Object.keys(state.needsEditMap || {});
+        const allCustomEditsKeys = Object.keys(state.customEdits || {});
 
         if (elements.manager.cntWrong) elements.manager.cntWrong.textContent = allWrong.length;
         if (elements.manager.cntNeedsEdit) elements.manager.cntNeedsEdit.textContent = allNeedsEditKeys.length;
+        if (elements.manager.cntCustomEdits) elements.manager.cntCustomEdits.textContent = allCustomEditsKeys.length;
 
         const qLower = (state.managerSearchQuery || '').trim().toLowerCase();
 
@@ -3169,6 +3176,23 @@
                     chapterName: info.chapterName,
                     type: info.type,
                     question: info.question,
+                    id: '?'
+                };
+            });
+            if (filterSubj !== 'all') list = list.filter(q => q.subject === filterSubj);
+            if (qLower) list = list.filter(matchesSearch);
+        } else if (tabName === 'custom_edits') {
+            list = allCustomEditsKeys.map(k => {
+                const isGwanri = k.startsWith('관리실무');
+                const pool = isGwanri ? gwanriPool : lawPool;
+                const found = pool.find(item => item.qKey === k);
+                const edited = state.customEdits[k] || {};
+                return found || {
+                    qKey: k,
+                    subject: isGwanri ? '관리실무' : '관계법규',
+                    chapterName: edited.chapterName || '수정된 문항',
+                    type: edited.type || 'choice',
+                    question: edited.title || edited.question || '수정된 문항',
                     id: '?'
                 };
             });
