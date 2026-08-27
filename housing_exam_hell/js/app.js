@@ -768,6 +768,17 @@
             return false;
         },
 
+        LADDER_WEIGHTS: {
+            7: 1.8,
+            6: 1.7,
+            5: 1.6,
+            4: 1.5,
+            3: 1.3,
+            2: 1.1,
+            1: 1.0,
+            0: 1.0
+        },
+
         matchQuestionKeywords(q, subject) {
             const subjectKeywords = this.getCoreKeywordsDB(subject);
             if (!subjectKeywords || subjectKeywords.length === 0) return [];
@@ -794,14 +805,16 @@
                 const matched = distinctiveKws.filter(kw => fullText.includes(kw));
                 const exactTopicMatch = item.topic && fullText.includes(item.topic);
 
-                let score = 0;
-                if (exactTopicMatch) score += 3;
-                if (matched.length >= 3) score += 3;
-                else if (matched.length === 2) score += 2;
-                else if (matched.length === 1) score += 1;
-
+                // Smooth 7-point ladder scoring:
+                // base = matched.length (1 to 6+)
+                // +1 for exact topic match
+                // +1 for chapter category match (if score > 0)
+                // capped at 7 points
+                let score = matched.length;
+                if (exactTopicMatch) score += 1;
                 const isChapterMatch = this.isCategoryMatch(q.chapterName, item.category);
                 if (isChapterMatch && score > 0) score += 1;
+                score = Math.min(7, score);
 
                 if (score >= 2) {
                     matches.push({
@@ -843,8 +856,10 @@
                 (chap.questions || []).forEach(q => {
                     const matches = this.matchQuestionKeywords({ ...q, chapterName: chap.chapter }, subject);
                     const topMatch = matches.length > 0 ? matches[0] : null;
-                    // ⭐ 핵심 300선 뱃지는 score >= 4 (상위 ~36% 초핵심)에만 부착
-                    const isHighYield = topMatch !== null && topMatch.score >= 4;
+                    const topScore = topMatch ? topMatch.score : 0;
+                    // ⭐ 핵심 300선 뱃지는 5점 이상 (7점, 6점, 5점)에 부착 (상위 44.7%)
+                    const isHighYield = topScore >= 5;
+                    const isSuperHighYield = topScore >= 6;
                     pool.push({
                         ...q,
                         qKey: `${subject}_${type}_${chap.chapter}_${q.id}`,
@@ -854,8 +869,11 @@
                         sourceFile: chap.source_file || '',
                         coreMatches: matches,
                         topCoreMatch: topMatch,
+                        topScore: topScore,
                         isHighYield: isHighYield,
-                        primaryCoreItem: isHighYield ? topMatch.item : null
+                        isSuperHighYield: isSuperHighYield,
+                        primaryCoreItem: isHighYield ? topMatch.item : null,
+                        scoreWeight: this.LADDER_WEIGHTS[topScore] || 1.0
                     });
                 });
             });
@@ -874,12 +892,8 @@
                 const stat = statsMap[it.qKey];
                 const userWeight = (stat && stat.weight) ? stat.weight : 1.0;
                 
-                // 적중 점수(score) 비례 확률 가중치 (완만한 스케일링, 최대 5.4배 캡):
-                // score >= 4 (⭐ 뱃지 부착, 초핵심): 1.8배
-                // score === 3 (준핵심 빈출, 뱃지 미부착): 1.3배
-                // score <= 2 (일반/지엽, 뱃지 미부착): 1.0배
-                const coreScore = (it.topCoreMatch && it.topCoreMatch.score) ? it.topCoreMatch.score : 1;
-                const scoreWeight = coreScore >= 4 ? 1.8 : (coreScore === 3 ? 1.3 : 1.0);
+                // 사다리형 가중치 (7점: 1.8배 ~ 0점: 1.0배)
+                const scoreWeight = it.scoreWeight || (it.topScore !== undefined ? (this.LADDER_WEIGHTS[it.topScore] || 1.0) : 1.0);
                 
                 return userWeight * scoreWeight;
             });
@@ -1753,7 +1767,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260826.1921</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260827.1106</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -1778,7 +1792,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260826.1921</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260827.1106</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
@@ -2055,7 +2069,10 @@
         
         let chapText = q.chapterName.replace(/^CHAPTER\s+\d+\s*/i, '');
         if (q.isHighYield && q.primaryCoreItem) {
-            elements.quiz.chapterBadge.innerHTML = `${chapText} <span class="badge-high-yield" title="${q.primaryCoreItem.note}"><i class="fa-solid fa-star text-amber-400"></i> 핵심 300선 #${String(q.primaryCoreItem.id).padStart(3, '0')} ${q.primaryCoreItem.tag}</span>`;
+            const isSuper = (q.topScore >= 6);
+            const badgeClass = isSuper ? 'badge-high-yield badge-tier-super' : 'badge-high-yield';
+            const iconHtml = isSuper ? '<i class="fa-solid fa-fire text-rose-500"></i> 초특급 빈출' : '<i class="fa-solid fa-star text-amber-400"></i> 핵심 300선';
+            elements.quiz.chapterBadge.innerHTML = `${chapText} <span class="${badgeClass}" title="${q.primaryCoreItem.note}">${iconHtml} #${String(q.primaryCoreItem.id).padStart(3, '0')} ${q.primaryCoreItem.tag}</span>`;
         } else {
             elements.quiz.chapterBadge.textContent = chapText;
         }
@@ -2112,9 +2129,14 @@
             : (q.type === 'short' ? '본 문항의 조문 및 법령 규정에 따른 정확한 기입 답안은 위와 같습니다.' : '');
 
         if (q.isHighYield && q.primaryCoreItem) {
+            const isSuper = (q.topScore >= 6);
+            const titleHtml = isSuper 
+                ? `<i class="fa-solid fa-fire text-rose-500"></i> [초특급 빈출 No.${String(q.primaryCoreItem.id).padStart(3, '0')}] ${q.primaryCoreItem.topic}`
+                : `<i class="fa-solid fa-star text-amber-400"></i> [초고효율 핵심 300선 No.${String(q.primaryCoreItem.id).padStart(3, '0')}] ${q.primaryCoreItem.topic}`;
+            const calloutClass = isSuper ? 'core-theme-callout callout-tier-super' : 'core-theme-callout';
             const calloutHtml = `
-                <div class="core-theme-callout">
-                    <div class="core-theme-title"><i class="fa-solid fa-star text-amber-400"></i> [초고효율 핵심 300선 No.${String(q.primaryCoreItem.id).padStart(3, '0')}] ${q.primaryCoreItem.topic}</div>
+                <div class="${calloutClass}">
+                    <div class="core-theme-title">${titleHtml}</div>
                     <div class="core-theme-note"><b>💡 출제 포인트:</b> ${q.primaryCoreItem.note}</div>
                 </div>
             `;
@@ -3191,9 +3213,12 @@
             card.dataset.qkey = q.qKey;
 
             let badgeHtml = '';
-            const coreMatch = q.topCoreMatch && q.topCoreMatch.score >= 3 ? q.topCoreMatch.item : null;
+            const coreMatch = q.topCoreMatch && q.topCoreMatch.score >= 5 ? q.topCoreMatch.item : null;
             if (coreMatch) {
-                badgeHtml += `<span class="badge-high-yield mgr-badge" title="${coreMatch.topic}">⭐ 핵심 #${coreMatch.id}</span>`;
+                const isSuper = (q.topScore >= 6 || (q.topCoreMatch && q.topCoreMatch.score >= 6));
+                const badgeClass = isSuper ? 'badge-high-yield mgr-badge badge-tier-super' : 'badge-high-yield mgr-badge';
+                const badgeIcon = isSuper ? '🔥 초특급' : '⭐ 핵심';
+                badgeHtml += `<span class="${badgeClass}" title="${coreMatch.topic}">${badgeIcon} #${coreMatch.id}</span>`;
             }
             if (isFlagged) {
                 badgeHtml += `<span class="mgr-status-flag">🚩 수정요청</span>`;
@@ -3301,9 +3326,12 @@
         }
         if (elements.manager.metaId) {
             let coreHtml = '';
-            const coreMatch = q.topCoreMatch && q.topCoreMatch.score >= 3 ? q.topCoreMatch.item : null;
+            const coreMatch = q.topCoreMatch && q.topCoreMatch.score >= 5 ? q.topCoreMatch.item : null;
             if (coreMatch) {
-                coreHtml = ` <span class="badge-high-yield mgr-badge" title="${coreMatch.note}">⭐ 핵심 300선 #${coreMatch.id} ${coreMatch.tag}</span>`;
+                const isSuper = (q.topScore >= 6 || (q.topCoreMatch && q.topCoreMatch.score >= 6));
+                const badgeClass = isSuper ? 'badge-high-yield mgr-badge badge-tier-super' : 'badge-high-yield mgr-badge';
+                const badgeIcon = isSuper ? '🔥 초특급' : '⭐ 핵심 300선';
+                coreHtml = ` <span class="${badgeClass}" title="${coreMatch.note}">${badgeIcon} #${coreMatch.id} ${coreMatch.tag}</span>`;
             }
             elements.manager.metaId.innerHTML = `[문항 ID: ${q.id}]${coreHtml}`;
         }

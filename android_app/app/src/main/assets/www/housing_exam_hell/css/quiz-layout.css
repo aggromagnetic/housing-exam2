@@ -2181,11 +2181,24 @@ body.manager-mode .app-header .header-content {
     flex-shrink: 0;
 }
 
+.badge-high-yield.badge-tier-super {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.22) 0%, rgba(245, 158, 11, 0.28) 100%);
+    color: #FCA5A5;
+    border-color: rgba(239, 68, 68, 0.55);
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.25);
+}
+
 .badge-high-yield.mgr-badge {
     padding: 2px 6px;
     font-size: 0.7rem;
     background: rgba(245, 158, 11, 0.12);
     border-color: rgba(245, 158, 11, 0.35);
+}
+
+.badge-high-yield.mgr-badge.badge-tier-super {
+    background: rgba(239, 68, 68, 0.18);
+    border-color: rgba(239, 68, 68, 0.45);
+    color: #FCA5A5;
 }
 
 .core-theme-callout {
@@ -2198,6 +2211,12 @@ body.manager-mode .app-header .header-content {
     font-size: 0.85rem;
     color: #E2E8F0;
     line-height: 1.55;
+}
+
+.core-theme-callout.callout-tier-super {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(30, 41, 59, 0.5) 100%);
+    border-color: rgba(239, 68, 68, 0.4);
+    border-left: 4px solid #EF4444;
 }
 
 .core-theme-title {
