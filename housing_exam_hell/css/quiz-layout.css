@@ -1625,9 +1625,9 @@ body.manager-mode .app-header .header-content {
 
 /* Sidebar (Left Panel - 100% Independent Scroll) */
 .manager-sidebar {
-    width: 380px !important;
-    min-width: 300px !important;
-    max-width: 440px !important;
+    width: 440px !important;
+    min-width: 340px !important;
+    max-width: 480px !important;
     background: #0F172A;
     border: 1px solid #1E293B;
     border-radius: 14px;
@@ -1644,16 +1644,18 @@ body.manager-mode .app-header .header-content {
     flex-shrink: 0 !important;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    padding: 8px 8px;
-    gap: 5px;
+    padding: 8px 6px;
+    gap: 4px;
     background: #090D16;
     border-bottom: 1px solid #1E293B;
+    box-sizing: border-box;
+    width: 100%;
 }
 
 .mgr-tab-btn {
-    padding: 7px 4px;
+    padding: 7px 2px;
     border-radius: 7px;
-    font-size: 0.78rem;
+    font-size: 0.76rem;
     font-weight: 700;
     background: transparent;
     color: #94A3B8;
@@ -1666,6 +1668,8 @@ body.manager-mode .app-header .header-content {
     align-items: center;
     justify-content: center;
     gap: 3px;
+    min-width: 0;
+    box-sizing: border-box;
 }
 
 .mgr-tab-btn.active {

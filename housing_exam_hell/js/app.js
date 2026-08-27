@@ -1772,7 +1772,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260827.2139</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260827.2142</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -1797,7 +1797,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260827.2139</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260827.2142</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
@@ -3199,24 +3199,38 @@
             if (filterSubj !== 'all') list = list.filter(q => q.subject === filterSubj);
             if (qLower) list = list.filter(matchesSearch);
         } else if (tabName === 'search_all') {
-            list = allPool;
-            if (filterSubj !== 'all') list = list.filter(q => q.subject === filterSubj);
-            if (qLower) {
-                list = list.filter(matchesSearch);
+            if (!qLower) {
+                list = [];
             } else {
-                list = list.slice(0, 100);
+                list = allPool;
+                if (filterSubj !== 'all') list = list.filter(q => q.subject === filterSubj);
+                list = list.filter(matchesSearch);
             }
         }
 
-        if (elements.manager.listCount) elements.manager.listCount.textContent = list.length;
+        if (elements.manager.listCount) {
+            elements.manager.listCount.textContent = (tabName === 'search_all' && !qLower) ? '0' : list.length;
+        }
 
         if (list.length === 0) {
-            elements.manager.itemsList.innerHTML = `
-                <div style="text-align: center; padding: 40px 16px; color: var(--text-muted);">
-                    <i class="fa-solid fa-circle-question" style="font-size: 2.2rem; color: #64748B; margin-bottom: 10px; display: block;"></i>
-                    ${qLower ? `"${qLower}" 검색 결과가 없습니다.` : '목록에 표시할 문제가 없습니다.'}
-                </div>
-            `;
+            let emptyHtml = '';
+            if (tabName === 'search_all' && !qLower) {
+                emptyHtml = `
+                    <div style="text-align: center; padding: 50px 16px; color: #94A3B8;">
+                        <i class="fa-solid fa-magnifying-glass" style="font-size: 2.4rem; color: #38BDF8; margin-bottom: 14px; display: block; opacity: 0.9;"></i>
+                        <div style="font-size: 1.05rem; font-weight: 800; color: #F1F5F9; margin-bottom: 8px;">필요한 문제를 검색하세요</div>
+                        <div style="font-size: 0.82rem; color: #64748B; line-height: 1.6;">지문, 단원명, 법률 조문, 정답 키워드를<br>검색창에 입력하고 <kbd style="background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.15); color: #E2E8F0;">Enter</kbd> 또는 <strong>검색</strong>을 누르세요.</div>
+                    </div>
+                `;
+            } else {
+                emptyHtml = `
+                    <div style="text-align: center; padding: 40px 16px; color: var(--text-muted);">
+                        <i class="fa-solid fa-circle-question" style="font-size: 2.2rem; color: #64748B; margin-bottom: 10px; display: block;"></i>
+                        ${qLower ? `"${qLower}" 검색 결과가 없습니다.` : '목록에 표시할 문제가 없습니다.'}
+                    </div>
+                `;
+            }
+            elements.manager.itemsList.innerHTML = emptyHtml;
             if (elements.manager.editorEmpty) elements.manager.editorEmpty.style.display = 'flex';
             if (elements.manager.editorForm) elements.manager.editorForm.style.display = 'none';
             return;
@@ -3476,6 +3490,9 @@
                 document.querySelectorAll('.mgr-tab-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 renderManagerList(btn.dataset.tab, state.managerFilter);
+                if (btn.dataset.tab === 'search_all' && elements.manager.searchInput) {
+                    setTimeout(() => elements.manager.searchInput.focus(), 50);
+                }
             });
         });
 
