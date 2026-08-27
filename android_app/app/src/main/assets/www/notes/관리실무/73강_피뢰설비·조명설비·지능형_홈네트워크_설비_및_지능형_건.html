@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 - 제73강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+            letter-spacing: -0.05em;
+        }
+        
+        h1 {
+            font-size: 12pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        /* 토너 절약 4색 시각 강조 클래스 (배경색 배제) */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #16803d; 
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #6d28d9; 
+        }
+        
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        ol.quiz-list {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+            line-height: 2.1;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        /* 하단 정답표 3단 그리드 배치 */
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px 15px;
+        }
+
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        제73강. 피뢰설비·조명설비·지능형 홈네트워크 설비 및 지능형 건축물 정밀 학습 노트
+    </h1>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+        1. 피뢰설비 법정 기술기준 및 구조·성능 규정 (건축물의 설비기준 등에 관한 규칙 제20조)
+    </h2>
+    <ul>
+        <li><strong>★ 법정 피뢰설비 의무 설치대상 및 피뢰레벨 기준 (★주관식 단골 수치)</strong>:
+            <ol>
+                <li><span class="highlight-red">★ 설치대상 건축물 기준</span>: 낙뢰의 우려가 있는 건축물 또는 높이가 <span class="highlight-red">20미터(20 m) 이상</span>인 건축물 및 공작물. (※ 20m 수치 단독 기출 및 주관식 1순위).</li>
+                <li><span class="highlight-purple">★ 한국산업표준(KS) 피뢰레벨 규정</span>: 한국산업표준이 정하는 피뢰레벨 등급에 적합할 것. (※ 과거 60도, 45도 등의 보호각 구 기준은 폐지됨).
+                    <br>&rarr; <span class="highlight-blue">★ 위험물저장 및 처리시설 특례</span>: 한국산업표준이 정하는 <span class="highlight-blue">피뢰시스템레벨 Ⅱ 이상</span>이어야 함.</li>
+            </ol>
+        </li>
+        <li><strong>★ 피뢰설비 주요 구성 요소별 기술기준 (돌침, 재료, 인하도선)</strong>:
+            <ol>
+                <li><span class="highlight-blue">★ 돌침 설치 높이</span>: 돌침은 건축물의 맨 윗부분으로부터 <span class="highlight-blue">25센티미터(25 cm) 이상</span> 돌출시켜 설치할 것.</li>
+                <li><span class="highlight-red">★ 피뢰설비 재료 및 최소 단면적</span>: 피복이 없는 <span class="highlight-red">동선(나동선)</span>을 기준으로 수뢰부, 인하도선 및 접지극은 <span class="highlight-red">50제곱밀리미터(50 mm²) 이상</span>이거나 이와 동등 이상의 성능을 갖출 것. (※ 과거 상이했던 수치들이 50 mm²로 통합됨).</li>
+                <li><span class="highlight-purple">★ 인하도선 대체 규정 및 전기적 연속성</span>: 철골조의 철골구조물과 철근콘크리트조의 철근구조체 등을 인하도선으로 <span class="highlight-purple">사용할 수 있음</span>.
+                    <br>&rarr; <span class="highlight-purple">★ 전기적 연속성 판단 기준</span>: 건축물 금속구조체의 최상단부와 지표레벨 사이의 전기저항이 <span class="highlight-purple">0.2옴(0.2 Ω) 이하</span>이어야 함.</li>
+            </ol>
+        </li>
+        <li><strong>★ 측면 수뢰부(측면 낙뢰 방지) 및 통합접지 서지보호장치</strong>:
+            <ol>
+                <li><span class="highlight-red">★ 측면 수뢰부 설치대상 및 위치 공식 (★출제 최다 포인트)</span>:
+                    <br>&rarr; 높이가 <span class="highlight-red">60미터(60 m)를 초과</span>하는 건축물: 지면에서 건축물 높이의 <span class="highlight-red">5분의 4(4/5)</span>가 되는 지점부터 최상단부분까지 측면 수뢰부 설치.
+                    <br>&rarr; 최상단부 높이가 <span class="highlight-purple">150미터(150 m)를 초과</span>하는 건축물: <span class="highlight-purple">120미터(120 m)</span> 지점부터 최상단부분까지 측면 수뢰부 설치.
+                    <br>(※ 건축물 외벽이 금속부재로 마감되고 전기저항 0.2 Ω 이하 등 요건 충족 시 측면 수뢰부가 설치된 것으로 간주).</li>
+                <li><span class="highlight-green">★ 통합접지공사 시 서지보호장치(SPD)</span>: 전기설비 접지계통과 피뢰설비·통신설비 접지극을 공용하는 통합접지공사 시 낙뢰 과전압 보호를 위해 <span class="highlight-green">서지보호장치(SPD)</span>를 필수 설치해야 함.</li>
+            </ol>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">피뢰설비 구분 항목</th>
+                <th style="width: 45%;">법정 핵심 수치 및 기술 기준</th>
+                <th style="width: 30%;">수험 핵심 출제 포인트</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th><span class="highlight-red">의무 설치 대상</span></th>
+                <td>낙뢰 우려 건축물 또는 높이 <span class="highlight-red">20 m 이상</span> 건축물·공작물</td>
+                <td>20 m 수치 단독 주관식 단골</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-blue">돌침 돌출 높이</span></th>
+                <td>건축물 맨 윗부분으로부터 <span class="highlight-blue">25 cm 이상</span> 돌출</td>
+                <td>25 cm 돌출 수치 암기</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-red">재료 및 최소 단면적</span></th>
+                <td>피복 없는 <span class="highlight-red">동선</span> 기준 <span class="highlight-red">50 mm² 이상</span> (수뢰부·인하도선·접지극)</td>
+                <td>동선 / 50 mm² 묶음 기출</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-purple">인하도선 대체 구조</span></th>
+                <td>철골·철근콘크리트 구조체 사용 가능 (전기저항 <span class="highlight-purple">0.2 Ω 이하</span>)</td>
+                <td>사용 불가 지문 오답 출제</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-red">측면 수뢰부 규정</span></th>
+                <td>60 m 초과 시 <span class="highlight-red">5분의 4 지점</span> / 150 m 초과 시 <span class="highlight-purple">120 m 지점</span>부터</td>
+                <td>60 m, 5분의 4, 120 m 기출</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-green">통합접지 보호장치</span></th>
+                <td>접지극 공용 시 과전압 방지용 <span class="highlight-green">서지보호장치(SPD)</span> 설치</td>
+                <td>배선용차단기로 변형 오답 주의</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line></svg>
+        2. 조명설비 기초 용어, 설계 순서 및 광속계산(실룸법) 공식
+    </h2>
+    <ul>
+        <li><strong>★ 조명 관련 주요 광학 단위 및 핵심 개념 정밀 비교</strong>:
+            <ol>
+                <li><span class="highlight-blue">광속 (F, Luminous Flux)</span>: 단위시간 동안 전파되는 빛의 총량(빛의 양). 단위는 <span class="highlight-blue">루멘(lm)</span>.</li>
+                <li><span class="highlight-purple">광도 (I, Luminous Intensity)</span>: 광원에서 특정 방향으로 나오는 빛의 세기(빛의 세기). 단위는 <span class="highlight-purple">칸델라(cd)</span>.</li>
+                <li><span class="highlight-red">조도 (E, Illuminance)</span>: 단위면적당 입사하는 광속(면의 밝기). 단위는 <span class="highlight-red">룩스(lx)</span>. (※ 조명설계의 가장 핵심 지표).</li>
+                <li><span class="highlight-green">휘도 (L, Luminance)</span>: 눈으로 느껴지는 대상면의 단위면적당 광도(눈부심의 정도). 단위는 <span class="highlight-green">니트(nt)</span> 또는 스틸브(sb).</li>
+                <li><span class="highlight-blue">광속발산도 (R, Luminous Emittance)</span>: 광원의 단위면적당 발산하는 광속. 단위는 <span class="highlight-blue">레드룩스(rlx)</span>.</li>
+                <li><span class="highlight-purple">연색성 (Color Rendering)</span>: 조명 아래에서 물체의 색이 본래의 자연색과 얼마나 비슷하게 보이는가를 나타내는 성질.</li>
+                <li><span class="highlight-red">균제도 (Uniformity Ratio)</span>: 조명면의 일정한 정도를 나타내는 지표. <span class="highlight-red">최소조도 / 평균조도</span> 또는 <span class="highlight-red">최소조도 / 최대조도</span>의 비로 산정.</li>
+            </ol>
+        </li>
+        <li><strong>★ 조명 설계 순서 5단계 (★암기 공식: 소·전·조·강·배)</strong>:
+            <br>&rarr; <span class="highlight-red">소</span>(소요조도 결정) &rarr; <span class="highlight-purple">전</span>(전등·광원 선정) &rarr; <span class="highlight-blue">조</span>(조명방식 선정) &rarr; <span class="highlight-green">강</span>(광속 계산) &rarr; <span class="highlight-red">배</span>(조명기구 배치).
+        </li>
+        <li><strong>★ 실룸법에 의한 광속 계산 기본 공식 (★암기 공식: FUN = EAD)</strong>:
+            <ol>
+                <li><span class="highlight-red">기본 방정식</span>: <span class="highlight-red">F &times; U &times; N = E &times; A &times; D</span>
+                    <br>&rarr; <strong>F</strong> = 광속(lm), <strong>U</strong> = 조명률, <strong>N</strong> = 등(램프)의 개수.
+                    <br>&rarr; <strong>E</strong> = 평균조도(lx), <strong>A</strong> = 실 면적(m², 바닥면적 = 가로 &times; 세로), <strong>D</strong> = 감강보상률.</li>
+                <li><span class="highlight-purple">★ 감강보상률(D) vs 보수율(M)의 관계</span>: 감강보상률은 램프 노후 및 먼지 부착에 따른 조도 저하를 고려하여 여유를 두는 계수로, <span class="highlight-purple">보수율(M)의 역수(D = 1 / M)</span> 관계임. (※ 보수율 적용 시 공식: F &times; U &times; N &times; M = E &times; A).</li>
+                <li><span class="highlight-blue">★ 계산 응용 (등 개수 N 및 평균조도 E 구하기)</span>:
+                    <br>&rarr; 등 개수 산정: <span class="highlight-blue">N = (E &times; A &times; D) / (F &times; U)</span>. (※ 등 개수 산정 시 소수점 발생 시 무조건 절상하여 정수로 산정).
+                    <br>&rarr; 면적 산정 시 함정 주의: 체적(가로&times;세로&times;높이)이 아닌 <span class="highlight-red">바닥면적(가로&times;세로)</span>만 곱하여 산정할 것!</li>
+            </ol>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        3. 지능형 홈네트워크 설비 설치 및 기술기준 (망·장비·사용기기·공간·보안 규정)
+    </h2>
+    <ul>
+        <li><strong>★ 홈네트워크 기본 구성 3대 요소 정밀 구분</strong>:
+            <ol>
+                <li><span class="highlight-blue">★ 홈네트워크망 (2종)</span>:
+                    <br>&rarr; <span class="highlight-blue">단지망</span>: 집중구내통신실(MDF실)에서 각 세대까지를 연결하는 망. (※ 통신배관실에서 연결한다는 지문 오답 주의!).
+                    <br>&rarr; <span class="highlight-blue">세대망</span>: 전유부분(각 세대 내)을 연결하는 망.</li>
+                <li><span class="highlight-red">★ 홈네트워크장비 (4종 - ★주관식 핵심)</span>:
+                    <br>&rarr; <span class="highlight-red">홈게이트웨이</span>: 세대 내 사용기기들을 유무선으로 연결하고 세대망과 단지망/기간망을 상호 접속하는 장치.
+                    <br>&rarr; <span class="highlight-red">세대단말기</span>: 세대 및 공용부 설비를 제어·확인하고 사용자 인터페이스를 제공하는 장치. (※ 과거 '월패드'에서 개정된 법정 용어).
+                    <br>&rarr; <span class="highlight-red">단지네트워크장비</span>: 홈게이트웨이와 단지서버 간 통신 및 보안을 수행하는 장비. (백본, 방화벽, 워크그룹스위치 등).
+                    <br>&rarr; <span class="highlight-red">단지서버</span>: 홈네트워크 설비를 총괄적으로 관리하고 각종 데이터 저장·관리·서비스를 제공하는 핵심 장비.</li>
+                <li><span class="highlight-purple">★ 홈네트워크 사용기기 (8종)</span>: 원격제어기기, 원격검침시스템, 감지기, 전자출입시스템, 차량출입시스템, 무인택배시스템, 영상정보처리기기, 전자경보시스템.</li>
+            </ol>
+        </li>
+        <li><strong>★ 장비별 설치 장소 및 가스감지기·전자출입·무인택배 세부 기술기준</strong>:
+            <ol>
+                <li><span class="highlight-blue">★ 단지네트워크장비 vs 단지서버 설치장소 엄격 구분</span>:
+                    <br>&rarr; 단지네트워크장비: <span class="highlight-blue">집중구내통신실(MDF)</span> 또는 <span class="highlight-blue">통신배관실(TPS)</span>에 설치. (※ 방재실 설치 불가!).
+                    <br>&rarr; 단지서버: 원칙적으로 단지서버실에 설치하되, 없을 경우 <span class="highlight-blue">집중구내통신실(MDF)</span> 또는 <span class="highlight-blue">방재실</span>에 설치 가능. (※ 통신배관실 설치 불가!).</li>
+                <li><span class="highlight-red">★ 가스감지기 설치 높이 공식</span>:
+                    <br>&rarr; LNG(메탄, 공기보다 가벼움): <span class="highlight-red">천장 쪽</span>에 설치.
+                    <br>&rarr; LPG(프로판/부탄, 공기보다 무거움): <span class="highlight-red">바닥 쪽</span>에 설치.</li>
+                <li><span class="highlight-purple">★ 전자출입시스템 및 무인택배함 설치 기준</span>:
+                    <br>&rarr; 전자출입시스템: 접지단자는 강우 등에 견딜 수 있도록 프레임 <span class="highlight-purple">내부</span>에 설치할 것. (외부 X).
+                    <br>&rarr; 무인택배함 권장 수량: 소형주택 = 세대수의 <span class="highlight-purple">10~15 %</span> 권장 / 중형주택 이상 = 세대수의 <span class="highlight-purple">10~20 %</span> 권장. (※ 의무사항이 아닌 '권장사항').</li>
+            </ol>
+        </li>
+        <li><strong>★ 홈네트워크 설비 설치공간 기술기준 (TPS실 규정 ★최다 기출)</strong>:
+            <ol>
+                <li><span class="highlight-blue">세대단자함 권장 크기</span>: 500 mm &times; 400 mm &times; 80 mm (깊이).</li>
+                <li><span class="highlight-red">★ 통신배관실(TPS실) 출입문 및 문턱 규정 (★수치 엄수)</span>:
+                    <br>&rarr; 출입문 규격: 최소 폭 <span class="highlight-red">0.7미터(0.7 m) 이상</span>, 높이 <span class="highlight-red">1.8미터(1.8 m) 이상</span> (문틀 내측치수).
+                    <br>&rarr; 문턱 높이: 먼지·물 침입 방지를 위해 <span class="highlight-red">50밀리미터(50 mm, 5 cm) 이상</span>의 문턱 설치. (단, 차수판/차수막 설치 시 예외).</li>
+                <li><span class="highlight-purple">집중구내통신실(MDF실) 환경</span>: 적정 온도 유지를 위해 <span class="highlight-purple">냉방시설 또는 흡배기용 환풍기</span>를 설치할 것.</li>
+            </ol>
+        </li>
+        <li><strong>★ 연동성, 예비부품 확보 및 네트워크 보안 기술기준</strong>:
+            <ol>
+                <li><span class="highlight-green">★ 신호 연동 체계</span>: 홈네트워크 사용기기는 <span class="highlight-green">홈게이트웨이</span>와 연동하고, 홈게이트웨이는 <span class="highlight-green">단지서버</span>와 연동함. (※ 사용기기가 단지서버와 직접 연동된다는 지문 오답!).</li>
+                <li><span class="highlight-blue">★ 예비부품 권장 확보 기준</span>: 홈네트워크사용기기의 예비부품은 <span class="highlight-blue">5퍼센트(5 %) 이상</span>을 <span class="highlight-blue">5년간</span> 확보할 것을 권장함.</li>
+                <li><span class="highlight-purple">★ 논리적 보안 분리 기술 (소프트웨어 활용 3종)</span>: 가상사설통신망(VPN), 가상근거리통신망(VLAN), 암호화기술 등을 활용하여 논리적으로 분리·구축할 것.</li>
+            </ol>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 22%;">공간 및 장비 구분</th>
+                <th style="width: 48%;">법정 설치 위치 및 세부 기술규격</th>
+                <th style="width: 30%;">수험 핵심 출제 함정</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th><span class="highlight-blue">단지망</span></th>
+                <td><span class="highlight-blue">집중구내통신실(MDF) ~ 세대</span> 연결 망</td>
+                <td>통신배관실 출발 오답 지문</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-red">단지네트워크장비</span></th>
+                <td><span class="highlight-red">집중구내통신실(MDF)</span> 또는 <span class="highlight-red">통신배관실(TPS)</span></td>
+                <td>방재실 설치 가능 오답 지문</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-purple">단지서버</span></th>
+                <td>단지서버실 / <span class="highlight-purple">집중구내통신실(MDF)</span> / <span class="highlight-purple">방재실</span></td>
+                <td>통신배관실 설치 가능 오답 지문</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-green">통신배관실(TPS)</span></th>
+                <td>출입문 폭 <span class="highlight-green">0.7m</span>, 높이 <span class="highlight-green">1.8m</span> / 문턱 <span class="highlight-green">50mm 이상</span></td>
+                <td>집중구내통신실 출입문 규격 적용X</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-blue">예비부품 / 연동</span></th>
+                <td>예비부품 <span class="highlight-blue">5% 이상, 5년간</span> / 사용기기&harr;홈게이트웨이&harr;단지서버</td>
+                <td>3%·3년 오답 / 직접 연동 오답</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect><line x1="9" y1="22" x2="9" y2="22.01"></line><line x1="15" y1="22" x2="15" y2="22.01"></line><line x1="12" y1="18" x2="12" y2="18.01"></line><line x1="12" y1="14" x2="12" y2="14.01"></line><line x1="12" y1="10" x2="12" y2="10.01"></line><line x1="12" y1="6" x2="12" y2="6.01"></line></svg>
+        4. 건축법상 지능형 건축물 인증 및 완화 기준 (건축법 제65조의2 제6항)
+    </h2>
+    <ul>
+        <li><strong>★ 지능형 건축물 인증 시 건축기준 완화 비율 (★주관식 수치 필수 암기)</strong>:
+            <ol>
+                <li><span class="highlight-red">★ 조경설치면적 완화 기준</span>: 허가권자는 지능형 건축물 인증을 받은 건축물에 대하여 조경설치면적(건축법 제42조)을 <span class="highlight-red">100분의 85까지</span> 완화하여 적용할 수 있다. (※ 85%까지 완화 적용).</li>
+                <li><span class="highlight-purple">★ 용적률 및 건축물 높이 제한 완화 기준</span>: 허가권자는 용적률(제56조) 및 건축물의 높이(제60조)를 각각 <span class="highlight-purple">100분의 115의 범위에서</span> 완화하여 적용할 수 있다. (※ 115% 범위 완화).</li>
+            </ol>
+        </li>
+    </ul>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+            💡 [수험 핵심 팁] 제73강 실전 출제 포인트 & 함정 방지 최종 체크
+        </div>
+        <ul>
+            <li><strong>피뢰설비 핵심 수치 묶음</strong>: 설치대상 = 높이 <span class="highlight-red">20 m 이상</span> / 돌침 = 맨 윗부분 <span class="highlight-blue">25 cm 이상</span> 돌출 / 재료 = 피복 없는 <span class="highlight-red">동선 50 mm² 이상</span> / 전기저항 = <span class="highlight-purple">0.2 Ω 이하</span> / 측면 수뢰부 = <span class="highlight-red">60 m 초과 시 5분의 4 지점</span>, <span class="highlight-purple">150 m 초과 시 120 m 지점</span> / 통합접지 = <span class="highlight-green">서지보호장치(SPD)</span>.</li>
+            <li><strong>조명설비 광속 공식 & 순서</strong>: 설계 순서 = <span class="highlight-red">소&middot;전&middot;조&middot;강&middot;배</span> / 공식 = <span class="highlight-red">F &times; U &times; N = E &times; A &times; D</span> (A는 바닥면적, 높이 곱하면 오답! 등 개수 소수점 발생 시 절상!).</li>
+            <li><strong>홈네트워크 설치장소 헷갈림 방지</strong>: 단지네트워크장비 = <span class="highlight-blue">MDF실, TPS실</span> (방재실 X) / 단지서버 = <span class="highlight-purple">MDF실, 방재실</span> (TPS실 X) / TPS실 출입문 = 폭 <span class="highlight-green">0.7 m</span>, 높이 <span class="highlight-green">1.8 m</span>, 문턱 <span class="highlight-green">50 mm 이상</span>.</li>
+            <li><strong>지능형 건축물 완화 수치</strong>: 조경면적 = <span class="highlight-red">100분의 85</span> / 용적률 및 높이 = <span class="highlight-purple">100분의 115</span>.</li>
+        </ul>
+    </div>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>주관식 단답형 및 빈칸 채우기 실전 훈련</h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡, ㉢)에 들어갈 알맞은 핵심 용어나 법정 수치, 단위를 아래 빈칸에 직접 작성해 보십시오.</p>
+
+    <ol class="quiz-list">
+        <li>
+            건축물의 설비기준 등에 관한 규칙상 피뢰설비는 낙뢰의 우려가 있는 건축물 또는 높이가 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이상의 건축물 및 공작물에 설치하여야 한다.
+        </li>
+        <li>
+            피뢰설비의 돌침은 건축물의 맨 윗부분으로부터 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )cm 이상 돌출시켜 설치하여야 한다.
+        </li>
+        <li>
+            피뢰설비의 재료는 피복이 없는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )을(를) 기준으로 수뢰부, 인하도선 및 접지극은 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )mm² 이상이어야 한다.
+        </li>
+        <li>
+            피뢰설비의 인하도선 대신 철근콘크리트조의 철근구조체를 사용하는 경우 건축물 금속구조체의 최상단부와 지표레벨 사이의 전기저항이 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )옴 이하이어야 한다.
+        </li>
+        <li>
+            측면 낙뢰를 방지하기 위하여 높이가 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터를 초과하는 건축물에는 지면에서 건축물 높이의 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )가 되는 지점부터 최상단부분까지 측면에 수뢰부를 설치하여야 한다.
+        </li>
+        <li>
+            지표레벨에서 최상단부의 높이가 150미터를 초과하는 건축물은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 지점부터 최상단부분까지 측면에 수뢰부를 설치하여야 한다.
+        </li>
+        <li>
+            전기설비의 접지계통과 건축물의 피뢰설비 및 통신설비 등의 접지극을 공용하는 통합접지공사를 하는 경우 과전압으로부터 전기설비 등을 보호하기 위하여 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )을(를) 설치하여야 한다.
+        </li>
+        <li>
+            조명 관련 단위 중 광속의 단위는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이고, 조도의 단위는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이다.
+        </li>
+        <li>
+            실룸법에 의한 광속 계산 공식은 F(광속) &times; U(조명률) &times; N(등수) = E(평균조도) &times; A(면적) &times; ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )이다.
+        </li>
+        <li>
+            조명설비에서 램프의 노후화 및 먼지 부착에 따른 조명 효율 저하를 보완하기 위한 보전계수를 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )라 하며, 이는 보수율의 역수 관계에 있다.
+        </li>
+        <li>
+            지능형 홈네트워크 설비 중 집중구내통신실(MDF실)에서 세대까지를 연결하는 망을 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )(이라) 하고, 각 세대 전유부분 내부를 연결하는 망을 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )(이라) 한다.
+        </li>
+        <li>
+            지능형 홈네트워크 장비 중 세대 및 공용부의 다양한 설비 기능을 제어·확인하고 사용자 인터페이스를 제공하는 장치를 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )(이라) 한다.
+        </li>
+        <li>
+            지능형 홈네트워크 설비 중 단지네트워크장비는 집중구내통신실 또는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )에 설치하여야 한다.
+        </li>
+        <li>
+            지능형 홈네트워크 설비 중 단지서버는 단지서버실, 집중구내통신실 또는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )에 설치할 수 있다.
+        </li>
+        <li>
+            전자출입시스템의 접지단자는 강우 등에 견딜 수 있도록 프레임 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )에 설치하여야 한다.
+        </li>
+        <li>
+            무인택배함의 설치수량은 소형주택의 경우 세대수의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )~15 %, 중형주택 이상은 세대수의 10~( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) % 정도 설치할 것을 권장한다.
+        </li>
+        <li>
+            통신배관실(TPS실)의 출입문은 폭 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이상, 높이 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이상이어야 하며, ( ㉢&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )mm 이상의 문턱을 설치하여야 한다.
+        </li>
+        <li>
+            지능형 홈네트워크 설비 기술기준상 홈네트워크사용기기의 예비부품은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )% 이상, ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )년간 확보할 것을 권장한다.
+        </li>
+        <li>
+            지능형 홈네트워크 보안을 위하여 소프트웨어를 이용하는 경우 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ), 가상근거리통신망(VLAN), 암호화기술 등을 활용하여 논리적 방법으로 분리하여야 한다.
+        </li>
+        <li>
+            허가권자는 지능형건축물 인증을 받은 건축물에 대하여 조경설치면적을 100분의 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )까지, 용적률 및 건축물 높이를 100분의 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )의 범위에서 완화하여 적용할 수 있다.
+        </li>
+    </ol>
+
+    <div style="font-size: 9.5pt; color: #666666; margin-top: 30px; padding: 15px; border-top: 1px dashed #666666; line-height: 1.8;">
+        <strong style="display: block; margin-bottom: 10px; color: #333333;">[제73강 주관식 단답형 정답 리스트]</strong>
+        <div class="answer-grid">
+            <div><strong>1.</strong> ㉠ 20</div>
+            <div><strong>2.</strong> ㉠ 25</div>
+            <div><strong>3.</strong> ㉠ 동선, ㉡ 50</div>
+            <div><strong>4.</strong> ㉠ 0.2</div>
+            <div><strong>5.</strong> ㉠ 60, ㉡ 5분의 4(또는 4/5)</div>
+            <div><strong>6.</strong> ㉠ 120</div>
+            <div><strong>7.</strong> ㉠ 서지보호장치(SPD)</div>
+            <div><strong>8.</strong> ㉠ 루멘(lm), ㉡ 룩스(lx)</div>
+            <div><strong>9.</strong> ㉠ D(또는 감강보상률)</div>
+            <div><strong>10.</strong> ㉠ 감강보상률</div>
+            <div><strong>11.</strong> ㉠ 단지망, ㉡ 세대망</div>
+            <div><strong>12.</strong> ㉠ 세대단말기</div>
+            <div><strong>13.</strong> ㉠ 통신배관실(TPS실)</div>
+            <div><strong>14.</strong> ㉠ 방재실</div>
+            <div><strong>15.</strong> ㉠ 내부</div>
+            <div><strong>16.</strong> ㉠ 10, ㉡ 20</div>
+            <div><strong>17.</strong> ㉠ 0.7, ㉡ 1.8, ㉢ 50</div>
+            <div><strong>18.</strong> ㉠ 5, ㉡ 5</div>
+            <div><strong>19.</strong> ㉠ 가상사설통신망(VPN)</div>
+            <div><strong>20.</strong> ㉠ 85, ㉡ 115</div>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주택관리사보 2차 - 제74강 학습 노트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 11pt;
+            line-height: 1.65;
+            color: #111111;
+            margin: 20px;
+            padding: 0;
+            letter-spacing: -0.05em;
+        }
+        
+        h1 {
+            font-size: 12pt;
+            font-weight: bold;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #1d4ed8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+        
+        /* 토너 절약 4색 시각 강조 클래스 (배경색 배제) */
+        .highlight-blue {
+            font-weight: bold;
+            color: #1d4ed8; 
+        }
+        
+        .highlight-red {
+            font-weight: bold;
+            color: #b91c1c; 
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #16803d; 
+        }
+
+        .highlight-purple {
+            font-weight: bold;
+            color: #6d28d9; 
+        }
+        
+        .explanation {
+            font-size: 10pt;
+            border: 1px dashed #666666;
+            padding: 12px;
+            margin: 15px 0;
+            background-color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .explanation-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        ul {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        ol.quiz-list {
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+            line-height: 2.1;
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        /* 하단 정답표 3단 그리드 배치 */
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px 15px;
+        }
+
+        @media print {
+            body {
+                margin: 10mm;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        제74강. 승강기설비(주택건설기준 및 건축법상 승용·비상용·화물용·피난용 승강기 법정 정밀 기준) 학습 노트
+    </h1>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        1. 주택건설기준상 승용·비상용·화물용 승강기 법정 설치 기준 (주택건설기준 규정 제15조 및 규칙 제4조)
+    </h2>
+    <ul>
+        <li><strong>★ 주택건설기준상 승용승강기 법정 기본 설치 기준 (★주관식 최다 단골 수치)</strong>:
+            <ol>
+                <li><span class="highlight-red">★ 법정 설치 의무 대상</span>: <span class="highlight-red">6층 이상</span>인 공동주택에는 대당 <span class="highlight-red">6인승 이상</span>인 승용승강기를 설치해야 함. (※ 6층 이상 / 6인승 이상 수치 결합 필수 암기).</li>
+                <li><span class="highlight-blue">★ 설치 예외 규정 (건축법 시행령 제89조 준용)</span>: 6층인 건축물로서 각 층 거실의 바닥면적 <span class="highlight-blue">300제곱미터(300 m²) 이내마다</span> 1개소 이상의 직통계단을 설치한 공동주택의 경우에는 승용승강기를 설치하지 아니할 수 있음. (※ 오직 '6층인 건축물'에 한해 예외 적용되며, 7층 이상은 예외 적용 불가!).</li>
+            </ol>
+        </li>
+        <li><strong>★ 승용승강기 계단실형 vs 복도형 세부 설치 대수 및 탑승인원수 공식 (★출제 1순위)</strong>:
+            <ol>
+                <li><span class="highlight-purple">★ 계단실형 공동주택 기준</span>:
+                    <br>&rarr; 설치 대수: 계단실마다 <span class="highlight-purple">1대 이상</span> 설치. (※ <span class="highlight-red">특례</span>: 한 층에 3세대 이상이 조합된 계단실형 공동주택이 <span class="highlight-red">22층 이상</span>인 경우에는 <span class="highlight-red">2대 이상</span> 설치하여야 함).
+                    <br>&rarr; 탑승인원수: 동일한 계단실을 사용하는 <span class="highlight-purple">4층 이상인 층</span>의 세대당 <span class="highlight-purple">0.3명</span>(독신자용 주택은 <span class="highlight-purple">0.15명</span>)의 비율로 산정한 인원수 이상.
+                </li>
+                <li><span class="highlight-green">★ 복도형 공동주택 기준</span>:
+                    <br>&rarr; 설치 대수: 1대에 <span class="highlight-green">100세대를 넘는 80세대마다 1대</span>를 더한 대수 이상. (공식: 1대 + [(전체 세대수 - 100) / 80]대. ※ 100세대 추가가 아닌 <span class="highlight-green">80세대마다 추가</span>임을 명심!).
+                    <br>&rarr; 탑승인원수: <span class="highlight-green">4층 이상인 층</span>의 세대당 <span class="highlight-green">0.2명</span>(독신자용 주택은 <span class="highlight-green">0.1명</span>)의 비율로 산정한 인원수 이상.
+                </li>
+            </ol>
+        </li>
+        <li><strong>★ 주택건설기준상 비상용 및 화물용 승강기 규격·설치 대수 (★최신 개정 수치 엄수)</strong>:
+            <ol>
+                <li><span class="highlight-red">★ 비상용 승강기 구조 전환 대상</span>: <span class="highlight-red">10층 이상</span>인 공동주택의 경우에는 승용승강기를 비상용승강기의 구조로 하여야 함. (※ 과거 16층에서 10층으로 개정됨. 높이 기준이 아닌 <span class="highlight-red">'10층 이상'</span> 층수 기준 적용).</li>
+                <li><span class="highlight-blue">★ 화물용 승강기 의무 설치 대상 및 물리적 규격</span>:
+                    <br>&rarr; 설치 대상: <span class="highlight-blue">10층 이상</span>인 공동주택 (이삿짐 등 운반 목적).
+                    <br>&rarr; 법정 적재하중: <span class="highlight-blue">0.9톤 이상</span>일 것.
+                    <br>&rarr; 승강기 면적 규격: 폭 또는 너비 중 한 변은 <span class="highlight-blue">1.35미터(1.35 m) 이상</span>, 다른 한 변은 <span class="highlight-blue">1.6미터(1.6 m) 이상</span>일 것.
+                </li>
+                <li><span class="highlight-purple">★ 화물용 승강기 대수 및 겸용 규정</span>:
+                    <br>&rarr; 계단실형: 계단실마다 <span class="highlight-purple">1대 이상</span>.
+                    <br>&rarr; 복도형: 100세대까지는 1대, <span class="highlight-purple">100세대를 넘는 경우에는 100세대마다 1대</span>를 추가로 설치할 것. (※ 승용과 달리 복도형 화물용은 100세대마다 1대 추가!).
+                    <br>&rarr; <span class="highlight-green">겸용 허용</span>: 승용승강기 또는 비상용승강기가 화물용 승강기 규격(0.9톤 이상, 1.35m×1.6m 이상)을 충족하는 경우 화물용 승강기로 겸용 가능함.</li>
+            </ol>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 18%;">구분 항목</th>
+                <th style="width: 32%;">계단실형 공동주택</th>
+                <th style="width: 32%;">복도형 공동주택</th>
+                <th style="width: 18%;">수험 핵심 포인트</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th><span class="highlight-blue">승용 대수</span></th>
+                <td>계단실마다 <span class="highlight-blue">1대</span> (3세대 이상 조합 + <span class="highlight-red">22층 이상시 2대</span>)</td>
+                <td>100세대까지 1대 + <span class="highlight-blue">100세대 초과 80세대마다 1대</span></td>
+                <td>22층 2대 / 80세대 추가 기출</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-purple">승용 인원수</span></th>
+                <td>4층 이상 세대당 <span class="highlight-purple">0.3명</span> (독신자 <span class="highlight-purple">0.15명</span>)</td>
+                <td>4층 이상 세대당 <span class="highlight-purple">0.2명</span> (독신자 <span class="highlight-purple">0.1명</span>)</td>
+                <td>계단실 0.3 / 복도형 0.2 암기</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-red">비상용 구조</span></th>
+                <td colspan="2"><span class="highlight-red">10층 이상</span>인 공동주택의 승용승강기를 비상용 구조로 전환</td>
+                <td>10층 수치 단독 기출</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-green">화물용 승강기</span></th>
+                <td>계단실마다 <span class="highlight-green">1대</span> (<span class="highlight-green">10층 이상</span> 대상)</td>
+                <td>100세대까지 1대 + <span class="highlight-green">100세대 초과 100세대마다 1대</span></td>
+                <td>적재 0.9톤 / 1.35m×1.6m</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+        2. 건축법상 승용승강기 설치대상·예외 및 대수 산정 공식 (건축법 제64조 및 설비기준 규칙 별표 1의2)
+    </h2>
+    <ul>
+        <li><strong>★ 건축법상 승용승강기 의무 설치 대상 및 예외 기준 (★주관식/객관식 동시 출제)</strong>:
+            <ol>
+                <li><span class="highlight-red">★ 의무 설치 2대 요건 (동시 충족)</span>: 건축주는 <span class="highlight-red">6층 이상</span>으로서 연면적이 <span class="highlight-red">2천제곱미터(2,000 m²) 이상</span>인 건축물을 건축하려면 승강기를 설치해야 함. (※ 층수 6층 이상 + 연면적 2,000 m² 이상 묶음 암기).</li>
+                <li><span class="highlight-blue">★ 건축법상 설치 면제 예외 규정</span>: 층수가 <span class="highlight-blue">6층인 건축물</span>로서 각 층 거실의 바닥면적 <span class="highlight-blue">300제곱미터(300 m²) 이내마다</span> 1개소 이상의 직통계단을 설치한 건축물은 승용승강기 설치 의무가 면제됨.</li>
+                <li><span class="highlight-purple">★ 증축 시 승강로 연장 예외</span>: 승용승강기가 설치된 기존 건축물에 <span class="highlight-purple">1개 층을 증축</span>하는 경우에는 승강로를 연장하여 설치하지 아니할 수 있음. (2개 층 이상 증축 시 연장 필수).</li>
+            </ol>
+        </li>
+        <li><strong>★ 건축물의 설비기준 등에 관한 규칙상 공동주택 승용승강기 대수 산정 공식 (★계산 문제 핵심)</strong>:
+            <ol>
+                <li><span class="highlight-red">★ 공동주택 승용승강기 산정 공식</span>:
+                    <br>&rarr; <span class="highlight-red">6층 이상 거실면적의 합계 3,000 m² 이하</span>: <span class="highlight-red">1대</span>.
+                    <br>&rarr; <span class="highlight-red">6층 이상 거실면적의 합계 3,000 m² 초과</span>: <span class="highlight-red">1대 + [(6층 이상 거실면적 합계 - 3,000) / 3,000]대</span> (※ 계산 시 소수점 이하 단위는 <span class="highlight-red">1대로 올림(절상)</span>하여 정수로 산정!).
+                </li>
+                <li><span class="highlight-purple">★ 탑승 승객수 규격별 승강기 인정 대수</span>:
+                    <br>&rarr; <span class="highlight-purple">8인승 이상 15인승 이하</span> 승강기: <span class="highlight-purple">1대</span>의 승강기로 인정.
+                    <br>&rarr; <span class="highlight-purple">16인승 이상</span> 승강기: <span class="highlight-purple">2대</span>의 승강기로 인정.
+                </li>
+                <li><span class="highlight-green">★ 계산 문제 시 면적 산정 주의사항</span>: 연면적 전체나 1~5층 바닥면적을 합산하면 안 되며, 오직 <span class="highlight-green">6층 이상 층의 '거실면적'</span>만 합산할 것. (기계실, 물탱크실, 주차장 등 거실 외 용도 면적은 철저히 제외!).</li>
+            </ol>
+        </li>
+    </ul>
+
+    <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+        3. 건축법상 비상용 승강기 및 피난용 승강기 법정 기술기준·구조·면적 규정
+    </h2>
+    <ul>
+        <li><strong>★ 건축법상 비상용 승강기 의무 설치 대상 및 법정 예외 조건 (★단골 기출)</strong>:
+            <ol>
+                <li><span class="highlight-red">★ 의무 설치 대상</span>: 높이 <span class="highlight-red">31미터(31 m)를 초과</span>하는 건축물에는 승용승강기 외에 <span class="highlight-red">비상용승강기를 추가로 설치</span>하여야 함.</li>
+                <li><span class="highlight-purple">★ 비상용 승강기 설치 면제 예외 3가지</span>:
+                    <br>&rarr; ① 높이 31m를 넘는 각 층을 <span class="highlight-purple">거실 외의 용도</span>로 쓰는 건축물.
+                    <br>&rarr; ② 높이 31m를 넘는 각 층의 바닥면적의 합계가 <span class="highlight-purple">500제곱미터(500 m²) 이하</span>인 건축물.
+                    <br>&rarr; ③ 높이 31m를 넘는 층수가 <span class="highlight-purple">4개 층 이하</span>로서 당해 각 층의 바닥면적 합계 <span class="highlight-purple">200제곱미터</span>[벽 및 반자 마감을 불연재료로 한 경우 <span class="highlight-purple">500제곱미터</span>] 이내마다 방화구획으로 구획한 건축물.</li>
+            </ol>
+        </li>
+        <li><strong>★ 비상용 승강기 법정 대수 산정 공식</strong>:
+            <br>&rarr; 높이 31m를 넘는 각 층 바닥면적 중 <span class="highlight-blue">최대 바닥면적 1,500 m² 이하</span>: <span class="highlight-blue">1대</span>.
+            <br>&rarr; <span class="highlight-blue">1,500 m² 초과</span> 시: <span class="highlight-blue">1대 + [(최대 바닥면적 - 1,500) / 3,000]대</span>. (※ 2대 이상 설치 시 화재 진압 효율성을 위해 일정한 간격을 두고 배치할 것).
+        </li>
+        <li><strong>★ 비상용 승강기 승강장 및 승강로 법정 구조 기준 (★출제 빈도 최상)</strong>:
+            <ol>
+                <li><span class="highlight-red">★ 내화구조 및 마감재료</span>: 승강장 바닥 및 벽은 <span class="highlight-red">내화구조</span>로 구획할 것 (방화구조 X). 실내에 접하는 마감재료는 <span class="highlight-red">불연재료</span>로 할 것 (난연재료 X).</li>
+                <li><span class="highlight-purple">★ 승강장 방화문 규격 및 피난층 예외</span>: 출입구에는 <span class="highlight-purple">60분+ 방화문</span> 또는 <span class="highlight-purple">60분 방화문</span>을 설치할 것 (30분 방화문 X). 단, <span class="highlight-purple">피난층에는 방화문을 설치하지 아니할 수 있음</span>.</li>
+                <li><span class="highlight-blue">★ 승강장 바닥면적 및 옥외 예외</span>: 승강장의 바닥면적은 비상용 승강기 1대에 대하여 <span class="highlight-blue">6.0제곱미터(6.0 m²) 이상</span>으로 할 것. (※ 단, <span class="highlight-blue">옥외에 승강장을 설치하는 경우에는 바닥면적 제한을 적용하지 않음</span>).</li>
+                <li><span class="highlight-green">★ 피난층 보행거리 및 승강로</span>: 피난층 승강장 출입구로부터 도로 등 공지에 이르는 거리는 <span class="highlight-green">30미터(30 m) 이하</span>일 것. 승강로는 각 층으로부터 피난층에 이르는 승강로를 <span class="highlight-green">단일구조로 연결</span>할 것 (중간 교체/갈아타기 금지!).</li>
+            </ol>
+        </li>
+        <li><strong>★ 건축법상 피난용 승강기 법정 설치 기준</strong>:
+            <ol>
+                <li><span class="highlight-red">★ 의무 설치 대상</span>: <span class="highlight-red">고층건축물</span>(층수가 <span class="highlight-red">30층 이상</span>이거나 높이가 <span class="highlight-red">120미터 이상</span>인 건축물).</li>
+                <li><span class="highlight-purple">★ 지정 방식</span>: 별도로 추가 설치하는 것이 아니라, 건축물에 설치하는 <span class="highlight-purple">승용승강기 중 1대 이상을 피난용승강기 구조로 지정</span>하여 설치함. (승강장 바닥면적은 1대당 <span class="highlight-purple">6.0 m² 이상</span>).</li>
+            </ol>
+        </li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 20%;">승강기 구분</th>
+                <th style="width: 30%;">의무 설치 대상 기준</th>
+                <th style="width: 30%;">법정 대수 및 면적 규격</th>
+                <th style="width: 20%;">비고 및 핵심 특징</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th><span class="highlight-blue">승용승강기 (건축법)</span></th>
+                <td><span class="highlight-blue">6층 이상</span> + 연면적 <span class="highlight-blue">2,000 m² 이상</span></td>
+                <td>6층 이상 거실 <span class="highlight-blue">3,000 m² 이하 1대</span> (+3,000 m²당 1대)</td>
+                <td>6층 + 300 m² 이내 직통계단시 면제</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-purple">비상용승강기</span></th>
+                <td>높이 <span class="highlight-purple">31 m 초과</span> 건축물</td>
+                <td>최대 바닥면적 <span class="highlight-purple">1,500 m² 이하 1대</span> (+3,000 m²당 1대)</td>
+                <td>승용 외 <span class="highlight-purple">추가 설치</span> (승강장 <span class="highlight-purple">6.0 m² 이상</span>)</td>
+            </tr>
+            <tr>
+                <th><span class="highlight-red">피난용승강기</span></th>
+                <td><span class="highlight-red">고층건축물</span> (30층 이상 / 120 m 이상)</td>
+                <td>승용승강기 중 <span class="highlight-red">1대 이상 지정</span></td>
+                <td>추가 설치 X (승용 중 전환 지정)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="explanation">
+        <div class="explanation-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+            💡 [수험 핵심 팁] 제74강 실전 출제 포인트 & 함정 방지 최종 체크
+        </div>
+        <ul>
+            <li><strong>주택건설기준 3대 승강기 숫자</strong>: 승용 = <span class="highlight-red">6층 이상, 6인승 이상</span> / 계단실형 승용 2대 조건 = <span class="highlight-purple">3세대 이상 조합 + 22층 이상</span> / 인원수 = 계단실 <span class="highlight-blue">0.3명</span>, 복도형 <span class="highlight-blue">0.2명</span> / 복도형 대수 = <span class="highlight-green">100세대 초과 80세대마다 1대</span> / 비상용 구조 = <span class="highlight-red">10층 이상</span> / 화물용 = <span class="highlight-purple">10층 이상, 0.9톤 이상, 1.35m×1.6m 이상</span>.</li>
+            <li><strong>건축법 승용/비상용/피난용 차이점</strong>: 승용 대상 = <span class="highlight-blue">6층 이상 + 연면적 2,000 m² 이상</span> / 비상용 대상 = <span class="highlight-purple">높이 31 m 초과</span> / 피난용 대상 = <span class="highlight-red">30층 이상 또는 높이 120 m 이상</span>.</li>
+            <li><strong>비상용 승강장 구조 함정 피하기</strong>: 벽·바닥 = <span class="highlight-red">내화구조</span> (방화구조 X) / 마감 = <span class="highlight-red">불연재료</span> (난연재료 X) / 방화문 = <span class="highlight-purple">60분+ 또는 60분</span> (피난층은 미설치 가능!) / 면적 = <span class="highlight-blue">6.0 m² 이상</span> (옥외 승강장은 면적 제한 없음!) / 보행거리 = <span class="highlight-green">30 m 이하</span> / 승강로 = <span class="highlight-green">단일구조 연결</span>.</li>
+        </ul>
+    </div>
+
+    <hr style="border: 0; border-top: 1px double #222222; margin: 25px 0;">
+
+    <h2>주관식 단답형 및 빈칸 채우기 실전 훈련</h2>
+    <p style="font-size: 9.5pt; color: #555555; margin-bottom: 15px;">* 다음 문장의 빈칸 내부의 각 기호(㉠, ㉡, ㉢)에 들어갈 알맞은 핵심 용어나 법정 수치, 단위를 아래 빈칸에 직접 작성해 보십시오.</p>
+
+    <ol class="quiz-list">
+        <li>
+            주택건설기준 등에 관한 규정상 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )층 이상인 공동주택에는 대당 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )인승 이상인 승용승강기를 설치하여야 한다.
+        </li>
+        <li>
+            한 층에 3세대 이상이 조합된 계단실형 공동주택이 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )층 이상인 경우에는 승용승강기를 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )대 이상 설치하여야 한다.
+        </li>
+        <li>
+            계단실형 공동주택의 승용승강기 탑승인원수는 동일 계단실을 사용하는 4층 이상인 층의 세대당 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )명(독신자용 주택은 0.15명)의 비율로 산정한다.
+        </li>
+        <li>
+            복도형 공동주택의 승용승강기는 1대에 100세대를 넘는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )세대마다 1대를 더한 대수 이상을 설치하고, 탑승인원수는 4층 이상 세대당 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )명의 비율로 산정한다.
+        </li>
+        <li>
+            주택건설기준 등에 관한 규정상 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )층 이상인 공동주택의 경우에는 승용승강기를 비상용승강기의 구조로 하여야 한다.
+        </li>
+        <li>
+            주택건설기준 등에 관한 규정상 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )층 이상인 공동주택에는 적재하중이 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )톤 이상인 화물용 승강기를 설치하여야 한다.
+        </li>
+        <li>
+            화물용 승강기의 폭 또는 너비 중 한 변은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이상, 다른 한 변은 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이상이어야 한다.
+        </li>
+        <li>
+            복도형 공동주택의 화물용 승강기는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )세대까지 1대를 설치하되, 이를 넘는 경우에는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )세대마다 1대를 추가로 설치한다.
+        </li>
+        <li>
+            건축법상 승용승강기는 층수가 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )층 이상으로서 연면적이 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )제곱미터 이상인 건축물에 설치하여야 한다.
+        </li>
+        <li>
+            층수가 6층인 건축물로서 각 층 거실의 바닥면적 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )제곱미터 이내마다 1개소 이상의 직통계단을 설치한 건축물은 승용승강기 설치 의무가 면제된다.
+        </li>
+        <li>
+            건축물의 설비기준 등에 관한 규칙상 공동주택의 승용승강기는 6층 이상 거실면적의 합계가 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )제곱미터 이하일 때 1대, 이를 초과하는 경우 1대에 초과하는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )제곱미터 이내마다 1대를 더한다.
+        </li>
+        <li>
+            승용승강기 대수 계산 시 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )인승 이상 15인승 이하 승강기는 1대, ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )인승 이상 승강기는 2대의 승강기로 본다.
+        </li>
+        <li>
+            건축법상 비상용승강기는 높이 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터를 초과하는 건축물에 승용승강기 외에 추가로 설치하여야 한다.
+        </li>
+        <li>
+            높이 31미터를 넘는 각 층의 바닥면적 중 최대 바닥면적이 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )제곱미터 이하인 건축물에는 비상용승강기를 1대 이상 설치한다.
+        </li>
+        <li>
+            비상용 승강기의 승강장 바닥 및 벽은 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )구조로 하고, 실내에 접하는 마감재료는 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )재료로 하여야 한다.
+        </li>
+        <li>
+            비상용 승강장 출입구에는 60분+ 방화문 또는 60분 방화문을 설치해야 하나, ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )층에는 방화문을 설치하지 아니할 수 있다.
+        </li>
+        <li>
+            비상용 승강기의 승강장 바닥면적은 비상용 승강기 1대에 대하여 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )제곱미터 이상으로 해야 하나, ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )에 승강장을 설치하는 경우에는 예외로 한다.
+        </li>
+        <li>
+            비상용 승강기의 피난층 승강장 출입구로부터 도로 등 공지에 이르는 거리는 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이하이어야 한다.
+        </li>
+        <li>
+            층수가 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )층 이상이거나 높이가 ( ㉡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )미터 이상인 고층건축물에는 승용승강기 중 1대 이상을 피난용승강기로 설치하여야 한다.
+        </li>
+        <li>
+            기존 건축물에 승용승강기가 설치되어 있는 경우 ( ㉠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )개 층을 증축하는 경우에는 승강로를 연장하여 설치하지 아니할 수 있다.
+        </li>
+    </ol>
+
+    <div style="font-size: 9.5pt; color: #666666; margin-top: 30px; padding: 15px; border-top: 1px dashed #666666; line-height: 1.8;">
+        <strong style="display: block; margin-bottom: 10px; color: #333333;">[제74강 주관식 단답형 정답 리스트]</strong>
+        <div class="answer-grid">
+            <div><strong>1.</strong> ㉠ 6, ㉡ 6</div>
+            <div><strong>2.</strong> ㉠ 22, ㉡ 2</div>
+            <div><strong>3.</strong> ㉠ 0.3</div>
+            <div><strong>4.</strong> ㉠ 80, ㉡ 0.2</div>
+            <div><strong>5.</strong> ㉠ 10</div>
+            <div><strong>6.</strong> ㉠ 10, ㉡ 0.9</div>
+            <div><strong>7.</strong> ㉠ 1.35, ㉡ 1.6</div>
+            <div><strong>8.</strong> ㉠ 100</div>
+            <div><strong>9.</strong> ㉠ 6, ㉡ 2,000</div>
+            <div><strong>10.</strong> ㉠ 300</div>
+            <div><strong>11.</strong> ㉠ 3,000</div>
+            <div><strong>12.</strong> ㉠ 8, ㉡ 16</div>
+            <div><strong>13.</strong> ㉠ 31</div>
+            <div><strong>14.</strong> ㉠ 1,500</div>
+            <div><strong>15.</strong> ㉠ 내화, ㉡ 불연</div>
+            <div><strong>16.</strong> ㉠ 피난</div>
+            <div><strong>17.</strong> ㉠ 6.0, ㉡ 옥외</div>
+            <div><strong>18.</strong> ㉠ 30</div>
+            <div><strong>19.</strong> ㉠ 30, ㉡ 120</div>
+            <div><strong>20.</strong> ㉠ 1</div>
+        </div>
+    </div>
+
+</body>
+</html>
