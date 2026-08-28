@@ -17,9 +17,9 @@
     <meta name="apple-mobile-web-app-title" content="문제지옥">
     
     <!-- Custom Theme Styles -->
-    <link rel="stylesheet" href="css/dark-theme.css?v=2608281332">
-    <link rel="stylesheet" href="css/quiz-layout.css?v=2608281332">
-    <link rel="stylesheet" href="css/tablet-canvas.css?v=2608281332">
+    <link rel="stylesheet" href="css/dark-theme.css?v=2608281450">
+    <link rel="stylesheet" href="css/quiz-layout.css?v=2608281450">
+    <link rel="stylesheet" href="css/tablet-canvas.css?v=2608281450">
 </head>
 <body data-subject="관계법규">
 
@@ -35,7 +35,7 @@
                 </a>
                 <span id="header-brand-badge" class="brand-badge">관계법규</span>
                 <span id="header-mode-title" class="mode-title">
-                    <i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260828.1332</span>
+                    <i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260828.1450</span>
                 </span>
             </div>
 
@@ -109,9 +109,9 @@
                 <!-- 헬 모드 (무한 풀이) -->
                 <div class="mode-card" data-mode="infinite">
                     <div class="mode-icon"><i class="fa-solid fa-skull"></i></div>
-                    <h3>헬 모드 (무한 풀이)</h3>
-                    <p>40문항(객관식 24+주관식 16) 세트가 끝없이 연속 생성됩니다. 틀릴 때마다 오답 가중치가 누적되며 피의 게이지가 차오릅니다.</p>
-                    <span class="mode-badge">연속 40문항 단위 무한 생성</span>
+                    <h3>무한 헬 모드 (전과목 융합)</h3>
+                    <p>관계법규+관리실무 80문항(객50%+주50%) 융합 세트가 끝없이 무한 롤링됩니다. 안 풀어본 초특급/핵심 문제(50%) 우선 출제 & 콤보 스트릭 지원!</p>
+                    <span class="mode-badge" style="background: rgba(239, 68, 68, 0.15); color: #F87171;">주관식 50% · 안 푼 핵심 우선 융합</span>
                 </div>
 
                 <!-- 복습 학습 (오답 집중) -->
@@ -174,9 +174,10 @@
 
                 <!-- Question Header Meta -->
                 <div class="question-meta">
-                    <div style="display: flex; align-items: center; gap: 8px;">
+                    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
                         <span id="q-num-text" class="q-badge">문항 1 / 40</span>
                         <span id="q-chapter-badge" style="font-size: 0.8rem; color: var(--text-muted); font-weight: 700;">총칙</span>
+                        <span id="q-combo-badge" class="combo-badge" style="display: none;">🔥 2 COMBO</span>
                     </div>
                     <span id="q-weight-badge" class="weight-badge" style="background: rgba(255,255,255,0.06); color: var(--text-main);">
                         🌱 기본
@@ -229,7 +230,7 @@
                 <div id="res-score-text" class="score-display">85점</div>
                 <div id="res-pass-pill" class="pass-pill pass"><i class="fa-solid fa-circle-check"></i> 최종 합격 (PASS)</div>
 
-                <div class="stats-row">
+                <div class="stats-row" style="grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));">
                     <div class="stat-box">
                         <div id="res-correct-count" class="val text-emerald-400">34개</div>
                         <div class="lbl">맞은 문항</div>
@@ -237,6 +238,10 @@
                     <div class="stat-box">
                         <div id="res-wrong-count" class="val text-rose-400">6개</div>
                         <div class="lbl">틀린 문항</div>
+                    </div>
+                    <div class="stat-box">
+                        <div id="res-combo-count" class="val text-amber-400">0</div>
+                        <div class="lbl">최대 콤보 (MAX)</div>
                     </div>
                     <div class="stat-box">
                         <div id="res-time-count" class="val text-sky-400">28분 14초</div>
@@ -707,15 +712,15 @@
     <!-- Firebase SDK (Compat) for Realtime Cloud Sync -->
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-    <script src="js/cloud-sync.js?v=2608281332"></script>
+    <script src="js/cloud-sync.js?v=2608281450"></script>
 
     <!-- Master Exam Data Bundle (3,900 Questions) -->
-    <script src="data/exam_bank.js?v=2608281332"></script>
+    <script src="data/exam_bank.js?v=2608281450"></script>
 
     <!-- Core Keywords 300 DB (관계법규 300 + 관리실무 300) -->
-    <script src="data/core_keywords_db.js?v=2608281332"></script>
+    <script src="data/core_keywords_db.js?v=2608281450"></script>
 
     <!-- Application Script -->
-    <script src="js/app.js?v=2608281332"></script>
+    <script src="js/app.js?v=2608281450"></script>
 </body>
 </html>

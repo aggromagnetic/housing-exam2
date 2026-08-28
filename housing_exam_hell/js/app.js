@@ -971,6 +971,112 @@
             }
         },
 
+        /**
+         * Hell Mode Blueprint Table (50% MC : 50% SA = 20 MC + 20 SA per subject)
+         */
+        getHellBlueprint(subject) {
+            if (subject === '관리실무') {
+                return [
+                    { pattern: /01.*주택의.*정의/, mc: 1, sa: 0 },
+                    { pattern: /02.*총칙/, mc: 1, sa: 0 },
+                    { pattern: /03.*관리방법/, mc: 2, sa: 2 },
+                    { pattern: /04.*관리조직/, mc: 2, sa: 2 },
+                    { pattern: /05.*주택관리사/, mc: 1, sa: 0 },
+                    { pattern: /06.*벌칙/, mc: 0, sa: 1 },
+                    { pattern: /07.*입주자관리/, mc: 1, sa: 1 },
+                    { pattern: /08.*사무.*인사/, mc: 2, sa: 3 },
+                    { pattern: /09.*대외업무/, mc: 1, sa: 0 },
+                    { pattern: /10.*회계관리/, mc: 1, sa: 1 },
+                    { pattern: /11.*시설관리/, mc: 6, sa: 8 },
+                    { pattern: /12.*환경.*안전/, mc: 2, sa: 3 }
+                ];
+            } else {
+                // 관계법규 (20 MC + 20 SA)
+                return [
+                    { pattern: /01.*주택법/, mc: 4, sa: 4 },
+                    { pattern: /02.*공동주택관리법/, mc: 4, sa: 4 },
+                    { pattern: /03.*민간임대주택/, mc: 1, sa: 1 },
+                    { pattern: /04.*공공주택/, mc: 1, sa: 1 },
+                    { pattern: /05.*건축법/, mc: 4, sa: 4 },
+                    { pattern: /06.*도시.*주거환경정비/, mc: 1, sa: 1 },
+                    { pattern: /07.*도시재정비/, mc: 1, sa: 0 },
+                    { pattern: /08.*시설물의.*안전/, mc: 1, sa: 1 },
+                    { pattern: /09.*소방기본법/, mc: 0, sa: 1 },
+                    { pattern: /10.*화재의.*예방/, mc: 1, sa: 0 },
+                    { pattern: /11.*소방시설/, mc: 1, sa: 0 },
+                    { pattern: /12.*전기사업법/, mc: 1, sa: 1 },
+                    { pattern: /13.*승강기/, mc: 1, sa: 1 },
+                    { pattern: /14.*집합건물/, mc: 0, sa: 1 }
+                ];
+            }
+        },
+
+        /**
+         * Pick unseen high-yield questions first. If exhausted, pick least-attempted + high wrong-rate questions.
+         */
+        pickUnseenHighYieldFirst(items, statsMap = {}, count, excludeKeysSet = new Set()) {
+            const available = items.filter(it => !excludeKeysSet.has(it.qKey));
+            if (available.length <= count) return available;
+
+            // 1단계: 한 번도 안 푼 문제 (tryCount === 0 또는 미등록)
+            const unseen = available.filter(it => {
+                const stat = statsMap[it.qKey];
+                return !stat || !stat.tryCount || stat.tryCount === 0;
+            });
+
+            // 안 푼 문제가 목표 수량 이상이면 그 안에서 가중치 추첨
+            if (unseen.length >= count) {
+                return this.weightedPick(unseen, statsMap, count, excludeKeysSet);
+            }
+
+            // 2단계: 안 푼 문제는 전원 선발
+            const selected = [...unseen];
+            const pickedKeys = new Set(unseen.map(it => it.qKey));
+
+            // 3단계: 부족분은 풀어본 것 중 [덜 푼 것(낮은 tryCount)] + [자주 틀린 오답(높은 weight)] 우선 가중치 추첨
+            const seen = available.filter(it => !pickedKeys.has(it.qKey));
+            const remainderNeeded = count - selected.length;
+
+            const remainderWeights = seen.map(it => {
+                const stat = statsMap[it.qKey] || {};
+                const userWeight = stat.weight || 1.0;
+                const tryCount = stat.tryCount || 1;
+                const scoreWeight = it.scoreWeight || (it.topScore !== undefined ? (this.LADDER_WEIGHTS[it.topScore] || 1.0) : 1.0);
+                return (userWeight * scoreWeight) / Math.sqrt(tryCount);
+            });
+
+            const additional = [];
+            const pickedIndices = new Set();
+
+            for (let step = 0; step < remainderNeeded; step++) {
+                let totalWeight = 0;
+                for (let i = 0; i < seen.length; i++) {
+                    if (!pickedIndices.has(i)) totalWeight += remainderWeights[i];
+                }
+                if (totalWeight <= 0) break;
+
+                let rnd = Math.random() * totalWeight;
+                let current = 0;
+                let chosenIdx = -1;
+
+                for (let i = 0; i < seen.length; i++) {
+                    if (pickedIndices.has(i)) continue;
+                    current += remainderWeights[i];
+                    if (rnd <= current) {
+                        chosenIdx = i;
+                        break;
+                    }
+                }
+
+                if (chosenIdx !== -1) {
+                    pickedIndices.add(chosenIdx);
+                    additional.push(seen[chosenIdx]);
+                }
+            }
+
+            return [...selected, ...additional];
+        },
+
         generateExamSet(subject, statsMap = {}, excludeKeysSet = new Set(), highYieldRatio = 0.40) {
             const mcPool = this.getQuestionPool(subject, 'choice');
             const saPool = this.getQuestionPool(subject, 'short');
@@ -1061,6 +1167,87 @@
             return [...selectedMC.slice(0, 24), ...selectedSA.slice(0, 16)];
         },
 
+        /**
+         * Generate 40-question Hell Mode Set (20 MC + 20 SA: 50% unseen high-yield + 50% weighted roulette)
+         */
+        generateHellSubjectSet(subject, statsMap = {}, excludeKeysSet = new Set(), highYieldRatio = 0.50) {
+            const mcPool = this.getQuestionPool(subject, 'choice');
+            const saPool = this.getQuestionPool(subject, 'short');
+            const blueprint = this.getHellBlueprint(subject);
+
+            const selectedMC = [];
+            const selectedSA = [];
+            const pickedKeys = new Set(excludeKeysSet);
+
+            blueprint.forEach(rule => {
+                const targetMc = rule.mc;
+                const targetSa = rule.sa;
+
+                const chapterMcList = mcPool.filter(q => rule.pattern.test(q.chapterName));
+                const chapterSaList = saPool.filter(q => rule.pattern.test(q.chapterName));
+
+                // 1) MC (20문항): 50%는 안 푼 초특급/핵심 우선 선정 + 50%는 스마트 룰렛
+                if (targetMc > 0) {
+                    const hyCandidates = chapterMcList.filter(q => q.isHighYield);
+                    const targetHyMc = Math.min(hyCandidates.length, Math.ceil(targetMc * highYieldRatio));
+                    const pickedHy = this.pickUnseenHighYieldFirst(hyCandidates, statsMap, targetHyMc, pickedKeys);
+
+                    pickedHy.forEach(q => {
+                        pickedKeys.add(q.qKey);
+                        selectedMC.push(q);
+                    });
+
+                    const remainingMcCount = targetMc - pickedHy.length;
+                    if (remainingMcCount > 0) {
+                        const pickedRest = this.weightedPick(chapterMcList, statsMap, remainingMcCount, pickedKeys);
+                        pickedRest.forEach(q => {
+                            pickedKeys.add(q.qKey);
+                            selectedMC.push(q);
+                        });
+                    }
+                }
+
+                // 2) SA (20문항): 50%는 안 푼 초특급/핵심 우선 선정 + 50%는 스마트 룰렛
+                if (targetSa > 0) {
+                    const hyCandidates = chapterSaList.filter(q => q.isHighYield);
+                    const targetHySa = Math.min(hyCandidates.length, Math.ceil(targetSa * highYieldRatio));
+                    const pickedHy = this.pickUnseenHighYieldFirst(hyCandidates, statsMap, targetHySa, pickedKeys);
+
+                    pickedHy.forEach(q => {
+                        pickedKeys.add(q.qKey);
+                        selectedSA.push(q);
+                    });
+
+                    const remainingSaCount = targetSa - pickedHy.length;
+                    if (remainingSaCount > 0) {
+                        const pickedRest = this.weightedPick(chapterSaList, statsMap, remainingSaCount, pickedKeys);
+                        pickedRest.forEach(q => {
+                            pickedKeys.add(q.qKey);
+                            selectedSA.push(q);
+                        });
+                    }
+                }
+            });
+
+            // Quota fallback if pool is tight
+            if (selectedMC.length < 20) {
+                const remainderAll = this.weightedPick(mcPool, statsMap, 20 - selectedMC.length, pickedKeys);
+                remainderAll.forEach(q => {
+                    pickedKeys.add(q.qKey);
+                    selectedMC.push(q);
+                });
+            }
+            if (selectedSA.length < 20) {
+                const remainderAll = this.weightedPick(saPool, statsMap, 20 - selectedSA.length, pickedKeys);
+                remainderAll.forEach(q => {
+                    pickedKeys.add(q.qKey);
+                    selectedSA.push(q);
+                });
+            }
+
+            return [...selectedMC.slice(0, 20), ...selectedSA.slice(0, 20)];
+        },
+
         shuffleWithAntiClumping(questions) {
             const shuffled = [...questions].sort(() => Math.random() - 0.5);
             const result = [];
@@ -1111,16 +1298,16 @@
             return all.sort(() => Math.random() - 0.5);
         },
 
-        generateInfiniteHellSet(statsMap = {}, excludeKeysSet = new Set(), highYieldRatio = 0.40) {
-            // 1. 관계법규 40문항 (객관식 24 + 주관식 16: 14대 법률 블루프린트 100% 반영)
-            const lawSet = this.generateExamSet('관계법규', statsMap, excludeKeysSet, highYieldRatio);
+        generateInfiniteHellSet(statsMap = {}, excludeKeysSet = new Set(), highYieldRatio = 0.50) {
+            // 1. 관계법규 40문항 (객관식 20 + 주관식 20: 50% 안 푼 핵심 보장)
+            const lawSet = this.generateHellSubjectSet('관계법규', statsMap, excludeKeysSet, highYieldRatio);
             
             // 2. 중복 방지를 위한 키 누적
             const lawKeys = new Set(excludeKeysSet);
             lawSet.forEach(q => lawKeys.add(q.qKey));
 
-            // 3. 관리실무 40문항 (객관식 24 + 주관식 16: 12대 단원 블루프린트 100% 반영)
-            const gwanriSet = this.generateExamSet('관리실무', statsMap, lawKeys, highYieldRatio);
+            // 3. 관리실무 40문항 (객관식 20 + 주관식 20: 50% 안 푼 핵심 보장)
+            const gwanriSet = this.generateHellSubjectSet('관리실무', statsMap, lawKeys, highYieldRatio);
 
             // 4. 총 80문항 융합 및 군집 방지 셔플 (관계법규 + 관리실무 50:50)
             const combined = [...lawSet, ...gwanriSet];
@@ -1581,6 +1768,9 @@
         infiniteSetCount: 1,
         infiniteUsedKeys: new Set(),
 
+        currentCombo: 0,
+        maxCombo: 0,
+
         timerInterval: null,
         elapsedSeconds: 0,
         mockRemainingSeconds: 40 * 60,
@@ -1666,6 +1856,7 @@
                 card: document.getElementById('quiz-card'),
                 qNum: document.getElementById('q-num-text'),
                 chapterBadge: document.getElementById('q-chapter-badge'),
+                comboBadge: document.getElementById('q-combo-badge'),
                 weightBadge: document.getElementById('q-weight-badge'),
                 qTitle: document.getElementById('q-title-text'),
                 passageBox: document.getElementById('q-passage-box'),
@@ -1754,6 +1945,7 @@
                 passPill: document.getElementById('res-pass-pill'),
                 correctCount: document.getElementById('res-correct-count'),
                 wrongCount: document.getElementById('res-wrong-count'),
+                comboCount: document.getElementById('res-combo-count'),
                 timeCount: document.getElementById('res-time-count'),
                 btnCopyAI: document.getElementById('btn-copy-ai-prompt'),
                 btnRetry: document.getElementById('btn-retry-session'),
@@ -1776,7 +1968,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260828.1332</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260828.1450</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -1801,7 +1993,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260828.1332</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260828.1450</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
@@ -1853,6 +2045,8 @@
         state.mode = modeKey;
         state.currentPartPattern = partPattern;
         state.currentIndex = 0;
+        state.currentCombo = 0;
+        state.maxCombo = 0;
         state.userAnswers = [];
         state.results = [];
         state.firstAttemptResults = [];
@@ -2084,6 +2278,15 @@
             elements.quiz.chapterBadge.innerHTML = `${chapText} <span class="${badgeClass}" title="${q.primaryCoreItem.note}">${iconHtml} #${String(q.primaryCoreItem.id).padStart(3, '0')} ${q.primaryCoreItem.tag}</span>`;
         } else {
             elements.quiz.chapterBadge.textContent = chapText;
+        }
+
+        if (elements.quiz.comboBadge) {
+            if (state.currentCombo >= 2) {
+                elements.quiz.comboBadge.textContent = `🔥 ${state.currentCombo} COMBO`;
+                elements.quiz.comboBadge.style.display = 'inline-flex';
+            } else {
+                elements.quiz.comboBadge.style.display = 'none';
+            }
         }
 
         let wIcon = '🌱 기본';
@@ -2515,6 +2718,19 @@
                 chapter: q.chapterName
             });
             state.statsMap[q.qKey] = updatedStat;
+
+            // 콤보 스트릭 계산
+            if (gradeRes.isCorrect) {
+                state.currentCombo = (state.currentCombo || 0) + 1;
+                if (state.currentCombo > (state.maxCombo || 0)) {
+                    state.maxCombo = state.currentCombo;
+                }
+                if (state.currentCombo >= 3) {
+                    showToast(`🔥 ${state.currentCombo} COMBO! 연속 정답 행진!`);
+                }
+            } else {
+                state.currentCombo = 0;
+            }
         }
 
         renderQuestion(idx);
@@ -2690,6 +2906,9 @@
         elements.result.scoreText.textContent = `${score}점`;
         elements.result.correctCount.textContent = `${correctCount}개`;
         elements.result.wrongCount.textContent = `${wrongCount}개`;
+        if (elements.result.comboCount) {
+            elements.result.comboCount.textContent = `${state.maxCombo || 0} COMBO`;
+        }
 
         const mins = Math.floor(state.elapsedSeconds / 60);
         const secs = state.elapsedSeconds % 60;

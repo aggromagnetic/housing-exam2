@@ -362,6 +362,112 @@ export const ExamEngine = {
     },
 
     /**
+     * Hell Mode Blueprint Table (50% MC : 50% SA = 20 MC + 20 SA per subject)
+     */
+    getHellBlueprint(subject) {
+        if (subject === '관리실무') {
+            return [
+                { pattern: /01.*주택의.*정의/, mc: 1, sa: 0 },
+                { pattern: /02.*총칙/, mc: 1, sa: 0 },
+                { pattern: /03.*관리방법/, mc: 2, sa: 2 },
+                { pattern: /04.*관리조직/, mc: 2, sa: 2 },
+                { pattern: /05.*주택관리사/, mc: 1, sa: 0 },
+                { pattern: /06.*벌칙/, mc: 0, sa: 1 },
+                { pattern: /07.*입주자관리/, mc: 1, sa: 1 },
+                { pattern: /08.*사무.*인사/, mc: 2, sa: 3 },
+                { pattern: /09.*대외업무/, mc: 1, sa: 0 },
+                { pattern: /10.*회계관리/, mc: 1, sa: 1 },
+                { pattern: /11.*시설관리/, mc: 6, sa: 8 },
+                { pattern: /12.*환경.*안전/, mc: 2, sa: 3 }
+            ];
+        } else {
+            // 관계법규 (20 MC + 20 SA)
+            return [
+                { pattern: /01.*주택법/, mc: 4, sa: 4 },
+                { pattern: /02.*공동주택관리법/, mc: 4, sa: 4 },
+                { pattern: /03.*민간임대주택/, mc: 1, sa: 1 },
+                { pattern: /04.*공공주택/, mc: 1, sa: 1 },
+                { pattern: /05.*건축법/, mc: 4, sa: 4 },
+                { pattern: /06.*도시.*주거환경정비/, mc: 1, sa: 1 },
+                { pattern: /07.*도시재정비/, mc: 1, sa: 0 },
+                { pattern: /08.*시설물의.*안전/, mc: 1, sa: 1 },
+                { pattern: /09.*소방기본법/, mc: 0, sa: 1 },
+                { pattern: /10.*화재의.*예방/, mc: 1, sa: 0 },
+                { pattern: /11.*소방시설/, mc: 1, sa: 0 },
+                { pattern: /12.*전기사업법/, mc: 1, sa: 1 },
+                { pattern: /13.*승강기/, mc: 1, sa: 1 },
+                { pattern: /14.*집합건물/, mc: 0, sa: 1 }
+            ];
+        }
+    },
+
+    /**
+     * Pick unseen high-yield questions first. If exhausted, pick least-attempted + high wrong-rate questions.
+     */
+    pickUnseenHighYieldFirst(items, statsMap = {}, count, excludeKeysSet = new Set()) {
+        const available = items.filter(it => !excludeKeysSet.has(it.qKey));
+        if (available.length <= count) return available;
+
+        // 1단계: 한 번도 안 푼 문제 (tryCount === 0 또는 미등록)
+        const unseen = available.filter(it => {
+            const stat = statsMap[it.qKey];
+            return !stat || !stat.tryCount || stat.tryCount === 0;
+        });
+
+        // 안 푼 문제가 목표 수량 이상이면 그 안에서 가중치 추첨
+        if (unseen.length >= count) {
+            return this.weightedPick(unseen, statsMap, count, excludeKeysSet);
+        }
+
+        // 2단계: 안 푼 문제는 전원 선발
+        const selected = [...unseen];
+        const pickedKeys = new Set(unseen.map(it => it.qKey));
+
+        // 3단계: 부족분은 풀어본 것 중 [덜 푼 것(낮은 tryCount)] + [자주 틀린 오답(높은 weight)] 우선 가중치 추첨
+        const seen = available.filter(it => !pickedKeys.has(it.qKey));
+        const remainderNeeded = count - selected.length;
+
+        const remainderWeights = seen.map(it => {
+            const stat = statsMap[it.qKey] || {};
+            const userWeight = stat.weight || 1.0;
+            const tryCount = stat.tryCount || 1;
+            const scoreWeight = it.scoreWeight || (it.topScore !== undefined ? (this.LADDER_WEIGHTS[it.topScore] || 1.0) : 1.0);
+            return (userWeight * scoreWeight) / Math.sqrt(tryCount);
+        });
+
+        const additional = [];
+        const pickedIndices = new Set();
+
+        for (let step = 0; step < remainderNeeded; step++) {
+            let totalWeight = 0;
+            for (let i = 0; i < seen.length; i++) {
+                if (!pickedIndices.has(i)) totalWeight += remainderWeights[i];
+            }
+            if (totalWeight <= 0) break;
+
+            let rnd = Math.random() * totalWeight;
+            let current = 0;
+            let chosenIdx = -1;
+
+            for (let i = 0; i < seen.length; i++) {
+                if (pickedIndices.has(i)) continue;
+                current += remainderWeights[i];
+                if (rnd <= current) {
+                    chosenIdx = i;
+                    break;
+                }
+            }
+
+            if (chosenIdx !== -1) {
+                pickedIndices.add(chosenIdx);
+                additional.push(seen[chosenIdx]);
+            }
+        }
+
+        return [...selected, ...additional];
+    },
+
+    /**
      * Generate 40-question Exam (24 MC + 16 Subjective) with at least 40% Core 300 guaranteed + natural random selection
      */
     generateExamSet(subject, statsMap = {}, excludeKeysSet = new Set(), highYieldRatio = 0.40) {
@@ -453,6 +559,87 @@ export const ExamEngine = {
     },
 
     /**
+     * Generate 40-question Hell Mode Set (20 MC + 20 SA: 50% unseen high-yield + 50% weighted roulette)
+     */
+    generateHellSubjectSet(subject, statsMap = {}, excludeKeysSet = new Set(), highYieldRatio = 0.50) {
+        const mcPool = this.getQuestionPool(subject, 'choice');
+        const saPool = this.getQuestionPool(subject, 'short');
+        const blueprint = this.getHellBlueprint(subject);
+
+        const selectedMC = [];
+        const selectedSA = [];
+        const pickedKeys = new Set(excludeKeysSet);
+
+        blueprint.forEach(rule => {
+            const targetMc = rule.mc;
+            const targetSa = rule.sa;
+
+            const chapterMcList = mcPool.filter(q => rule.pattern.test(q.chapterName));
+            const chapterSaList = saPool.filter(q => rule.pattern.test(q.chapterName));
+
+            // 1) MC (20문항): 50%는 안 푼 초특급/핵심 우선 선정 + 50%는 스마트 룰렛
+            if (targetMc > 0) {
+                const hyCandidates = chapterMcList.filter(q => q.isHighYield);
+                const targetHyMc = Math.min(hyCandidates.length, Math.ceil(targetMc * highYieldRatio));
+                const pickedHy = this.pickUnseenHighYieldFirst(hyCandidates, statsMap, targetHyMc, pickedKeys);
+
+                pickedHy.forEach(q => {
+                    pickedKeys.add(q.qKey);
+                    selectedMC.push(q);
+                });
+
+                const remainingMcCount = targetMc - pickedHy.length;
+                if (remainingMcCount > 0) {
+                    const pickedRest = this.weightedPick(chapterMcList, statsMap, remainingMcCount, pickedKeys);
+                    pickedRest.forEach(q => {
+                        pickedKeys.add(q.qKey);
+                        selectedMC.push(q);
+                    });
+                }
+            }
+
+            // 2) SA (20문항): 50%는 안 푼 초특급/핵심 우선 선정 + 50%는 스마트 룰렛
+            if (targetSa > 0) {
+                const hyCandidates = chapterSaList.filter(q => q.isHighYield);
+                const targetHySa = Math.min(hyCandidates.length, Math.ceil(targetSa * highYieldRatio));
+                const pickedHy = this.pickUnseenHighYieldFirst(hyCandidates, statsMap, targetHySa, pickedKeys);
+
+                pickedHy.forEach(q => {
+                    pickedKeys.add(q.qKey);
+                    selectedSA.push(q);
+                });
+
+                const remainingSaCount = targetSa - pickedHy.length;
+                if (remainingSaCount > 0) {
+                    const pickedRest = this.weightedPick(chapterSaList, statsMap, remainingSaCount, pickedKeys);
+                    pickedRest.forEach(q => {
+                        pickedKeys.add(q.qKey);
+                        selectedSA.push(q);
+                    });
+                }
+            }
+        });
+
+        // Quota fallback if pool is tight
+        if (selectedMC.length < 20) {
+            const remainderAll = this.weightedPick(mcPool, statsMap, 20 - selectedMC.length, pickedKeys);
+            remainderAll.forEach(q => {
+                pickedKeys.add(q.qKey);
+                selectedMC.push(q);
+            });
+        }
+        if (selectedSA.length < 20) {
+            const remainderAll = this.weightedPick(saPool, statsMap, 20 - selectedSA.length, pickedKeys);
+            remainderAll.forEach(q => {
+                pickedKeys.add(q.qKey);
+                selectedSA.push(q);
+            });
+        }
+
+        return [...selectedMC.slice(0, 20), ...selectedSA.slice(0, 20)];
+    },
+
+    /**
      * Anti-Clumping Shuffle: Prevents consecutive questions from same chapter / adjacent indexes
      */
     shuffleWithAntiClumping(questions) {
@@ -512,18 +699,18 @@ export const ExamEngine = {
     },
 
     /**
-     * Generate Infinite Hell Mode Set (80 questions: Mixed 40 Law + 40 Gwanri, Blueprint Guaranteed)
+     * Generate Infinite Hell Mode Set (80 questions: Mixed 40 Law + 40 Gwanri, 50% MC + 50% SA, 50% Unseen High Yield)
      */
-    generateInfiniteHellSet(statsMap = {}, excludeKeysSet = new Set(), highYieldRatio = 0.40) {
-        // 1. 관계법규 40문항 (객관식 24 + 주관식 16: 14대 법률 블루프린트 100% 반영)
-        const lawSet = this.generateExamSet('관계법규', statsMap, excludeKeysSet, highYieldRatio);
+    generateInfiniteHellSet(statsMap = {}, excludeKeysSet = new Set(), highYieldRatio = 0.50) {
+        // 1. 관계법규 40문항 (객관식 20 + 주관식 20: 50% 안 푼 핵심 보장)
+        const lawSet = this.generateHellSubjectSet('관계법규', statsMap, excludeKeysSet, highYieldRatio);
         
         // 2. 중복 방지를 위한 키 누적
         const lawKeys = new Set(excludeKeysSet);
         lawSet.forEach(q => lawKeys.add(q.qKey));
 
-        // 3. 관리실무 40문항 (객관식 24 + 주관식 16: 12대 단원 블루프린트 100% 반영)
-        const gwanriSet = this.generateExamSet('관리실무', statsMap, lawKeys, highYieldRatio);
+        // 3. 관리실무 40문항 (객관식 20 + 주관식 20: 50% 안 푼 핵심 보장)
+        const gwanriSet = this.generateHellSubjectSet('관리실무', statsMap, lawKeys, highYieldRatio);
 
         // 4. 총 80문항 융합 및 군집 방지 셔플 (관계법규 + 관리실무 50:50)
         const combined = [...lawSet, ...gwanriSet];
