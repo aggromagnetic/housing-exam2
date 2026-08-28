@@ -1776,7 +1776,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260828.0107</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260828.1308</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -1801,7 +1801,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260828.0107</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260828.1308</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
@@ -3020,7 +3020,10 @@
         if (btnEditFromPrev) {
             btnEditFromPrev.onclick = () => {
                 closeModal(modal);
-                openEditModalForQuestion(q);
+                openPINAuthModal(() => {
+                    openEditModalForQuestion(q);
+                    showToast('🔓 문제 수정 모달이 열렸습니다.');
+                });
             };
         }
 
@@ -3074,8 +3077,9 @@
         elements.modals.editQuestion.classList.add('active');
     }
 
-    function openPINAuthModal() {
+    function openPINAuthModal(onSuccessCallback = null) {
         if (!elements.modals.pinAuth) return;
+        state.onPINAuthSuccess = onSuccessCallback;
         elements.modals.inputPin.value = '';
         elements.modals.pinAuth.classList.add('active');
         setTimeout(() => elements.modals.inputPin.focus(), 100);
@@ -3085,8 +3089,14 @@
         const pin = (elements.modals.inputPin.value || '').trim();
         if (pin === '2834' || pin === '0000') {
             closeModal(elements.modals.pinAuth);
-            openManagerScreen();
-            showToast('🔓 오답 관리 및 전체 문제 에디터가 열렸습니다.');
+            if (typeof state.onPINAuthSuccess === 'function') {
+                const cb = state.onPINAuthSuccess;
+                state.onPINAuthSuccess = null;
+                cb();
+            } else {
+                openManagerScreen();
+                showToast('🔓 오답 관리 및 전체 문제 에디터가 열렸습니다.');
+            }
         } else {
             showToast('❌ 잘못된 PIN 번호입니다.');
             elements.modals.inputPin.value = '';
@@ -3467,7 +3477,12 @@
     }
 
     function closeModal(modalEl) {
-        if (modalEl) modalEl.classList.remove('active');
+        if (modalEl) {
+            modalEl.classList.remove('active');
+            if (elements.modals && modalEl === elements.modals.pinAuth) {
+                state.onPINAuthSuccess = null;
+            }
+        }
     }
 
     function initEventListeners() {
@@ -4098,7 +4113,10 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
             btnEditQ.addEventListener('click', () => {
                 const q = state.questions[state.currentIndex];
                 if (!q) return;
-                openEditModalForQuestion(q);
+                openPINAuthModal(() => {
+                    openEditModalForQuestion(q);
+                    showToast('🔓 문제 수정 모달이 열렸습니다.');
+                });
             });
         }
 
