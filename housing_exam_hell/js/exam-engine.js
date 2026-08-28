@@ -271,6 +271,34 @@ export const ExamEngine = {
     },
 
     /**
+     * Get Effective Score with 3-Day (72h) Spaced Repetition Decay
+     * Base score: topScore (0~7)
+     * For each correct answer within 72 hours, score decreases by 1 (minimum 1)
+     * After 72 hours without answering, resets back to baseScore.
+     */
+    getEffectiveScore(question, stat) {
+        const baseScore = (question && question.topScore !== undefined) ? question.topScore : ((question && question.score) || 0);
+        if (!stat || !stat.scoreDeductions || !stat.lastCorrectAt) {
+            return baseScore;
+        }
+
+        const lastCorrectTime = new Date(stat.lastCorrectAt).getTime();
+        const elapsedHours = (Date.now() - lastCorrectTime) / (1000 * 60 * 60);
+
+        // 72시간(3일) 경과 시 원래 score로 완전 복원!
+        if (isNaN(elapsedHours) || elapsedHours >= 72) {
+            return baseScore;
+        }
+
+        // 3일 이내: 맞춘 횟수만큼 감점 (최솟값 1점)
+        return Math.max(1, baseScore - stat.scoreDeductions);
+    },
+
+    getScoreWeight(effectiveScore) {
+        return this.LADDER_WEIGHTS[effectiveScore] || 1.0;
+    },
+
+    /**
      * Weighted random selection (Roulette Wheel)
      * Probability of question i: P_i = W_i / sum(W_k)
      */
@@ -282,8 +310,9 @@ export const ExamEngine = {
             const stat = statsMap[it.qKey];
             const userWeight = (stat && stat.weight) ? stat.weight : 1.0;
             
-            // 사다리형 가중치 (7점: 1.8배 ~ 0점: 1.0배)
-            const scoreWeight = it.scoreWeight || (it.topScore !== undefined ? (this.LADDER_WEIGHTS[it.topScore] || 1.0) : 1.0);
+            // 3일 망각 주기 반영된 동적 임시 Score 기반 사다리 가중치
+            const effScore = this.getEffectiveScore(it, stat);
+            const scoreWeight = this.getScoreWeight(effScore);
             
             return userWeight * scoreWeight;
         });
@@ -431,7 +460,8 @@ export const ExamEngine = {
             const stat = statsMap[it.qKey] || {};
             const userWeight = stat.weight || 1.0;
             const tryCount = stat.tryCount || 1;
-            const scoreWeight = it.scoreWeight || (it.topScore !== undefined ? (this.LADDER_WEIGHTS[it.topScore] || 1.0) : 1.0);
+            const effScore = this.getEffectiveScore(it, stat);
+            const scoreWeight = this.getScoreWeight(effScore);
             return (userWeight * scoreWeight) / Math.sqrt(tryCount);
         });
 

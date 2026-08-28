@@ -104,15 +104,24 @@
 
             if (!isCorrect) {
                 existing.wrongCount = (existing.wrongCount || 0) + 1;
-                if (existing.wrongCount === 1) existing.weight = 1.5;
-                else if (existing.wrongCount === 2) existing.weight = 2.0;
-                else if (existing.wrongCount === 3) existing.weight = 2.5;
-                else existing.weight = 3.0;
+                if (existing.wrongCount === 1) existing.weight = 2;
+                else if (existing.wrongCount === 2) existing.weight = 4;
+                else if (existing.wrongCount === 3) existing.weight = 6;
+                else existing.weight = 10;
+
+                // 오답 시 3일 망각 임시 감점 즉시 리셋 (원래 본래 Score로 복구)
+                existing.scoreDeductions = 0;
+                existing.lastWrongAt = new Date().toISOString();
             } else {
                 existing.correctCount = (existing.correctCount || 0) + 1;
-                if (existing.weight >= 2.5) existing.weight = 2.0;
-                else if (existing.weight >= 2.0) existing.weight = 1.5;
-                else existing.weight = 1.0;
+                if (existing.weight === 10) existing.weight = 6;
+                else if (existing.weight === 6) existing.weight = 4;
+                else if (existing.weight === 4) existing.weight = 2;
+                else existing.weight = 1;
+
+                // 정답 시 임시 Score 1점씩 감점 누적 (3일간 유지) & 최근 정답 시각 기록
+                existing.scoreDeductions = (existing.scoreDeductions || 0) + 1;
+                existing.lastCorrectAt = new Date().toISOString();
             }
 
             if (db) {
@@ -888,6 +897,34 @@
                 : pool;
         },
 
+        /**
+         * Get Effective Score with 3-Day (72h) Spaced Repetition Decay
+         * Base score: topScore (0~7)
+         * For each correct answer within 72 hours, score decreases by 1 (minimum 1)
+         * After 72 hours without answering, resets back to baseScore.
+         */
+        getEffectiveScore(question, stat) {
+            const baseScore = (question && question.topScore !== undefined) ? question.topScore : ((question && question.score) || 0);
+            if (!stat || !stat.scoreDeductions || !stat.lastCorrectAt) {
+                return baseScore;
+            }
+
+            const lastCorrectTime = new Date(stat.lastCorrectAt).getTime();
+            const elapsedHours = (Date.now() - lastCorrectTime) / (1000 * 60 * 60);
+
+            // 72시간(3일) 경과 시 원래 score로 완전 복원!
+            if (isNaN(elapsedHours) || elapsedHours >= 72) {
+                return baseScore;
+            }
+
+            // 3일 이내: 맞춘 횟수만큼 감점 (최솟값 1점)
+            return Math.max(1, baseScore - stat.scoreDeductions);
+        },
+
+        getScoreWeight(effectiveScore) {
+            return this.LADDER_WEIGHTS[effectiveScore] || 1.0;
+        },
+
         weightedPick(items, statsMap = {}, count, excludeKeysSet = new Set()) {
             const available = items.filter(it => !excludeKeysSet.has(it.qKey));
             if (available.length <= count) return available;
@@ -896,8 +933,9 @@
                 const stat = statsMap[it.qKey];
                 const userWeight = (stat && stat.weight) ? stat.weight : 1.0;
                 
-                // 사다리형 가중치 (7점: 1.8배 ~ 0점: 1.0배)
-                const scoreWeight = it.scoreWeight || (it.topScore !== undefined ? (this.LADDER_WEIGHTS[it.topScore] || 1.0) : 1.0);
+                // 3일 망각 주기 반영된 동적 임시 Score 기반 사다리 가중치
+                const effScore = this.getEffectiveScore(it, stat);
+                const scoreWeight = this.getScoreWeight(effScore);
                 
                 return userWeight * scoreWeight;
             });
@@ -1041,7 +1079,8 @@
                 const stat = statsMap[it.qKey] || {};
                 const userWeight = stat.weight || 1.0;
                 const tryCount = stat.tryCount || 1;
-                const scoreWeight = it.scoreWeight || (it.topScore !== undefined ? (this.LADDER_WEIGHTS[it.topScore] || 1.0) : 1.0);
+                const effScore = this.getEffectiveScore(it, stat);
+                const scoreWeight = this.getScoreWeight(effScore);
                 return (userWeight * scoreWeight) / Math.sqrt(tryCount);
             });
 
@@ -1968,7 +2007,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260828.1450</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260828.1935</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -1993,7 +2032,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260828.1450</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260828.1935</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
@@ -3657,7 +3696,19 @@
                 scoreHtml = ` <span class="mgr-badge-score-low" title="핵심 300선 매칭 키워드 없음">[Score: ${topScore || 0}/7]</span>`;
             }
 
-            elements.manager.metaId.innerHTML = `[문항 ID: ${q.id}]${scoreHtml}`;
+            // 3일 망각 주기 임시 감점 쿨다운 표시
+            const qStat = state.statsMap[q.qKey];
+            const effScore = ExamEngine.getEffectiveScore(q, qStat);
+            let cooldownBadge = '';
+            if (qStat && qStat.scoreDeductions && qStat.lastCorrectAt) {
+                const elapsedHours = (Date.now() - new Date(qStat.lastCorrectAt).getTime()) / (1000 * 60 * 60);
+                if (elapsedHours < 72 && effScore < topScore) {
+                    const remainHours = Math.ceil(72 - elapsedHours);
+                    cooldownBadge = ` <span class="mgr-badge-score-mid" style="background: rgba(245, 158, 11, 0.15); color: #FBBF24; border-color: rgba(245, 158, 11, 0.4);" title="최근 정답으로 인해 3일간 임시 ${effScore}점으로 완화 (약 ${remainHours}시간 후 원래 ${topScore}점으로 복원)">⏳임시 ${effScore}점 (${remainHours}h)</span>`;
+                }
+            }
+
+            elements.manager.metaId.innerHTML = `[문항 ID: ${q.id}]${scoreHtml}${cooldownBadge}`;
         }
 
         // Wrong record delete button visibility
