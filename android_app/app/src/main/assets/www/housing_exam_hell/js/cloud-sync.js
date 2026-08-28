@@ -73,8 +73,9 @@ const CloudSync = {
 
             const syncCol = this.db.collection("exam_hell_sync");
             
-            // 1. Try modular documents first (edits, stats, history, flags)
-            const [editsDoc, statsDoc, historyDoc, flagsDoc, legacyDoc] = await Promise.all([
+            // 1. Fetch metadata and modular documents concurrently
+            const [editsMetaDoc, editsDoc, statsDoc, historyDoc, flagsDoc, legacyDoc] = await Promise.all([
+                syncCol.doc("edits_meta").get().catch(() => null),
                 syncCol.doc("edits_store").get().catch(() => null),
                 syncCol.doc("stats_store").get().catch(() => null),
                 syncCol.doc("history_store").get().catch(() => null),
@@ -88,17 +89,45 @@ const CloudSync = {
             let mergedStats = [];
             let mergedHistory = [];
 
-            // A. Load Custom Edits
-            if (editsDoc && editsDoc.exists && editsDoc.data()?.customEdits) {
-                mergedCustomEdits = editsDoc.data().customEdits;
-            } else if (legacyDoc && legacyDoc.exists && legacyDoc.data()?.customEdits) {
-                mergedCustomEdits = legacyDoc.data().customEdits;
+            // A. Load Custom Edits via High-Speed Chunked Store
+            if (editsMetaDoc && editsMetaDoc.exists) {
+                const meta = editsMetaDoc.data() || {};
+                const totalChunks = meta.totalChunks || 1;
+                const chunkPromises = [];
+                for (let i = 0; i < totalChunks; i++) {
+                    chunkPromises.push(syncCol.doc(`edits_chunk_${i}`).get().catch(() => null));
+                }
+                const chunkDocs = await Promise.all(chunkPromises);
+                chunkDocs.forEach(cDoc => {
+                    if (cDoc && cDoc.exists) {
+                        const cData = cDoc.data() || {};
+                        if (cData.data) {
+                            try {
+                                const parsed = JSON.parse(cData.data);
+                                Object.assign(mergedCustomEdits, parsed);
+                            } catch (e) {}
+                        }
+                    }
+                });
+            }
+
+            // Fallback: If chunked store not yet created, load from legacy docs
+            if (Object.keys(mergedCustomEdits).length === 0) {
+                if (editsDoc && editsDoc.exists && editsDoc.data()?.customEdits) {
+                    mergedCustomEdits = editsDoc.data().customEdits;
+                } else if (legacyDoc && legacyDoc.exists && legacyDoc.data()?.customEdits) {
+                    mergedCustomEdits = legacyDoc.data().customEdits;
+                }
             }
 
             // B. Load Flags & Deleted Keys
             if (flagsDoc && flagsDoc.exists) {
                 const fData = flagsDoc.data() || {};
-                mergedNeedsEdit = fData.needsEditMap || {};
+                if (fData.needsEditData) {
+                    try { mergedNeedsEdit = JSON.parse(fData.needsEditData); } catch (e) {}
+                } else if (fData.needsEditMap) {
+                    mergedNeedsEdit = fData.needsEditMap;
+                }
                 mergedDeletedKeys = fData.deletedKeys || [];
             } else if (legacyDoc && legacyDoc.exists) {
                 const lData = legacyDoc.data() || {};
@@ -107,15 +136,27 @@ const CloudSync = {
             }
 
             // C. Load Stats & History
-            if (statsDoc && statsDoc.exists && Array.isArray(statsDoc.data()?.stats)) {
-                mergedStats = statsDoc.data().stats;
-            } else if (legacyDoc && legacyDoc.exists && Array.isArray(legacyDoc.data()?.stats)) {
+            if (statsDoc && statsDoc.exists) {
+                const sData = statsDoc.data() || {};
+                if (sData.statsData) {
+                    try { mergedStats = JSON.parse(sData.statsData); } catch (e) {}
+                } else if (Array.isArray(sData.stats)) {
+                    mergedStats = sData.stats;
+                }
+            }
+            if (mergedStats.length === 0 && legacyDoc && legacyDoc.exists && Array.isArray(legacyDoc.data()?.stats)) {
                 mergedStats = legacyDoc.data().stats;
             }
 
-            if (historyDoc && historyDoc.exists && Array.isArray(historyDoc.data()?.history)) {
-                mergedHistory = historyDoc.data().history;
-            } else if (legacyDoc && legacyDoc.exists && Array.isArray(legacyDoc.data()?.history)) {
+            if (historyDoc && historyDoc.exists) {
+                const hData = historyDoc.data() || {};
+                if (hData.historyData) {
+                    try { mergedHistory = JSON.parse(hData.historyData); } catch (e) {}
+                } else if (Array.isArray(hData.history)) {
+                    mergedHistory = hData.history;
+                }
+            }
+            if (mergedHistory.length === 0 && legacyDoc && legacyDoc.exists && Array.isArray(legacyDoc.data()?.history)) {
                 mergedHistory = legacyDoc.data().history;
             }
 
@@ -147,7 +188,7 @@ const CloudSync = {
 
             this.lastSyncTime = new Date();
             this.syncStatus = "synced";
-            console.log("✅ Cloud modular pull & merge complete. Custom edits count:", Object.keys(mergedCustomEdits).length);
+            console.log("✅ Cloud modular chunk pull complete. Custom edits count:", Object.keys(mergedCustomEdits).length);
             this.notifyStatusChange();
             return true;
         } catch (err) {
@@ -182,7 +223,7 @@ const CloudSync = {
             let history = [];
             if (window.IDBStore) {
                 const fullBackup = await window.IDBStore.exportBackupJSON();
-                // Filter active stats only (tryCount > 0 or wrongCount > 0 or weight > 1) to keep size minimal
+                // Filter active stats only (tryCount > 0 or wrongCount > 0 or weight > 1)
                 stats = (fullBackup.stats || []).filter(s => (s.tryCount > 0 || s.wrongCount > 0 || (s.weight && s.weight > 1)));
                 history = (fullBackup.history || []).slice(-100);
             }
@@ -193,30 +234,57 @@ const CloudSync = {
             const nowIso = new Date().toISOString();
 
             const syncCol = this.db.collection("exam_hell_sync");
+            const chunkPromises = [];
 
-            // Save in modular documents to never exceed Firestore 1MB limit
-            await Promise.all([
-                syncCol.doc("edits_store").set({ customEdits, count: Object.keys(customEdits).length, updatedAt: nowIso }, { merge: true }),
-                syncCol.doc("stats_store").set({ stats, count: stats.length, updatedAt: nowIso }, { merge: true }),
-                syncCol.doc("history_store").set({ history, count: history.length, updatedAt: nowIso }, { merge: true }),
-                syncCol.doc("flags_store").set({ needsEditMap, deletedKeys, updatedAt: nowIso }, { merge: true })
-            ]);
+            // 1. Save Custom Edits into safe 150-item JSON-string chunks (max ~75KB each, 100% immune to 1MB limit)
+            const editKeys = Object.keys(customEdits);
+            const CHUNK_SIZE = 150;
+            const numChunks = Math.max(1, Math.ceil(editKeys.length / CHUNK_SIZE));
 
-            // Legacy backward-compatible doc (optional best effort)
-            try {
-                await syncCol.doc(SYNC_USER_DOC).set({
-                    updatedAt: nowIso,
-                    customEdits,
-                    needsEditMap,
-                    deletedKeys,
-                    statsCount: stats.length
-                }, { merge: true });
-            } catch (e) {}
+            chunkPromises.push(syncCol.doc("edits_meta").set({
+                totalChunks: numChunks,
+                totalCount: editKeys.length,
+                updatedAt: nowIso
+            }));
+
+            for (let i = 0; i < numChunks; i++) {
+                const sliceKeys = editKeys.slice(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE);
+                const chunkObj = {};
+                sliceKeys.forEach(k => { chunkObj[k] = customEdits[k]; });
+                chunkPromises.push(syncCol.doc(`edits_chunk_${i}`).set({
+                    chunkIndex: i,
+                    chunkSize: sliceKeys.length,
+                    totalChunks: numChunks,
+                    data: JSON.stringify(chunkObj),
+                    updatedAt: nowIso
+                }));
+            }
+
+            // 2. Save active Stats, History, and Flags as compact JSON-strings
+            chunkPromises.push(syncCol.doc("stats_store").set({
+                statsData: JSON.stringify(stats),
+                count: stats.length,
+                updatedAt: nowIso
+            }));
+
+            chunkPromises.push(syncCol.doc("history_store").set({
+                historyData: JSON.stringify(history),
+                count: history.length,
+                updatedAt: nowIso
+            }));
+
+            chunkPromises.push(syncCol.doc("flags_store").set({
+                needsEditData: JSON.stringify(needsEditMap),
+                deletedKeys,
+                updatedAt: nowIso
+            }));
+
+            await Promise.all(chunkPromises);
 
             this.lastSyncTime = new Date();
             this.syncStatus = "synced";
             this.isSyncing = false;
-            console.log("📤 Cloud modular push complete. Custom edits count:", Object.keys(customEdits).length);
+            console.log(`📤 Cloud chunk push complete. ${editKeys.length} edits across ${numChunks} chunks.`);
             this.notifyStatusChange();
             return true;
         } catch (err) {
