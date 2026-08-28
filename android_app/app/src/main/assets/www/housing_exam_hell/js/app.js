@@ -898,11 +898,13 @@
                 : pool;
         },
 
+        RESET_COOLDOWN_HOURS: 30, // 30시간 망각 주기 쿨다운
+        
         /**
-         * Get Effective Score with 3-Day (72h) Spaced Repetition Decay
+         * Get Effective Score with 30-Hour Spaced Repetition Decay
          * Base score: topScore (0~7)
-         * For each correct answer within 72 hours, score decreases by 1 (minimum 1)
-         * After 72 hours without answering, resets back to baseScore.
+         * For each correct answer within 30 hours, score decreases by 1 (minimum 1)
+         * After 30 hours without answering, resets back to baseScore.
          */
         getEffectiveScore(question, stat) {
             const baseScore = (question && question.topScore !== undefined) ? question.topScore : ((question && question.score) || 0);
@@ -913,12 +915,12 @@
             const lastCorrectTime = new Date(stat.lastCorrectAt).getTime();
             const elapsedHours = (Date.now() - lastCorrectTime) / (1000 * 60 * 60);
 
-            // 72시간(3일) 경과 시 원래 score로 완전 복원!
-            if (isNaN(elapsedHours) || elapsedHours >= 72) {
+            // 30시간 경과 시 원래 score로 완전 복원!
+            if (isNaN(elapsedHours) || elapsedHours >= 30) {
                 return baseScore;
             }
 
-            // 3일 이내: 맞춘 횟수만큼 감점 (최솟값 1점)
+            // 30시간 이내: 맞춘 횟수만큼 감점 (최솟값 1점)
             return Math.max(1, baseScore - stat.scoreDeductions);
         },
 
@@ -2008,7 +2010,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260828.2125</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260828.2130</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -2033,7 +2035,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260828.2125</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260828.2130</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
@@ -3697,15 +3699,15 @@
                 scoreHtml = ` <span class="mgr-badge-score-low" title="핵심 300선 매칭 키워드 없음">[Score: ${topScore || 0}/7]</span>`;
             }
 
-            // 3일 망각 주기 임시 감점 쿨다운 표시
+            // 30시간 망각 주기 임시 감점 쿨다운 표시
             const qStat = state.statsMap[q.qKey];
             const effScore = ExamEngine.getEffectiveScore(q, qStat);
             let cooldownBadge = '';
             if (qStat && qStat.scoreDeductions && qStat.lastCorrectAt) {
                 const elapsedHours = (Date.now() - new Date(qStat.lastCorrectAt).getTime()) / (1000 * 60 * 60);
-                if (elapsedHours < 72 && effScore < topScore) {
-                    const remainHours = Math.ceil(72 - elapsedHours);
-                    cooldownBadge = ` <span class="mgr-badge-score-mid" style="background: rgba(245, 158, 11, 0.15); color: #FBBF24; border-color: rgba(245, 158, 11, 0.4);" title="최근 정답으로 인해 3일간 임시 ${effScore}점으로 완화 (약 ${remainHours}시간 후 원래 ${topScore}점으로 복원)">⏳임시 ${effScore}점 (${remainHours}h)</span>`;
+                if (elapsedHours < 30 && effScore < topScore) {
+                    const remainHours = Math.ceil(30 - elapsedHours);
+                    cooldownBadge = ` <span class="mgr-badge-score-mid" style="background: rgba(245, 158, 11, 0.15); color: #FBBF24; border-color: rgba(245, 158, 11, 0.4);" title="최근 정답으로 인해 30시간 동안 임시 ${effScore}점으로 완화 (약 ${remainHours}시간 후 원래 ${topScore}점으로 복원)">⏳임시 ${effScore}점 (${remainHours}h)</span>`;
                 }
             }
 

@@ -270,11 +270,13 @@ export const ExamEngine = {
         return pool;
     },
 
+    RESET_COOLDOWN_HOURS: 30, // 30시간 망각 주기 쿨다운
+
     /**
-     * Get Effective Score with 3-Day (72h) Spaced Repetition Decay
+     * Get Effective Score with 30-Hour Spaced Repetition Decay
      * Base score: topScore (0~7)
-     * For each correct answer within 72 hours, score decreases by 1 (minimum 1)
-     * After 72 hours without answering, resets back to baseScore.
+     * For each correct answer within 30 hours, score decreases by 1 (minimum 1)
+     * After 30 hours without answering, resets back to baseScore.
      */
     getEffectiveScore(question, stat) {
         const baseScore = (question && question.topScore !== undefined) ? question.topScore : ((question && question.score) || 0);
@@ -285,12 +287,12 @@ export const ExamEngine = {
         const lastCorrectTime = new Date(stat.lastCorrectAt).getTime();
         const elapsedHours = (Date.now() - lastCorrectTime) / (1000 * 60 * 60);
 
-        // 72시간(3일) 경과 시 원래 score로 완전 복원!
-        if (isNaN(elapsedHours) || elapsedHours >= 72) {
+        // 30시간 경과 시 원래 score로 완전 복원!
+        if (isNaN(elapsedHours) || elapsedHours >= this.RESET_COOLDOWN_HOURS) {
             return baseScore;
         }
 
-        // 3일 이내: 맞춘 횟수만큼 감점 (최솟값 1점)
+        // 30시간 이내: 맞춘 횟수만큼 감점 (최솟값 1점)
         return Math.max(1, baseScore - stat.scoreDeductions);
     },
 
