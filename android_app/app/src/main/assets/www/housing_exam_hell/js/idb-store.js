@@ -114,6 +114,10 @@ export const IDBStore = {
             else if (existing.wrongCount === 2) existing.weight = 4;
             else if (existing.wrongCount === 3) existing.weight = 6;
             else existing.weight = 10;
+
+            // 오답 시 3일 망각 임시 감점 즉시 리셋 (원래 본래 Score로 복구)
+            existing.scoreDeductions = 0;
+            existing.lastWrongAt = new Date().toISOString();
         } else {
             existing.correctCount = (existing.correctCount || 0) + 1;
             // De-escalating step: 10 -> 6 -> 4 -> 2 -> 1
@@ -121,13 +125,20 @@ export const IDBStore = {
             else if (existing.weight === 6) existing.weight = 4;
             else if (existing.weight === 4) existing.weight = 2;
             else existing.weight = 1;
+
+            // 정답 시 임시 Score 1점씩 감점 누적 (3일간 유지) & 최근 정답 시각 기록
+            existing.scoreDeductions = (existing.scoreDeductions || 0) + 1;
+            existing.lastCorrectAt = new Date().toISOString();
         }
 
         return new Promise((resolve, reject) => {
             const tx = db.transaction('question_stats', 'readwrite');
             const store = tx.objectStore('question_stats');
             const req = store.put(existing);
-            req.onsuccess = () => resolve(existing);
+            req.onsuccess = () => {
+                if (window.CloudSync) window.CloudSync.schedulePush();
+                resolve(existing);
+            };
             req.onerror = () => reject(req.error);
         });
     },
@@ -305,12 +316,16 @@ export const IDBStore = {
     async saveQuestionEdit(qKey, editData) {
         try {
             const map = JSON.parse(localStorage.getItem('housing_exam_custom_edits') || '{}');
-            map[qKey] = {
+            const item = {
                 ...editData,
-                editedAt: new Date().toISOString()
+                editedAt: editData.editedAt || new Date().toISOString()
             };
+            map[qKey] = item;
             localStorage.setItem('housing_exam_custom_edits', JSON.stringify(map));
-        } catch (e) {}
+            return item;
+        } catch (e) {
+            return editData;
+        }
     },
 
     /**

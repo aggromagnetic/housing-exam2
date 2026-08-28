@@ -104,15 +104,24 @@
 
             if (!isCorrect) {
                 existing.wrongCount = (existing.wrongCount || 0) + 1;
-                if (existing.wrongCount === 1) existing.weight = 1.5;
-                else if (existing.wrongCount === 2) existing.weight = 2.0;
-                else if (existing.wrongCount === 3) existing.weight = 2.5;
-                else existing.weight = 3.0;
+                if (existing.wrongCount === 1) existing.weight = 2;
+                else if (existing.wrongCount === 2) existing.weight = 4;
+                else if (existing.wrongCount === 3) existing.weight = 6;
+                else existing.weight = 10;
+
+                // 오답 시 3일 망각 임시 감점 즉시 리셋 (원래 본래 Score로 복구)
+                existing.scoreDeductions = 0;
+                existing.lastWrongAt = new Date().toISOString();
             } else {
                 existing.correctCount = (existing.correctCount || 0) + 1;
-                if (existing.weight >= 2.5) existing.weight = 2.0;
-                else if (existing.weight >= 2.0) existing.weight = 1.5;
-                else existing.weight = 1.0;
+                if (existing.weight === 10) existing.weight = 6;
+                else if (existing.weight === 6) existing.weight = 4;
+                else if (existing.weight === 4) existing.weight = 2;
+                else existing.weight = 1;
+
+                // 정답 시 임시 Score 1점씩 감점 누적 (3일간 유지) & 최근 정답 시각 기록
+                existing.scoreDeductions = (existing.scoreDeductions || 0) + 1;
+                existing.lastCorrectAt = new Date().toISOString();
             }
 
             if (db) {
@@ -121,6 +130,7 @@
                     tx.objectStore('question_stats').put(existing);
                 } catch (e) {}
             }
+            if (window.CloudSync) window.CloudSync.schedulePush();
             return existing;
         },
 
@@ -211,13 +221,17 @@
         async saveQuestionEdit(qKey, editData) {
             try {
                 const map = JSON.parse(localStorage.getItem('housing_exam_custom_edits') || '{}');
-                map[qKey] = {
+                const item = {
                     ...editData,
-                    editedAt: new Date().toISOString()
+                    editedAt: editData.editedAt || new Date().toISOString()
                 };
+                map[qKey] = item;
                 localStorage.setItem('housing_exam_custom_edits', JSON.stringify(map));
-            } catch (e) {}
-            if (window.CloudSync) window.CloudSync.schedulePush();
+                if (window.CloudSync) window.CloudSync.schedulePush();
+                return item;
+            } catch (e) {
+                return editData;
+            }
         },
 
         async getQuestionEdit(qKey) {
@@ -884,6 +898,34 @@
                 : pool;
         },
 
+        /**
+         * Get Effective Score with 3-Day (72h) Spaced Repetition Decay
+         * Base score: topScore (0~7)
+         * For each correct answer within 72 hours, score decreases by 1 (minimum 1)
+         * After 72 hours without answering, resets back to baseScore.
+         */
+        getEffectiveScore(question, stat) {
+            const baseScore = (question && question.topScore !== undefined) ? question.topScore : ((question && question.score) || 0);
+            if (!stat || !stat.scoreDeductions || !stat.lastCorrectAt) {
+                return baseScore;
+            }
+
+            const lastCorrectTime = new Date(stat.lastCorrectAt).getTime();
+            const elapsedHours = (Date.now() - lastCorrectTime) / (1000 * 60 * 60);
+
+            // 72시간(3일) 경과 시 원래 score로 완전 복원!
+            if (isNaN(elapsedHours) || elapsedHours >= 72) {
+                return baseScore;
+            }
+
+            // 3일 이내: 맞춘 횟수만큼 감점 (최솟값 1점)
+            return Math.max(1, baseScore - stat.scoreDeductions);
+        },
+
+        getScoreWeight(effectiveScore) {
+            return this.LADDER_WEIGHTS[effectiveScore] || 1.0;
+        },
+
         weightedPick(items, statsMap = {}, count, excludeKeysSet = new Set()) {
             const available = items.filter(it => !excludeKeysSet.has(it.qKey));
             if (available.length <= count) return available;
@@ -892,8 +934,9 @@
                 const stat = statsMap[it.qKey];
                 const userWeight = (stat && stat.weight) ? stat.weight : 1.0;
                 
-                // 사다리형 가중치 (7점: 1.8배 ~ 0점: 1.0배)
-                const scoreWeight = it.scoreWeight || (it.topScore !== undefined ? (this.LADDER_WEIGHTS[it.topScore] || 1.0) : 1.0);
+                // 3일 망각 주기 반영된 동적 임시 Score 기반 사다리 가중치
+                const effScore = this.getEffectiveScore(it, stat);
+                const scoreWeight = this.getScoreWeight(effScore);
                 
                 return userWeight * scoreWeight;
             });
@@ -965,6 +1008,113 @@
                     { pattern: /14.*집합건물/, mc: 0, sa: 1 }
                 ];
             }
+        },
+
+        /**
+         * Hell Mode Blueprint Table (50% MC : 50% SA = 20 MC + 20 SA per subject)
+         */
+        getHellBlueprint(subject) {
+            if (subject === '관리실무') {
+                return [
+                    { pattern: /01.*주택의.*정의/, mc: 1, sa: 0 },
+                    { pattern: /02.*총칙/, mc: 1, sa: 0 },
+                    { pattern: /03.*관리방법/, mc: 2, sa: 2 },
+                    { pattern: /04.*관리조직/, mc: 2, sa: 2 },
+                    { pattern: /05.*주택관리사/, mc: 1, sa: 0 },
+                    { pattern: /06.*벌칙/, mc: 0, sa: 1 },
+                    { pattern: /07.*입주자관리/, mc: 1, sa: 1 },
+                    { pattern: /08.*사무.*인사/, mc: 2, sa: 3 },
+                    { pattern: /09.*대외업무/, mc: 1, sa: 0 },
+                    { pattern: /10.*회계관리/, mc: 1, sa: 1 },
+                    { pattern: /11.*시설관리/, mc: 6, sa: 8 },
+                    { pattern: /12.*환경.*안전/, mc: 2, sa: 3 }
+                ];
+            } else {
+                // 관계법규 (20 MC + 20 SA)
+                return [
+                    { pattern: /01.*주택법/, mc: 4, sa: 4 },
+                    { pattern: /02.*공동주택관리법/, mc: 4, sa: 4 },
+                    { pattern: /03.*민간임대주택/, mc: 1, sa: 1 },
+                    { pattern: /04.*공공주택/, mc: 1, sa: 1 },
+                    { pattern: /05.*건축법/, mc: 4, sa: 4 },
+                    { pattern: /06.*도시.*주거환경정비/, mc: 1, sa: 1 },
+                    { pattern: /07.*도시재정비/, mc: 1, sa: 0 },
+                    { pattern: /08.*시설물의.*안전/, mc: 1, sa: 1 },
+                    { pattern: /09.*소방기본법/, mc: 0, sa: 1 },
+                    { pattern: /10.*화재의.*예방/, mc: 1, sa: 0 },
+                    { pattern: /11.*소방시설/, mc: 1, sa: 0 },
+                    { pattern: /12.*전기사업법/, mc: 1, sa: 1 },
+                    { pattern: /13.*승강기/, mc: 1, sa: 1 },
+                    { pattern: /14.*집합건물/, mc: 0, sa: 1 }
+                ];
+            }
+        },
+
+        /**
+         * Pick unseen high-yield questions first. If exhausted, pick least-attempted + high wrong-rate questions.
+         */
+        pickUnseenHighYieldFirst(items, statsMap = {}, count, excludeKeysSet = new Set()) {
+            const available = items.filter(it => !excludeKeysSet.has(it.qKey));
+            if (available.length <= count) return available;
+
+            // 1단계: 한 번도 안 푼 문제 (tryCount === 0 또는 미등록)
+            const unseen = available.filter(it => {
+                const stat = statsMap[it.qKey];
+                return !stat || !stat.tryCount || stat.tryCount === 0;
+            });
+
+            // 안 푼 문제가 목표 수량 이상이면 그 안에서 가중치 추첨
+            if (unseen.length >= count) {
+                return this.weightedPick(unseen, statsMap, count, excludeKeysSet);
+            }
+
+            // 2단계: 안 푼 문제는 전원 선발
+            const selected = [...unseen];
+            const pickedKeys = new Set(unseen.map(it => it.qKey));
+
+            // 3단계: 부족분은 풀어본 것 중 [덜 푼 것(낮은 tryCount)] + [자주 틀린 오답(높은 weight)] 우선 가중치 추첨
+            const seen = available.filter(it => !pickedKeys.has(it.qKey));
+            const remainderNeeded = count - selected.length;
+
+            const remainderWeights = seen.map(it => {
+                const stat = statsMap[it.qKey] || {};
+                const userWeight = stat.weight || 1.0;
+                const tryCount = stat.tryCount || 1;
+                const effScore = this.getEffectiveScore(it, stat);
+                const scoreWeight = this.getScoreWeight(effScore);
+                return (userWeight * scoreWeight) / Math.sqrt(tryCount);
+            });
+
+            const additional = [];
+            const pickedIndices = new Set();
+
+            for (let step = 0; step < remainderNeeded; step++) {
+                let totalWeight = 0;
+                for (let i = 0; i < seen.length; i++) {
+                    if (!pickedIndices.has(i)) totalWeight += remainderWeights[i];
+                }
+                if (totalWeight <= 0) break;
+
+                let rnd = Math.random() * totalWeight;
+                let current = 0;
+                let chosenIdx = -1;
+
+                for (let i = 0; i < seen.length; i++) {
+                    if (pickedIndices.has(i)) continue;
+                    current += remainderWeights[i];
+                    if (rnd <= current) {
+                        chosenIdx = i;
+                        break;
+                    }
+                }
+
+                if (chosenIdx !== -1) {
+                    pickedIndices.add(chosenIdx);
+                    additional.push(seen[chosenIdx]);
+                }
+            }
+
+            return [...selected, ...additional];
         },
 
         generateExamSet(subject, statsMap = {}, excludeKeysSet = new Set(), highYieldRatio = 0.40) {
@@ -1057,6 +1207,87 @@
             return [...selectedMC.slice(0, 24), ...selectedSA.slice(0, 16)];
         },
 
+        /**
+         * Generate 40-question Hell Mode Set (20 MC + 20 SA: 50% unseen high-yield + 50% weighted roulette)
+         */
+        generateHellSubjectSet(subject, statsMap = {}, excludeKeysSet = new Set(), highYieldRatio = 0.50) {
+            const mcPool = this.getQuestionPool(subject, 'choice');
+            const saPool = this.getQuestionPool(subject, 'short');
+            const blueprint = this.getHellBlueprint(subject);
+
+            const selectedMC = [];
+            const selectedSA = [];
+            const pickedKeys = new Set(excludeKeysSet);
+
+            blueprint.forEach(rule => {
+                const targetMc = rule.mc;
+                const targetSa = rule.sa;
+
+                const chapterMcList = mcPool.filter(q => rule.pattern.test(q.chapterName));
+                const chapterSaList = saPool.filter(q => rule.pattern.test(q.chapterName));
+
+                // 1) MC (20문항): 50%는 안 푼 초특급/핵심 우선 선정 + 50%는 스마트 룰렛
+                if (targetMc > 0) {
+                    const hyCandidates = chapterMcList.filter(q => q.isHighYield);
+                    const targetHyMc = Math.min(hyCandidates.length, Math.ceil(targetMc * highYieldRatio));
+                    const pickedHy = this.pickUnseenHighYieldFirst(hyCandidates, statsMap, targetHyMc, pickedKeys);
+
+                    pickedHy.forEach(q => {
+                        pickedKeys.add(q.qKey);
+                        selectedMC.push(q);
+                    });
+
+                    const remainingMcCount = targetMc - pickedHy.length;
+                    if (remainingMcCount > 0) {
+                        const pickedRest = this.weightedPick(chapterMcList, statsMap, remainingMcCount, pickedKeys);
+                        pickedRest.forEach(q => {
+                            pickedKeys.add(q.qKey);
+                            selectedMC.push(q);
+                        });
+                    }
+                }
+
+                // 2) SA (20문항): 50%는 안 푼 초특급/핵심 우선 선정 + 50%는 스마트 룰렛
+                if (targetSa > 0) {
+                    const hyCandidates = chapterSaList.filter(q => q.isHighYield);
+                    const targetHySa = Math.min(hyCandidates.length, Math.ceil(targetSa * highYieldRatio));
+                    const pickedHy = this.pickUnseenHighYieldFirst(hyCandidates, statsMap, targetHySa, pickedKeys);
+
+                    pickedHy.forEach(q => {
+                        pickedKeys.add(q.qKey);
+                        selectedSA.push(q);
+                    });
+
+                    const remainingSaCount = targetSa - pickedHy.length;
+                    if (remainingSaCount > 0) {
+                        const pickedRest = this.weightedPick(chapterSaList, statsMap, remainingSaCount, pickedKeys);
+                        pickedRest.forEach(q => {
+                            pickedKeys.add(q.qKey);
+                            selectedSA.push(q);
+                        });
+                    }
+                }
+            });
+
+            // Quota fallback if pool is tight
+            if (selectedMC.length < 20) {
+                const remainderAll = this.weightedPick(mcPool, statsMap, 20 - selectedMC.length, pickedKeys);
+                remainderAll.forEach(q => {
+                    pickedKeys.add(q.qKey);
+                    selectedMC.push(q);
+                });
+            }
+            if (selectedSA.length < 20) {
+                const remainderAll = this.weightedPick(saPool, statsMap, 20 - selectedSA.length, pickedKeys);
+                remainderAll.forEach(q => {
+                    pickedKeys.add(q.qKey);
+                    selectedSA.push(q);
+                });
+            }
+
+            return [...selectedMC.slice(0, 20), ...selectedSA.slice(0, 20)];
+        },
+
         shuffleWithAntiClumping(questions) {
             const shuffled = [...questions].sort(() => Math.random() - 0.5);
             const result = [];
@@ -1107,16 +1338,16 @@
             return all.sort(() => Math.random() - 0.5);
         },
 
-        generateInfiniteHellSet(statsMap = {}, excludeKeysSet = new Set(), highYieldRatio = 0.40) {
-            // 1. 관계법규 40문항 (객관식 24 + 주관식 16: 14대 법률 블루프린트 100% 반영)
-            const lawSet = this.generateExamSet('관계법규', statsMap, excludeKeysSet, highYieldRatio);
+        generateInfiniteHellSet(statsMap = {}, excludeKeysSet = new Set(), highYieldRatio = 0.50) {
+            // 1. 관계법규 40문항 (객관식 20 + 주관식 20: 50% 안 푼 핵심 보장)
+            const lawSet = this.generateHellSubjectSet('관계법규', statsMap, excludeKeysSet, highYieldRatio);
             
             // 2. 중복 방지를 위한 키 누적
             const lawKeys = new Set(excludeKeysSet);
             lawSet.forEach(q => lawKeys.add(q.qKey));
 
-            // 3. 관리실무 40문항 (객관식 24 + 주관식 16: 12대 단원 블루프린트 100% 반영)
-            const gwanriSet = this.generateExamSet('관리실무', statsMap, lawKeys, highYieldRatio);
+            // 3. 관리실무 40문항 (객관식 20 + 주관식 20: 50% 안 푼 핵심 보장)
+            const gwanriSet = this.generateHellSubjectSet('관리실무', statsMap, lawKeys, highYieldRatio);
 
             // 4. 총 80문항 융합 및 군집 방지 셔플 (관계법규 + 관리실무 50:50)
             const combined = [...lawSet, ...gwanriSet];
@@ -1577,6 +1808,9 @@
         infiniteSetCount: 1,
         infiniteUsedKeys: new Set(),
 
+        currentCombo: 0,
+        maxCombo: 0,
+
         timerInterval: null,
         elapsedSeconds: 0,
         mockRemainingSeconds: 40 * 60,
@@ -1662,6 +1896,7 @@
                 card: document.getElementById('quiz-card'),
                 qNum: document.getElementById('q-num-text'),
                 chapterBadge: document.getElementById('q-chapter-badge'),
+                comboBadge: document.getElementById('q-combo-badge'),
                 weightBadge: document.getElementById('q-weight-badge'),
                 qTitle: document.getElementById('q-title-text'),
                 passageBox: document.getElementById('q-passage-box'),
@@ -1750,6 +1985,7 @@
                 passPill: document.getElementById('res-pass-pill'),
                 correctCount: document.getElementById('res-correct-count'),
                 wrongCount: document.getElementById('res-wrong-count'),
+                comboCount: document.getElementById('res-combo-count'),
                 timeCount: document.getElementById('res-time-count'),
                 btnCopyAI: document.getElementById('btn-copy-ai-prompt'),
                 btnRetry: document.getElementById('btn-retry-session'),
@@ -1772,7 +2008,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260827.2142</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260828.2125</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -1797,7 +2033,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260827.2142</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260828.2125</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
@@ -1849,6 +2085,8 @@
         state.mode = modeKey;
         state.currentPartPattern = partPattern;
         state.currentIndex = 0;
+        state.currentCombo = 0;
+        state.maxCombo = 0;
         state.userAnswers = [];
         state.results = [];
         state.firstAttemptResults = [];
@@ -2080,6 +2318,15 @@
             elements.quiz.chapterBadge.innerHTML = `${chapText} <span class="${badgeClass}" title="${q.primaryCoreItem.note}">${iconHtml} #${String(q.primaryCoreItem.id).padStart(3, '0')} ${q.primaryCoreItem.tag}</span>`;
         } else {
             elements.quiz.chapterBadge.textContent = chapText;
+        }
+
+        if (elements.quiz.comboBadge) {
+            if (state.currentCombo >= 2) {
+                elements.quiz.comboBadge.textContent = `🔥 ${state.currentCombo} COMBO`;
+                elements.quiz.comboBadge.style.display = 'inline-flex';
+            } else {
+                elements.quiz.comboBadge.style.display = 'none';
+            }
         }
 
         let wIcon = '🌱 기본';
@@ -2511,6 +2758,19 @@
                 chapter: q.chapterName
             });
             state.statsMap[q.qKey] = updatedStat;
+
+            // 콤보 스트릭 계산
+            if (gradeRes.isCorrect) {
+                state.currentCombo = (state.currentCombo || 0) + 1;
+                if (state.currentCombo > (state.maxCombo || 0)) {
+                    state.maxCombo = state.currentCombo;
+                }
+                if (state.currentCombo >= 3) {
+                    showToast(`🔥 ${state.currentCombo} COMBO! 연속 정답 행진!`);
+                }
+            } else {
+                state.currentCombo = 0;
+            }
         }
 
         renderQuestion(idx);
@@ -2686,6 +2946,9 @@
         elements.result.scoreText.textContent = `${score}점`;
         elements.result.correctCount.textContent = `${correctCount}개`;
         elements.result.wrongCount.textContent = `${wrongCount}개`;
+        if (elements.result.comboCount) {
+            elements.result.comboCount.textContent = `${state.maxCombo || 0} COMBO`;
+        }
 
         const mins = Math.floor(state.elapsedSeconds / 60);
         const secs = state.elapsedSeconds % 60;
@@ -3016,7 +3279,10 @@
         if (btnEditFromPrev) {
             btnEditFromPrev.onclick = () => {
                 closeModal(modal);
-                openEditModalForQuestion(q);
+                openPINAuthModal(() => {
+                    openEditModalForQuestion(q);
+                    showToast('🔓 문제 수정 모달이 열렸습니다.');
+                });
             };
         }
 
@@ -3070,19 +3336,49 @@
         elements.modals.editQuestion.classList.add('active');
     }
 
-    function openPINAuthModal() {
+    function isPINVerified() {
+        if (state.isPINAuthenticated) return true;
+        try {
+            return sessionStorage.getItem('housing_exam_pin_auth') === 'true';
+        } catch (e) {
+            return false;
+        }
+    }
+
+    function setPINVerified() {
+        state.isPINAuthenticated = true;
+        try {
+            sessionStorage.setItem('housing_exam_pin_auth', 'true');
+        } catch (e) {}
+    }
+
+    function openPINAuthModal(onSuccessCallback = null) {
+        if (isPINVerified()) {
+            if (typeof onSuccessCallback === 'function') {
+                onSuccessCallback();
+            }
+            return;
+        }
         if (!elements.modals.pinAuth) return;
+        state.onPINAuthSuccess = onSuccessCallback;
         elements.modals.inputPin.value = '';
         elements.modals.pinAuth.classList.add('active');
         setTimeout(() => elements.modals.inputPin.focus(), 100);
     }
 
     function verifyPINAuth() {
+        if (!elements.modals.pinAuth || !elements.modals.pinAuth.classList.contains('active')) return;
+
         const pin = (elements.modals.inputPin.value || '').trim();
-        if (pin === '2834' || pin === '0000') {
+        if (pin === '2834') {
+            setPINVerified();
+            const cb = state.onPINAuthSuccess;
+            state.onPINAuthSuccess = null;
+            elements.modals.inputPin.value = '';
             closeModal(elements.modals.pinAuth);
-            openManagerScreen();
-            showToast('🔓 오답 관리 및 전체 문제 에디터가 열렸습니다.');
+            if (typeof cb === 'function') {
+                cb();
+            }
         } else {
             showToast('❌ 잘못된 PIN 번호입니다.');
             elements.modals.inputPin.value = '';
@@ -3146,17 +3442,19 @@
 
         const matchesSearch = (q) => {
             if (!qLower) return true;
+            applyCustomEdits(q);
             const title = (q.question || q.title || '').toLowerCase();
             const chap = (q.chapterName || '').toLowerCase();
             const pass = (q.passage || '').toLowerCase();
+            const opts = Array.isArray(q.options) ? q.options.join(' ').toLowerCase() : '';
             const exp = (q.explanation || '').toLowerCase();
             const tip = (q.tip || '').toLowerCase();
             const ans = String(q.answer || '').toLowerCase();
             const ansObj = JSON.stringify(q.answers || {}).toLowerCase();
             const idStr = String(q.id || '');
             return title.includes(qLower) || chap.includes(qLower) || pass.includes(qLower) ||
-                   exp.includes(qLower) || tip.includes(qLower) || ans.includes(qLower) ||
-                   ansObj.includes(qLower) || idStr === qLower;
+                   opts.includes(qLower) || exp.includes(qLower) || tip.includes(qLower) ||
+                   ans.includes(qLower) || ansObj.includes(qLower) || idStr === qLower;
         };
 
         let list = [];
@@ -3181,6 +3479,11 @@
             });
             if (filterSubj !== 'all') list = list.filter(q => q.subject === filterSubj);
             if (qLower) list = list.filter(matchesSearch);
+            list.sort((a, b) => {
+                const timeA = new Date(state.needsEditMap[a.qKey]?.flaggedAt || 0).getTime();
+                const timeB = new Date(state.needsEditMap[b.qKey]?.flaggedAt || 0).getTime();
+                return timeB - timeA;
+            });
         } else if (tabName === 'custom_edits') {
             list = allCustomEditsKeys.map(k => {
                 const isGwanri = k.startsWith('관리실무');
@@ -3198,6 +3501,11 @@
             });
             if (filterSubj !== 'all') list = list.filter(q => q.subject === filterSubj);
             if (qLower) list = list.filter(matchesSearch);
+            list.sort((a, b) => {
+                const timeA = new Date(state.customEdits[a.qKey]?.editedAt || 0).getTime();
+                const timeB = new Date(state.customEdits[b.qKey]?.editedAt || 0).getTime();
+                return timeB - timeA;
+            });
         } else if (tabName === 'search_all') {
             if (!qLower) {
                 list = [];
@@ -3364,15 +3672,44 @@
             elements.manager.metaType.textContent = q.type === 'choice' ? '객관식 5지선다' : '주관식 단답/기입형';
         }
         if (elements.manager.metaId) {
-            let coreHtml = '';
-            const coreMatch = q.topCoreMatch && q.topCoreMatch.score >= 5 ? q.topCoreMatch.item : null;
-            if (coreMatch) {
-                const isSuper = (q.topScore >= 6 || (q.topCoreMatch && q.topCoreMatch.score >= 6));
-                const badgeClass = isSuper ? 'badge-high-yield mgr-badge badge-tier-super' : 'badge-high-yield mgr-badge';
-                const badgeIcon = isSuper ? '🔥 초특급' : '⭐ 핵심 300선';
-                coreHtml = ` <span class="${badgeClass}" title="${coreMatch.note}">${badgeIcon} #${coreMatch.id} ${coreMatch.tag}</span>`;
+            let topMatch = q.topCoreMatch;
+            let topScore = q.topScore;
+            if (topScore === undefined) {
+                const matches = ExamEngine.matchQuestionKeywords(q, q.subject);
+                topMatch = matches.length > 0 ? matches[0] : null;
+                topScore = topMatch ? topMatch.score : 0;
             }
-            elements.manager.metaId.innerHTML = `[문항 ID: ${q.id}]${coreHtml}`;
+
+            let scoreHtml = '';
+            if (topScore >= 6 && topMatch && topMatch.item) {
+                const matchKeywords = (topMatch.matched && topMatch.matched.length > 0) ? `매칭: ${topMatch.matched.join(', ')}` : '';
+                const matchTip = [topMatch.item.topic, matchKeywords, topMatch.item.note].filter(Boolean).join(' | ').replace(/"/g, '&quot;');
+                scoreHtml = ` <span class="badge-high-yield mgr-badge badge-tier-super" title="${matchTip}">[Score: ${topScore}/7 🔥초특급 #${topMatch.item.id}]</span>`;
+            } else if (topScore === 5 && topMatch && topMatch.item) {
+                const matchKeywords = (topMatch.matched && topMatch.matched.length > 0) ? `매칭: ${topMatch.matched.join(', ')}` : '';
+                const matchTip = [topMatch.item.topic, matchKeywords, topMatch.item.note].filter(Boolean).join(' | ').replace(/"/g, '&quot;');
+                scoreHtml = ` <span class="badge-high-yield mgr-badge" title="${matchTip}">[Score: 5/7 ⭐핵심 #${topMatch.item.id}]</span>`;
+            } else if (topScore >= 2 && topMatch && topMatch.item) {
+                const matchKeywords = (topMatch.matched && topMatch.matched.length > 0) ? `매칭: ${topMatch.matched.join(', ')}` : '';
+                const matchTip = [topMatch.item.topic, matchKeywords].filter(Boolean).join(' | ').replace(/"/g, '&quot;');
+                scoreHtml = ` <span class="mgr-badge-score-mid" title="${matchTip}">[Score: ${topScore}/7 #${topMatch.item.id}]</span>`;
+            } else {
+                scoreHtml = ` <span class="mgr-badge-score-low" title="핵심 300선 매칭 키워드 없음">[Score: ${topScore || 0}/7]</span>`;
+            }
+
+            // 3일 망각 주기 임시 감점 쿨다운 표시
+            const qStat = state.statsMap[q.qKey];
+            const effScore = ExamEngine.getEffectiveScore(q, qStat);
+            let cooldownBadge = '';
+            if (qStat && qStat.scoreDeductions && qStat.lastCorrectAt) {
+                const elapsedHours = (Date.now() - new Date(qStat.lastCorrectAt).getTime()) / (1000 * 60 * 60);
+                if (elapsedHours < 72 && effScore < topScore) {
+                    const remainHours = Math.ceil(72 - elapsedHours);
+                    cooldownBadge = ` <span class="mgr-badge-score-mid" style="background: rgba(245, 158, 11, 0.15); color: #FBBF24; border-color: rgba(245, 158, 11, 0.4);" title="최근 정답으로 인해 3일간 임시 ${effScore}점으로 완화 (약 ${remainHours}시간 후 원래 ${topScore}점으로 복원)">⏳임시 ${effScore}점 (${remainHours}h)</span>`;
+                }
+            }
+
+            elements.manager.metaId.innerHTML = `[문항 ID: ${q.id}]${scoreHtml}${cooldownBadge}`;
         }
 
         // Wrong record delete button visibility
@@ -3434,7 +3771,12 @@
     }
 
     function closeModal(modalEl) {
-        if (modalEl) modalEl.classList.remove('active');
+        if (modalEl) {
+            modalEl.classList.remove('active');
+            if (elements.modals && modalEl === elements.modals.pinAuth) {
+                state.onPINAuthSuccess = null;
+            }
+        }
     }
 
     function initEventListeners() {
@@ -3448,7 +3790,10 @@
                 if (mode === 'coming_soon') {
                     showToast('✨ 수험생 맞춤형 고급 기능이 곧 추가될 예정입니다!');
                 } else if (mode === 'manage_wrong') {
-                    openPINAuthModal();
+                    openPINAuthModal(() => {
+                        openManagerScreen();
+                        showToast('🔓 오답 관리 및 전체 문제 에디터가 열렸습니다.');
+                    });
                 } else if (mode === 'download_md') {
                     openDownloadMdModal();
                 } else if (mode === 'part') {
@@ -3591,9 +3936,9 @@
                 }
             }
 
-            await IDBStore.saveQuestionEdit(qKey, editData);
+            const savedItem = await IDBStore.saveQuestionEdit(qKey, editData);
             if (!state.customEdits) state.customEdits = {};
-            state.customEdits[qKey] = editData;
+            state.customEdits[qKey] = savedItem || editData;
             applyCustomEdits(q);
 
             // Update badges and left list card
@@ -3945,7 +4290,12 @@
 
         elements.header.btnOMR.addEventListener('click', openOMR);
         if (elements.header.btnManager) {
-            elements.header.btnManager.addEventListener('click', openPINAuthModal);
+            elements.header.btnManager.addEventListener('click', () => {
+                openPINAuthModal(() => {
+                    openManagerScreen();
+                    showToast('🔓 오답 관리 및 전체 문제 에디터가 열렸습니다.');
+                });
+            });
         }
         if (elements.quiz.qNum) {
             elements.quiz.qNum.addEventListener('click', openOMR);
@@ -4065,7 +4415,10 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
             btnEditQ.addEventListener('click', () => {
                 const q = state.questions[state.currentIndex];
                 if (!q) return;
-                openEditModalForQuestion(q);
+                openPINAuthModal(() => {
+                    openEditModalForQuestion(q);
+                    showToast('🔓 문제 수정 모달이 열렸습니다.');
+                });
             });
         }
 
@@ -4111,8 +4464,9 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
                     editData.answer = Object.values(sortedAnswers).join(', ');
                 }
 
-                await IDBStore.saveQuestionEdit(qKey, editData);
-                state.customEdits[qKey] = editData;
+                const savedItem = await IDBStore.saveQuestionEdit(qKey, editData);
+                if (!state.customEdits) state.customEdits = {};
+                state.customEdits[qKey] = savedItem || editData;
                 applyCustomEdits(q);
 
                 // If currently taking a quiz on this question, update current view
@@ -4217,7 +4571,7 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
                     if (state.currentScreen === 'manager') {
                         renderManagerList();
                     }
-                    showToast('☁️ 태블릿/PC 클라우드 동기화 완료!');
+                    showToast(`☁️ 클라우드 동기화 완료! (수정 문제: ${Object.keys(state.customEdits || {}).length}개)`);
                 } else {
                     showToast('⚡ 오프라인 상태 (로컬 저장 유지)');
                 }
