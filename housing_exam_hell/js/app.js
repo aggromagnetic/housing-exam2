@@ -130,6 +130,7 @@
                     tx.objectStore('question_stats').put(existing);
                 } catch (e) {}
             }
+            if (window.CloudSync) window.CloudSync.schedulePush();
             return existing;
         },
 

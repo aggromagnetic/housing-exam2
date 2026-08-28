@@ -135,7 +135,10 @@ export const IDBStore = {
             const tx = db.transaction('question_stats', 'readwrite');
             const store = tx.objectStore('question_stats');
             const req = store.put(existing);
-            req.onsuccess = () => resolve(existing);
+            req.onsuccess = () => {
+                if (window.CloudSync) window.CloudSync.schedulePush();
+                resolve(existing);
+            };
             req.onerror = () => reject(req.error);
         });
     },
