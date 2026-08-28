@@ -322,6 +322,7 @@ export const IDBStore = {
             };
             map[qKey] = item;
             localStorage.setItem('housing_exam_custom_edits', JSON.stringify(map));
+            if (window.CloudSync) window.CloudSync.schedulePush();
             return item;
         } catch (e) {
             return editData;
@@ -355,6 +356,7 @@ export const IDBStore = {
             const map = JSON.parse(localStorage.getItem('housing_exam_custom_edits') || '{}');
             delete map[qKey];
             localStorage.setItem('housing_exam_custom_edits', JSON.stringify(map));
+            if (window.CloudSync) window.CloudSync.schedulePush();
         } catch (e) {}
     },
 
@@ -373,6 +375,7 @@ export const IDBStore = {
                 flaggedAt: new Date().toISOString()
             };
             localStorage.setItem('housing_exam_needs_edit', JSON.stringify(map));
+            if (window.CloudSync) window.CloudSync.schedulePush();
             return map[qKey];
         } catch (e) { return null; }
     },
@@ -394,6 +397,7 @@ export const IDBStore = {
             const map = JSON.parse(localStorage.getItem('housing_exam_needs_edit') || '{}');
             delete map[qKey];
             localStorage.setItem('housing_exam_needs_edit', JSON.stringify(map));
+            if (window.CloudSync) window.CloudSync.schedulePush();
         } catch (e) {}
     },
 
