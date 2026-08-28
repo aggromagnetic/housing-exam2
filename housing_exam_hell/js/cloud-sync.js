@@ -71,50 +71,83 @@ const CloudSync = {
             this.syncStatus = "syncing";
             this.notifyStatusChange();
 
-            const docRef = this.db.collection("exam_hell_sync").doc(SYNC_USER_DOC);
-            const doc = await docRef.get();
+            const syncCol = this.db.collection("exam_hell_sync");
+            
+            // 1. Try modular documents first (edits, stats, history, flags)
+            const [editsDoc, statsDoc, historyDoc, flagsDoc, legacyDoc] = await Promise.all([
+                syncCol.doc("edits_store").get().catch(() => null),
+                syncCol.doc("stats_store").get().catch(() => null),
+                syncCol.doc("history_store").get().catch(() => null),
+                syncCol.doc("flags_store").get().catch(() => null),
+                syncCol.doc(SYNC_USER_DOC).get().catch(() => null)
+            ]);
 
-            if (doc.exists) {
-                const cloudData = doc.data() || {};
-                console.log("📥 Cloud data received, merging into local storage...", cloudData.updatedAt);
+            let mergedCustomEdits = {};
+            let mergedNeedsEdit = {};
+            let mergedDeletedKeys = [];
+            let mergedStats = [];
+            let mergedHistory = [];
 
-                // 1. Merge custom question edits
-                if (cloudData.customEdits && typeof cloudData.customEdits === "object") {
-                    const localEdits = JSON.parse(localStorage.getItem("housing_exam_custom_edits") || "{}");
-                    const mergedEdits = { ...localEdits, ...cloudData.customEdits };
-                    localStorage.setItem("housing_exam_custom_edits", JSON.stringify(mergedEdits));
-                }
-
-                // 2. Merge needs edit flags
-                if (cloudData.needsEditMap && typeof cloudData.needsEditMap === "object") {
-                    const localNeeds = JSON.parse(localStorage.getItem("housing_exam_needs_edit") || "{}");
-                    const mergedNeeds = { ...localNeeds, ...cloudData.needsEditMap };
-                    localStorage.setItem("housing_exam_needs_edit", JSON.stringify(mergedNeeds));
-                }
-
-                // 3. Merge question statistics in IDB
-                if (window.IDBStore && Array.isArray(cloudData.stats)) {
-                    await window.IDBStore.importBackupJSON({
-                        stats: cloudData.stats,
-                        history: cloudData.history || []
-                    });
-                }
-
-                // 4. Merge deleted questions
-                if (Array.isArray(cloudData.deletedKeys)) {
-                    const localDel = JSON.parse(localStorage.getItem("housing_exam_deleted_keys") || "[]");
-                    const mergedDel = Array.from(new Set([...localDel, ...cloudData.deletedKeys]));
-                    localStorage.setItem("housing_exam_deleted_keys", JSON.stringify(mergedDel));
-                }
-
-                this.lastSyncTime = new Date();
-                this.syncStatus = "synced";
-                console.log("✅ Cloud pull & merge complete at", this.lastSyncTime.toLocaleTimeString());
-            } else {
-                console.log("☁️ No remote data found in Firestore. Performing initial push to Cloud...");
-                await this.pushToCloud();
+            // A. Load Custom Edits
+            if (editsDoc && editsDoc.exists && editsDoc.data()?.customEdits) {
+                mergedCustomEdits = editsDoc.data().customEdits;
+            } else if (legacyDoc && legacyDoc.exists && legacyDoc.data()?.customEdits) {
+                mergedCustomEdits = legacyDoc.data().customEdits;
             }
 
+            // B. Load Flags & Deleted Keys
+            if (flagsDoc && flagsDoc.exists) {
+                const fData = flagsDoc.data() || {};
+                mergedNeedsEdit = fData.needsEditMap || {};
+                mergedDeletedKeys = fData.deletedKeys || [];
+            } else if (legacyDoc && legacyDoc.exists) {
+                const lData = legacyDoc.data() || {};
+                mergedNeedsEdit = lData.needsEditMap || {};
+                mergedDeletedKeys = lData.deletedKeys || [];
+            }
+
+            // C. Load Stats & History
+            if (statsDoc && statsDoc.exists && Array.isArray(statsDoc.data()?.stats)) {
+                mergedStats = statsDoc.data().stats;
+            } else if (legacyDoc && legacyDoc.exists && Array.isArray(legacyDoc.data()?.stats)) {
+                mergedStats = legacyDoc.data().stats;
+            }
+
+            if (historyDoc && historyDoc.exists && Array.isArray(historyDoc.data()?.history)) {
+                mergedHistory = historyDoc.data().history;
+            } else if (legacyDoc && legacyDoc.exists && Array.isArray(legacyDoc.data()?.history)) {
+                mergedHistory = legacyDoc.data().history;
+            }
+
+            // Apply merged data to LocalStorage & IndexedDB
+            if (Object.keys(mergedCustomEdits).length > 0) {
+                const localEdits = JSON.parse(localStorage.getItem("housing_exam_custom_edits") || "{}");
+                const finalEdits = { ...localEdits, ...mergedCustomEdits };
+                localStorage.setItem("housing_exam_custom_edits", JSON.stringify(finalEdits));
+            }
+
+            if (Object.keys(mergedNeedsEdit).length > 0) {
+                const localNeeds = JSON.parse(localStorage.getItem("housing_exam_needs_edit") || "{}");
+                const finalNeeds = { ...localNeeds, ...mergedNeedsEdit };
+                localStorage.setItem("housing_exam_needs_edit", JSON.stringify(finalNeeds));
+            }
+
+            if (mergedDeletedKeys.length > 0) {
+                const localDel = JSON.parse(localStorage.getItem("housing_exam_deleted_keys") || "[]");
+                const finalDel = Array.from(new Set([...localDel, ...mergedDeletedKeys]));
+                localStorage.setItem("housing_exam_deleted_keys", JSON.stringify(finalDel));
+            }
+
+            if (window.IDBStore && (mergedStats.length > 0 || mergedHistory.length > 0)) {
+                await window.IDBStore.importBackupJSON({
+                    stats: mergedStats,
+                    history: mergedHistory
+                });
+            }
+
+            this.lastSyncTime = new Date();
+            this.syncStatus = "synced";
+            console.log("✅ Cloud modular pull & merge complete. Custom edits count:", Object.keys(mergedCustomEdits).length);
             this.notifyStatusChange();
             return true;
         } catch (err) {
@@ -149,30 +182,41 @@ const CloudSync = {
             let history = [];
             if (window.IDBStore) {
                 const fullBackup = await window.IDBStore.exportBackupJSON();
-                stats = fullBackup.stats || [];
-                history = fullBackup.history || [];
+                // Filter active stats only (tryCount > 0 or wrongCount > 0 or weight > 1) to keep size minimal
+                stats = (fullBackup.stats || []).filter(s => (s.tryCount > 0 || s.wrongCount > 0 || (s.weight && s.weight > 1)));
+                history = (fullBackup.history || []).slice(-100);
             }
 
             const customEdits = JSON.parse(localStorage.getItem("housing_exam_custom_edits") || "{}");
             const needsEditMap = JSON.parse(localStorage.getItem("housing_exam_needs_edit") || "{}");
             const deletedKeys = JSON.parse(localStorage.getItem("housing_exam_deleted_keys") || "[]");
+            const nowIso = new Date().toISOString();
 
-            const payload = {
-                updatedAt: new Date().toISOString(),
-                stats,
-                history,
-                customEdits,
-                needsEditMap,
-                deletedKeys
-            };
+            const syncCol = this.db.collection("exam_hell_sync");
 
-            const docRef = this.db.collection("exam_hell_sync").doc(SYNC_USER_DOC);
-            await docRef.set(payload, { merge: true });
+            // Save in modular documents to never exceed Firestore 1MB limit
+            await Promise.all([
+                syncCol.doc("edits_store").set({ customEdits, count: Object.keys(customEdits).length, updatedAt: nowIso }, { merge: true }),
+                syncCol.doc("stats_store").set({ stats, count: stats.length, updatedAt: nowIso }, { merge: true }),
+                syncCol.doc("history_store").set({ history, count: history.length, updatedAt: nowIso }, { merge: true }),
+                syncCol.doc("flags_store").set({ needsEditMap, deletedKeys, updatedAt: nowIso }, { merge: true })
+            ]);
+
+            // Legacy backward-compatible doc (optional best effort)
+            try {
+                await syncCol.doc(SYNC_USER_DOC).set({
+                    updatedAt: nowIso,
+                    customEdits,
+                    needsEditMap,
+                    deletedKeys,
+                    statsCount: stats.length
+                }, { merge: true });
+            } catch (e) {}
 
             this.lastSyncTime = new Date();
             this.syncStatus = "synced";
             this.isSyncing = false;
-            console.log("📤 Cloud push complete at", this.lastSyncTime.toLocaleTimeString());
+            console.log("📤 Cloud modular push complete. Custom edits count:", Object.keys(customEdits).length);
             this.notifyStatusChange();
             return true;
         } catch (err) {
