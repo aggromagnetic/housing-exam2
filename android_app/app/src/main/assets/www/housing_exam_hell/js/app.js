@@ -2010,7 +2010,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260829.2045</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260830.0110</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -2035,7 +2035,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260829.2045</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260830.0110</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
@@ -4164,7 +4164,7 @@
                 if (elements.manager.editTip.value) {
                     prompt += `\n[핵심 암기 팁]\n${elements.manager.editTip.value}\n`;
                 }
-                prompt += `\n위 문제의 정답과 해설, 최신 개정 법령 반영 여부를 면밀히 검증하고 보완 사항을 알려주세요.`;
+                prompt += `\n---\n🤖 요청사항: 위 문제의 정답과 해설, 최신 개정 법령 반영 여부, 정확한 명칭, 수치 등을 반드시 웹검색을 통해 면밀히 검증하고 보완 사항을 알려주세요.`;
 
                 navigator.clipboard.writeText(prompt).then(() => {
                     showToast('📋 AI 검증용 문제·정답·해설 프롬프트가 복사되었습니다!');
@@ -4397,7 +4397,7 @@ ${q.explanation || '(등록된 해설 없음)'}
 ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
 
 ---
-🤖 요청사항: 위 문제의 법률 조문, 정답, 해설에 최신 개정 법령 반영 오류나 오탈자, 불일치가 있는지 검증하고 올바른 근거를 상세히 설명해 주세요.`;
+🤖 요청사항: 위 문제의 정답과 해설, 최신 개정 법령 반영 여부, 정확한 명칭, 수치 등을 반드시 웹검색을 통해 면밀히 검증하고 보완 사항을 알려주세요.`;
 
                 navigator.clipboard.writeText(fullPrompt).then(() => {
                     showToast('📋 문제·정답·해설이 복사되었습니다! (Gemini/AI 검증용)');
