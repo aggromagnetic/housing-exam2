@@ -164,9 +164,10 @@
 .home-hero p {
     color: var(--text-muted);
     font-size: 0.95rem;
-    max-width: 540px;
+    max-width: 620px;
     margin: 0 auto 24px;
-    line-height: 1.5;
+    line-height: 1.6;
+    word-break: keep-all;
 }
 
 /* Subject Switcher */
