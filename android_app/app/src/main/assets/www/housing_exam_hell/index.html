@@ -17,9 +17,9 @@
     <meta name="apple-mobile-web-app-title" content="문제지옥">
     
     <!-- Custom Theme Styles -->
-    <link rel="stylesheet" href="css/dark-theme.css?v=2608300110">
-    <link rel="stylesheet" href="css/quiz-layout.css?v=2608300110">
-    <link rel="stylesheet" href="css/tablet-canvas.css?v=2608300110">
+    <link rel="stylesheet" href="css/dark-theme.css?v=2608301020">
+    <link rel="stylesheet" href="css/quiz-layout.css?v=2608301020">
+    <link rel="stylesheet" href="css/tablet-canvas.css?v=2608301020">
 </head>
 <body data-subject="관계법규">
 
@@ -35,7 +35,7 @@
                 </a>
                 <span id="header-brand-badge" class="brand-badge">관계법규</span>
                 <span id="header-mode-title" class="mode-title">
-                    <i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260830.0110</span>
+                    <i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260830.1020</span>
                 </span>
             </div>
 
@@ -200,14 +200,14 @@
                     <div class="exp-header">
                         <span class="exp-title"><i class="fa-solid fa-lightbulb text-amber-400"></i> 정답 및 상세 해설</span>
                         <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                            <button id="btn-flag-needs-edit" class="btn-ctrl-sm" title="태블릿에서 발견한 문제/정답/해설 오류를 '수정 필요 목록'에 플래그합니다.">
-                                <i class="fa-solid fa-flag"></i> 수정필요
-                            </button>
                             <button id="btn-copy-question-ai" class="btn-ctrl-sm" title="문제·보기·정답·해설을 복사하여 AI(Gemini 등) 검증에 활용합니다.">
                                 <i class="fa-solid fa-copy"></i> 복사
                             </button>
                             <button id="btn-edit-question" class="btn-ctrl-sm" title="문제/정답/해설 오류를 직접 수정합니다.">
                                 <i class="fa-solid fa-pen-to-square"></i> 수정
+                            </button>
+                            <button id="btn-flag-needs-edit" class="btn-ctrl-sm" title="태블릿에서 발견한 문제/정답/해설 오류를 '수정 필요 목록'에 플래그합니다.">
+                                <i class="fa-solid fa-flag"></i> 수정필요
                             </button>
                             <button id="btn-retry-q" class="btn-override" style="display: none;" title="오답 기록은 유지한 채 다시 풀기">
                                 <i class="fa-solid fa-rotate-left"></i> 다시 풀기
@@ -311,8 +311,11 @@
                             <button type="button" class="mgr-pill-btn" data-subject="관계법규">관계법규</button>
                             <button type="button" class="mgr-pill-btn" data-subject="관리실무">관리실무</button>
                         </div>
-                        <div class="mgr-count-badge">
-                            표시: <span id="mgr-list-count" class="text-sky-400">0</span>건
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                            <button type="button" id="mgr-btn-clear-all-flags" class="mgr-pill-btn" style="display: none; background: rgba(244,63,94,0.15); color: #FB7185; border-color: rgba(244,63,94,0.3); font-size: 0.72rem; padding: 2px 6px;" title="수정 필요 목록 전체 초기화">전체 비우기</button>
+                            <div class="mgr-count-badge">
+                                표시: <span id="mgr-list-count" class="text-sky-400">0</span>건
+                            </div>
                         </div>
                     </div>
 
@@ -711,15 +714,15 @@
     <!-- Firebase SDK (Compat) for Realtime Cloud Sync -->
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-    <script src="js/cloud-sync.js?v=2608300110"></script>
+    <script src="js/cloud-sync.js?v=2608301020"></script>
 
     <!-- Master Exam Data Bundle (3,959 Questions) -->
-    <script src="data/exam_bank.js?v=2608300110"></script>
+    <script src="data/exam_bank.js?v=2608301020"></script>
 
     <!-- Core Keywords 300 DB (관계법규 300 + 관리실무 300) -->
-    <script src="data/core_keywords_db.js?v=2608300110"></script>
+    <script src="data/core_keywords_db.js?v=2608301020"></script>
 
     <!-- Application Script -->
-    <script src="js/app.js?v=2608300110"></script>
+    <script src="js/app.js?v=2608301020"></script>
 </body>
 </html>

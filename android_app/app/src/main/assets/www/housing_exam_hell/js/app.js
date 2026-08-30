@@ -2010,7 +2010,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260830.0110</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260830.1020</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -2035,7 +2035,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260830.0110</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260830.1020</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
@@ -3440,6 +3440,11 @@
         if (elements.manager.cntNeedsEdit) elements.manager.cntNeedsEdit.textContent = allNeedsEditKeys.length;
         if (elements.manager.cntCustomEdits) elements.manager.cntCustomEdits.textContent = allCustomEditsKeys.length;
 
+        const btnClearAllFlags = document.getElementById('mgr-btn-clear-all-flags');
+        if (btnClearAllFlags) {
+            btnClearAllFlags.style.display = (tabName === 'needs_edit' && allNeedsEditKeys.length > 0) ? 'inline-block' : 'none';
+        }
+
         const qLower = (state.managerSearchQuery || '').trim().toLowerCase();
 
         const matchesSearch = (q) => {
@@ -3943,6 +3948,16 @@
             state.customEdits[qKey] = savedItem || editData;
             applyCustomEdits(q);
 
+            // If question was flagged as '수정필요', auto-unflag it upon saving fix
+            if (state.needsEditMap && state.needsEditMap[qKey]) {
+                await IDBStore.deleteNeedsEdit(qKey);
+                delete state.needsEditMap[qKey];
+                if (elements.manager.btnFlagToggle) elements.manager.btnFlagToggle.classList.remove('active');
+                if (elements.manager.flagText) elements.manager.flagText.textContent = '수정필요';
+                if (elements.manager.flagBadge) elements.manager.flagBadge.style.display = 'none';
+                if (elements.manager.cntNeedsEdit) elements.manager.cntNeedsEdit.textContent = Object.keys(state.needsEditMap).length;
+            }
+
             // Update badges and left list card
             if (elements.manager.editedBadge) elements.manager.editedBadge.style.display = 'inline-block';
             const activeCard = document.querySelector(`.mgr-item-card[data-qkey="${qKey}"]`);
@@ -4028,6 +4043,25 @@
                     } else if (isFlagged && flagTag) {
                         flagTag.remove();
                     }
+                }
+            });
+        }
+
+        // 5-A. Clear All Needs Edit Flags
+        const btnClearAllFlags = document.getElementById('mgr-btn-clear-all-flags');
+        if (btnClearAllFlags) {
+            btnClearAllFlags.addEventListener('click', async () => {
+                const count = Object.keys(state.needsEditMap || {}).length;
+                if (count === 0) return;
+                if (confirm(`수정 필요 목록에 등록된 ${count}개 항목을 모두 초기화(비우기)하시겠습니까?`)) {
+                    localStorage.removeItem('housing_exam_needs_edit');
+                    state.needsEditMap = {};
+                    if (window.CloudSync) window.CloudSync.schedulePush(500);
+                    renderManagerList();
+                    if (elements.manager.btnFlagToggle) elements.manager.btnFlagToggle.classList.remove('active');
+                    if (elements.manager.flagText) elements.manager.flagText.textContent = '수정필요';
+                    if (elements.manager.flagBadge) elements.manager.flagBadge.style.display = 'none';
+                    showToast('🚩 수정 필요 목록이 모두 초기화되었습니다.');
                 }
             });
         }
@@ -4470,6 +4504,12 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
                 if (!state.customEdits) state.customEdits = {};
                 state.customEdits[qKey] = savedItem || editData;
                 applyCustomEdits(q);
+
+                // Auto-unflag if question was in needsEdit
+                if (state.needsEditMap && state.needsEditMap[qKey]) {
+                    await IDBStore.deleteNeedsEdit(qKey);
+                    delete state.needsEditMap[qKey];
+                }
 
                 // If currently taking a quiz on this question, update current view
                 if (elements.screens.quiz && elements.screens.quiz.classList.contains('active')) {
