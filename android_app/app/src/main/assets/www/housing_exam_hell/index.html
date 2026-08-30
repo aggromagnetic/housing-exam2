@@ -17,9 +17,9 @@
     <meta name="apple-mobile-web-app-title" content="문제지옥">
     
     <!-- Custom Theme Styles -->
-    <link rel="stylesheet" href="css/dark-theme.css?v=2608301535">
-    <link rel="stylesheet" href="css/quiz-layout.css?v=2608301535">
-    <link rel="stylesheet" href="css/tablet-canvas.css?v=2608301535">
+    <link rel="stylesheet" href="css/dark-theme.css?v=2608301537">
+    <link rel="stylesheet" href="css/quiz-layout.css?v=2608301537">
+    <link rel="stylesheet" href="css/tablet-canvas.css?v=2608301537">
 </head>
 <body data-subject="관계법규">
 
@@ -35,7 +35,7 @@
                 </a>
                 <span id="header-brand-badge" class="brand-badge">관계법규</span>
                 <span id="header-mode-title" class="mode-title">
-                    <i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260830.1535</span>
+                    <i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260830.1537</span>
                 </span>
             </div>
 
@@ -125,7 +125,7 @@
                 <div class="mode-card" data-mode="mock">
                     <div class="mode-icon"><i class="fa-solid fa-stopwatch"></i></div>
                     <h3>실전 모의고사 (40분)</h3>
-                    <p>5개년 출제비율을 반영한 40문항 실전 시험을 치릅니다</p>
+                    <p id="mock-mode-desc">출제비율을 반영한 40문항 <span class="text-sky-400" style="font-weight: 700;">관계법규</span> 실전 시험입니다</p>
                     <span class="mode-badge">40문항 / 40분 제한시간</span>
                 </div>
 
@@ -141,7 +141,7 @@
                 <div class="mode-card" data-mode="download_md">
                     <div class="mode-icon" style="color: #10B981;"><i class="fa-solid fa-file-arrow-down"></i></div>
                     <h3>모의고사 MD 다운로드 📥</h3>
-                    <p>실전 모의고사 문제지와 정답·해설을 MD 파일로 내려받습니다</p>
+                    <p>실전 40문항 모의고사 문제지를 내려받습니다</p>
                     <span class="mode-badge" style="background: rgba(16, 185, 129, 0.15); color: #34D399;">관계법규 / 관리실무 MD 출력</span>
                 </div>
 
@@ -153,12 +153,11 @@
                     <span class="mode-badge" style="background: rgba(168, 85, 247, 0.15); color: #C084FC;">COMING SOON</span>
                 </div>
 
-                <!-- 오답리스트관리 (보안 잠금) -->
+                <!-- 관리자 모드 (보안 잠금) -->
                 <div class="mode-card" data-mode="manage_wrong">
                     <div class="mode-icon" style="color: #F43F5E;"><i class="fa-solid fa-list-check"></i></div>
-                    <h3>오답리스트 관리 🔒</h3>
-                    <p>오답 문항 및 수정 필요 문제를 확인하고 관리합니다</p>
-                    <span class="mode-badge" style="background: rgba(244, 63, 94, 0.15); color: #FDA4AF;">보안 PIN 잠금 🔒</span>
+                    <h3>관리자 모드 🔒</h3>
+                    <span class="mode-badge" style="background: rgba(244, 63, 94, 0.15); color: #FDA4AF; margin-top: auto;">보안 PIN 잠금 🔒</span>
                 </div>
             </div>
         </section>
@@ -738,15 +737,15 @@
     <!-- Firebase SDK (Compat) for Realtime Cloud Sync -->
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-    <script src="js/cloud-sync.js?v=2608301535"></script>
+    <script src="js/cloud-sync.js?v=2608301537"></script>
 
     <!-- Master Exam Data Bundle (3,959 Questions) -->
-    <script src="data/exam_bank.js?v=2608301535"></script>
+    <script src="data/exam_bank.js?v=2608301537"></script>
 
     <!-- Core Keywords 300 DB (관계법규 300 + 관리실무 300) -->
-    <script src="data/core_keywords_db.js?v=2608301535"></script>
+    <script src="data/core_keywords_db.js?v=2608301537"></script>
 
     <!-- Application Script -->
-    <script src="js/app.js?v=2608301535"></script>
+    <script src="js/app.js?v=2608301537"></script>
 </body>
 </html>
