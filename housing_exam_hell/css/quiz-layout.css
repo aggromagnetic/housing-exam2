@@ -2309,19 +2309,22 @@ body.manager-mode .app-header .header-content {
     background: rgba(10, 15, 29, 0.94);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
-    display: none;
+    display: flex;
     align-items: center;
     justify-content: center;
     z-index: 99999;
     padding: 20px;
     opacity: 0;
-    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
 }
 
 .exam-loading-overlay.active {
-    display: flex;
     opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
 }
 
 .exam-loading-card {
