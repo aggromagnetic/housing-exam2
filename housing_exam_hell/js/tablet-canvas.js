@@ -112,6 +112,21 @@ export class TabletCanvas {
 
         if (this.palmRejection && e.pointerType === 'touch' && e.isPrimary === false) return;
 
+        // 주관식 빈칸 입력창이나 필기인식 서랍 영역인 경우 캔버스 캡처를 피하고 네이티브 펜/키보드 입력 허용
+        this.canvas.style.pointerEvents = 'none';
+        const underEl = document.elementFromPoint(e.clientX, e.clientY);
+        this.canvas.style.pointerEvents = 'auto';
+
+        if (underEl) {
+            const inputTarget = underEl.closest('.blank-input, .hw-drawer, .btn-toggle-hw, .hw-canvas, .hw-cand-chip, .btn-hw-action');
+            if (inputTarget) {
+                if (inputTarget.classList.contains('blank-input') || inputTarget.tagName === 'INPUT' || inputTarget.tagName === 'TEXTAREA') {
+                    inputTarget.focus();
+                }
+                return;
+            }
+        }
+
         this.isDrawing = true;
         this.pointerDownPos = this.getPos(e);
         this.pointerDownClient = { x: e.clientX, y: e.clientY };
@@ -197,7 +212,26 @@ export class TabletCanvas {
             this.canvas.style.pointerEvents = 'auto';
 
             if (underEl) {
-                const targetInteractive = underEl.closest('button, input, textarea, a, .option-item, .blank-input, .btn-ctrl, .btn-ctrl-sm, .btn-override, .color-dot, .stylus-btn, .btn-toggle-hw');
+                // 1. 객관식 선지 영역 터치 시: 필기 모드에서는 번호 원(opt-num) 주변을 터치했을 때만 답 선택!
+                const optItem = underEl.closest('.option-item');
+                if (optItem) {
+                    const optNum = optItem.querySelector('.opt-num');
+                    if (optNum) {
+                        const numRect = optNum.getBoundingClientRect();
+                        const centerX = numRect.left + numRect.width / 2;
+                        const centerY = numRect.top + numRect.height / 2;
+                        const distToCenter = Math.hypot(clientX - centerX, clientY - centerY);
+                        // 번호 원 중심으로부터 40px 반경 이내 또는 원을 직접 터치했을 때만 선택
+                        if (distToCenter <= 40 || underEl.closest('.opt-num')) {
+                            optItem.click();
+                        }
+                        // 텍스트/여백 터치는 필기/밑줄용이므로 오답/선택 변경 방지
+                    }
+                    return;
+                }
+
+                // 2. 일반 대화형 버튼/입력창 터치 처리
+                const targetInteractive = underEl.closest('button, input, textarea, a, .blank-input, .btn-ctrl, .btn-ctrl-sm, .btn-override, .color-dot, .stylus-btn, .btn-toggle-hw');
                 if (targetInteractive) {
                     targetInteractive.click();
                     if (['INPUT', 'TEXTAREA'].includes(targetInteractive.tagName)) {
@@ -262,6 +296,7 @@ export class TabletCanvas {
     togglePen(forceState) {
         this.isEnabled = typeof forceState === 'boolean' ? forceState : !this.isEnabled;
         this.canvas.style.pointerEvents = this.isEnabled ? 'auto' : 'none';
+        document.body.classList.toggle('stylus-mode-active', this.isEnabled);
         if (this.toolbar) {
             this.toolbar.classList.toggle('active', this.isEnabled);
         }
