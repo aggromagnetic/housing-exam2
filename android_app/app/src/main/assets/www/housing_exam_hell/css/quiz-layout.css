@@ -2290,3 +2290,317 @@ body.manager-mode .app-header .header-content {
     50% { transform: scale(1.15); }
     100% { transform: scale(1); opacity: 1; }
 }
+
+/* 💀 Infinite Hell Mode Permanent Red Skull Icon */
+.mode-card[data-mode="infinite"] .mode-icon {
+    color: #EF4444 !important;
+    background: rgba(239, 68, 68, 0.12) !important;
+}
+
+/* ==========================================================================
+   🎲 4-Second Random Exam Loading Overlay & Dynamic Animations
+   ========================================================================== */
+.exam-loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(10, 15, 29, 0.94);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    padding: 20px;
+    opacity: 0;
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+}
+
+.exam-loading-overlay.active {
+    display: flex;
+    opacity: 1;
+}
+
+.exam-loading-card {
+    background: linear-gradient(145deg, #1E293B 0%, #0F172A 100%);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(56, 189, 248, 0.15);
+    border-radius: 24px;
+    padding: 32px 28px;
+    width: 100%;
+    max-width: 440px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    animation: loadingPopIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes loadingPopIn {
+    0% { transform: scale(0.88) translateY(10px); opacity: 0; }
+    100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+/* Stage & Graphics Container */
+.loading-anim-stage {
+    height: 130px;
+    margin: 10px 0 20px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    perspective: 800px;
+}
+
+/* --- Theme 1: 🃏 Cards Shuffle --- */
+.stage-cards {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+.shuffle-card {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 74px;
+    height: 104px;
+    margin-top: -52px;
+    margin-left: -37px;
+    background: linear-gradient(135deg, #1E293B, #334155);
+    border: 2px solid rgba(56, 189, 248, 0.5);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: #F8FAFC;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    transform-origin: center center;
+}
+.shuffle-card i { font-size: 1.5rem; }
+.card-1 {
+    border-color: #38BDF8;
+    color: #38BDF8;
+    animation: cardShuffle1 1.8s infinite ease-in-out;
+}
+.card-2 {
+    border-color: #F59E0B;
+    color: #F59E0B;
+    animation: cardShuffle2 1.8s infinite ease-in-out;
+}
+.card-3 {
+    border-color: #EF4444;
+    color: #EF4444;
+    animation: cardShuffle3 1.8s infinite ease-in-out;
+}
+@keyframes cardShuffle1 {
+    0%, 100% { transform: translate(-36px, 0) rotate(-14deg) scale(0.95); z-index: 1; }
+    33% { transform: translate(0px, -12px) rotate(0deg) scale(1.08); z-index: 3; }
+    66% { transform: translate(36px, 0) rotate(14deg) scale(0.95); z-index: 2; }
+}
+@keyframes cardShuffle2 {
+    0%, 100% { transform: translate(0px, -10px) rotate(0deg) scale(1.05); z-index: 3; }
+    33% { transform: translate(36px, 0) rotate(14deg) scale(0.95); z-index: 1; }
+    66% { transform: translate(-36px, 0) rotate(-14deg) scale(0.95); z-index: 2; }
+}
+@keyframes cardShuffle3 {
+    0%, 100% { transform: translate(36px, 0) rotate(14deg) scale(0.95); z-index: 2; }
+    33% { transform: translate(-36px, 0) rotate(-14deg) scale(0.95); z-index: 1; }
+    66% { transform: translate(0px, -12px) rotate(0deg) scale(1.08); z-index: 3; }
+}
+
+/* --- Theme 2: 🤹 Juggling Clown --- */
+.stage-juggler {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.juggler-clown {
+    font-size: 3.2rem;
+    animation: clownBob 0.6s infinite alternate ease-in-out;
+    filter: drop-shadow(0 0 16px rgba(239, 68, 68, 0.4));
+}
+@keyframes clownBob {
+    0% { transform: translateY(6px) scale(0.96); }
+    100% { transform: translateY(-6px) scale(1.04); }
+}
+.juggling-ball {
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    box-shadow: 0 0 12px currentColor;
+}
+.ball-1 { background: #38BDF8; color: #38BDF8; animation: juggleArc1 1.6s infinite linear; }
+.ball-2 { background: #34D399; color: #34D399; animation: juggleArc2 1.6s infinite linear; }
+.ball-3 { background: #F59E0B; color: #F59E0B; animation: juggleArc3 1.6s infinite linear; }
+.ball-4 { background: #EF4444; color: #EF4444; animation: juggleArc4 1.6s infinite linear; }
+
+@keyframes juggleArc1 {
+    0% { transform: translate(-45px, 20px); }
+    25% { transform: translate(-25px, -45px); }
+    50% { transform: translate(45px, 20px); }
+    75% { transform: translate(25px, -45px); }
+    100% { transform: translate(-45px, 20px); }
+}
+@keyframes juggleArc2 {
+    0% { transform: translate(45px, 20px); }
+    25% { transform: translate(25px, -45px); }
+    50% { transform: translate(-45px, 20px); }
+    75% { transform: translate(-25px, -45px); }
+    100% { transform: translate(45px, 20px); }
+}
+@keyframes juggleArc3 {
+    0% { transform: translate(0px, -48px); }
+    35% { transform: translate(45px, 15px); }
+    70% { transform: translate(-45px, 15px); }
+    100% { transform: translate(0px, -48px); }
+}
+@keyframes juggleArc4 {
+    0% { transform: translate(0px, 25px); }
+    35% { transform: translate(-40px, -35px); }
+    70% { transform: translate(40px, -35px); }
+    100% { transform: translate(0px, 25px); }
+}
+
+/* --- Theme 3: ⏱️ Stopwatch Countdown --- */
+.stage-stopwatch {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+.stopwatch-ring {
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    border: 4px solid rgba(56, 189, 248, 0.2);
+    border-top: 4px solid #38BDF8;
+    border-right: 4px solid #F59E0B;
+    animation: ringSpin 1.2s infinite linear;
+    position: absolute;
+}
+.stopwatch-center-icon {
+    font-size: 2.5rem;
+    color: #F8FAFC;
+    animation: heartPulse 0.5s infinite alternate ease-in-out;
+}
+.stopwatch-count-num {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: #38BDF8;
+    margin-top: 10px;
+    font-family: monospace, sans-serif;
+    letter-spacing: 0.05em;
+    text-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
+}
+@keyframes ringSpin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+@keyframes heartPulse {
+    0% { transform: scale(0.9); }
+    100% { transform: scale(1.15); }
+}
+
+/* --- Theme 4: 📑 Exam Papers Flutter --- */
+.stage-papers {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.exam-paper-sheet {
+    position: absolute;
+    width: 90px;
+    height: 110px;
+    background: #F8FAFC;
+    border-radius: 6px;
+    color: #0F172A;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.paper-line {
+    height: 4px;
+    background: #CBD5E1;
+    border-radius: 2px;
+}
+.paper-stamp {
+    align-self: flex-end;
+    font-size: 0.6rem;
+    font-weight: 900;
+    color: #DC2626;
+    border: 1.5px solid #DC2626;
+    padding: 1px 4px;
+    border-radius: 3px;
+    transform: rotate(-12deg);
+    margin-top: auto;
+}
+.sheet-1 { animation: paperFlutter1 2s infinite ease-in-out; z-index: 1; }
+.sheet-2 { animation: paperFlutter2 2s infinite ease-in-out; z-index: 2; }
+.sheet-3 { animation: paperFlutter3 2s infinite ease-in-out; z-index: 3; }
+@keyframes paperFlutter1 {
+    0%, 100% { transform: translate(-28px, 6px) rotate(-12deg); }
+    50% { transform: translate(25px, -8px) rotate(10deg); }
+}
+@keyframes paperFlutter2 {
+    0%, 100% { transform: translate(25px, 8px) rotate(14deg); }
+    50% { transform: translate(-20px, -6px) rotate(-8deg); }
+}
+@keyframes paperFlutter3 {
+    0%, 100% { transform: translate(0, -6px) rotate(0deg) scale(1.05); }
+    50% { transform: translate(0, 8px) rotate(4deg) scale(0.95); }
+}
+
+/* Loading Titles & Progress Bar */
+.loading-title {
+    font-size: 1.22rem;
+    font-weight: 800;
+    color: #F8FAFC;
+    margin-bottom: 6px;
+    letter-spacing: -0.02em;
+}
+.loading-subtext {
+    font-size: 0.85rem;
+    color: #94A3B8;
+    min-height: 24px;
+    margin-bottom: 18px;
+    transition: opacity 0.25s ease;
+    word-break: keep-all;
+}
+.loading-progress-track {
+    width: 100%;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 9999px;
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 12px;
+}
+.loading-progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #38BDF8, #F59E0B, #10B981);
+    border-radius: 9999px;
+    transition: width 0.05s linear;
+}
+.loading-skip-hint {
+    font-size: 0.74rem;
+    color: #64748B;
+    letter-spacing: -0.01em;
+}
+
