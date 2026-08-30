@@ -74,12 +74,13 @@ const CloudSync = {
             const syncCol = this.db.collection("exam_hell_sync");
             
             // 1. Fetch metadata and modular documents concurrently
-            const [editsMetaDoc, editsDoc, statsDoc, historyDoc, flagsDoc, legacyDoc] = await Promise.all([
+            const [editsMetaDoc, editsDoc, statsDoc, historyDoc, flagsDoc, reportsDoc, legacyDoc] = await Promise.all([
                 syncCol.doc("edits_meta").get().catch(() => null),
                 syncCol.doc("edits_store").get().catch(() => null),
                 syncCol.doc("stats_store").get().catch(() => null),
                 syncCol.doc("history_store").get().catch(() => null),
                 syncCol.doc("flags_store").get().catch(() => null),
+                syncCol.doc("reports_store").get().catch(() => null),
                 syncCol.doc(SYNC_USER_DOC).get().catch(() => null)
             ]);
 
@@ -188,8 +189,7 @@ const CloudSync = {
                 });
             }
 
-            const reportsDoc = snapMap.get("reports_store");
-            if (reportsDoc && reportsDoc.exists && reportsDoc.data().reportsData) {
+            if (reportsDoc && reportsDoc.exists && reportsDoc.data()?.reportsData) {
                 try {
                     const cloudReports = JSON.parse(reportsDoc.data().reportsData || "[]");
                     if (Array.isArray(cloudReports) && cloudReports.length > 0) {
@@ -200,7 +200,9 @@ const CloudSync = {
                         const mergedReports = Array.from(map.values()).sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 100);
                         localStorage.setItem("housing_exam_tutoring_reports", JSON.stringify(mergedReports));
                     }
-                } catch (e) {}
+                } catch (e) {
+                    console.error("Reports pull error:", e);
+                }
             }
 
             this.lastSyncTime = new Date();
