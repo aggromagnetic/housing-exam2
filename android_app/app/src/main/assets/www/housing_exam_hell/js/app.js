@@ -1866,6 +1866,11 @@
         statsMap: {},
         customEdits: {},
         needsEditMap: {},
+        managerTab: 'wrong',
+        managerFilter: 'all',
+        managerSearchQuery: '',
+        managerPage: 1,
+        managerPageSize: 100,
         wrongManagerTab: 'wrong',
         wrongManagerFilter: 'all',
 
@@ -1992,6 +1997,10 @@
                 btnClearSearch: document.getElementById('mgr-btn-clear-search'),
                 listCount: document.getElementById('mgr-list-count'),
                 itemsList: document.getElementById('mgr-items-list'),
+                pagination: document.getElementById('mgr-pagination'),
+                pagePrev: document.getElementById('mgr-page-prev'),
+                pageNext: document.getElementById('mgr-page-next'),
+                pageNumbers: document.getElementById('mgr-page-numbers'),
                 editorPanel: document.getElementById('mgr-editor-panel'),
                 editorEmpty: document.getElementById('mgr-editor-empty'),
                 editorForm: document.getElementById('mgr-editor-form'),
@@ -2083,7 +2092,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260830.2355</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260831.0005</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -2108,7 +2117,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260830.2355</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260831.0005</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
@@ -3688,6 +3697,100 @@
         renderManagerList();
     }
 
+    function renderManagerPagination(totalItems, currentPage, pageSize) {
+        if (!elements.manager.pagination) return;
+        const totalPages = Math.ceil(totalItems / pageSize);
+        if (totalPages <= 1) {
+            elements.manager.pagination.style.display = 'none';
+            return;
+        }
+
+        elements.manager.pagination.style.display = 'flex';
+        const pageNumbersEl = elements.manager.pageNumbers;
+        if (!pageNumbersEl) return;
+        pageNumbersEl.innerHTML = '';
+
+        const PAGE_GROUP_SIZE = 5;
+        const currentGroup = Math.floor((currentPage - 1) / PAGE_GROUP_SIZE);
+        const startPage = currentGroup * PAGE_GROUP_SIZE + 1;
+        const endPage = Math.min(startPage + PAGE_GROUP_SIZE - 1, totalPages);
+
+        if (elements.manager.pagePrev) {
+            elements.manager.pagePrev.disabled = currentPage <= 1;
+            elements.manager.pagePrev.onclick = () => {
+                if (currentPage > 1) {
+                    state.managerPage = currentPage - 1;
+                    renderManagerList();
+                    if (elements.manager.itemsList) elements.manager.itemsList.scrollTop = 0;
+                }
+            };
+        }
+
+        if (elements.manager.pageNext) {
+            elements.manager.pageNext.disabled = currentPage >= totalPages;
+            elements.manager.pageNext.onclick = () => {
+                if (currentPage < totalPages) {
+                    state.managerPage = currentPage + 1;
+                    renderManagerList();
+                    if (elements.manager.itemsList) elements.manager.itemsList.scrollTop = 0;
+                }
+            };
+        }
+
+        if (startPage > 1) {
+            const btn1 = document.createElement('button');
+            btn1.type = 'button';
+            btn1.className = 'mgr-page-btn';
+            btn1.textContent = '1';
+            btn1.onclick = () => {
+                state.managerPage = 1;
+                renderManagerList();
+                if (elements.manager.itemsList) elements.manager.itemsList.scrollTop = 0;
+            };
+            pageNumbersEl.appendChild(btn1);
+
+            if (startPage > 2) {
+                const ell = document.createElement('span');
+                ell.className = 'mgr-page-ellipsis';
+                ell.textContent = '...';
+                pageNumbersEl.appendChild(ell);
+            }
+        }
+
+        for (let p = startPage; p <= endPage; p++) {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = `mgr-page-btn ${p === currentPage ? 'active' : ''}`;
+            btn.textContent = p;
+            btn.onclick = () => {
+                state.managerPage = p;
+                renderManagerList();
+                if (elements.manager.itemsList) elements.manager.itemsList.scrollTop = 0;
+            };
+            pageNumbersEl.appendChild(btn);
+        }
+
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) {
+                const ell = document.createElement('span');
+                ell.className = 'mgr-page-ellipsis';
+                ell.textContent = '...';
+                pageNumbersEl.appendChild(ell);
+            }
+
+            const btnLast = document.createElement('button');
+            btnLast.type = 'button';
+            btnLast.className = 'mgr-page-btn';
+            btnLast.textContent = totalPages;
+            btnLast.onclick = () => {
+                state.managerPage = totalPages;
+                renderManagerList();
+                if (elements.manager.itemsList) elements.manager.itemsList.scrollTop = 0;
+            };
+            pageNumbersEl.appendChild(btnLast);
+        }
+    }
+
     function renderManagerList(tabName = state.managerTab, filterSubj = state.managerFilter, query = state.managerSearchQuery) {
         state.managerTab = tabName;
         state.managerFilter = filterSubj;
@@ -3745,11 +3848,24 @@
                 });
             }
 
+            const totalReportCount = reportList.length;
+            const totalReportPages = Math.max(1, Math.ceil(totalReportCount / state.managerPageSize));
+            if (state.managerPage > totalReportPages) state.managerPage = totalReportPages;
+            if (state.managerPage < 1) state.managerPage = 1;
+
+            const rStart = (state.managerPage - 1) * state.managerPageSize;
+            const rEnd = Math.min(rStart + state.managerPageSize, totalReportCount);
+            const pagedReports = reportList.slice(rStart, rEnd);
+
             if (elements.manager.listCount) {
-                elements.manager.listCount.textContent = reportList.length;
+                if (totalReportCount > state.managerPageSize) {
+                    elements.manager.listCount.innerHTML = `<strong>${rStart + 1}-${rEnd}</strong> <span style="font-size:0.75rem; color:#64748B;">/ ${totalReportCount}건</span>`;
+                } else {
+                    elements.manager.listCount.textContent = totalReportCount;
+                }
             }
 
-            if (reportList.length === 0) {
+            if (totalReportCount === 0) {
                 elements.manager.itemsList.innerHTML = `
                     <div style="text-align: center; padding: 40px 16px; color: var(--text-muted);">
                         <i class="fa-solid fa-book-bookmark" style="font-size: 2.2rem; color: #A78BFA; margin-bottom: 10px; display: block;"></i>
@@ -3759,12 +3875,13 @@
                 if (elements.manager.editorEmpty) elements.manager.editorEmpty.style.display = 'flex';
                 if (elements.manager.editorForm) elements.manager.editorForm.style.display = 'none';
                 if (elements.manager.reportViewPanel) elements.manager.reportViewPanel.style.display = 'none';
+                renderManagerPagination(0, 1, state.managerPageSize);
                 return;
             }
 
             let selectedReportFound = false;
 
-            reportList.forEach(r => {
+            pagedReports.forEach(r => {
                 const isSelected = state.currentSelectedReport && state.currentSelectedReport.id === r.id;
                 if (isSelected) selectedReportFound = true;
 
@@ -3793,8 +3910,10 @@
                 elements.manager.itemsList.appendChild(card);
             });
 
-            if (!selectedReportFound && reportList.length > 0) {
-                loadReportIntoViewer(reportList[0]);
+            renderManagerPagination(totalReportCount, state.managerPage, state.managerPageSize);
+
+            if (!selectedReportFound && pagedReports.length > 0) {
+                loadReportIntoViewer(pagedReports[0]);
             }
             return;
         }
@@ -3824,7 +3943,15 @@
             list = allWrong;
             if (filterSubj !== 'all') list = list.filter(q => q.subject === filterSubj);
             if (qLower) list = list.filter(matchesSearch);
-            list.sort((a, b) => (state.statsMap[b.qKey]?.weight || 1) - (state.statsMap[a.qKey]?.weight || 1));
+            // 📌 오답 추가된 순서(최신 오답 lastWrongAt / lastAttempt 최신순)로 정렬!
+            list.sort((a, b) => {
+                const statA = state.statsMap[a.qKey];
+                const statB = state.statsMap[b.qKey];
+                const timeA = new Date(statA?.lastWrongAt || statA?.lastAttempt || 0).getTime();
+                const timeB = new Date(statB?.lastWrongAt || statB?.lastAttempt || 0).getTime();
+                if (timeB !== timeA) return timeB - timeA;
+                return (statB?.weight || 1) - (statA?.weight || 1);
+            });
         } else if (tabName === 'needs_edit') {
             list = allNeedsEditKeys.map(k => {
                 const info = state.needsEditMap[k];
@@ -3878,8 +4005,21 @@
             }
         }
 
+        const totalCount = (tabName === 'search_all' && !qLower) ? 0 : list.length;
+        const totalPages = Math.max(1, Math.ceil(totalCount / state.managerPageSize));
+        if (state.managerPage > totalPages) state.managerPage = totalPages;
+        if (state.managerPage < 1) state.managerPage = 1;
+
+        const startIndex = (state.managerPage - 1) * state.managerPageSize;
+        const endIndex = Math.min(startIndex + state.managerPageSize, totalCount);
+        const pagedList = list.slice(startIndex, endIndex);
+
         if (elements.manager.listCount) {
-            elements.manager.listCount.textContent = (tabName === 'search_all' && !qLower) ? '0' : list.length;
+            if (totalCount > state.managerPageSize) {
+                elements.manager.listCount.innerHTML = `<strong>${startIndex + 1}-${endIndex}</strong> <span style="font-size:0.75rem; color:#64748B;">/ ${totalCount}건</span>`;
+            } else {
+                elements.manager.listCount.textContent = totalCount;
+            }
         }
 
         if (list.length === 0) {
@@ -3903,12 +4043,13 @@
             elements.manager.itemsList.innerHTML = emptyHtml;
             if (elements.manager.editorEmpty) elements.manager.editorEmpty.style.display = 'flex';
             if (elements.manager.editorForm) elements.manager.editorForm.style.display = 'none';
+            renderManagerPagination(0, 1, state.managerPageSize);
             return;
         }
 
         let selectedFound = false;
 
-        list.forEach((q) => {
+        pagedList.forEach((q) => {
             applyCustomEdits(q);
             const isSelected = state.currentEditingQuestion && state.currentEditingQuestion.qKey === q.qKey;
             if (isSelected) selectedFound = true;
@@ -3969,9 +4110,7 @@
                     if (state.managerTab === 'wrong') {
                         card.classList.add('reset-done');
                         setTimeout(() => {
-                            card.remove();
-                            const currentCount = parseInt(elements.manager.listCount.textContent || '0', 10);
-                            if (currentCount > 0) elements.manager.listCount.textContent = currentCount - 1;
+                            renderManagerList();
                         }, 300);
                     } else {
                         btnQuickDel.remove();
@@ -3997,9 +4136,11 @@
             elements.manager.itemsList.appendChild(card);
         });
 
+        renderManagerPagination(totalCount, state.managerPage, state.managerPageSize);
+
         // Auto-select first item if no matching active item
-        if (!selectedFound && list.length > 0) {
-            loadQuestionIntoEditor(list[0]);
+        if (!selectedFound && pagedList.length > 0) {
+            loadQuestionIntoEditor(pagedList[0]);
         }
     }
 
@@ -4238,7 +4379,9 @@
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.mgr-tab-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
+                state.managerPage = 1;
                 renderManagerList(btn.dataset.tab, state.managerFilter);
+                if (elements.manager.itemsList) elements.manager.itemsList.scrollTop = 0;
                 if (btn.dataset.tab === 'search_all' && elements.manager.searchInput) {
                     setTimeout(() => elements.manager.searchInput.focus(), 50);
                 }
@@ -4250,7 +4393,9 @@
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.mgr-pill-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
+                state.managerPage = 1;
                 renderManagerList(state.managerTab, btn.dataset.subject);
+                if (elements.manager.itemsList) elements.manager.itemsList.scrollTop = 0;
             });
         });
 
@@ -4260,7 +4405,9 @@
                 if (e.key === 'Enter') {
                     e.preventDefault();
                     state.managerSearchQuery = e.target.value.trim();
+                    state.managerPage = 1;
                     renderManagerList();
+                    if (elements.manager.itemsList) elements.manager.itemsList.scrollTop = 0;
                 }
             });
 
@@ -4276,7 +4423,9 @@
                 if (elements.manager.searchInput) {
                     state.managerSearchQuery = elements.manager.searchInput.value.trim();
                 }
+                state.managerPage = 1;
                 renderManagerList();
+                if (elements.manager.itemsList) elements.manager.itemsList.scrollTop = 0;
             });
         }
 
@@ -4286,8 +4435,10 @@
                     elements.manager.searchInput.value = '';
                 }
                 state.managerSearchQuery = '';
+                state.managerPage = 1;
                 elements.manager.btnClearSearch.classList.remove('show');
                 renderManagerList();
+                if (elements.manager.itemsList) elements.manager.itemsList.scrollTop = 0;
             });
         }
 
