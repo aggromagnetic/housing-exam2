@@ -2010,7 +2010,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260830.1020</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260830.1535</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -2035,7 +2035,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260830.1020</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260830.1535</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
@@ -2081,6 +2081,157 @@
         setTimeout(() => {
             elements.toast.classList.remove('show');
         }, 2200);
+    }
+
+    // -------------------------------------------------------------
+    // 🎲 4-Second Dynamic Exam Loading Overlay (Cards/Juggler/Stopwatch/Papers)
+    // -------------------------------------------------------------
+    const LOADING_THEMES = [
+        {
+            id: 'cards',
+            title: '🃏 합격 비법 카드 셔플 중...',
+            stageHtml: `
+                <div class="stage-cards">
+                    <div class="shuffle-card card-1"><i class="fa-solid fa-layer-group"></i><span>3,959제</span></div>
+                    <div class="shuffle-card card-2"><i class="fa-solid fa-fire"></i><span>출제유력</span></div>
+                    <div class="shuffle-card card-3"><i class="fa-solid fa-star"></i><span>핵심300선</span></div>
+                </div>
+            `,
+            subtexts: [
+                '🎲 3,959개 문항 카드를 무작위 셔플하고 있습니다...',
+                '🔥 고난도 함정과 출제유력 카드를 조합하는 중!',
+                '✨ 완벽한 문제 세트 완성! 입장합니다.'
+            ]
+        },
+        {
+            id: 'juggler',
+            title: '🤹 광대의 멘탈 저글링 쇼!',
+            stageHtml: `
+                <div class="stage-juggler">
+                    <div class="juggler-clown">🤹</div>
+                    <div class="juggling-ball ball-1" title="관계법규"></div>
+                    <div class="juggling-ball ball-2" title="관리실무"></div>
+                    <div class="juggling-ball ball-3" title="객관식"></div>
+                    <div class="juggling-ball ball-4" title="주관식"></div>
+                </div>
+            `,
+            subtexts: [
+                '🎪 멘탈을 꽉 잡으세요! 문제들을 공중에서 저글링 중...',
+                '🎯 실수 방지 집중력 극대화 마법 시전 중!',
+                '🎉 저글링 성공! 지옥의 문제 속으로 뛰어듭니다.'
+            ]
+        },
+        {
+            id: 'stopwatch',
+            title: '⏱️ 실전 타이머 장전 중...',
+            stageHtml: `
+                <div class="stage-stopwatch">
+                    <div class="stopwatch-ring"></div>
+                    <div class="stopwatch-center-icon"><i class="fa-solid fa-stopwatch"></i></div>
+                    <div id="loading-stopwatch-num" class="stopwatch-count-num">READY</div>
+                </div>
+            `,
+            subtexts: [
+                '⚡ 심장 박동수 체크! 40분 실전 타이머를 동기화합니다.',
+                '⏳ 1문항당 1분 컷! 합격 뇌파 가동 중...',
+                '🚀 카운트다운 완료! 지금 바로 시작합니다.'
+            ]
+        },
+        {
+            id: 'papers',
+            title: '📑 특급 시험지 인쇄 & 믹싱 중...',
+            stageHtml: `
+                <div class="stage-papers">
+                    <div class="exam-paper-sheet sheet-1">
+                        <div class="paper-line" style="width: 80%;"></div>
+                        <div class="paper-line" style="width: 60%;"></div>
+                        <div class="paper-line" style="width: 70%;"></div>
+                        <div class="paper-stamp">5개년 100%</div>
+                    </div>
+                    <div class="exam-paper-sheet sheet-2">
+                        <div class="paper-line" style="width: 75%;"></div>
+                        <div class="paper-line" style="width: 50%;"></div>
+                        <div class="paper-line" style="width: 85%;"></div>
+                        <div class="paper-stamp">1타 엄선</div>
+                    </div>
+                    <div class="exam-paper-sheet sheet-3">
+                        <div class="paper-line" style="width: 90%;"></div>
+                        <div class="paper-line" style="width: 65%;"></div>
+                        <div class="paper-line" style="width: 40%;"></div>
+                        <div class="paper-stamp">출제유력</div>
+                    </div>
+                </div>
+            `,
+            subtexts: [
+                '🖨️ 5개년 출제비율 정밀 알고리즘으로 시험지 인쇄 중...',
+                '🔍 오답 가중치와 30시간 망각 주기 데이터 믹싱 완료!',
+                '📄 따끈따끈한 문제지가 배부되었습니다. 파이팅!'
+            ]
+        }
+    ];
+
+    function showExamLoading(onComplete) {
+        const overlay = document.getElementById('modal-exam-loading');
+        const titleEl = document.getElementById('loading-title');
+        const stageEl = document.getElementById('loading-stage-container');
+        const subtextEl = document.getElementById('loading-subtext');
+        const barEl = document.getElementById('loading-progress-bar');
+
+        if (!overlay || !stageEl || !titleEl || !subtextEl) {
+            if (typeof onComplete === 'function') onComplete();
+            return;
+        }
+
+        // Randomly pick one of the 4 themes
+        const theme = LOADING_THEMES[Math.floor(Math.random() * LOADING_THEMES.length)];
+        titleEl.textContent = theme.title;
+        stageEl.innerHTML = theme.stageHtml;
+        subtextEl.textContent = theme.subtexts[0];
+        if (barEl) barEl.style.width = '0%';
+
+        overlay.classList.add('active');
+
+        const totalDuration = 4000; // 4.0s
+        const startTime = performance.now();
+        let isFinished = false;
+        let animFrameId = null;
+
+        const finish = () => {
+            if (isFinished) return;
+            isFinished = true;
+            if (animFrameId) cancelAnimationFrame(animFrameId);
+            overlay.classList.remove('active');
+            if (typeof onComplete === 'function') onComplete();
+        };
+
+        overlay.onclick = () => finish();
+
+        const updateFrame = (now) => {
+            if (isFinished) return;
+            const elapsed = now - startTime;
+            const progress = Math.min(100, (elapsed / totalDuration) * 100);
+            if (barEl) barEl.style.width = `${progress}%`;
+
+            const stopwatchNum = document.getElementById('loading-stopwatch-num');
+            if (elapsed < 1400) {
+                subtextEl.textContent = theme.subtexts[0];
+                if (stopwatchNum) stopwatchNum.textContent = '3.0s';
+            } else if (elapsed < 2800) {
+                subtextEl.textContent = theme.subtexts[1];
+                if (stopwatchNum) stopwatchNum.textContent = '1.5s';
+            } else {
+                subtextEl.textContent = theme.subtexts[2];
+                if (stopwatchNum) stopwatchNum.textContent = 'GO! 🔥';
+            }
+
+            if (elapsed >= totalDuration) {
+                finish();
+            } else {
+                animFrameId = requestAnimationFrame(updateFrame);
+            }
+        };
+
+        animFrameId = requestAnimationFrame(updateFrame);
     }
 
     async function startMode(modeKey, partPattern = '') {
@@ -3805,6 +3956,8 @@
                     openDownloadMdModal();
                 } else if (mode === 'part') {
                     openPartSelectModal();
+                } else if (mode === 'infinite' || mode === 'review' || mode === 'mock') {
+                    showExamLoading(() => startMode(mode));
                 } else {
                     startMode(mode);
                 }
@@ -3813,10 +3966,20 @@
 
         // 📥 MD 모의고사 다운로드 버튼
         const btnDlLaw = document.getElementById('btn-dl-md-law');
-        if (btnDlLaw) btnDlLaw.addEventListener('click', () => generateMockExamMarkdown('관계법규'));
+        if (btnDlLaw) {
+            btnDlLaw.addEventListener('click', () => {
+                if (elements.modals.downloadMd) elements.modals.downloadMd.classList.remove('active');
+                showExamLoading(() => generateMockExamMarkdown('관계법규'));
+            });
+        }
 
         const btnDlGwanri = document.getElementById('btn-dl-md-gwanri');
-        if (btnDlGwanri) btnDlGwanri.addEventListener('click', () => generateMockExamMarkdown('관리실무'));
+        if (btnDlGwanri) {
+            btnDlGwanri.addEventListener('click', () => {
+                if (elements.modals.downloadMd) elements.modals.downloadMd.classList.remove('active');
+                showExamLoading(() => generateMockExamMarkdown('관리실무'));
+            });
+        }
 
         // 📋 탭 전환 (오답 리스트 / 수정 필요 문제함 / 전체 검색)
         if (elements.modals.tabWrongList) {
@@ -4569,7 +4732,7 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
         }
 
         elements.result.btnHomeFromRes.addEventListener('click', () => showScreen('home'));
-        elements.result.btnRetry.addEventListener('click', () => startMode(state.mode, state.currentPartPattern));
+        elements.result.btnRetry.addEventListener('click', () => showExamLoading(() => startMode(state.mode, state.currentPartPattern)));
         elements.result.btnCopyAI.addEventListener('click', () => {
             const mdText = OMRSheet.buildAIPrompt({
                 subject: state.subject,
