@@ -1644,13 +1644,36 @@ body.manager-mode .app-header .header-content {
 .mgr-tabs-row {
     flex-shrink: 0 !important;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     padding: 8px 6px;
     gap: 4px;
     background: #090D16;
     border-bottom: 1px solid #1E293B;
     box-sizing: border-box;
     width: 100%;
+}
+
+.mgr-report-item {
+    padding: 12px 14px;
+    background: #0F172A;
+    border: 1px solid #1E293B;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.mgr-report-item:hover {
+    background: #1E293B;
+    border-color: #A78BFA;
+    transform: translateY(-1px);
+}
+.mgr-report-item.active {
+    background: #1E293B;
+    border-color: #A78BFA;
+    box-shadow: 0 0 0 1px #A78BFA;
 }
 
 .mgr-tab-btn {

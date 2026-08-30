@@ -321,6 +321,38 @@
             } catch (e) { return new Set(); }
         },
 
+        async saveTutoringReport(report) {
+            try {
+                let list = JSON.parse(localStorage.getItem('housing_exam_tutoring_reports') || '[]');
+                list.unshift(report);
+                if (list.length > 100) list = list.slice(0, 100);
+                localStorage.setItem('housing_exam_tutoring_reports', JSON.stringify(list));
+            } catch (e) {}
+            if (window.CloudSync) window.CloudSync.schedulePush();
+        },
+
+        async getAllTutoringReports() {
+            try {
+                return JSON.parse(localStorage.getItem('housing_exam_tutoring_reports') || '[]');
+            } catch (e) { return []; }
+        },
+
+        async deleteTutoringReport(reportId) {
+            try {
+                let list = JSON.parse(localStorage.getItem('housing_exam_tutoring_reports') || '[]');
+                list = list.filter(r => r.id !== reportId);
+                localStorage.setItem('housing_exam_tutoring_reports', JSON.stringify(list));
+            } catch (e) {}
+            if (window.CloudSync) window.CloudSync.schedulePush();
+        },
+
+        async clearAllTutoringReports() {
+            try {
+                localStorage.removeItem('housing_exam_tutoring_reports');
+            } catch (e) {}
+            if (window.CloudSync) window.CloudSync.schedulePush();
+        },
+
         async exportBackupJSON() {
             const db = await openDB();
             let stats = [];
@@ -341,10 +373,12 @@
             let customEdits = {};
             let needsEditMap = {};
             let deletedKeys = [];
+            let tutoringReports = [];
             try {
                 customEdits = JSON.parse(localStorage.getItem('housing_exam_custom_edits') || '{}');
                 needsEditMap = JSON.parse(localStorage.getItem('housing_exam_needs_edit') || '{}');
                 deletedKeys = JSON.parse(localStorage.getItem('housing_exam_deleted_keys') || '[]');
+                tutoringReports = JSON.parse(localStorage.getItem('housing_exam_tutoring_reports') || '[]');
             } catch (e) {}
 
             return {
@@ -354,7 +388,8 @@
                 history,
                 customEdits,
                 needsEditMap,
-                deletedKeys
+                deletedKeys,
+                tutoringReports
             };
         },
 
@@ -403,6 +438,17 @@
                     const existing = JSON.parse(localStorage.getItem('housing_exam_deleted_keys') || '[]');
                     const merged = Array.from(new Set([...existing, ...backupData.deletedKeys]));
                     localStorage.setItem('housing_exam_deleted_keys', JSON.stringify(merged));
+                } catch (e) {}
+            }
+
+            if (Array.isArray(backupData.tutoringReports)) {
+                try {
+                    const existing = JSON.parse(localStorage.getItem('housing_exam_tutoring_reports') || '[]');
+                    const map = new Map();
+                    backupData.tutoringReports.forEach(r => map.set(r.id, r));
+                    existing.forEach(r => map.set(r.id, r));
+                    const merged = Array.from(map.values()).sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 100);
+                    localStorage.setItem('housing_exam_tutoring_reports', JSON.stringify(merged));
                 } catch (e) {}
             }
 
@@ -1919,10 +1965,12 @@
                 tabWrong: document.getElementById('mgr-tab-wrong'),
                 tabNeedsEdit: document.getElementById('mgr-tab-needs-edit'),
                 tabCustomEdits: document.getElementById('mgr-tab-custom-edits'),
+                tabReports: document.getElementById('mgr-tab-reports'),
                 tabSearchAll: document.getElementById('mgr-tab-search-all'),
                 cntWrong: document.getElementById('mgr-cnt-wrong'),
                 cntNeedsEdit: document.getElementById('mgr-cnt-needs-edit'),
                 cntCustomEdits: document.getElementById('mgr-cnt-custom-edits'),
+                cntReports: document.getElementById('mgr-cnt-reports'),
                 searchInput: document.getElementById('mgr-search-input'),
                 btnSearch: document.getElementById('mgr-btn-search'),
                 btnClearSearch: document.getElementById('mgr-btn-clear-search'),
@@ -1931,6 +1979,14 @@
                 editorPanel: document.getElementById('mgr-editor-panel'),
                 editorEmpty: document.getElementById('mgr-editor-empty'),
                 editorForm: document.getElementById('mgr-editor-form'),
+                reportViewPanel: document.getElementById('mgr-report-view-panel'),
+                reportSubject: document.getElementById('mgr-report-subject'),
+                reportTitleBadge: document.getElementById('mgr-report-title-badge'),
+                reportScoreBadge: document.getElementById('mgr-report-score-badge'),
+                reportMarkdownContent: document.getElementById('mgr-report-markdown-content'),
+                reportBtnCopy: document.getElementById('mgr-report-btn-copy'),
+                reportBtnDownload: document.getElementById('mgr-report-btn-download'),
+                reportBtnDelete: document.getElementById('mgr-report-btn-delete'),
                 editorBody: document.getElementById('mgr-editor-body'),
                 editQKey: document.getElementById('mgr-edit-q-key'),
                 metaSubject: document.getElementById('mgr-meta-subject'),
@@ -2011,7 +2067,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260830.1950</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260830.2000</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -2036,7 +2092,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260830.1950</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260830.2000</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
@@ -3111,6 +3167,40 @@
             duration: state.elapsedSeconds
         });
 
+        // 📝 오답 과외 보고서 자동 생성 및 보관함 내부 저장
+        const mdText = OMRSheet.buildAIPrompt({
+            subject: state.subject,
+            score: score,
+            correctCount: correctCount,
+            wrongCount: wrongCount,
+            questions: state.questions,
+            userAnswers: state.userAnswers,
+            results: state.firstAttemptResults.length > 0 ? state.firstAttemptResults : state.results
+        });
+
+        const now = new Date();
+        const modeName = state.mode === 'mock' ? '실전모의고사' :
+                         state.mode === 'infinite' ? `무한헬모드(세트${state.infiniteSetCount})` :
+                         state.mode === 'review' ? '복습학습' :
+                         state.mode === 'part' ? `단원완독` : '학습';
+        const dateTitle = `${String(now.getMonth()+1).padStart(2,'0')}월${String(now.getDate()).padStart(2,'0')}일 ${String(now.getHours()).padStart(2,'0')}시${String(now.getMinutes()).padStart(2,'0')}분_${state.subject}_${modeName}`;
+
+        const tutoringReport = {
+            id: `report_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`,
+            createdAt: now.toISOString(),
+            title: dateTitle,
+            subject: state.subject,
+            mode: state.mode,
+            score: score,
+            totalCount: state.questions.length,
+            correctCount: correctCount,
+            wrongCount: wrongCount,
+            durationSeconds: state.elapsedSeconds,
+            mdContent: mdText
+        };
+
+        await IDBStore.saveTutoringReport(tutoringReport);
+
         elements.result.scoreText.textContent = `${score}점`;
         elements.result.correctCount.textContent = `${correctCount}개`;
         elements.result.wrongCount.textContent = `${wrongCount}개`;
@@ -3601,17 +3691,100 @@
         });
         const allNeedsEditKeys = Object.keys(state.needsEditMap || {});
         const allCustomEditsKeys = Object.keys(state.customEdits || {});
+        const allReports = JSON.parse(localStorage.getItem('housing_exam_tutoring_reports') || '[]');
 
         if (elements.manager.cntWrong) elements.manager.cntWrong.textContent = allWrong.length;
         if (elements.manager.cntNeedsEdit) elements.manager.cntNeedsEdit.textContent = allNeedsEditKeys.length;
         if (elements.manager.cntCustomEdits) elements.manager.cntCustomEdits.textContent = allCustomEditsKeys.length;
+        if (elements.manager.cntReports) elements.manager.cntReports.textContent = allReports.length;
 
         const btnClearAllFlags = document.getElementById('mgr-btn-clear-all-flags');
         if (btnClearAllFlags) {
-            btnClearAllFlags.style.display = (tabName === 'needs_edit' && allNeedsEditKeys.length > 0) ? 'inline-block' : 'none';
+            if (tabName === 'needs_edit') {
+                btnClearAllFlags.style.display = allNeedsEditKeys.length > 0 ? 'inline-block' : 'none';
+                btnClearAllFlags.textContent = '전체 비우기';
+            } else if (tabName === 'reports') {
+                btnClearAllFlags.style.display = allReports.length > 0 ? 'inline-block' : 'none';
+                btnClearAllFlags.textContent = '전체 비우기';
+            } else {
+                btnClearAllFlags.style.display = 'none';
+            }
         }
 
         const qLower = (state.managerSearchQuery || '').trim().toLowerCase();
+
+        // 📝 오답 과외 보관함 탭 처리
+        if (tabName === 'reports') {
+            if (elements.manager.reportViewPanel) elements.manager.reportViewPanel.style.display = 'none';
+            if (elements.manager.editorForm) elements.manager.editorForm.style.display = 'none';
+
+            let reportList = allReports;
+            if (filterSubj !== 'all') reportList = reportList.filter(r => r.subject === filterSubj);
+            if (qLower) {
+                reportList = reportList.filter(r => {
+                    const title = (r.title || '').toLowerCase();
+                    const sub = (r.subject || '').toLowerCase();
+                    const md = (r.mdContent || '').toLowerCase();
+                    return title.includes(qLower) || sub.includes(qLower) || md.includes(qLower);
+                });
+            }
+
+            if (elements.manager.listCount) {
+                elements.manager.listCount.textContent = reportList.length;
+            }
+
+            if (reportList.length === 0) {
+                elements.manager.itemsList.innerHTML = `
+                    <div style="text-align: center; padding: 40px 16px; color: var(--text-muted);">
+                        <i class="fa-solid fa-book-bookmark" style="font-size: 2.2rem; color: #A78BFA; margin-bottom: 10px; display: block;"></i>
+                        ${qLower ? `"${qLower}" 검색 결과가 없습니다.` : '보관된 오답 과외 보고서가 없습니다.<br><span style="font-size:0.8rem; color:#64748B; margin-top:4px; display:inline-block;">실전모의고사나 헬 모드를 풀면 자동으로 여기에 저장됩니다.</span>'}
+                    </div>
+                `;
+                if (elements.manager.editorEmpty) elements.manager.editorEmpty.style.display = 'flex';
+                if (elements.manager.editorForm) elements.manager.editorForm.style.display = 'none';
+                if (elements.manager.reportViewPanel) elements.manager.reportViewPanel.style.display = 'none';
+                return;
+            }
+
+            let selectedReportFound = false;
+
+            reportList.forEach(r => {
+                const isSelected = state.currentSelectedReport && state.currentSelectedReport.id === r.id;
+                if (isSelected) selectedReportFound = true;
+
+                const card = document.createElement('div');
+                card.className = `mgr-report-item ${isSelected ? 'active' : ''}`;
+                card.dataset.reportid = r.id;
+
+                const scoreColor = r.score >= 60 ? '#34D399' : '#FB7185';
+                card.innerHTML = `
+                    <div class="mgr-item-header">
+                        <span class="subject-badge ${r.subject === '관리실무' ? 'gwanri' : 'law'}">${r.subject}</span>
+                        <span style="font-size:0.75rem; color:${scoreColor}; font-weight:800; background:rgba(255,255,255,0.05); padding:2px 6px; border-radius:4px; border: 1px solid ${scoreColor};">${r.score}점 (틀림 ${r.wrongCount}개)</span>
+                    </div>
+                    <div style="font-size: 0.88rem; font-weight: 800; color: #F1F5F9; margin-top: 4px; line-height: 1.4;">
+                        ${r.title}
+                    </div>
+                    <div style="font-size: 0.74rem; color: #64748B; margin-top: 2px;">
+                        📅 ${new Date(r.createdAt).toLocaleString('ko-KR')}
+                    </div>
+                `;
+
+                card.addEventListener('click', () => {
+                    loadReportIntoViewer(r);
+                });
+
+                elements.manager.itemsList.appendChild(card);
+            });
+
+            if (!selectedReportFound && reportList.length > 0) {
+                loadReportIntoViewer(reportList[0]);
+            }
+            return;
+        }
+
+        // Non-reports tabs: Ensure report panel is hidden
+        if (elements.manager.reportViewPanel) elements.manager.reportViewPanel.style.display = 'none';
 
         const matchesSearch = (q) => {
             if (!qLower) return true;
@@ -3811,6 +3984,36 @@
         // Auto-select first item if no matching active item
         if (!selectedFound && list.length > 0) {
             loadQuestionIntoEditor(list[0]);
+        }
+    }
+
+    function loadReportIntoViewer(r) {
+        if (!r) return;
+        state.currentSelectedReport = r;
+
+        document.querySelectorAll('.mgr-report-item').forEach(card => {
+            card.classList.toggle('active', card.dataset.reportid === r.id);
+        });
+
+        if (elements.manager.editorEmpty) elements.manager.editorEmpty.style.display = 'none';
+        if (elements.manager.editorForm) elements.manager.editorForm.style.display = 'none';
+        if (elements.manager.reportViewPanel) elements.manager.reportViewPanel.style.display = 'block';
+
+        if (elements.manager.reportSubject) {
+            elements.manager.reportSubject.textContent = r.subject;
+            elements.manager.reportSubject.className = `subject-badge ${r.subject === '관리실무' ? 'gwanri' : 'law'}`;
+        }
+        if (elements.manager.reportTitleBadge) {
+            elements.manager.reportTitleBadge.textContent = r.title;
+        }
+        if (elements.manager.reportScoreBadge) {
+            const scoreColor = r.score >= 60 ? '#34D399' : '#FB7185';
+            elements.manager.reportScoreBadge.textContent = `${r.score}점 (맞춤 ${r.correctCount || 0} / 틀림 ${r.wrongCount || 0})`;
+            elements.manager.reportScoreBadge.style.color = scoreColor;
+            elements.manager.reportScoreBadge.style.borderColor = scoreColor;
+        }
+        if (elements.manager.reportMarkdownContent) {
+            elements.manager.reportMarkdownContent.textContent = r.mdContent;
         }
     }
 
@@ -4225,10 +4428,21 @@
             });
         }
 
-        // 5-A. Clear All Needs Edit Flags
+        // 5-A. Clear All Flags or Reports
         const btnClearAllFlags = document.getElementById('mgr-btn-clear-all-flags');
         if (btnClearAllFlags) {
             btnClearAllFlags.addEventListener('click', async () => {
+                if (state.managerTab === 'reports') {
+                    const allReports = await IDBStore.getAllTutoringReports();
+                    if (allReports.length === 0) return;
+                    if (confirm(`보관된 오답 과외 보고서 ${allReports.length}건을 모두 삭제하시겠습니까?`)) {
+                        await IDBStore.clearAllTutoringReports();
+                        state.currentSelectedReport = null;
+                        renderManagerList('reports');
+                        showToast('🗑️ 오답 과외 보관함이 모두 비워졌습니다.');
+                    }
+                    return;
+                }
                 const count = Object.keys(state.needsEditMap || {}).length;
                 if (count === 0) return;
                 if (confirm(`수정 필요 목록에 등록된 ${count}개 항목을 모두 초기화(비우기)하시겠습니까?`)) {
@@ -4240,6 +4454,51 @@
                     if (elements.manager.flagText) elements.manager.flagText.textContent = '수정필요';
                     if (elements.manager.flagBadge) elements.manager.flagBadge.style.display = 'none';
                     showToast('🚩 수정 필요 목록이 모두 초기화되었습니다.');
+                }
+            });
+        }
+
+        // 5-A-2. Report Action Handlers (Copy, Download, Delete)
+        if (elements.manager.reportBtnCopy) {
+            elements.manager.reportBtnCopy.addEventListener('click', () => {
+                const r = state.currentSelectedReport;
+                if (!r || !r.mdContent) return;
+                navigator.clipboard.writeText(r.mdContent).then(() => {
+                    showToast('📋 AI 과외 요청서가 클립보드에 복사되었습니다!');
+                }).catch(() => {
+                    alert('클립보드 복사 권한을 확인해주세요.');
+                });
+            });
+        }
+
+        if (elements.manager.reportBtnDownload) {
+            elements.manager.reportBtnDownload.addEventListener('click', () => {
+                const r = state.currentSelectedReport;
+                if (!r || !r.mdContent) return;
+                const safeTitle = (r.title || '오답과외보고서').replace(/[^\w가-힣\-_]/g, '_');
+                const filename = `주관사2차_${safeTitle}.md`;
+                const blob = new Blob([r.mdContent], { type: 'text/markdown;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                showToast(`📥 [${filename}] 파일이 다운로드되었습니다!`);
+            });
+        }
+
+        if (elements.manager.reportBtnDelete) {
+            elements.manager.reportBtnDelete.addEventListener('click', async () => {
+                const r = state.currentSelectedReport;
+                if (!r) return;
+                if (confirm(`'${r.title}' 보고서를 보관함에서 삭제하시겠습니까?`)) {
+                    await IDBStore.deleteTutoringReport(r.id);
+                    state.currentSelectedReport = null;
+                    renderManagerList('reports');
+                    showToast('🗑️ 오답 과외 보고서가 삭제되었습니다.');
                 }
             });
         }

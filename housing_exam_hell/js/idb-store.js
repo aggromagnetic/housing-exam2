@@ -227,6 +227,38 @@ export const IDBStore = {
         });
     },
 
+    async saveTutoringReport(report) {
+        try {
+            let list = JSON.parse(localStorage.getItem('housing_exam_tutoring_reports') || '[]');
+            list.unshift(report);
+            if (list.length > 100) list = list.slice(0, 100);
+            localStorage.setItem('housing_exam_tutoring_reports', JSON.stringify(list));
+        } catch (e) {}
+        if (window.CloudSync) window.CloudSync.schedulePush();
+    },
+
+    async getAllTutoringReports() {
+        try {
+            return JSON.parse(localStorage.getItem('housing_exam_tutoring_reports') || '[]');
+        } catch (e) { return []; }
+    },
+
+    async deleteTutoringReport(reportId) {
+        try {
+            let list = JSON.parse(localStorage.getItem('housing_exam_tutoring_reports') || '[]');
+            list = list.filter(r => r.id !== reportId);
+            localStorage.setItem('housing_exam_tutoring_reports', JSON.stringify(list));
+        } catch (e) {}
+        if (window.CloudSync) window.CloudSync.schedulePush();
+    },
+
+    async clearAllTutoringReports() {
+        try {
+            localStorage.removeItem('housing_exam_tutoring_reports');
+        } catch (e) {}
+        if (window.CloudSync) window.CloudSync.schedulePush();
+    },
+
     /**
      * Export all user statistics and histories to JSON
      */
@@ -249,9 +281,13 @@ export const IDBStore = {
 
         let customEdits = {};
         let needsEditMap = {};
+        let deletedKeys = [];
+        let tutoringReports = [];
         try {
             customEdits = JSON.parse(localStorage.getItem('housing_exam_custom_edits') || '{}');
             needsEditMap = JSON.parse(localStorage.getItem('housing_exam_needs_edit') || '{}');
+            deletedKeys = JSON.parse(localStorage.getItem('housing_exam_deleted_keys') || '[]');
+            tutoringReports = JSON.parse(localStorage.getItem('housing_exam_tutoring_reports') || '[]');
         } catch (e) {}
 
         return {
@@ -260,7 +296,9 @@ export const IDBStore = {
             stats,
             history,
             customEdits,
-            needsEditMap
+            needsEditMap,
+            deletedKeys,
+            tutoringReports
         };
     },
 
@@ -304,6 +342,25 @@ export const IDBStore = {
                 const existing = JSON.parse(localStorage.getItem('housing_exam_needs_edit') || '{}');
                 const merged = { ...existing, ...backupData.needsEditMap };
                 localStorage.setItem('housing_exam_needs_edit', JSON.stringify(merged));
+            } catch (e) {}
+        }
+
+        if (Array.isArray(backupData.deletedKeys)) {
+            try {
+                const existing = JSON.parse(localStorage.getItem('housing_exam_deleted_keys') || '[]');
+                const merged = Array.from(new Set([...existing, ...backupData.deletedKeys]));
+                localStorage.setItem('housing_exam_deleted_keys', JSON.stringify(merged));
+            } catch (e) {}
+        }
+
+        if (Array.isArray(backupData.tutoringReports)) {
+            try {
+                const existing = JSON.parse(localStorage.getItem('housing_exam_tutoring_reports') || '[]');
+                const map = new Map();
+                backupData.tutoringReports.forEach(r => map.set(r.id, r));
+                existing.forEach(r => map.set(r.id, r));
+                const merged = Array.from(map.values()).sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 100);
+                localStorage.setItem('housing_exam_tutoring_reports', JSON.stringify(merged));
             } catch (e) {}
         }
 

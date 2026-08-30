@@ -188,6 +188,21 @@ const CloudSync = {
                 });
             }
 
+            const reportsDoc = snapMap.get("reports_store");
+            if (reportsDoc && reportsDoc.exists && reportsDoc.data().reportsData) {
+                try {
+                    const cloudReports = JSON.parse(reportsDoc.data().reportsData || "[]");
+                    if (Array.isArray(cloudReports) && cloudReports.length > 0) {
+                        const localReports = JSON.parse(localStorage.getItem("housing_exam_tutoring_reports") || "[]");
+                        const map = new Map();
+                        cloudReports.forEach(r => map.set(r.id, r));
+                        localReports.forEach(r => map.set(r.id, r));
+                        const mergedReports = Array.from(map.values()).sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 100);
+                        localStorage.setItem("housing_exam_tutoring_reports", JSON.stringify(mergedReports));
+                    }
+                } catch (e) {}
+            }
+
             this.lastSyncTime = new Date();
             this.syncStatus = "synced";
             console.log("✅ Cloud modular chunk pull complete. Custom edits count:", Object.keys(mergedCustomEdits).length);
@@ -278,6 +293,13 @@ const CloudSync = {
             chunkPromises.push(syncCol.doc("flags_store").set({
                 needsEditData: JSON.stringify(needsEditMap),
                 deletedKeys,
+                updatedAt: nowIso
+            }));
+
+            const tutoringReports = JSON.parse(localStorage.getItem("housing_exam_tutoring_reports") || "[]");
+            chunkPromises.push(syncCol.doc("reports_store").set({
+                reportsData: JSON.stringify(tutoringReports.slice(0, 50)),
+                count: Math.min(tutoringReports.length, 50),
                 updatedAt: nowIso
             }));
 
