@@ -7,7 +7,7 @@
     width: 100%;
     height: 100%;
     pointer-events: none;
-    z-index: 20;
+    z-index: 35;
     overflow: hidden;
     border-radius: 20px;
 }
@@ -107,4 +107,65 @@
     border-color: #FFF;
     transform: scale(1.25);
     box-shadow: 0 0 8px rgba(255,255,255,0.7);
+}
+
+/* -------------------------------------------------------------
+ * Stylus / 필기 모드 전용 선지 & 주관식 입력 UI
+ * ------------------------------------------------------------- */
+body.stylus-mode-active .option-item {
+    cursor: default;
+}
+
+/* 필기 모드에서는 번호 원(opt-num)을 터치하기 쉽게 원을 조금 크고 선명하게 표시 */
+body.stylus-mode-active .opt-num {
+    width: 38px;
+    height: 38px;
+    font-size: 1.15rem;
+    cursor: pointer;
+    border: 2px solid var(--theme-primary);
+    background: #182642;
+    color: #FFF;
+    box-shadow: 0 0 0 5px rgba(56, 189, 248, 0.2);
+    position: relative;
+    z-index: 45;
+    pointer-events: auto;
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body.stylus-mode-active .opt-num:hover,
+body.stylus-mode-active .opt-num:active {
+    transform: scale(1.15);
+    background: var(--theme-primary);
+    color: #000;
+    box-shadow: 0 0 0 8px rgba(56, 189, 248, 0.4);
+}
+
+body.stylus-mode-active .option-item.selected .opt-num {
+    background: var(--theme-primary) !important;
+    color: #000 !important;
+    box-shadow: 0 0 14px rgba(56, 189, 248, 0.7);
+}
+
+/* 주관식 입력창 필기 모드: 태블릿 펜(S펜/애플펜슬) 직접 쓰기 및 필기패드 영역 */
+body.stylus-mode-active .blank-row-wrapper,
+body.stylus-mode-active .blank-input,
+body.stylus-mode-active .btn-toggle-hw,
+body.stylus-mode-active .hw-drawer {
+    position: relative;
+    z-index: 45;
+    pointer-events: auto;
+}
+
+body.stylus-mode-active .blank-input {
+    min-height: 48px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    border: 2px solid rgba(56, 189, 248, 0.6);
+    background: #0D1629;
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.15);
+}
+
+body.stylus-mode-active .blank-input:focus {
+    border-color: #38BDF8;
+    box-shadow: 0 0 18px rgba(56, 189, 248, 0.4);
 }

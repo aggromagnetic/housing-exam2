@@ -2092,7 +2092,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260831.0020</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260831.0030</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -2117,7 +2117,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260831.0020</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260831.0030</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
@@ -2722,7 +2722,19 @@
                 <span class="${textClass}">${optText}${extraBadge}</span>
             `;
 
-            optBtn.addEventListener('click', () => {
+            optBtn.addEventListener('click', (e) => {
+                if (state.tabletCanvas && state.tabletCanvas.isEnabled && e.clientX && e.clientY) {
+                    const optNum = optBtn.querySelector('.opt-num');
+                    if (optNum) {
+                        const numRect = optNum.getBoundingClientRect();
+                        const centerX = numRect.left + numRect.width / 2;
+                        const centerY = numRect.top + numRect.height / 2;
+                        const dist = Math.hypot(e.clientX - centerX, e.clientY - centerY);
+                        if (dist > 40 && !e.target.closest('.opt-num')) {
+                            return; // 필기 모드에서는 번호 원 주변 터치 시에만 선택 허용
+                        }
+                    }
+                }
                 selectChoice(choiceNum);
             });
 
