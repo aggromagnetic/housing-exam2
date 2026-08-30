@@ -1847,6 +1847,69 @@ body.manager-mode .app-header .header-content {
     background: #38BDF8;
 }
 
+/* Manager Sidebar Pagination */
+.mgr-pagination {
+    flex-shrink: 0 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 8px 6px;
+    background: #090D16;
+    border-top: 1px solid #1E293B;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.mgr-page-numbers {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.mgr-page-btn {
+    min-width: 32px;
+    height: 32px;
+    padding: 0 6px;
+    border-radius: 7px;
+    font-size: 0.82rem;
+    font-weight: 800;
+    background: #1E293B;
+    color: #94A3B8;
+    border: 1px solid #334155;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+    user-select: none;
+}
+
+.mgr-page-btn:hover:not(:disabled) {
+    background: #334155;
+    color: #F8FAFC;
+    border-color: #38BDF8;
+}
+
+.mgr-page-btn.active {
+    background: #38BDF8;
+    color: #0F172A;
+    border-color: #38BDF8;
+    box-shadow: 0 0 8px rgba(56, 189, 248, 0.35);
+}
+
+.mgr-page-btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+.mgr-page-ellipsis {
+    color: #64748B;
+    font-size: 0.8rem;
+    padding: 0 2px;
+    user-select: none;
+}
+
 .mgr-item-card {
     background: #162032;
     border: 1.5px solid #1E293B;
