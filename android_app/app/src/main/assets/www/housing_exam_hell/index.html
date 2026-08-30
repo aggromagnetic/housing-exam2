@@ -17,9 +17,9 @@
     <meta name="apple-mobile-web-app-title" content="문제지옥">
     
     <!-- Custom Theme Styles -->
-    <link rel="stylesheet" href="css/dark-theme.css?v=2608302000">
-    <link rel="stylesheet" href="css/quiz-layout.css?v=2608302000">
-    <link rel="stylesheet" href="css/tablet-canvas.css?v=2608302000">
+    <link rel="stylesheet" href="css/dark-theme.css?v=2608302005">
+    <link rel="stylesheet" href="css/quiz-layout.css?v=2608302005">
+    <link rel="stylesheet" href="css/tablet-canvas.css?v=2608302005">
 </head>
 <body data-subject="관계법규">
 
@@ -35,7 +35,7 @@
                 </a>
                 <span id="header-brand-badge" class="brand-badge">관계법규</span>
                 <span id="header-mode-title" class="mode-title">
-                    <i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260830.2000</span>
+                    <i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260830.2005</span>
                 </span>
             </div>
 
@@ -275,19 +275,19 @@
                 <aside class="manager-sidebar">
                     <!-- Top Mode Switcher Tabs -->
                     <div class="mgr-tabs-row">
-                        <button type="button" class="mgr-tab-btn active" data-tab="wrong" id="mgr-tab-wrong">
-                            <i class="fa-solid fa-triangle-exclamation text-rose-400"></i> 오답 (<span id="mgr-cnt-wrong">0</span>)
+                        <button type="button" class="mgr-tab-btn active" data-tab="wrong" id="mgr-tab-wrong" title="오답 문제">
+                            <i class="fa-solid fa-triangle-exclamation text-rose-400"></i> 오답
                         </button>
-                        <button type="button" class="mgr-tab-btn" data-tab="needs_edit" id="mgr-tab-needs-edit">
-                            <i class="fa-solid fa-flag text-amber-400"></i> 수정필요 (<span id="mgr-cnt-needs-edit">0</span>)
+                        <button type="button" class="mgr-tab-btn" data-tab="needs_edit" id="mgr-tab-needs-edit" title="수정 필요 문제">
+                            <i class="fa-solid fa-flag text-amber-400"></i> 수정필요
                         </button>
-                        <button type="button" class="mgr-tab-btn" data-tab="custom_edits" id="mgr-tab-custom-edits">
-                            <i class="fa-solid fa-pen-to-square text-emerald-400"></i> 수정완료 (<span id="mgr-cnt-custom-edits">0</span>)
+                        <button type="button" class="mgr-tab-btn" data-tab="custom_edits" id="mgr-tab-custom-edits" title="수정 완료 문제">
+                            <i class="fa-solid fa-pen-to-square text-emerald-400"></i> 수정완료
                         </button>
-                        <button type="button" class="mgr-tab-btn" data-tab="reports" id="mgr-tab-reports">
-                            <i class="fa-solid fa-book-bookmark text-purple-400"></i> 오답과외 (<span id="mgr-cnt-reports">0</span>)
+                        <button type="button" class="mgr-tab-btn" data-tab="reports" id="mgr-tab-reports" title="오답 과외 보관함">
+                            <i class="fa-solid fa-book-bookmark text-purple-400"></i> 오답과외
                         </button>
-                        <button type="button" class="mgr-tab-btn" data-tab="search_all" id="mgr-tab-search-all">
+                        <button type="button" class="mgr-tab-btn" data-tab="search_all" id="mgr-tab-search-all" title="전체 문제 검색">
                             <i class="fa-solid fa-magnifying-glass text-sky-400"></i> 전체검색
                         </button>
                     </div>
@@ -768,15 +768,15 @@
     <!-- Firebase SDK (Compat) for Realtime Cloud Sync -->
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-    <script src="js/cloud-sync.js?v=2608302000"></script>
+    <script src="js/cloud-sync.js?v=2608302005"></script>
 
     <!-- Master Exam Data Bundle (3,959 Questions) -->
-    <script src="data/exam_bank.js?v=2608302000"></script>
+    <script src="data/exam_bank.js?v=2608302005"></script>
 
     <!-- Core Keywords 300 DB (관계법규 300 + 관리실무 300) -->
-    <script src="data/core_keywords_db.js?v=2608302000"></script>
+    <script src="data/core_keywords_db.js?v=2608302005"></script>
 
     <!-- Application Script -->
-    <script src="js/app.js?v=2608302000"></script>
+    <script src="js/app.js?v=2608302005"></script>
 </body>
 </html>

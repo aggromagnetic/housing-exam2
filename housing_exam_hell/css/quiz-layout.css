@@ -1677,9 +1677,9 @@ body.manager-mode .app-header .header-content {
 }
 
 .mgr-tab-btn {
-    padding: 7px 2px;
+    padding: 8px 3px;
     border-radius: 7px;
-    font-size: 0.76rem;
+    font-size: 0.8rem;
     font-weight: 700;
     background: transparent;
     color: #94A3B8;
@@ -1691,7 +1691,7 @@ body.manager-mode .app-header .header-content {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 3px;
+    gap: 4px;
     min-width: 0;
     box-sizing: border-box;
 }
