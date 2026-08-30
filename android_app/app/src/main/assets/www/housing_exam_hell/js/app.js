@@ -2092,7 +2092,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260831.0005</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260831.0020</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -2117,7 +2117,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260831.0005</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260831.0020</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
@@ -3170,15 +3170,23 @@
             PartProgressManager.clearProgress(state.subject, state.currentPartPattern);
         }
 
-        let correctCount = 0;
-        let wrongCount = 0;
-
-        state.questions.forEach((q, idx) => {
-            // 시험 최종 성적은 최초 시도(firstAttemptResults) 기준으로 엄격하고 정직하게 산출!
-            const res = state.firstAttemptResults[idx] !== undefined ? state.firstAttemptResults[idx] : state.results[idx];
+        for (let idx = 0; idx < state.questions.length; idx++) {
+            const q = state.questions[idx];
+            let res = state.firstAttemptResults[idx] !== undefined ? state.firstAttemptResults[idx] : state.results[idx];
+            if (!res) {
+                res = Grader.grade(q, state.userAnswers[idx]);
+                state.results[idx] = res;
+                state.firstAttemptResults[idx] = res;
+                const updatedStat = await IDBStore.recordAnswer(q.qKey, res.isCorrect, {
+                    subject: q.subject,
+                    type: q.type,
+                    chapter: q.chapterName
+                });
+                state.statsMap[q.qKey] = updatedStat;
+            }
             if (res && res.isCorrect) correctCount++;
             else wrongCount++;
-        });
+        }
 
         const score = Math.round((correctCount / state.questions.length) * 100);
 
@@ -3791,6 +3799,14 @@
         }
     }
 
+    function getStatTime(stat) {
+        if (!stat) return 0;
+        const raw = stat.lastWrongAt || stat.lastAttempt || stat.updatedAt || stat.timestamp || stat.createdAt || stat.lastCorrectAt;
+        if (!raw) return 0;
+        const t = new Date(raw).getTime();
+        return isNaN(t) ? 0 : t;
+    }
+
     function renderManagerList(tabName = state.managerTab, filterSubj = state.managerFilter, query = state.managerSearchQuery) {
         state.managerTab = tabName;
         state.managerFilter = filterSubj;
@@ -3861,7 +3877,7 @@
                 if (totalReportCount > state.managerPageSize) {
                     elements.manager.listCount.innerHTML = `<strong>${rStart + 1}-${rEnd}</strong> <span style="font-size:0.75rem; color:#64748B;">/ ${totalReportCount}건</span>`;
                 } else {
-                    elements.manager.listCount.textContent = totalReportCount;
+                    elements.manager.listCount.textContent = `${totalReportCount}건`;
                 }
             }
 
@@ -3943,14 +3959,17 @@
             list = allWrong;
             if (filterSubj !== 'all') list = list.filter(q => q.subject === filterSubj);
             if (qLower) list = list.filter(matchesSearch);
-            // 📌 오답 추가된 순서(최신 오답 lastWrongAt / lastAttempt 최신순)로 정렬!
+            // 📌 오답 추가된 순서(최신 오답 시간 우선, 그 다음 가중치 높은 순)
             list.sort((a, b) => {
                 const statA = state.statsMap[a.qKey];
                 const statB = state.statsMap[b.qKey];
-                const timeA = new Date(statA?.lastWrongAt || statA?.lastAttempt || 0).getTime();
-                const timeB = new Date(statB?.lastWrongAt || statB?.lastAttempt || 0).getTime();
+                const timeA = getStatTime(statA);
+                const timeB = getStatTime(statB);
                 if (timeB !== timeA) return timeB - timeA;
-                return (statB?.weight || 1) - (statA?.weight || 1);
+                const wA = statA?.weight || 1;
+                const wB = statB?.weight || 1;
+                if (wB !== wA) return wB - wA;
+                return (statB?.wrongCount || 0) - (statA?.wrongCount || 0);
             });
         } else if (tabName === 'needs_edit') {
             list = allNeedsEditKeys.map(k => {
@@ -4018,7 +4037,7 @@
             if (totalCount > state.managerPageSize) {
                 elements.manager.listCount.innerHTML = `<strong>${startIndex + 1}-${endIndex}</strong> <span style="font-size:0.75rem; color:#64748B;">/ ${totalCount}건</span>`;
             } else {
-                elements.manager.listCount.textContent = totalCount;
+                elements.manager.listCount.textContent = `${totalCount}건`;
             }
         }
 
@@ -4043,6 +4062,7 @@
             elements.manager.itemsList.innerHTML = emptyHtml;
             if (elements.manager.editorEmpty) elements.manager.editorEmpty.style.display = 'flex';
             if (elements.manager.editorForm) elements.manager.editorForm.style.display = 'none';
+            if (elements.manager.reportViewPanel) elements.manager.reportViewPanel.style.display = 'none';
             renderManagerPagination(0, 1, state.managerPageSize);
             return;
         }
@@ -4184,6 +4204,7 @@
             card.classList.toggle('active', card.dataset.qkey === q.qKey);
         });
 
+        if (elements.manager.reportViewPanel) elements.manager.reportViewPanel.style.display = 'none';
         if (elements.manager.editorEmpty) elements.manager.editorEmpty.style.display = 'none';
         if (elements.manager.editorForm) elements.manager.editorForm.style.display = 'flex';
 

@@ -1977,12 +1977,12 @@ body.manager-mode .app-header .header-content {
 }
 
 .mgr-editor-form {
-    display: flex !important;
-    flex-direction: column !important;
-    height: 100% !important;
-    max-height: 100% !important;
-    min-height: 0 !important;
-    overflow: hidden !important;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    max-height: 100%;
+    min-height: 0;
+    overflow: hidden;
 }
 
 .mgr-editor-header {
