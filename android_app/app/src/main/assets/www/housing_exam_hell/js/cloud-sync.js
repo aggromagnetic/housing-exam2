@@ -167,7 +167,9 @@ const CloudSync = {
                 localStorage.setItem("housing_exam_custom_edits", JSON.stringify(finalEdits));
             }
 
-            if (Object.keys(mergedNeedsEdit).length > 0) {
+            if (flagsDoc && flagsDoc.exists) {
+                localStorage.setItem("housing_exam_needs_edit", JSON.stringify(mergedNeedsEdit || {}));
+            } else if (Object.keys(mergedNeedsEdit).length > 0) {
                 const localNeeds = JSON.parse(localStorage.getItem("housing_exam_needs_edit") || "{}");
                 const finalNeeds = { ...localNeeds, ...mergedNeedsEdit };
                 localStorage.setItem("housing_exam_needs_edit", JSON.stringify(finalNeeds));
