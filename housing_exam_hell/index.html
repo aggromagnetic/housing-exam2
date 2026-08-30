@@ -17,9 +17,9 @@
     <meta name="apple-mobile-web-app-title" content="문제지옥">
     
     <!-- Custom Theme Styles -->
-    <link rel="stylesheet" href="css/dark-theme.css?v=2608301950">
-    <link rel="stylesheet" href="css/quiz-layout.css?v=2608301950">
-    <link rel="stylesheet" href="css/tablet-canvas.css?v=2608301950">
+    <link rel="stylesheet" href="css/dark-theme.css?v=2608302000">
+    <link rel="stylesheet" href="css/quiz-layout.css?v=2608302000">
+    <link rel="stylesheet" href="css/tablet-canvas.css?v=2608302000">
 </head>
 <body data-subject="관계법규">
 
@@ -35,7 +35,7 @@
                 </a>
                 <span id="header-brand-badge" class="brand-badge">관계법규</span>
                 <span id="header-mode-title" class="mode-title">
-                    <i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260830.1950</span>
+                    <i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260830.2000</span>
                 </span>
             </div>
 
@@ -284,6 +284,9 @@
                         <button type="button" class="mgr-tab-btn" data-tab="custom_edits" id="mgr-tab-custom-edits">
                             <i class="fa-solid fa-pen-to-square text-emerald-400"></i> 수정완료 (<span id="mgr-cnt-custom-edits">0</span>)
                         </button>
+                        <button type="button" class="mgr-tab-btn" data-tab="reports" id="mgr-tab-reports">
+                            <i class="fa-solid fa-book-bookmark text-purple-400"></i> 오답과외 (<span id="mgr-cnt-reports">0</span>)
+                        </button>
                         <button type="button" class="mgr-tab-btn" data-tab="search_all" id="mgr-tab-search-all">
                             <i class="fa-solid fa-magnifying-glass text-sky-400"></i> 전체검색
                         </button>
@@ -458,6 +461,29 @@
                             </button>
                         </div>
                     </form>
+
+                    <!-- REPORT VIEW PANEL (Tutoring Reports Archive Viewer) -->
+                    <div id="mgr-report-view-panel" style="display: none; padding: 20px 24px; overflow-y: auto; height: 100%; box-sizing: border-box;">
+                        <div class="mgr-editor-header" style="margin-bottom: 16px; border-radius: 10px; border: 1px solid #1E293B; background: #0F172A;">
+                            <div class="mgr-meta-left" style="gap: 8px;">
+                                <span id="mgr-report-subject" class="subject-badge law">관계법규</span>
+                                <span id="mgr-report-title-badge" style="font-size: 0.88rem; font-weight: 800; color: #F8FAFC;">08월30일 19:50_관리실무_실전모의고사</span>
+                                <span id="mgr-report-score-badge" style="font-size: 0.78rem; font-weight: 800; padding: 2px 8px; border-radius: 4px; background: rgba(52,211,153,0.15); color: #34D399; border: 1px solid rgba(52,211,153,0.3);">85점 (맞춤 34 / 틀림 6)</span>
+                            </div>
+                            <div class="mgr-meta-actions" style="gap: 6px;">
+                                <button type="button" id="mgr-report-btn-copy" class="mgr-act-btn" style="color: #38BDF8; border-color: rgba(56,189,248,0.3); background: rgba(56,189,248,0.1);" title="이 보고서 내용을 AI 과외 프롬프트로 복사">
+                                    <i class="fa-solid fa-copy"></i> AI 복사
+                                </button>
+                                <button type="button" id="mgr-report-btn-download" class="mgr-act-btn" style="color: #34D399; border-color: rgba(52,211,153,0.3); background: rgba(52,211,153,0.1);" title="마크다운(.md) 파일로 다운로드">
+                                    <i class="fa-solid fa-file-arrow-down"></i> MD 다운로드
+                                </button>
+                                <button type="button" id="mgr-report-btn-delete" class="mgr-act-btn btn-danger-soft" title="이 오답 과외 보고서 삭제">
+                                    <i class="fa-solid fa-trash-can text-rose-400"></i> 삭제
+                                </button>
+                            </div>
+                        </div>
+                        <div id="mgr-report-markdown-content" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 20px; color: #E2E8F0; line-height: 1.7; font-size: 0.92rem; white-space: pre-wrap; word-break: break-word; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, monospace;"></div>
+                    </div>
                 </main>
             </div>
         </section>
@@ -742,15 +768,15 @@
     <!-- Firebase SDK (Compat) for Realtime Cloud Sync -->
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-    <script src="js/cloud-sync.js?v=2608301950"></script>
+    <script src="js/cloud-sync.js?v=2608302000"></script>
 
     <!-- Master Exam Data Bundle (3,959 Questions) -->
-    <script src="data/exam_bank.js?v=2608301950"></script>
+    <script src="data/exam_bank.js?v=2608302000"></script>
 
     <!-- Core Keywords 300 DB (관계법규 300 + 관리실무 300) -->
-    <script src="data/core_keywords_db.js?v=2608301950"></script>
+    <script src="data/core_keywords_db.js?v=2608302000"></script>
 
     <!-- Application Script -->
-    <script src="js/app.js?v=2608301950"></script>
+    <script src="js/app.js?v=2608302000"></script>
 </body>
 </html>
