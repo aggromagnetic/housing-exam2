@@ -1990,6 +1990,7 @@
                 comboCount: document.getElementById('res-combo-count'),
                 timeCount: document.getElementById('res-time-count'),
                 btnCopyAI: document.getElementById('btn-copy-ai-prompt'),
+                btnDownloadAIMD: document.getElementById('btn-download-ai-md'),
                 btnRetry: document.getElementById('btn-retry-session'),
                 btnHomeFromRes: document.getElementById('btn-home-from-result')
             },
@@ -2010,7 +2011,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260830.1545</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260830.1950</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -2035,7 +2036,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260830.1545</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260830.1950</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
@@ -4764,6 +4765,37 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
                 alert('클립보드 복사 권한을 확인해주세요.');
             });
         });
+
+        if (elements.result.btnDownloadAIMD) {
+            elements.result.btnDownloadAIMD.addEventListener('click', () => {
+                const mdText = OMRSheet.buildAIPrompt({
+                    subject: state.subject,
+                    score: (elements.result.scoreText.textContent || '0').replace('점', ''),
+                    correctCount: elements.result.correctCount.textContent,
+                    wrongCount: elements.result.wrongCount.textContent,
+                    questions: state.questions,
+                    userAnswers: state.userAnswers,
+                    results: state.firstAttemptResults.length > 0 ? state.firstAttemptResults : state.results
+                });
+
+                const now = new Date();
+                const dateStr = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}_${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}`;
+                const scoreVal = (elements.result.scoreText.textContent || '0').replace('점', '');
+                const filename = `주관사2차_${state.subject}_오답분석과외보고서_${scoreVal}점_${dateStr}.md`;
+
+                const blob = new Blob([mdText], { type: 'text/markdown;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+                showToast(`📥 [${filename}] 파일이 저장되었습니다!`);
+            });
+        }
 
         // Cloud Sync Header Button Trigger
         if (elements.header.btnCloudSync) {

@@ -17,9 +17,9 @@
     <meta name="apple-mobile-web-app-title" content="문제지옥">
     
     <!-- Custom Theme Styles -->
-    <link rel="stylesheet" href="css/dark-theme.css?v=2608301545">
-    <link rel="stylesheet" href="css/quiz-layout.css?v=2608301545">
-    <link rel="stylesheet" href="css/tablet-canvas.css?v=2608301545">
+    <link rel="stylesheet" href="css/dark-theme.css?v=2608301950">
+    <link rel="stylesheet" href="css/quiz-layout.css?v=2608301950">
+    <link rel="stylesheet" href="css/tablet-canvas.css?v=2608301950">
 </head>
 <body data-subject="관계법규">
 
@@ -35,7 +35,7 @@
                 </a>
                 <span id="header-brand-badge" class="brand-badge">관계법규</span>
                 <span id="header-mode-title" class="mode-title">
-                    <i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260830.1545</span>
+                    <i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260830.1950</span>
                 </span>
             </div>
 
@@ -247,10 +247,15 @@
                     </div>
                 </div>
 
-                <div style="display: flex; flex-direction: column; gap: 12px; max-width: 480px; margin: 0 auto;">
-                    <button id="btn-copy-ai-prompt" class="btn-ctrl btn-primary" style="justify-content: center; padding: 14px; font-size: 1rem;">
-                        <i class="fa-solid fa-robot"></i> AI 일타 과외 처방전 복사 (Gemini/ChatGPT용)
-                    </button>
+                <div style="display: flex; flex-direction: column; gap: 10px; max-width: 480px; margin: 0 auto;">
+                    <div style="display: flex; gap: 10px;">
+                        <button id="btn-copy-ai-prompt" class="btn-ctrl btn-primary" style="flex: 1; justify-content: center; padding: 12px; font-size: 0.92rem;" title="틀린 문제와 분석 요청 프롬프트를 클립보드에 복사">
+                            <i class="fa-solid fa-copy"></i> AI 과외 요청서 복사
+                        </button>
+                        <button id="btn-download-ai-md" class="btn-ctrl" style="flex: 1; justify-content: center; padding: 12px; font-size: 0.92rem; background: rgba(56,189,248,0.15); color: #38BDF8; border-color: rgba(56,189,248,0.4);" title="틀린 문제와 분석 요청서를 Markdown(.md) 파일로 다운로드">
+                            <i class="fa-solid fa-file-arrow-down"></i> 오답 과외 MD 다운로드
+                        </button>
+                    </div>
                     <div style="display: flex; gap: 10px;">
                         <button id="btn-retry-session" class="btn-ctrl" style="flex: 1; justify-content: center;">
                             <i class="fa-solid fa-rotate-right"></i> 다시 풀기
@@ -737,15 +742,15 @@
     <!-- Firebase SDK (Compat) for Realtime Cloud Sync -->
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-    <script src="js/cloud-sync.js?v=2608301545"></script>
+    <script src="js/cloud-sync.js?v=2608301950"></script>
 
     <!-- Master Exam Data Bundle (3,959 Questions) -->
-    <script src="data/exam_bank.js?v=2608301545"></script>
+    <script src="data/exam_bank.js?v=2608301950"></script>
 
     <!-- Core Keywords 300 DB (관계법규 300 + 관리실무 300) -->
-    <script src="data/core_keywords_db.js?v=2608301545"></script>
+    <script src="data/core_keywords_db.js?v=2608301950"></script>
 
     <!-- Application Script -->
-    <script src="js/app.js?v=2608301545"></script>
+    <script src="js/app.js?v=2608301950"></script>
 </body>
 </html>
