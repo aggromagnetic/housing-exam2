@@ -723,7 +723,27 @@
     line-height: 1.8;
     color: #F1F5F9;
     margin-bottom: 14px;
-    white-space: pre-wrap;
+}
+
+.exp-main-text b, .exp-main-text strong {
+    color: #38BDF8;
+    font-weight: 800;
+}
+
+.exp-section-tip {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(217, 119, 6, 0.05) 100%);
+    border: 1.5px solid rgba(245, 158, 11, 0.35);
+    border-left: 5px solid #F59E0B;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-top: 16px;
+    color: #FEF3C7;
+    line-height: 1.75;
+}
+
+.exp-section-tip b, .exp-section-tip strong {
+    color: #FDE047;
+    font-weight: 800;
 }
 
 .tip-box {
