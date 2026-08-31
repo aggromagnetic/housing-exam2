@@ -2174,7 +2174,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260831.2345</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260901.0135</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -2199,7 +2199,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260831.2345</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260901.0135</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
@@ -2486,9 +2486,8 @@
             return;
         }
 
-        // Deep clone & Object.freeze to guarantee 100% structural immutability throughout the exam
+        // Deep clone to guarantee isolated state throughout the exam
         state.questions = JSON.parse(JSON.stringify(state.questions));
-        state.questions.forEach(q => Object.freeze(q));
 
         if (modeKey === 'mock') {
             MockSessionManager.saveSession(state);
@@ -2505,7 +2504,6 @@
         state.subject = sessionData.subject || state.subject;
         state.questions = sessionData.questions;
         state.questions = JSON.parse(JSON.stringify(state.questions));
-        state.questions.forEach(q => Object.freeze(q));
         state.currentIndex = sessionData.currentIndex || 0;
         state.userAnswers = sessionData.userAnswers || [];
         state.results = sessionData.results || [];
@@ -2554,7 +2552,6 @@
         state.questions = restoredQuestions;
         state.questions.forEach(applyCustomEdits);
         state.questions = JSON.parse(JSON.stringify(state.questions));
-        state.questions.forEach(q => Object.freeze(q));
 
         state.currentIndex = Math.min(prog.currentIndex || 0, state.questions.length - 1);
         state.userAnswers = prog.userAnswers || [];
@@ -5394,31 +5391,46 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
                     editData.answer = Object.values(sortedAnswers).join(', ');
                 }
 
-                const savedItem = await IDBStore.saveQuestionEdit(qKey, editData);
-                if (!state.customEdits) state.customEdits = {};
-                state.customEdits[qKey] = savedItem || editData;
-                applyCustomEdits(q);
+                try {
+                    const savedItem = await IDBStore.saveQuestionEdit(qKey, editData);
+                    if (!state.customEdits) state.customEdits = {};
+                    state.customEdits[qKey] = savedItem || editData;
+                    applyCustomEdits(q);
 
-                // Auto-unflag if question was in needsEdit
-                if (state.needsEditMap && state.needsEditMap[qKey]) {
-                    await IDBStore.deleteNeedsEdit(qKey);
-                    delete state.needsEditMap[qKey];
-                }
-
-                // If currently taking a quiz on this question, update current view
-                if (elements.screens.quiz && elements.screens.quiz.classList.contains('active')) {
-                    if (state.questions[state.currentIndex] && state.questions[state.currentIndex].qKey === qKey) {
-                        renderQuestion(state.currentIndex);
+                    if (state.questions && state.questions.length > 0) {
+                        const currentQ = state.questions.find(item => item.qKey === qKey);
+                        if (currentQ) applyCustomEdits(currentQ);
                     }
-                }
 
-                // If wrong & needs-edit manager is open, re-render list so changes appear immediately
-                if (elements.modals.wrongManager && elements.modals.wrongManager.classList.contains('active')) {
-                    renderWrongManagerList(state.wrongManagerFilter, state.wrongManagerTab);
-                }
+                    // Auto-unflag if question was in needsEdit
+                    if (state.needsEditMap && state.needsEditMap[qKey]) {
+                        await IDBStore.deleteNeedsEdit(qKey);
+                        delete state.needsEditMap[qKey];
+                    }
 
-                closeModal(modalEditQ);
-                showToast('💾 문제 수정사항이 저장되었습니다!');
+                    // If currently taking a quiz on this question, update current view & keep explanation open
+                    if (elements.screens.quiz && elements.screens.quiz.classList.contains('active')) {
+                        if (state.questions[state.currentIndex] && state.questions[state.currentIndex].qKey === qKey) {
+                            renderQuestion(state.currentIndex);
+                            toggleExplanation(true);
+                        }
+                    }
+
+                    if (state.mode === 'mock') {
+                        MockSessionManager.saveSession(state);
+                    }
+
+                    // If wrong & needs-edit manager is open, re-render list so changes appear immediately
+                    if (elements.modals.wrongManager && elements.modals.wrongManager.classList.contains('active')) {
+                        renderWrongManagerList(state.wrongManagerFilter, state.wrongManagerTab);
+                    }
+
+                    closeModal(modalEditQ);
+                    showToast('💾 문제 수정사항이 저장되었습니다!');
+                } catch (err) {
+                    console.error('Failed to save question edit:', err);
+                    showToast('⚠️ 저장 중 오류가 발생했습니다: ' + err.message);
+                }
             });
         }
 
