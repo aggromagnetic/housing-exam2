@@ -3,7 +3,7 @@
  * 
  * Usage:
  *   node scripts/ai_enhance_questions.js --score=5 --limit=10    # Test 10 items of 5-score
- *   node scripts/ai_enhance_questions.js --score=5              # Run all 417 unedited 5-score items
+ *   node scripts/ai_enhance_questions.js --score=5              # Run unedited 5-score items
  *   node scripts/ai_enhance_questions.js --score=6              # Run 6-score items
  *   node scripts/ai_enhance_questions.js --score=7              # Run 7-score items
  */
@@ -114,37 +114,34 @@ const targetQuestions = allPool.filter(q => {
     return true;
 }).slice(0, limitCount);
 
-console.log(`\n📋 Target ${targetScore}-Point Questions to Enhance: ${targetQuestions.length} items (Total already in progress: ${Object.keys(progressData).length})`);
+console.log(`\n📋 Target ${targetScore}-Point Questions to Enhance: ${targetQuestions.length} items (Total already completed: ${Object.keys(progressData).length})`);
 
 if (targetQuestions.length === 0) {
     console.log("🎉 No questions left to process for this target score!");
     process.exit(0);
 }
 
-// 4. Gemini System Prompt with Legal Search Grounding
+// 4. Upgraded Gemini System Prompt (Uniform Circled Numbers & Comprehensive Comparative Tips)
 const SYSTEM_PROMPT = `당신은 대한민국 주택관리사(보) 2차 국가전문자격시험(관계법규, 공동주택관리실무)의 최고 일타강사이자 국가전문자격시험 출제위원급 검증 전문가입니다.
 사용자가 제공하는 문제(객관식 5지선다 또는 주관식 단답/기입형), 정답, 해설, 팁을 면밀히 분석하고 검증하여 2026년 7월 기준 최신 개정 법령 및 표준 실무 기준에 완벽히 부합하도록 교정합니다.
 
-[지시 사항]
-1. 사전 지식 과신 금지: 반드시 웹 검색 도구(Google Search)를 실행하여 2026년 최신 개정 법령(공동주택관리법, 주택법, 건축법, 민간임대주택특별법, 소방시설법, 승강기안전관리법 등)의 조문, 수치, 행정기관 명칭을 실시간 검색/확인 후 그에 기반하여 답변하십시오.
-2. 치명적 오류 감지:
-   - 복수 정답 발생, 정답 번호 오류, 법 개정으로 인한 문제 무효화, 지문/보기 심각한 파손 시 "isCriticalError": true, "errorType": "MULTIPLE_ANSWERS" | "WRONG_ANSWER_KEY" | "OBSOLETE_LAW" | "CORRUPTED_QUESTION", "errorSummary": "간결한 원인 요약"
-   - 정상 문항 시 "isCriticalError": false, "errorType": "NONE", "errorSummary": ""
-3. 간결성 및 핵심 위주 보강:
-   - 단순 조문 번호(예: 제00조 제0항) 나열은 지양하고, 실제 요건과 수치, 용어에 집중.
-4. 표기 및 시각화 규칙:
-   - LaTeX 수식 문법($, $$, \\frac 등) 절대 사용 금지. (1/2, 50m², 20m 등 일반 텍스트 사용)
-   - 시각화 기호 활용: 🔵 맞는 지문, ❌ 틀린 지문, ⚠️ 함정 주의, ⭐ 중요, 🌟 매우중요, 🚨 매우조심, 💯 이렇게하면 100점
-   - 해설 구성:
-     - [문제/정답 오류 교정]: (오류 수정 요약, 없으면 생략)
-     - ❌ [오답 지문 수정]: (왜 틀렸는지 이유와 올바른 지문 제시)
-     - 🔵 [정답/기타 지문 핵심]: (핵심 근거 요약)
-   - 일타 팁 구성:
-     - 1. 핵심 비교·정리, 빈출 핵심(수치), ⚠️함정 피하기 (시각 기호 활용)
-     - 2. 3초 암기 공식: "핵심 키워드 중심의 직관적 암기 문구"
+[핵심 작성 원칙]
+1. 사전 지식 과신 금지 및 실시간 검색:
+   - 반드시 웹 검색 도구(Google Search)를 실행하여 2026년 최신 개정 법령의 조문, 수치, 행정기관 명칭을 실시간 검색/확인 후 교정하십시오.
+2. 지문 표기 완전 통일 (동그라미 숫자):
+   - 객관식 지문은 무조건 동그라미 숫자(①, ②, ③, ④, ⑤)로만 표기하십시오. ('선택지 1번', '1.', '3번 지문' 등 혼용 절대 금지)
+   - 주관식 빈칸은 [㉠], [㉡], [㉢] 등으로 표기하십시오.
+3. 해설 간결화 및 법조문 번호 배제:
+   - 「법률명」 제00조 제0항 같은 단순 조문 번호 나열은 일체 쓰지 말고, 법률의 실제 요건, 핵심 수치, 개념에만 집중하십시오.
+   - ❌ [오답 지문 수정]: 왜 틀렸는지 핵심 이유와 올바른 정문(正文)을 제시하십시오. (예: ❌ ⑤: 사용자는 ... 거부할 수 없고, 필요한 경우 시간을 변경할 수만 있습니다.)
+   - 🔵 [정답/기타 지문 핵심]: 보기 지문과 대동소이한 단순 반복 설명은 과감히 전부 생략하십시오. 꼭 필요한 핵심 추가 포인트가 있을 때만 1줄로 압축하십시오.
+4. [일타 팁] - 시험 변형 대비 전체 주제 총정리 및 비교 (가장 중요!):
+   - 문제 지문을 단순히 다시 요약하지 마십시오. (지문 단순 반복 절대 금지)
+   - 해당 문제가 속한 주제의 전체 체계와 헷갈리는 비교 대상(예: 과태료 기준별 2천만/1천만/5백만/3백만 비교, 권한자별 국토부/시도지사/시군구 비교, 정족수별 과반수/3분의2/4분의3 비교 등)을 입체적으로 총정리하십시오.
+   - 3초 암기 공식: 변형 문제가 나와도 즉시 풀 수 있는 직관적인 암기 구호를 포함하십시오.
 
 [출력 형식]:
-답변 마지막에 반드시 다음과 같은 단 하나의 \`\`\`json 코드블록으로 응답하십시오.
+반드시 단 하나의 \`\`\`json 코드블록으로 응답하십시오.
 \`\`\`json
 {
   "isCriticalError": false,
@@ -152,9 +149,9 @@ const SYSTEM_PROMPT = `당신은 대한민국 주택관리사(보) 2차 국가�
   "errorSummary": "",
   "question": "문제 전문",
   "passage": "지문 박스 내용 (없으면 빈 문자열)",
-  "options": ["선택지1", "선택지2", "선택지3", "선택지4", "선택지5"], // 객관식일 때 ①~⑤ 텍스트 (원문자 제외)
-  "answer": 1, // 객관식 정답 번호 (1~5)
-  "answers": {}, // 주관식일 때 {"㉠": "정답단어"} (객관식이면 {})
+  "options": ["선택지1", "선택지2", "선택지3", "선택지4", "선택지5"],
+  "answer": 1,
+  "answers": {},
   "explanation": "해설 내용",
   "tip": "일타 팁 내용"
 }
@@ -162,9 +159,9 @@ const SYSTEM_PROMPT = `당신은 대한민국 주택관리사(보) 2차 국가�
 
 function extractJsonFromParts(parts) {
     const fullText = parts.map(p => p.text || "").join("\n");
-    const jsonMatch = fullText.match(/\`\`\`json\s*([\s\S]*?)\s*\`\`\`/);
+    const jsonMatch = fullText.match(/\`\`\`(?:json)?\s*([\s\S]*?)\s*\`\`\`/);
     if (jsonMatch) {
-        return JSON.parse(jsonMatch[1]);
+        try { return JSON.parse(jsonMatch[1]); } catch (e) {}
     }
     const firstBrace = fullText.indexOf("{");
     const lastBrace = fullText.lastIndexOf("}");
@@ -237,7 +234,7 @@ ${q.options && q.options.length > 0 ? `- 선택 보기:\n${q.options.map((o, i) 
 
 // 5. Execution Queue & Batch Worker
 async function runBatch() {
-    console.log(`🚀 Starting AI Enhancement with Gemini 3.7/2.5 Flash & Search Grounding...`);
+    console.log(`🚀 Starting AI Enhancement with Upgraded Prompt (Circled Numbers & Holistic Tips)...`);
     const totalCount = targetQuestions.length;
     let completedCount = 0;
     let criticalErrorsCount = 0;
@@ -248,7 +245,7 @@ async function runBatch() {
         try { preBackup = JSON.parse(fs.readFileSync(PRE_BACKUP_JSON, "utf8")); } catch (e) {}
     }
 
-    const CONCURRENCY = 2; // Conservative concurrency to avoid 429 quota limits
+    const CONCURRENCY = 2;
     let currentIndex = 0;
 
     async function worker(workerId) {
