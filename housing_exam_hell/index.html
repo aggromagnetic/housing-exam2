@@ -19,10 +19,28 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     
+    <script>
+        // Automatic tablet cache buster: Forces tablet WebView to always fetch latest build
+        (function() {
+            const CURRENT_BUILD = '2608311945';
+            const savedBuild = localStorage.getItem('housing_exam_build_version');
+            if (savedBuild !== CURRENT_BUILD) {
+                localStorage.setItem('housing_exam_build_version', CURRENT_BUILD);
+                if (window.caches) {
+                    caches.keys().then(names => names.forEach(name => caches.delete(name)));
+                }
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.get('v') !== CURRENT_BUILD) {
+                    window.location.replace(window.location.pathname + '?v=' + CURRENT_BUILD + '&t=' + Date.now());
+                }
+            }
+        })();
+    </script>
+    
     <!-- Custom Theme Styles -->
-    <link rel="stylesheet" href="css/dark-theme.css?v=2608311935">
-    <link rel="stylesheet" href="css/quiz-layout.css?v=2608311935">
-    <link rel="stylesheet" href="css/tablet-canvas.css?v=2608311935">
+    <link rel="stylesheet" href="css/dark-theme.css?v=2608311945">
+    <link rel="stylesheet" href="css/quiz-layout.css?v=2608311945">
+    <link rel="stylesheet" href="css/tablet-canvas.css?v=2608311945">
 </head>
 <body data-subject="관계법규">
 
@@ -787,15 +805,15 @@
     <!-- Firebase SDK (Compat) for Realtime Cloud Sync -->
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-    <script src="js/cloud-sync.js?v=2608311935"></script>
+    <script src="js/cloud-sync.js?v=2608311945"></script>
 
     <!-- Master Exam Data Bundle (3,959 Questions) -->
-    <script src="data/exam_bank.js?v=2608311935"></script>
+    <script src="data/exam_bank.js?v=2608311945"></script>
 
     <!-- Core Keywords 300 DB (관계법규 300 + 관리실무 300) -->
-    <script src="data/core_keywords_db.js?v=2608311935"></script>
+    <script src="data/core_keywords_db.js?v=2608311945"></script>
 
     <!-- Application Script -->
-    <script src="js/app.js?v=2608311710"></script>
+    <script src="js/app.js?v=2608311945"></script>
 </body>
 </html>
