@@ -366,6 +366,10 @@
     position: relative;
     z-index: 31;
     pointer-events: auto;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    -webkit-user-select: none;
 }
 
 .option-item:hover {
@@ -811,6 +815,10 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    -webkit-user-select: none;
 }
 
 .btn-ctrl:hover {
