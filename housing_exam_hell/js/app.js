@@ -2092,7 +2092,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260831.1115</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260831.1245</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -2117,7 +2117,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260831.1115</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260831.1245</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
@@ -2687,6 +2687,17 @@
             }
         }
 
+        // Update Next button label on last question
+        if (elements.quiz.btnNext) {
+            if (index >= state.questions.length - 1 && state.mode !== 'infinite') {
+                elements.quiz.btnNext.innerHTML = '시험 완료 및 채점 <i class="fa-solid fa-flag-checkered"></i>';
+                elements.quiz.btnNext.classList.add('btn-finish');
+            } else {
+                elements.quiz.btnNext.innerHTML = '다음 <i class="fa-solid fa-chevron-right"></i>';
+                elements.quiz.btnNext.classList.remove('btn-finish');
+            }
+        }
+
         updateBloodGauge();
     }
 
@@ -3182,6 +3193,9 @@
             PartProgressManager.clearProgress(state.subject, state.currentPartPattern);
         }
 
+        let correctCount = 0;
+        let wrongCount = 0;
+
         for (let idx = 0; idx < state.questions.length; idx++) {
             const q = state.questions[idx];
             let res = state.firstAttemptResults[idx] !== undefined ? state.firstAttemptResults[idx] : state.results[idx];
@@ -3189,80 +3203,94 @@
                 res = Grader.grade(q, state.userAnswers[idx]);
                 state.results[idx] = res;
                 state.firstAttemptResults[idx] = res;
-                const updatedStat = await IDBStore.recordAnswer(q.qKey, res.isCorrect, {
-                    subject: q.subject,
-                    type: q.type,
-                    chapter: q.chapterName
-                });
-                state.statsMap[q.qKey] = updatedStat;
+                try {
+                    const updatedStat = await IDBStore.recordAnswer(q.qKey, res.isCorrect, {
+                        subject: q.subject,
+                        type: q.type,
+                        chapter: q.chapterName
+                    });
+                    if (updatedStat) state.statsMap[q.qKey] = updatedStat;
+                } catch (err) {
+                    console.error('recordAnswer error:', err);
+                }
             }
             if (res && res.isCorrect) correctCount++;
             else wrongCount++;
         }
 
-        const score = Math.round((correctCount / state.questions.length) * 100);
+        const score = Math.round((correctCount / (state.questions.length || 1)) * 100);
 
-        await IDBStore.saveSession({
-            mode: state.mode,
-            subject: state.subject,
-            total: state.questions.length,
-            correct: correctCount,
-            wrong: wrongCount,
-            score,
-            duration: state.elapsedSeconds
-        });
+        try {
+            await IDBStore.saveSession({
+                mode: state.mode,
+                subject: state.subject,
+                total: state.questions.length,
+                correct: correctCount,
+                wrong: wrongCount,
+                score,
+                duration: state.elapsedSeconds
+            });
+        } catch (e) {
+            console.error('saveSession error:', e);
+        }
 
         // 📝 오답 과외 보고서 자동 생성 및 보관함 내부 저장
-        const mdText = OMRSheet.buildAIPrompt({
-            subject: state.subject,
-            score: score,
-            correctCount: correctCount,
-            wrongCount: wrongCount,
-            questions: state.questions,
-            userAnswers: state.userAnswers,
-            results: state.firstAttemptResults.length > 0 ? state.firstAttemptResults : state.results
-        });
+        try {
+            const mdText = OMRSheet.buildAIPrompt({
+                subject: state.subject,
+                score: score,
+                correctCount: correctCount,
+                wrongCount: wrongCount,
+                questions: state.questions,
+                userAnswers: state.userAnswers,
+                results: state.firstAttemptResults.length > 0 ? state.firstAttemptResults : state.results
+            });
 
-        const now = new Date();
-        const modeName = state.mode === 'mock' ? '실전모의고사' :
-                         state.mode === 'infinite' ? `무한헬모드(세트${state.infiniteSetCount})` :
-                         state.mode === 'review' ? '복습학습' :
-                         state.mode === 'part' ? `단원완독` : '학습';
-        const dateTitle = `${String(now.getMonth()+1).padStart(2,'0')}월${String(now.getDate()).padStart(2,'0')}일 ${String(now.getHours()).padStart(2,'0')}시${String(now.getMinutes()).padStart(2,'0')}분_${state.subject}_${modeName}`;
+            const now = new Date();
+            const modeName = state.mode === 'mock' ? '실전모의고사' :
+                             state.mode === 'infinite' ? `무한헬모드(세트${state.infiniteSetCount})` :
+                             state.mode === 'review' ? '복습학습' :
+                             state.mode === 'part' ? `단원완독` : '학습';
+            const dateTitle = `${String(now.getMonth()+1).padStart(2,'0')}월${String(now.getDate()).padStart(2,'0')}일 ${String(now.getHours()).padStart(2,'0')}시${String(now.getMinutes()).padStart(2,'0')}분_${state.subject}_${modeName}`;
 
-        const tutoringReport = {
-            id: `report_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`,
-            createdAt: now.toISOString(),
-            title: dateTitle,
-            subject: state.subject,
-            mode: state.mode,
-            score: score,
-            totalCount: state.questions.length,
-            correctCount: correctCount,
-            wrongCount: wrongCount,
-            durationSeconds: state.elapsedSeconds,
-            mdContent: mdText
-        };
+            const tutoringReport = {
+                id: `report_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`,
+                createdAt: now.toISOString(),
+                title: dateTitle,
+                subject: state.subject,
+                mode: state.mode,
+                score: score,
+                totalCount: state.questions.length,
+                correctCount: correctCount,
+                wrongCount: wrongCount,
+                durationSeconds: state.elapsedSeconds,
+                mdContent: mdText
+            };
 
-        await IDBStore.saveTutoringReport(tutoringReport);
+            await IDBStore.saveTutoringReport(tutoringReport);
+        } catch (e) {
+            console.error('saveTutoringReport error:', e);
+        }
 
-        elements.result.scoreText.textContent = `${score}점`;
-        elements.result.correctCount.textContent = `${correctCount}개`;
-        elements.result.wrongCount.textContent = `${wrongCount}개`;
+        if (elements.result.scoreText) elements.result.scoreText.textContent = `${score}점`;
+        if (elements.result.correctCount) elements.result.correctCount.textContent = `${correctCount}개`;
+        if (elements.result.wrongCount) elements.result.wrongCount.textContent = `${wrongCount}개`;
         if (elements.result.comboCount) {
             elements.result.comboCount.textContent = `${state.maxCombo || 0} COMBO`;
         }
 
         const mins = Math.floor(state.elapsedSeconds / 60);
         const secs = state.elapsedSeconds % 60;
-        elements.result.timeCount.textContent = `${mins}분 ${secs}초`;
+        if (elements.result.timeCount) elements.result.timeCount.textContent = `${mins}분 ${secs}초`;
 
-        if (score >= 60) {
-            elements.result.passPill.className = 'pass-pill pass';
-            elements.result.passPill.innerHTML = '<i class="fa-solid fa-circle-check"></i> 최종 합격 (PASS)';
-        } else {
-            elements.result.passPill.className = 'pass-pill fail';
-            elements.result.passPill.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> 불합격 / 과락 주의 (RE-STUDY)';
+        if (elements.result.passPill) {
+            if (score >= 60) {
+                elements.result.passPill.className = 'pass-pill pass';
+                elements.result.passPill.innerHTML = '<i class="fa-solid fa-circle-check"></i> 최종 합격 (PASS)';
+            } else {
+                elements.result.passPill.className = 'pass-pill fail';
+                elements.result.passPill.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> 불합격 / 과락 주의 (RE-STUDY)';
+            }
         }
 
         showScreen('result');
