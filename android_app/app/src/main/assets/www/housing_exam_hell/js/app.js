@@ -1252,7 +1252,7 @@
             // 실전 시험지 순서와 100% 동일하게 정렬:
             // 1~24번: 객관식 (주택법/행정관리 -> 공주법 -> 건축법/시설관리 -> 기타법/안전환경)
             // 25~40번: 주관식 (주택법/행정관리 -> 공주법 -> 건축법/시설관리 -> 기타법/안전환경)
-            return [...selectedMC.slice(0, 24), ...selectedSA.slice(0, 16)];
+            return [...selectedMC.slice(0, 24), ...selectedSA.slice(0, 16)].map(q => ({ ...q }));
         },
 
         /**
@@ -1333,7 +1333,7 @@
                 });
             }
 
-            return [...selectedMC.slice(0, 20), ...selectedSA.slice(0, 20)];
+            return [...selectedMC.slice(0, 20), ...selectedSA.slice(0, 20)].map(q => ({ ...q }));
         },
 
         shuffleWithAntiClumping(questions) {
@@ -1371,7 +1371,7 @@
                 picked = [...weakItems, ...remaining];
             }
 
-            return this.shuffleWithAntiClumping(picked);
+            return this.shuffleWithAntiClumping(picked).map(q => ({ ...q }));
         },
 
         generatePartSet(subject, chapterPattern) {
@@ -1383,7 +1383,7 @@
             const saMatches = saPool.filter(q => regex.test(q.chapterName));
 
             const all = [...mcMatches, ...saMatches];
-            return all.sort(() => Math.random() - 0.5);
+            return all.sort(() => Math.random() - 0.5).map(q => ({ ...q }));
         },
 
         generateInfiniteHellSet(statsMap = {}, excludeKeysSet = new Set(), highYieldRatio = 0.50) {
@@ -1399,7 +1399,7 @@
 
             // 4. 총 80문항 융합 및 군집 방지 셔플 (관계법규 + 관리실무 50:50)
             const combined = [...lawSet, ...gwanriSet];
-            return this.shuffleWithAntiClumping(combined);
+            return this.shuffleWithAntiClumping(combined).map(q => ({ ...q }));
         },
 
         getChapterList(subject) {
@@ -2092,7 +2092,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260831.1245</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260831.1415</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -2117,7 +2117,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260831.1245</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260831.1415</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
@@ -5358,7 +5358,7 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
             });
         }
 
-        // Cross-tab real-time sync (탭 2개 띄워놓고 한 탭에서 문제 수정 시 다른 탭에 0.01초 즉시 반영)
+        // Cross-tab real-time sync (다른 탭에서 문제 수정 시 실시간 반영)
         window.addEventListener('storage', async (e) => {
             if (e.key === 'housing_exam_custom_edits' || e.key === 'housing_exam_needs_edit' || e.key === 'housing_exam_deleted_keys') {
                 state.customEdits = await IDBStore.getAllQuestionEditsMap();
@@ -5368,10 +5368,7 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
                 if (state.questions && state.questions.length > 0) {
                     state.questions.forEach(applyCustomEdits);
                 }
-                if (state.currentScreen === 'quiz' || (elements.screens.quiz && elements.screens.quiz.classList.contains('active'))) {
-                    renderQuestion(state.currentIndex);
-                }
-                if (state.currentScreen === 'manager' || (elements.screens.manager && elements.screens.manager.classList.contains('active'))) {
+                if (elements.screens.manager && elements.screens.manager.classList.contains('active')) {
                     renderManagerList();
                 }
             }
@@ -5427,10 +5424,7 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
                     if (state.questions && state.questions.length > 0) {
                         state.questions.forEach(applyCustomEdits);
                     }
-                    if (state.mode === 'quiz') {
-                        renderQuestion(state.currentIndex);
-                    }
-                    if (state.mode === 'manager') {
+                    if (elements.screens.manager && elements.screens.manager.classList.contains('active')) {
                         renderManagerList();
                     }
                 }
