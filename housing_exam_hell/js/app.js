@@ -519,6 +519,58 @@
     };
 
     // -------------------------------------------------------------
+    // 1.5. Mock Exam Session State Persistence Engine (Bulletproof)
+    // -------------------------------------------------------------
+    const MockSessionManager = {
+        STORAGE_KEY: 'hell_active_mock_session',
+
+        saveSession(state) {
+            if (!state || state.mode !== 'mock' || !state.questions || state.questions.length === 0) return;
+            try {
+                const sessionData = {
+                    subject: state.subject,
+                    questions: state.questions,
+                    currentIndex: state.currentIndex,
+                    userAnswers: state.userAnswers,
+                    results: state.results,
+                    firstAttemptResults: state.firstAttemptResults,
+                    currentCombo: state.currentCombo || 0,
+                    maxCombo: state.maxCombo || 0,
+                    elapsedSeconds: state.elapsedSeconds || 0,
+                    mockRemainingSeconds: state.mockRemainingSeconds || (40 * 60),
+                    savedAt: Date.now()
+                };
+                localStorage.setItem(this.STORAGE_KEY, JSON.stringify(sessionData));
+            } catch (e) {
+                console.error('Failed to save mock session:', e);
+            }
+        },
+
+        getSession(subject) {
+            try {
+                const raw = localStorage.getItem(this.STORAGE_KEY);
+                if (!raw) return null;
+                const data = JSON.parse(raw);
+                if (subject && data.subject !== subject) return null;
+                // Valid for 12 hours
+                if (Date.now() - (data.savedAt || 0) > 12 * 3600 * 1000) {
+                    this.clearSession();
+                    return null;
+                }
+                return data;
+            } catch (e) {
+                return null;
+            }
+        },
+
+        clearSession() {
+            try {
+                localStorage.removeItem(this.STORAGE_KEY);
+            } catch (e) {}
+        }
+    };
+
+    // -------------------------------------------------------------
     // 2. Grader & Text Normalizer
     // -------------------------------------------------------------
     const Grader = {
@@ -2092,7 +2144,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260831.1945</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260831.1955</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -2117,7 +2169,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260831.1945</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260831.1955</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
@@ -2140,6 +2192,32 @@
         }
     }
 
+    function updateMockCardResumeUI() {
+        const mockDesc = document.getElementById('mock-mode-desc');
+        const mockCard = document.querySelector('.mode-card[data-mode="mock"]');
+        if (!mockDesc || !mockCard) return;
+
+        const activeSession = MockSessionManager.getSession(state.subject);
+        const isLaw = state.subject === '관계법규';
+        const colorClass = isLaw ? 'text-sky-400' : 'text-emerald-400';
+
+        if (activeSession && activeSession.questions && activeSession.questions.length > 0) {
+            const curNum = (activeSession.currentIndex || 0) + 1;
+            mockDesc.innerHTML = `
+                <div style="display: flex; flex-direction: column; gap: 4px; margin-top: 4px;">
+                    <span style="color: #94A3B8; font-size: 0.85rem;">진행 중인 시험: <b style="color: #38BDF8;">${curNum}/40번</b> 문항</span>
+                    <span style="display: inline-flex; align-items: center; gap: 6px; background: rgba(56, 189, 248, 0.18); color: #38BDF8; border: 1px solid rgba(56, 189, 248, 0.4); padding: 3px 8px; border-radius: 6px; font-weight: 700; font-size: 0.78rem; width: fit-content;">
+                        <i class="fa-solid fa-play"></i> 풀던 시험 이어서 풀기
+                    </span>
+                </div>
+            `;
+            mockCard.style.borderColor = 'rgba(56, 189, 248, 0.5)';
+        } else {
+            mockDesc.innerHTML = `출제비율을 반영한 40문항 <span class="${colorClass}" style="font-weight: 700;">${state.subject}</span> 실전 시험입니다`;
+            mockCard.style.borderColor = '';
+        }
+    }
+
     function setSubject(subj) {
         state.subject = subj;
         localStorage.setItem('hell_subject', subj);
@@ -2155,13 +2233,7 @@
             elements.header.brandBadge.textContent = subj;
         }
 
-        // Dynamically update Real Mock Exam description according to selected subject
-        const mockDesc = document.getElementById('mock-mode-desc');
-        if (mockDesc) {
-            const isLaw = subj === '관계법규';
-            const colorClass = isLaw ? 'text-sky-400' : 'text-emerald-400';
-            mockDesc.innerHTML = `출제비율을 반영한 40문항 <span class="${colorClass}" style="font-weight: 700;">${subj}</span> 실전 시험입니다`;
-        }
+        updateMockCardResumeUI();
     }
 
     function showToast(msg) {
@@ -2388,9 +2460,44 @@
         state.questions = JSON.parse(JSON.stringify(state.questions));
         state.questions.forEach(q => Object.freeze(q));
 
+        if (modeKey === 'mock') {
+            MockSessionManager.saveSession(state);
+        }
+
         startTimer(modeKey === 'mock');
         showScreen('quiz');
         renderQuestion(0);
+    }
+
+    async function resumeMockSession(sessionData) {
+        if (!sessionData || !sessionData.questions || sessionData.questions.length === 0) return;
+        state.mode = 'mock';
+        state.subject = sessionData.subject || state.subject;
+        state.questions = sessionData.questions;
+        state.questions = JSON.parse(JSON.stringify(state.questions));
+        state.questions.forEach(q => Object.freeze(q));
+        state.currentIndex = sessionData.currentIndex || 0;
+        state.userAnswers = sessionData.userAnswers || [];
+        state.results = sessionData.results || [];
+        state.firstAttemptResults = sessionData.firstAttemptResults || [];
+        state.currentCombo = sessionData.currentCombo || 0;
+        state.maxCombo = sessionData.maxCombo || 0;
+        state.elapsedSeconds = sessionData.elapsedSeconds || 0;
+        state.mockRemainingSeconds = sessionData.mockRemainingSeconds || (40 * 60);
+        state.isExplanationOpen = false;
+        if (state.sessionStrokes) state.sessionStrokes.clear();
+        state.statsMap = await IDBStore.getAllStatsMap();
+
+        if (elements.header.modeTitle) {
+            elements.header.modeTitle.innerHTML = `<i class="fa-solid fa-clock text-sky-400"></i> 실전 모의고사 (이어풀기)`;
+        }
+
+        startTimer(true);
+        state.elapsedSeconds = sessionData.elapsedSeconds || 0;
+        state.mockRemainingSeconds = sessionData.mockRemainingSeconds || (40 * 60);
+        showScreen('quiz');
+        renderQuestion(state.currentIndex);
+        showToast(`💾 [${state.subject} 모의고사] ${state.currentIndex + 1}번 문항부터 안전하게 복원되었습니다.`);
     }
 
     async function resumePart(subject, chapter) {
@@ -2706,6 +2813,9 @@
         }
 
         updateBloodGauge();
+        if (state.mode === 'mock') {
+            MockSessionManager.saveSession(state);
+        }
     }
 
     function renderChoiceOptions(q, index) {
@@ -2902,6 +3012,7 @@
                     input.value = topCand;
                     if (!state.userAnswers[index]) state.userAnswers[index] = {};
                     state.userAnswers[index][k] = topCand;
+                    if (state.mode === 'mock') MockSessionManager.saveSession(state);
 
                     candidatesBox.innerHTML = `<span class="hw-cand-label">후보:</span>`;
                     candidates.slice(0, 6).forEach((cand, cIdx) => {
@@ -2915,6 +3026,7 @@
                             input.value = cand.trim();
                             if (!state.userAnswers[index]) state.userAnswers[index] = {};
                             state.userAnswers[index][k] = cand.trim();
+                            if (state.mode === 'mock') MockSessionManager.saveSession(state);
                         });
                         candidatesBox.appendChild(chip);
                     });
@@ -3013,6 +3125,9 @@
         if (elements.quiz.btnToggleExp) {
             elements.quiz.btnToggleExp.innerHTML = `<i class="fa-solid fa-circle-check text-sky-400"></i> ${choiceNum}번 정답 확인`;
         }
+        if (state.mode === 'mock') {
+            MockSessionManager.saveSession(state);
+        }
     }
 
     async function gradeCurrentQuestion() {
@@ -3058,6 +3173,9 @@
 
         if (state.mode === 'part') {
             PartProgressManager.saveProgress(state.subject, state.currentPartPattern, state);
+        }
+        if (state.mode === 'mock') {
+            MockSessionManager.saveSession(state);
         }
     }
 
@@ -3198,6 +3316,9 @@
 
         if (state.mode === 'part') {
             PartProgressManager.clearProgress(state.subject, state.currentPartPattern);
+        }
+        if (state.mode === 'mock') {
+            MockSessionManager.clearSession();
         }
 
         let correctCount = 0;
@@ -4399,7 +4520,20 @@
                     openDownloadMdModal();
                 } else if (mode === 'part') {
                     openPartSelectModal();
-                } else if (mode === 'infinite' || mode === 'review' || mode === 'mock') {
+                } else if (mode === 'mock') {
+                    const activeSession = MockSessionManager.getSession(state.subject);
+                    if (activeSession && activeSession.questions && activeSession.questions.length > 0) {
+                        const curNum = (activeSession.currentIndex || 0) + 1;
+                        if (confirm(`💾 [${state.subject} 실전 모의고사]\n현재 ${curNum}/40번 문항까지 푼 시험이 안전하게 보존되어 있습니다.\n\n이전에 풀던 시험을 이어서 푸시겠습니까?\n\n- '확인' : 풀던 모의고사 이어서 풀기\n- '취소' : 새 40문항 모의고사 시작`)) {
+                            showExamLoading(() => resumeMockSession(activeSession));
+                            return;
+                        } else {
+                            MockSessionManager.clearSession();
+                            updateMockCardResumeUI();
+                        }
+                    }
+                    showExamLoading(() => startMode(mode));
+                } else if (mode === 'infinite' || mode === 'review') {
                     showExamLoading(() => startMode(mode));
                 } else {
                     startMode(mode);
@@ -4990,6 +5124,16 @@
                 }
                 return;
             }
+            if (state.mode === 'mock') {
+                MockSessionManager.saveSession(state);
+                if (confirm(`💾 [실전 모의고사]\n현재 ${state.currentIndex + 1}번 문항까지의 문제 및 OMR 마킹이 자동 보존되었습니다.\n\n메인 화면으로 이동하시겠습니까? (홈 화면에서 언제든 이어서 풀 수 있습니다)`)) {
+                    clearInterval(state.timerInterval);
+                    showScreen('home');
+                    showToast('💾 실전 모의고사 진행 상황이 안전하게 보존되었습니다.');
+                    updateMockCardResumeUI();
+                }
+                return;
+            }
             if (confirm('학습을 종료하고 메인 화면으로 이동하시겠습니까?')) {
                 clearInterval(state.timerInterval);
                 showScreen('home');
@@ -5389,10 +5533,13 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
             }
         });
 
-        // Auto-save part progress on window unload / refresh
+        // Auto-save part/mock progress on window unload / refresh
         window.addEventListener('beforeunload', () => {
             if (state.mode === 'part' && state.currentPartPattern) {
                 PartProgressManager.saveProgress(state.subject, state.currentPartPattern, state);
+            }
+            if (state.mode === 'mock') {
+                MockSessionManager.saveSession(state);
             }
         });
     }
