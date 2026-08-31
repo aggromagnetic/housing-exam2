@@ -141,10 +141,11 @@ class MainActivity : AppCompatActivity() {
             builtInZoomControls = true
             displayZoomControls = false
 
-            // Cache & Offline
-            cacheMode = WebSettings.LOAD_DEFAULT
+            // Cache & Offline: Always fetch latest version on Wi-Fi
+            cacheMode = WebSettings.LOAD_NO_CACHE
             mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
         }
+        webView.clearCache(true)
     }
 
     private fun enableImmersiveStickyMode() {

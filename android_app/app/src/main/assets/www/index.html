@@ -4,7 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>주택관리사보 2차 스마트 학습 플랫폼 (관계법규 & 관리실무)</title>
-    <link rel="stylesheet" href="styles.css?v=2608272142">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <script>
+        // Automatic tablet cache buster: Forces tablet WebView to always fetch latest build
+        (function() {
+            const CURRENT_BUILD = '2608311945';
+            const savedBuild = localStorage.getItem('housing_exam_build_version');
+            if (savedBuild !== CURRENT_BUILD) {
+                localStorage.setItem('housing_exam_build_version', CURRENT_BUILD);
+                if (window.caches) {
+                    caches.keys().then(names => names.forEach(name => caches.delete(name)));
+                }
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.get('v') !== CURRENT_BUILD) {
+                    window.location.replace(window.location.pathname + '?v=' + CURRENT_BUILD + '&t=' + Date.now());
+                }
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="styles.css?v=2608311945">
     <meta name="theme-color" content="#1e293b">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -40,7 +60,7 @@
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                 풀던 퀴즈
             </button>
-            <a href="housing_exam_hell/" class="nav-btn btn-exam-hell-link" style="color: #ef4444; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;" title="3,900문항 (기출 + 100선 특강 430제 통합) 5개년 출제비율 시뮬레이션 및 무한 헬모드">
+            <a href="housing_exam_hell/" class="nav-btn btn-exam-hell-link" style="color: #ef4444; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;" title="3,959문항 (기출 + 100선 특강 + 2026 출제유력 주관식 60제 통합) 5개년 출제비율 시뮬레이션 및 무한 헬모드">
                 🔥 문제지옥
             </a>
             <button class="nav-btn" id="btn-tab-result" onclick="switchView('result')" style="display: none;">
