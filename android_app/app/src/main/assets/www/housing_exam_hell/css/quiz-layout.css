@@ -427,7 +427,6 @@
     color: #FFF !important;
 }
 
-/* Subjective Blank Inputs */
 /* Subjective Blank Inputs & Handwriting Pad */
 .subjective-container {
     background: #0A0F1D;
@@ -435,6 +434,9 @@
     border-radius: 12px;
     padding: 18px;
     margin-bottom: 20px;
+    position: relative;
+    z-index: 50;
+    pointer-events: auto;
 }
 
 .blank-row-wrapper {

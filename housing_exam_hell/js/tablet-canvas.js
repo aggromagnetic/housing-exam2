@@ -118,10 +118,13 @@ export class TabletCanvas {
         this.canvas.style.pointerEvents = 'auto';
 
         if (underEl) {
-            const inputTarget = underEl.closest('.blank-input, .hw-drawer, .btn-toggle-hw, .hw-canvas, .hw-cand-chip, .btn-hw-action');
+            const inputTarget = underEl.closest('.subjective-container, .blank-row-wrapper, .blank-input, .hw-drawer, .btn-toggle-hw, .hw-canvas, .hw-cand-chip, .btn-hw-action');
             if (inputTarget) {
-                if (inputTarget.classList.contains('blank-input') || inputTarget.tagName === 'INPUT' || inputTarget.tagName === 'TEXTAREA') {
-                    inputTarget.focus();
+                this.isDrawing = false;
+                this.currentStroke = null;
+                const realInput = underEl.closest('input, textarea') || inputTarget.querySelector('input, textarea');
+                if (realInput) {
+                    realInput.focus();
                 }
                 return;
             }

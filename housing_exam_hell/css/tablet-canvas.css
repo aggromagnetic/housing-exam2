@@ -147,12 +147,14 @@ body.stylus-mode-active .option-item.selected .opt-num {
 }
 
 /* 주관식 입력창 필기 모드: 태블릿 펜(S펜/애플펜슬) 직접 쓰기 및 필기패드 영역 */
+.subjective-container,
+body.stylus-mode-active .subjective-container,
 body.stylus-mode-active .blank-row-wrapper,
 body.stylus-mode-active .blank-input,
 body.stylus-mode-active .btn-toggle-hw,
 body.stylus-mode-active .hw-drawer {
     position: relative;
-    z-index: 45;
+    z-index: 50;
     pointer-events: auto;
 }
 
