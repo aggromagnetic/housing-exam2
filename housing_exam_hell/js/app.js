@@ -529,7 +529,7 @@
             try {
                 const sessionData = {
                     subject: state.subject,
-                    questions: state.questions,
+                    questionKeys: state.questions.map(q => q.qKey),
                     currentIndex: state.currentIndex,
                     userAnswers: state.userAnswers,
                     results: state.results,
@@ -556,6 +556,19 @@
                 if (Date.now() - (data.savedAt || 0) > 12 * 3600 * 1000) {
                     this.clearSession();
                     return null;
+                }
+                // Hydrate questions if questionKeys array is stored
+                if (data.questionKeys && Array.isArray(data.questionKeys)) {
+                    const allPool = [
+                        ...ExamEngine.getQuestionPool(data.subject, 'choice'),
+                        ...ExamEngine.getQuestionPool(data.subject, 'short')
+                    ];
+                    const poolMap = new Map(allPool.map(q => [q.qKey, q]));
+                    data.questions = data.questionKeys.map(k => poolMap.get(k)).filter(Boolean);
+                    if (data.questions.length !== data.questionKeys.length) {
+                        this.clearSession();
+                        return null;
+                    }
                 }
                 return data;
             } catch (e) {
@@ -1677,6 +1690,13 @@
 
             if (this.currentQuestionKey && state.sessionStrokes) {
                 state.sessionStrokes.set(this.currentQuestionKey, [...this.strokes]);
+                // Memory Guard: If session strokes exceed 35 questions, prune oldest entries to keep RAM low
+                if (state.sessionStrokes.size > 35) {
+                    const oldestKey = state.sessionStrokes.keys().next().value;
+                    if (oldestKey && oldestKey !== this.currentQuestionKey) {
+                        state.sessionStrokes.delete(oldestKey);
+                    }
+                }
             }
         }
 
@@ -2144,7 +2164,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260831.2005</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260831.2335</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -2169,7 +2189,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260831.2005</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260831.2335</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
@@ -2618,13 +2638,41 @@
         };
     }
 
-    function formatExplanation(text) {
+    function formatExplanationToHtml(text) {
         if (!text) return '';
-        return text
+        let clean = text
             .replace(/([.!?])([㉠㉡㉢㉣㉤㉥㉦㉧㉨㉩㉪①②③④⑤⑥⑦⑧⑨⑩])/g, '$1 $2')
             .replace(/\r\n/g, '\n')
             .replace(/\n{3,}/g, '\n\n')
             .trim();
+
+        // Check if there is an [일타 팁] section
+        if (clean.includes('━━━━━━━━━━━━━━━━━━━━━━━━━━━━') || clean.includes('💡 [일타 팁')) {
+            const parts = clean.split(/━━━━━━━━━━━━━━━━━━━━━━━━━━━━|💡\s*\[일타\s*팁/);
+            const mainBody = parts[0].trim();
+            const tipContent = parts.slice(1).join('\n').replace(/^(&\s*3초\s*암기\s*공식\]|\])/, '').trim();
+            
+            let formattedMain = escapeHtml(mainBody)
+                .replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>');
+            
+            let formattedTip = escapeHtml(tipContent)
+                .replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>');
+
+            return `
+                <div class="exp-main-text" style="white-space: pre-wrap; line-height: 1.75;">${formattedMain}</div>
+                <div class="exp-section-tip">
+                    <div style="font-weight: 800; font-size: 1.12rem; margin-bottom: 8px; color: #F59E0B; display: flex; align-items: center; gap: 6px;">
+                        <i class="fa-solid fa-lightbulb"></i> 일타 팁 & 3초 암기 공식
+                    </div>
+                    <div style="white-space: pre-wrap; line-height: 1.7; color: #FEF3C7;">${formattedTip}</div>
+                </div>
+            `;
+        }
+
+        let formattedText = escapeHtml(clean)
+            .replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>');
+
+        return `<div class="exp-main-text" style="white-space: pre-wrap; line-height: 1.75;">${formattedText}</div>`;
     }
 
     async function renderQuestion(index) {
@@ -2739,9 +2787,7 @@
             }
         }
 
-        let expText = q.explanation && q.explanation.trim().length > 0 
-            ? formatExplanation(q.explanation)
-            : (q.type === 'short' ? '본 문항의 조문 및 법령 규정에 따른 정확한 기입 답안은 위와 같습니다.' : '');
+        let expHtml = formatExplanationToHtml(q.explanation || (q.type === 'short' ? '본 문항의 조문 및 법령 규정에 따른 정확한 기입 답안은 위와 같습니다.' : ''));
 
         if (q.isHighYield && q.primaryCoreItem) {
             const isSuper = (q.topScore >= 6);
@@ -2750,18 +2796,18 @@
                 : `<i class="fa-solid fa-star text-amber-400"></i> [초고효율 핵심 300선 No.${String(q.primaryCoreItem.id).padStart(3, '0')}] ${q.primaryCoreItem.topic}`;
             const calloutClass = isSuper ? 'core-theme-callout callout-tier-super' : 'core-theme-callout';
             const calloutHtml = `
-                <div class="${calloutClass}">
+                <div class="${calloutClass}" style="margin-top: 14px;">
                     <div class="core-theme-title">${titleHtml}</div>
                     <div class="core-theme-note"><b>💡 출제 포인트:</b> ${q.primaryCoreItem.note}</div>
                 </div>
             `;
-            elements.quiz.expBody.innerHTML = `<div style="white-space: pre-wrap;">${expText}</div>${calloutHtml}`;
+            elements.quiz.expBody.innerHTML = `${expHtml}${calloutHtml}`;
         } else {
-            elements.quiz.expBody.textContent = expText;
+            elements.quiz.expBody.innerHTML = expHtml;
         }
 
-        if (q.tip) {
-            elements.quiz.tipBox.textContent = `💡 일타 팁: ${q.tip}`;
+        if (q.tip && q.tip.trim()) {
+            elements.quiz.tipBox.innerHTML = `<i class="fa-solid fa-lightbulb"></i> <b>일타 팁:</b> ${escapeHtml(q.tip)}`;
             elements.quiz.tipBox.style.display = 'block';
         } else {
             elements.quiz.tipBox.style.display = 'none';

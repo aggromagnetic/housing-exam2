@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity() {
                 super.onReceivedError(view, request, error)
                 // If live online page fails to load (e.g. no Wi-Fi / offline), seamlessly fallback to local asset
                 if (request.isForMainFrame && !request.url.toString().contains("appassets.androidplatform.net")) {
-                    view.loadUrl("https://appassets.androidplatform.net/assets/www/index.html")
+                    view.loadUrl("https://appassets.androidplatform.net/assets/www/housing_exam_hell/index.html")
                 }
             }
         }
@@ -118,9 +118,9 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // 7. Load Live Online App with Auto-Updates (Falls back to local asset if offline)
+        // 7. Load Dedicated Housing Exam Hell App with Auto-Updates (Falls back to local asset if offline)
         if (savedInstanceState == null) {
-            webView.loadUrl("https://aggromagnetic.github.io/housing-exam2/")
+            webView.loadUrl("https://aggromagnetic.github.io/housing-exam2/housing_exam_hell/")
         } else {
             webView.restoreState(savedInstanceState)
         }
