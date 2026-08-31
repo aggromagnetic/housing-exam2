@@ -119,10 +119,19 @@ class MainActivity : AppCompatActivity() {
         }
 
         // 7. Load Live Online App with Auto-Updates (Falls back to local asset if offline)
-        webView.loadUrl("https://aggromagnetic.github.io/housing-exam2/")
+        if (savedInstanceState == null) {
+            webView.loadUrl("https://aggromagnetic.github.io/housing-exam2/")
+        } else {
+            webView.restoreState(savedInstanceState)
+        }
 
         // 8. Handle Back Button (Prevent Accidental Exits)
         setupBackPressHandler()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        webView.saveState(outState)
     }
 
     private fun configureWebViewSettings(settings: WebSettings) {
