@@ -827,6 +827,19 @@
     color: #000;
 }
 
+.btn-finish {
+    background: #10B981 !important;
+    color: #000 !important;
+    border-color: #10B981 !important;
+    font-weight: 800 !important;
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.5) !important;
+}
+
+.btn-finish:hover {
+    background: #34D399 !important;
+    transform: scale(1.04);
+}
+
 .btn-override {
     font-size: 0.8rem;
     padding: 6px 12px;
