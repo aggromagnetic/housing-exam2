@@ -182,6 +182,15 @@ const CloudSync = {
                         }
                     }
                 });
+                // Filter against deletedEdits
+                const localDelEdits = JSON.parse(localStorage.getItem("housing_exam_deleted_edits") || "{}");
+                Object.keys(finalEdits).forEach(k => {
+                    const delTime = localDelEdits[k] ? new Date(localDelEdits[k]).getTime() : 0;
+                    const editTime = finalEdits[k]?.editedAt ? new Date(finalEdits[k].editedAt).getTime() : 0;
+                    if (delTime > 0 && delTime >= editTime) {
+                        delete finalEdits[k];
+                    }
+                });
                 localStorage.setItem("housing_exam_custom_edits", JSON.stringify(finalEdits));
             }
 
@@ -325,6 +334,15 @@ const CloudSync = {
                     if (lTime >= cTime) {
                         mergedToPush[k] = loc;
                     }
+                }
+            });
+            // Filter against deletedEdits
+            const localDelEdits = JSON.parse(localStorage.getItem("housing_exam_deleted_edits") || "{}");
+            Object.keys(mergedToPush).forEach(k => {
+                const delTime = localDelEdits[k] ? new Date(localDelEdits[k]).getTime() : 0;
+                const editTime = mergedToPush[k]?.editedAt ? new Date(mergedToPush[k].editedAt).getTime() : 0;
+                if (delTime > 0 && delTime >= editTime) {
+                    delete mergedToPush[k];
                 }
             });
             localStorage.setItem("housing_exam_custom_edits", JSON.stringify(mergedToPush));

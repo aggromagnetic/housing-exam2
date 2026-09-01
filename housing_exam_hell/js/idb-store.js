@@ -373,13 +373,17 @@ export const IDBStore = {
     async saveQuestionEdit(qKey, editData) {
         try {
             const map = JSON.parse(localStorage.getItem('housing_exam_custom_edits') || '{}');
+            const delEdits = JSON.parse(localStorage.getItem('housing_exam_deleted_edits') || '{}');
+            delete delEdits[qKey];
+            localStorage.setItem('housing_exam_deleted_edits', JSON.stringify(delEdits));
+
             const item = {
                 ...editData,
                 editedAt: editData.editedAt || new Date().toISOString()
             };
             map[qKey] = item;
             localStorage.setItem('housing_exam_custom_edits', JSON.stringify(map));
-            if (window.CloudSync) window.CloudSync.schedulePush();
+            if (window.CloudSync) window.CloudSync.schedulePush(200);
             return item;
         } catch (e) {
             return editData;
@@ -413,7 +417,12 @@ export const IDBStore = {
             const map = JSON.parse(localStorage.getItem('housing_exam_custom_edits') || '{}');
             delete map[qKey];
             localStorage.setItem('housing_exam_custom_edits', JSON.stringify(map));
-            if (window.CloudSync) window.CloudSync.schedulePush();
+
+            const delEdits = JSON.parse(localStorage.getItem('housing_exam_deleted_edits') || '{}');
+            delEdits[qKey] = new Date().toISOString();
+            localStorage.setItem('housing_exam_deleted_edits', JSON.stringify(delEdits));
+
+            if (window.CloudSync) window.CloudSync.schedulePush(200);
         } catch (e) {}
     },
 

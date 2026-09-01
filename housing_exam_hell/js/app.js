@@ -717,11 +717,27 @@
                     correctSummary: `${targetChoice}번`
                 };
             } else {
-                const targetAnswers = question.answers || {};
+                let targetAnswers = question.answers;
+                if (!targetAnswers || Object.keys(targetAnswers).length === 0) {
+                    if (question.answer) {
+                        const parsed = parseSubjectiveAnswers(question.answer);
+                        targetAnswers = parsed.answers;
+                    } else {
+                        targetAnswers = {};
+                    }
+                }
                 const keys = sortSubjectiveEntries(Object.entries(targetAnswers)).map(([k]) => k);
 
                 if (keys.length === 0) {
                     return { isCorrect: false, details: {}, userSummary: '', correctSummary: '' };
+                }
+
+                let userObj = userResponse;
+                if (typeof userResponse === 'string') {
+                    const parsedUser = parseSubjectiveAnswers(userResponse, targetAnswers);
+                    userObj = parsedUser.answers;
+                } else if (!userObj || typeof userObj !== 'object') {
+                    userObj = {};
                 }
 
                 const details = {};
@@ -730,7 +746,7 @@
                 const correctParts = [];
 
                 keys.forEach(k => {
-                    const userVal = (userResponse && userResponse[k]) ? String(userResponse[k]).trim() : '';
+                    const userVal = (userObj && userObj[k]) ? String(userObj[k]).trim() : '';
                     const targetVal = targetAnswers[k] || '';
                     const match = this.isMatch(userVal, targetVal);
 
@@ -2201,7 +2217,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260901.1925</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260901.1935</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
