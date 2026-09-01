@@ -423,6 +423,10 @@ export const IDBStore = {
     async saveNeedsEdit(qKey, qInfo) {
         try {
             const map = JSON.parse(localStorage.getItem('housing_exam_needs_edit') || '{}');
+            const unflagged = JSON.parse(localStorage.getItem('housing_exam_unflagged_keys') || '{}');
+            delete unflagged[qKey];
+            localStorage.setItem('housing_exam_unflagged_keys', JSON.stringify(unflagged));
+
             map[qKey] = {
                 qKey,
                 subject: qInfo.subject || '',
@@ -432,7 +436,7 @@ export const IDBStore = {
                 flaggedAt: new Date().toISOString()
             };
             localStorage.setItem('housing_exam_needs_edit', JSON.stringify(map));
-            if (window.CloudSync) window.CloudSync.schedulePush();
+            if (window.CloudSync) window.CloudSync.schedulePush(200);
             return map[qKey];
         } catch (e) { return null; }
     },
@@ -454,7 +458,29 @@ export const IDBStore = {
             const map = JSON.parse(localStorage.getItem('housing_exam_needs_edit') || '{}');
             delete map[qKey];
             localStorage.setItem('housing_exam_needs_edit', JSON.stringify(map));
-            if (window.CloudSync) window.CloudSync.schedulePush();
+
+            const unflagged = JSON.parse(localStorage.getItem('housing_exam_unflagged_keys') || '{}');
+            unflagged[qKey] = new Date().toISOString();
+            localStorage.setItem('housing_exam_unflagged_keys', JSON.stringify(unflagged));
+
+            if (window.CloudSync) window.CloudSync.schedulePush(200);
+        } catch (e) {}
+    },
+
+    /**
+     * Clear all Needs Edit flags
+     */
+    async clearAllNeedsEdit() {
+        try {
+            const map = JSON.parse(localStorage.getItem('housing_exam_needs_edit') || '{}');
+            const unflagged = JSON.parse(localStorage.getItem('housing_exam_unflagged_keys') || '{}');
+            const nowIso = new Date().toISOString();
+            Object.keys(map).forEach(k => {
+                unflagged[k] = nowIso;
+            });
+            localStorage.setItem('housing_exam_unflagged_keys', JSON.stringify(unflagged));
+            localStorage.removeItem('housing_exam_needs_edit');
+            if (window.CloudSync) window.CloudSync.schedulePush(200);
         } catch (e) {}
     },
 
