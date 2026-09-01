@@ -5306,10 +5306,16 @@
 
         const btnHardRefresh = document.getElementById('btn-hard-refresh');
         if (btnHardRefresh) {
-            btnHardRefresh.addEventListener('click', () => {
-                showToast('🔄 태블릿 캐시를 삭제하고 최신 버전으로 즉시 새로고침합니다...');
+            btnHardRefresh.addEventListener('click', async () => {
+                showToast('🔄 캐시를 완전히 비우고 최신 버전으로 즉시 새로고침합니다...');
+                if (window.caches) {
+                    try {
+                        const names = await caches.keys();
+                        await Promise.all(names.map(name => caches.delete(name)));
+                    } catch (e) {}
+                }
                 setTimeout(() => {
-                    const cleanUrl = window.location.origin + window.location.pathname + '?v=2608311735&t=' + Date.now();
+                    const cleanUrl = window.location.origin + window.location.pathname + '?t=' + Date.now();
                     window.location.replace(cleanUrl);
                 }, 300);
             });
