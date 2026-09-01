@@ -221,13 +221,17 @@
         async saveQuestionEdit(qKey, editData) {
             try {
                 const map = JSON.parse(localStorage.getItem('housing_exam_custom_edits') || '{}');
+                const delEdits = JSON.parse(localStorage.getItem('housing_exam_deleted_edits') || '{}');
+                delete delEdits[qKey];
+                localStorage.setItem('housing_exam_deleted_edits', JSON.stringify(delEdits));
+
                 const item = {
                     ...editData,
                     editedAt: editData.editedAt || new Date().toISOString()
                 };
                 map[qKey] = item;
                 localStorage.setItem('housing_exam_custom_edits', JSON.stringify(map));
-                if (window.CloudSync) window.CloudSync.schedulePush();
+                if (window.CloudSync) window.CloudSync.schedulePush(200);
                 return item;
             } catch (e) {
                 return editData;
@@ -252,24 +256,34 @@
                 const map = JSON.parse(localStorage.getItem('housing_exam_custom_edits') || '{}');
                 delete map[qKey];
                 localStorage.setItem('housing_exam_custom_edits', JSON.stringify(map));
+
+                const delEdits = JSON.parse(localStorage.getItem('housing_exam_deleted_edits') || '{}');
+                delEdits[qKey] = new Date().toISOString();
+                localStorage.setItem('housing_exam_deleted_edits', JSON.stringify(delEdits));
+
+                if (window.CloudSync) window.CloudSync.schedulePush(200);
             } catch (e) {}
-            if (window.CloudSync) window.CloudSync.schedulePush();
         },
 
         async saveNeedsEdit(qKey, qInfo) {
             try {
                 const map = JSON.parse(localStorage.getItem('housing_exam_needs_edit') || '{}');
+                const unflagged = JSON.parse(localStorage.getItem('housing_exam_unflagged_keys') || '{}');
+                delete unflagged[qKey];
+                localStorage.setItem('housing_exam_unflagged_keys', JSON.stringify(unflagged));
+
                 map[qKey] = {
                     qKey,
-                    subject: qInfo.subject,
-                    chapterName: qInfo.chapterName,
-                    type: qInfo.type,
-                    question: qInfo.question || qInfo.title,
+                    subject: qInfo.subject || '',
+                    chapterName: qInfo.chapterName || '',
+                    type: qInfo.type || 'choice',
+                    question: qInfo.question || qInfo.title || '',
                     flaggedAt: new Date().toISOString()
                 };
                 localStorage.setItem('housing_exam_needs_edit', JSON.stringify(map));
-            } catch (e) {}
-            if (window.CloudSync) window.CloudSync.schedulePush();
+                if (window.CloudSync) window.CloudSync.schedulePush(200);
+                return map[qKey];
+            } catch (e) { return null; }
         },
 
         async getNeedsEdit(qKey) {
@@ -290,8 +304,27 @@
                 const map = JSON.parse(localStorage.getItem('housing_exam_needs_edit') || '{}');
                 delete map[qKey];
                 localStorage.setItem('housing_exam_needs_edit', JSON.stringify(map));
+
+                const unflagged = JSON.parse(localStorage.getItem('housing_exam_unflagged_keys') || '{}');
+                unflagged[qKey] = new Date().toISOString();
+                localStorage.setItem('housing_exam_unflagged_keys', JSON.stringify(unflagged));
+
+                if (window.CloudSync) window.CloudSync.schedulePush(200);
             } catch (e) {}
-            if (window.CloudSync) window.CloudSync.schedulePush();
+        },
+
+        async clearAllNeedsEdit() {
+            try {
+                const map = JSON.parse(localStorage.getItem('housing_exam_needs_edit') || '{}');
+                const unflagged = JSON.parse(localStorage.getItem('housing_exam_unflagged_keys') || '{}');
+                const nowIso = new Date().toISOString();
+                Object.keys(map).forEach(k => {
+                    unflagged[k] = nowIso;
+                });
+                localStorage.setItem('housing_exam_unflagged_keys', JSON.stringify(unflagged));
+                localStorage.removeItem('housing_exam_needs_edit');
+                if (window.CloudSync) window.CloudSync.schedulePush(200);
+            } catch (e) {}
         },
 
         async saveDeletedKey(qKey) {
@@ -2217,7 +2250,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260901.1935</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260901.1940</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -2242,7 +2275,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260901.1935</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260901.1940</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
