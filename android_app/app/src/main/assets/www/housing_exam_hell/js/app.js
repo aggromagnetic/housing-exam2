@@ -2005,6 +2005,33 @@
         return sorted;
     }
 
+    function parseSubjectiveAnswers(rawInput, existingAnswers = {}) {
+        const trimmed = (rawInput || '').trim();
+        if (!trimmed) return { answers: {}, answer: '' };
+
+        const existingKeys = Object.keys(existingAnswers || {});
+        const CIRCLED = ['㉠', '㉡', '㉢', '㉣', '㉤', '㉥', '㉦', '㉧', '㉨', '㉩'];
+        const answersObj = {};
+
+        if (trimmed.includes('=')) {
+            const pairs = trimmed.split(',').map(s => s.trim()).filter(Boolean);
+            pairs.forEach(p => {
+                const [k, ...vParts] = p.split('=');
+                if (k) answersObj[k.trim()] = vParts.join('=').trim();
+            });
+        } else {
+            const values = trimmed.split(/[,，\n]/).map(s => s.trim()).filter(Boolean);
+            values.forEach((val, idx) => {
+                const key = existingKeys[idx] || CIRCLED[idx] || String(idx + 1);
+                answersObj[key] = val;
+            });
+        }
+
+        const sortedAnswers = getSortedAnswersObject(answersObj);
+        const answerStr = Object.entries(sortedAnswers).map(([k, v]) => `${k}=${v}`).join(', ');
+        return { answers: sortedAnswers, answer: answerStr };
+    }
+
     function applyCustomEdits(q) {
         if (!q || !q.qKey || !state.customEdits) return q;
         const custom = state.customEdits[q.qKey];
@@ -2174,7 +2201,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260901.1850</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260901.1925</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -2199,7 +2226,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260901.1850</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260901.1925</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
@@ -4771,19 +4798,9 @@
                 editData.answer = selectedRadio ? selectedRadio.value : (q.answer || '1');
             } else {
                 const rawShort = (elements.manager.editShortAns.value || '').trim();
-                if (rawShort.includes('=')) {
-                    const pairs = rawShort.split(',').map(s => s.trim()).filter(Boolean);
-                    const answersObj = {};
-                    pairs.forEach(p => {
-                        const [k, ...vParts] = p.split('=');
-                        if (k) answersObj[k.trim()] = vParts.join('=').trim();
-                    });
-                    const sortedAnswers = getSortedAnswersObject(answersObj);
-                    editData.answers = sortedAnswers;
-                    editData.answer = Object.values(sortedAnswers).join(', ');
-                } else {
-                    editData.answer = rawShort;
-                }
+                const parsed = parseSubjectiveAnswers(rawShort, q.answers);
+                editData.answers = parsed.answers;
+                editData.answer = parsed.answer || rawShort;
             }
 
             const savedItem = await IDBStore.saveQuestionEdit(qKey, editData);
@@ -5410,14 +5427,9 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
                     editData.options = newOptions;
                     editData.answer = newAns;
                 } else {
-                    const newAnswers = {};
-                    newAns.split(',').forEach(pair => {
-                        const [k, ...vParts] = pair.split('=').map(s => s.trim());
-                        if (k && vParts.length) newAnswers[k] = vParts.join('=').trim();
-                    });
-                    const sortedAnswers = getSortedAnswersObject(newAnswers);
-                    editData.answers = sortedAnswers;
-                    editData.answer = Object.values(sortedAnswers).join(', ');
+                    const parsed = parseSubjectiveAnswers(newAns, q.answers);
+                    editData.answers = parsed.answers;
+                    editData.answer = parsed.answer || newAns;
                 }
 
                 try {

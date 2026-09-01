@@ -1,5 +1,5 @@
 window.STUDY_DATA = {
-  "updatedAt": "2026-09-01T09:46:57.578Z",
+  "updatedAt": "2026-09-01T10:22:00.605Z",
   "totalLectures": 183,
   "totalQuizzes": 2772,
   "lectures": [
