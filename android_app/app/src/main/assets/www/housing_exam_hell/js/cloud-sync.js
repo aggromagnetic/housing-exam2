@@ -165,10 +165,23 @@ const CloudSync = {
                 mergedHistory = legacyDoc.data().history;
             }
 
-            // Apply merged data to LocalStorage & IndexedDB
+            // Apply merged data to LocalStorage & IndexedDB (Timestamp-based CRDT merge)
+            const localEdits = JSON.parse(localStorage.getItem("housing_exam_custom_edits") || "{}");
+            const finalEdits = { ...localEdits };
             if (Object.keys(mergedCustomEdits).length > 0) {
-                const localEdits = JSON.parse(localStorage.getItem("housing_exam_custom_edits") || "{}");
-                const finalEdits = { ...localEdits, ...mergedCustomEdits };
+                Object.keys(mergedCustomEdits).forEach(k => {
+                    const cItem = mergedCustomEdits[k];
+                    const lItem = finalEdits[k];
+                    if (!lItem) {
+                        finalEdits[k] = cItem;
+                    } else {
+                        const cTime = cItem.editedAt ? new Date(cItem.editedAt).getTime() : 0;
+                        const lTime = lItem.editedAt ? new Date(lItem.editedAt).getTime() : 0;
+                        if (cTime > lTime) {
+                            finalEdits[k] = cItem;
+                        }
+                    }
+                });
                 localStorage.setItem("housing_exam_custom_edits", JSON.stringify(finalEdits));
             }
 
@@ -280,8 +293,44 @@ const CloudSync = {
             const syncCol = this.db.collection("exam_hell_sync");
             const chunkPromises = [];
 
+            // Fetch current cloud edits first to ensure bidirectional safe merge (never overwrite newer edits)
+            let currentCloudEdits = {};
+            try {
+                const metaDoc = await syncCol.doc("edits_meta").get();
+                if (metaDoc && metaDoc.exists) {
+                    const totalChunks = metaDoc.data()?.totalChunks || 1;
+                    const cPromises = [];
+                    for (let i = 0; i < totalChunks; i++) {
+                        cPromises.push(syncCol.doc(`edits_chunk_${i}`).get().catch(() => null));
+                    }
+                    const cDocs = await Promise.all(cPromises);
+                    cDocs.forEach(cd => {
+                        if (cd && cd.exists && cd.data()?.data) {
+                            try { Object.assign(currentCloudEdits, JSON.parse(cd.data().data)); } catch (e) {}
+                        }
+                    });
+                }
+            } catch (e) {}
+
+            // Merge cloud + local by editedAt timestamp
+            const mergedToPush = { ...currentCloudEdits };
+            Object.keys(customEdits).forEach(k => {
+                const loc = customEdits[k];
+                const cld = mergedToPush[k];
+                if (!cld) {
+                    mergedToPush[k] = loc;
+                } else {
+                    const lTime = loc.editedAt ? new Date(loc.editedAt).getTime() : 0;
+                    const cTime = cld.editedAt ? new Date(cld.editedAt).getTime() : 0;
+                    if (lTime >= cTime) {
+                        mergedToPush[k] = loc;
+                    }
+                }
+            });
+            localStorage.setItem("housing_exam_custom_edits", JSON.stringify(mergedToPush));
+
             // 1. Save Custom Edits into safe 150-item JSON-string chunks (max ~75KB each, 100% immune to 1MB limit)
-            const editKeys = Object.keys(customEdits);
+            const editKeys = Object.keys(mergedToPush);
             const CHUNK_SIZE = 150;
             const numChunks = Math.max(1, Math.ceil(editKeys.length / CHUNK_SIZE));
 
@@ -294,7 +343,7 @@ const CloudSync = {
             for (let i = 0; i < numChunks; i++) {
                 const sliceKeys = editKeys.slice(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE);
                 const chunkObj = {};
-                sliceKeys.forEach(k => { chunkObj[k] = customEdits[k]; });
+                sliceKeys.forEach(k => { chunkObj[k] = mergedToPush[k]; });
                 chunkPromises.push(syncCol.doc(`edits_chunk_${i}`).set({
                     chunkIndex: i,
                     chunkSize: sliceKeys.length,
