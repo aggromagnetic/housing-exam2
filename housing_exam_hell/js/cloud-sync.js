@@ -121,13 +121,17 @@ const CloudSync = {
                 }
             }
 
-            // B. Load Flags & Deleted Keys
+            // B. Load Flags, Unflagged Resolves & Deleted Keys
+            let cloudUnflagged = {};
             if (flagsDoc && flagsDoc.exists) {
                 const fData = flagsDoc.data() || {};
                 if (fData.needsEditData) {
                     try { mergedNeedsEdit = JSON.parse(fData.needsEditData); } catch (e) {}
                 } else if (fData.needsEditMap) {
                     mergedNeedsEdit = fData.needsEditMap;
+                }
+                if (fData.unflaggedData) {
+                    try { cloudUnflagged = JSON.parse(fData.unflaggedData); } catch (e) {}
                 }
                 mergedDeletedKeys = fData.deletedKeys || [];
             } else if (legacyDoc && legacyDoc.exists) {
@@ -168,11 +172,31 @@ const CloudSync = {
                 localStorage.setItem("housing_exam_custom_edits", JSON.stringify(finalEdits));
             }
 
+            // Merge local and cloud unflagged records
+            const localUnflagged = JSON.parse(localStorage.getItem("housing_exam_unflagged_keys") || "{}");
+            const mergedUnflagged = { ...localUnflagged, ...cloudUnflagged };
+            localStorage.setItem("housing_exam_unflagged_keys", JSON.stringify(mergedUnflagged));
+
+            // Clean mergedNeedsEdit against unflagged timestamps
+            if (mergedNeedsEdit && typeof mergedNeedsEdit === 'object') {
+                Object.keys(mergedNeedsEdit).forEach(k => {
+                    const unflagTime = mergedUnflagged[k] ? new Date(mergedUnflagged[k]).getTime() : 0;
+                    const flagTime = mergedNeedsEdit[k]?.flaggedAt ? new Date(mergedNeedsEdit[k].flaggedAt).getTime() : 0;
+                    if (unflagTime > 0 && unflagTime >= flagTime) {
+                        delete mergedNeedsEdit[k];
+                    }
+                });
+            }
+
             if (flagsDoc && flagsDoc.exists) {
                 localStorage.setItem("housing_exam_needs_edit", JSON.stringify(mergedNeedsEdit || {}));
             } else if (Object.keys(mergedNeedsEdit).length > 0) {
                 const localNeeds = JSON.parse(localStorage.getItem("housing_exam_needs_edit") || "{}");
                 const finalNeeds = { ...localNeeds, ...mergedNeedsEdit };
+                // Also clean against unflagged
+                Object.keys(finalNeeds).forEach(k => {
+                    if (mergedUnflagged[k]) delete finalNeeds[k];
+                });
                 localStorage.setItem("housing_exam_needs_edit", JSON.stringify(finalNeeds));
             }
 
@@ -222,7 +246,7 @@ const CloudSync = {
      * Push current local data (stats, edits, flags, history) to Firestore
      */
     _pushTimeout: null,
-    schedulePush(delayMs = 1500) {
+    schedulePush(delayMs = 300) {
         if (this._pushTimeout) clearTimeout(this._pushTimeout);
         this._pushTimeout = setTimeout(() => {
             this.pushToCloud();
@@ -249,6 +273,7 @@ const CloudSync = {
 
             const customEdits = JSON.parse(localStorage.getItem("housing_exam_custom_edits") || "{}");
             const needsEditMap = JSON.parse(localStorage.getItem("housing_exam_needs_edit") || "{}");
+            const unflaggedKeys = JSON.parse(localStorage.getItem("housing_exam_unflagged_keys") || "{}");
             const deletedKeys = JSON.parse(localStorage.getItem("housing_exam_deleted_keys") || "[]");
             const nowIso = new Date().toISOString();
 
@@ -294,6 +319,7 @@ const CloudSync = {
 
             chunkPromises.push(syncCol.doc("flags_store").set({
                 needsEditData: JSON.stringify(needsEditMap),
+                unflaggedData: JSON.stringify(unflaggedKeys),
                 deletedKeys,
                 updatedAt: nowIso
             }));
