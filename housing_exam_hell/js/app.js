@@ -2281,7 +2281,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260902.2345</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260903.0015</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -2306,7 +2306,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260902.2345</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260903.0015</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
@@ -3454,6 +3454,24 @@
         const now = Date.now();
         if (now - lastNavTimestamp < NAV_THROTTLE_MS) return;
         lastNavTimestamp = now;
+
+        // Auto-grade answered questions in infinite / practice modes so wrong answers are immediately recorded
+        if (state.mode === 'infinite' || state.mode === 'part') {
+            const curIdx = state.currentIndex;
+            const curQ = state.questions[curIdx];
+            if (curQ && state.userAnswers[curIdx] !== undefined && state.firstAttemptResults[curIdx] === undefined) {
+                const gradeRes = Grader.grade(curQ, state.userAnswers[curIdx]);
+                state.results[curIdx] = gradeRes;
+                state.firstAttemptResults[curIdx] = gradeRes;
+                IDBStore.recordAnswer(curQ.qKey, gradeRes.isCorrect, {
+                    subject: curQ.subject,
+                    type: curQ.type,
+                    chapter: curQ.chapterName
+                }).then(updatedStat => {
+                    if (updatedStat) state.statsMap[curQ.qKey] = updatedStat;
+                }).catch(() => {});
+            }
+        }
 
         if (state.currentIndex < state.questions.length - 1) {
             renderQuestion(state.currentIndex + 1);
@@ -5339,6 +5357,25 @@
             }
             if (confirm('학습을 종료하고 메인 화면으로 이동하시겠습니까?')) {
                 clearInterval(state.timerInterval);
+                if (state.mode === 'infinite') {
+                    // Auto-grade all answered questions so far and save stats to IDB & Cloud
+                    (async () => {
+                        for (let i = 0; i < state.questions.length; i++) {
+                            const q = state.questions[i];
+                            if (q && state.userAnswers[i] !== undefined && state.firstAttemptResults[i] === undefined) {
+                                const gradeRes = Grader.grade(q, state.userAnswers[i]);
+                                state.results[i] = gradeRes;
+                                state.firstAttemptResults[i] = gradeRes;
+                                await IDBStore.recordAnswer(q.qKey, gradeRes.isCorrect, {
+                                    subject: q.subject,
+                                    type: q.type,
+                                    chapter: q.chapterName
+                                });
+                            }
+                        }
+                        if (window.CloudSync) window.CloudSync.schedulePush(200);
+                    })().catch(() => {});
+                }
                 showScreen('home');
             }
         });
