@@ -11,7 +11,7 @@ export const Grader = {
         if (hangulMatch) {
             return { num: parseInt(hangulMatch[2], 10), den: parseInt(hangulMatch[1], 10) };
         }
-        const slashMatch = clean.match(/^(\d+)\/(\d+)$/);
+        const slashMatch = clean.match(/^(\d{1,2})\/(\d{1,3})$/);
         if (slashMatch) {
             return { num: parseInt(slashMatch[1], 10), den: parseInt(slashMatch[2], 10) };
         }
@@ -24,30 +24,64 @@ export const Grader = {
             .replace(/[\s\t\r\n]+/g, '')
             .replace(/[.,·•ㆍ'"`~!?@#$%^&*()_+=\-\[\]{}|\\:;<>/\\]/g, '')
             .replace(/^[은는이가을를의에로으로]+|[은는이가을를의에로으로]+$/g, '')
+            .replace(/(?:만원|천원|백만원|억원|천|만|백|원|년|월|일|개월|인|명|회|퍼센트|%|점)$/, '')
             .toLowerCase()
             .trim();
     },
 
+    expandNumberSynonyms(rawStr) {
+        if (!rawStr) return [];
+        const clean = String(rawStr).replace(/[\s,]/g, '');
+        const results = [clean];
+
+        const chunMatch = clean.match(/^(\d+)천$/);
+        if (chunMatch) results.push(String(parseInt(chunMatch[1], 10) * 1000));
+        const numChunMatch = clean.match(/^(\d+)000$/);
+        if (numChunMatch) results.push(numChunMatch[1] + '천');
+
+        const manMatch = clean.match(/^(\d+)만$/);
+        if (manMatch) results.push(String(parseInt(manMatch[1], 10) * 10000));
+        const numManMatch = clean.match(/^(\d+)0000$/);
+        if (numManMatch) results.push(numManMatch[1] + '만');
+
+        const baekMatch = clean.match(/^(\d+)백$/);
+        if (baekMatch) results.push(String(parseInt(baekMatch[1], 10) * 100));
+        const numBaekMatch = clean.match(/^(\d+)00$/);
+        if (numBaekMatch) results.push(numBaekMatch[1] + '백');
+
+        return Array.from(new Set(results));
+    },
+
     getAnswerVariants(targetStr) {
         if (!targetStr) return [];
-        const parts = String(targetStr).split(/[,|]|\b또는\b/).map(s => s.trim()).filter(Boolean);
+        let splitParts = [];
+        const rawParts = String(targetStr).split(/[|]|\b또는\b|\b혹은\b/).map(s => s.trim()).filter(Boolean);
+        
+        rawParts.forEach(rp => {
+            const frac = this.parseFraction(rp);
+            if (frac) {
+                splitParts.push(rp);
+            } else if (rp.includes('/')) {
+                rp.split('/').map(s => s.trim()).filter(Boolean).forEach(sub => splitParts.push(sub));
+            } else {
+                splitParts.push(rp);
+            }
+        });
+
         const variants = [];
 
-        parts.forEach(part => {
+        splitParts.forEach(part => {
             const frac = this.parseFraction(part);
             if (frac) {
                 variants.push(`${frac.num}/${frac.den}`);
                 variants.push(`${frac.den}분의${frac.num}`);
             } else {
-                if (part.includes('/') && !part.match(/\d+\/\d+/)) {
-                    part.split('/').forEach(sub => {
-                        const norm = this.normalizeText(sub);
-                        if (norm) variants.push(norm);
-                    });
-                } else {
-                    const norm = this.normalizeText(part);
+                const expansions = this.expandNumberSynonyms(part);
+                expansions.forEach(exp => {
+                    const norm = this.normalizeText(exp);
                     if (norm) variants.push(norm);
-                }
+                    variants.push(exp);
+                });
             }
         });
 
@@ -59,7 +93,6 @@ export const Grader = {
 
         const userFrac = this.parseFraction(userAnswer);
         const targetVariants = this.getAnswerVariants(targetAnswer);
-        const isTargetFraction = targetVariants.some(v => this.parseFraction(v) !== null);
 
         if (userFrac) {
             const userFracKey = `${userFrac.num}/${userFrac.den}`;
@@ -72,34 +105,32 @@ export const Grader = {
             });
         }
 
-        if (isTargetFraction && !userFrac) {
-            return false;
-        }
-
-        const normUser = this.normalizeText(userAnswer);
-        if (!normUser) return false;
-
-        const isUserNum = /^\d+$/.test(normUser);
+        const userExpansions = this.expandNumberSynonyms(userAnswer);
+        const userNorms = userExpansions.map(u => this.normalizeText(u)).concat(userExpansions);
 
         return targetVariants.some(targetVar => {
             const normTarget = this.normalizeText(targetVar);
             const isTargetNum = /^\d+$/.test(normTarget);
 
-            if (isUserNum || isTargetNum) {
-                return normUser === normTarget;
-            }
+            return userNorms.some(uNorm => {
+                const normUser = this.normalizeText(uNorm);
+                const isUserNum = /^\d+$/.test(normUser);
 
-            if (normUser === normTarget) return true;
-
-            if (normTarget.length >= 4 && normUser.length >= 4) {
-                if (normTarget.includes(normUser) || normUser.includes(normTarget)) {
-                    const minLen = Math.min(normUser.length, normTarget.length);
-                    const maxLen = Math.max(normUser.length, normTarget.length);
-                    if (minLen / maxLen >= 0.75) return true;
+                if (isUserNum || isTargetNum) {
+                    return normUser === normTarget;
                 }
-            }
 
-            return false;
+                if (normUser === normTarget) return true;
+
+                if (normTarget.length >= 4 && normUser.length >= 4) {
+                    if (normTarget.includes(normUser) || normUser.includes(normTarget)) {
+                        const minLen = Math.min(normUser.length, normTarget.length);
+                        const maxLen = Math.max(normUser.length, normTarget.length);
+                        if (minLen / maxLen >= 0.75) return true;
+                    }
+                }
+                return false;
+            });
         });
     },
 
