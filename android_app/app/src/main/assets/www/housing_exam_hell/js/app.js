@@ -2281,7 +2281,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260903.0020</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260903.0025</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -2306,7 +2306,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260903.0020</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260903.0025</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
@@ -3380,8 +3380,20 @@
         if (isCorrect) {
             card.classList.add('anim-tada');
             createSparkleBurst();
+            if (navigator.vibrate) {
+                try { navigator.vibrate(35); } catch (e) {}
+            }
         } else {
             card.classList.add('anim-quake');
+            // Screen edge red shockwave flash vignette
+            const flash = document.createElement('div');
+            flash.className = 'screen-quake-flash';
+            document.body.appendChild(flash);
+            setTimeout(() => flash.remove(), 600);
+
+            if (navigator.vibrate) {
+                try { navigator.vibrate([60, 40, 80]); } catch (e) {}
+            }
         }
 
         setTimeout(() => {
@@ -3398,22 +3410,27 @@
         container.style.left = `${rect.left + rect.width / 2}px`;
         container.style.top = `${rect.top + rect.height / 3}px`;
 
-        const symbols = ['✨', '⭐', '🌟', '🎉', '💚', '🔥'];
-        for (let i = 0; i < 14; i++) {
+        const symbols = ['✨', '⭐', '🌟', '🎉', '💥', '🎊', '🔥', '💚', '💎', '👑'];
+        const totalParticles = 24;
+        for (let i = 0; i < totalParticles; i++) {
             const particle = document.createElement('span');
             particle.className = 'sparkle-particle';
             particle.textContent = symbols[Math.floor(Math.random() * symbols.length)];
-            const angle = (i / 14) * 2 * Math.PI + (Math.random() - 0.5) * 0.4;
-            const distance = 90 + Math.random() * 80;
+            
+            const angle = (i / totalParticles) * 2 * Math.PI + (Math.random() - 0.5) * 0.35;
+            const distance = 110 + Math.random() * 110;
             const tx = Math.cos(angle) * distance;
-            const ty = Math.sin(angle) * distance - 35;
+            const ty = Math.sin(angle) * distance - 45;
+            const rot = (Math.random() - 0.5) * 80;
+
             particle.style.setProperty('--tx', `${tx}px`);
             particle.style.setProperty('--ty', `${ty}px`);
-            particle.style.animationDelay = `${Math.random() * 0.06}s`;
+            particle.style.setProperty('--rot', `${rot}deg`);
+            particle.style.animationDelay = `${Math.random() * 0.08}s`;
             container.appendChild(particle);
         }
         document.body.appendChild(container);
-        setTimeout(() => container.remove(), 900);
+        setTimeout(() => container.remove(), 1000);
     }
 
     function toggleExplanation(forceOpen) {
