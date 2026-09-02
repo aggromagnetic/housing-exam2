@@ -2281,7 +2281,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260903.0015</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260903.0020</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -2306,7 +2306,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260903.0015</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260903.0020</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
@@ -2790,6 +2790,24 @@
     }
 
     async function renderQuestion(index) {
+        // Auto-grade previous question if answered across ALL modes (mock, infinite, part) so wrong answers are registered in real-time
+        const prevIdx = state.currentIndex;
+        if (prevIdx !== undefined && prevIdx !== index && state.questions && state.questions[prevIdx]) {
+            const prevQ = state.questions[prevIdx];
+            if (state.userAnswers[prevIdx] !== undefined && state.firstAttemptResults[prevIdx] === undefined) {
+                const gradeRes = Grader.grade(prevQ, state.userAnswers[prevIdx]);
+                state.results[prevIdx] = gradeRes;
+                state.firstAttemptResults[prevIdx] = gradeRes;
+                IDBStore.recordAnswer(prevQ.qKey, gradeRes.isCorrect, {
+                    subject: prevQ.subject,
+                    type: prevQ.type,
+                    chapter: prevQ.chapterName
+                }).then(updatedStat => {
+                    if (updatedStat) state.statsMap[prevQ.qKey] = updatedStat;
+                }).catch(() => {});
+            }
+        }
+
         state.currentIndex = index;
         const q = state.questions[index];
         if (!q) return;
@@ -5347,6 +5365,24 @@
             }
             if (state.mode === 'mock') {
                 MockSessionManager.saveSession(state);
+                // Auto-grade answered questions so far and save stats to IDB & Cloud
+                (async () => {
+                    for (let i = 0; i < state.questions.length; i++) {
+                        const q = state.questions[i];
+                        if (q && state.userAnswers[i] !== undefined && state.firstAttemptResults[i] === undefined) {
+                            const gradeRes = Grader.grade(q, state.userAnswers[i]);
+                            state.results[i] = gradeRes;
+                            state.firstAttemptResults[i] = gradeRes;
+                            await IDBStore.recordAnswer(q.qKey, gradeRes.isCorrect, {
+                                subject: q.subject,
+                                type: q.type,
+                                chapter: q.chapterName
+                            });
+                        }
+                    }
+                    if (window.CloudSync) window.CloudSync.schedulePush(200);
+                })().catch(() => {});
+
                 if (confirm(`💾 [실전 모의고사]\n현재 ${state.currentIndex + 1}번 문항까지의 문제 및 OMR 마킹이 자동 보존되었습니다.\n\n메인 화면으로 이동하시겠습니까? (홈 화면에서 언제든 이어서 풀 수 있습니다)`)) {
                     clearInterval(state.timerInterval);
                     showScreen('home');
