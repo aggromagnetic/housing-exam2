@@ -13,8 +13,7 @@
 
 /* Header */
 .app-header {
-    background: rgba(13, 19, 34, 0.85);
-    backdrop-filter: blur(12px);
+    background: #0B1020;
     border-bottom: 1px solid var(--border-base);
     position: sticky;
     top: 0;
@@ -800,8 +799,7 @@
 
 /* Bottom Controls */
 .quiz-controls {
-    background: rgba(13, 19, 34, 0.95);
-    backdrop-filter: blur(14px);
+    background: #0B1020;
     border-top: 1px solid var(--border-base);
     position: sticky;
     bottom: 0;

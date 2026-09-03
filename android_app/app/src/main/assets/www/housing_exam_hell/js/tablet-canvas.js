@@ -8,7 +8,12 @@ import { IDBStore } from './idb-store.js';
 export class TabletCanvas {
     constructor(canvasElement, toolbarContainer) {
         this.canvas = canvasElement;
-        this.ctx = canvasElement.getContext('2d');
+        try {
+            // Low-latency canvas mode: bypasses Android display loop for instantaneous stylus response
+            this.ctx = canvasElement.getContext('2d', { desynchronized: true, alpha: true }) || canvasElement.getContext('2d');
+        } catch (e) {
+            this.ctx = canvasElement.getContext('2d');
+        }
         this.toolbar = toolbarContainer;
 
         this.isEnabled = false;
@@ -21,6 +26,7 @@ export class TabletCanvas {
         this.currentQuestionKey = null;
         this.strokes = [];
         this.currentStroke = null;
+        this.saveTimeout = null;
 
         this.initEvents();
         this.initResizeObserver();
@@ -67,7 +73,7 @@ export class TabletCanvas {
 
     initEvents() {
         this.canvas.addEventListener('pointerdown', (e) => this.onPointerDown(e));
-        this.canvas.addEventListener('pointermove', (e) => this.onPointerMove(e));
+        this.canvas.addEventListener('pointermove', (e) => this.onPointerMove(e), { passive: true });
         this.canvas.addEventListener('pointerup', (e) => this.onPointerUp(e));
         this.canvas.addEventListener('pointercancel', (e) => this.onPointerUp(e));
 
@@ -165,36 +171,39 @@ export class TabletCanvas {
     onPointerMove(e) {
         if (!this.isDrawing || !this.currentStroke) return;
 
-        const pos = this.getPos(e);
-        if (this.pointerDownPos) {
-            const dist = Math.hypot(pos.x - this.pointerDownPos.x, pos.y - this.pointerDownPos.y);
-            if (dist > 5) {
-                this.pointerMoved = true;
+        const events = typeof e.getCoalescedEvents === 'function' ? e.getCoalescedEvents() : [e];
+        for (const subEvent of events) {
+            const pos = this.getPos(subEvent);
+            if (this.pointerDownPos) {
+                const dist = Math.hypot(pos.x - this.pointerDownPos.x, pos.y - this.pointerDownPos.y);
+                if (dist > 5) {
+                    this.pointerMoved = true;
+                }
             }
-        }
 
-        this.currentStroke.points.push(pos);
+            this.currentStroke.points.push(pos);
 
-        if (this.currentTool === 'eraser') {
-            this.ctx.save();
-            this.ctx.globalCompositeOperation = 'destination-out';
-            this.ctx.beginPath();
-            this.ctx.arc(pos.x, pos.y, 18, 0, Math.PI * 2);
-            this.ctx.fill();
-            this.ctx.restore();
-        } else {
-            const pts = this.currentStroke.points;
-            const prev = pts.length >= 2 ? pts[pts.length - 2] : pos;
-            this.ctx.save();
-            this.ctx.strokeStyle = this.penColor;
-            this.ctx.lineWidth = this.penWidth;
-            this.ctx.lineCap = 'round';
-            this.ctx.lineJoin = 'round';
-            this.ctx.beginPath();
-            this.ctx.moveTo(prev.x, prev.y);
-            this.ctx.lineTo(pos.x, pos.y);
-            this.ctx.stroke();
-            this.ctx.restore();
+            if (this.currentTool === 'eraser') {
+                this.ctx.save();
+                this.ctx.globalCompositeOperation = 'destination-out';
+                this.ctx.beginPath();
+                this.ctx.arc(pos.x, pos.y, 18, 0, Math.PI * 2);
+                this.ctx.fill();
+                this.ctx.restore();
+            } else {
+                const pts = this.currentStroke.points;
+                const prev = pts.length >= 2 ? pts[pts.length - 2] : pos;
+                this.ctx.save();
+                this.ctx.strokeStyle = this.penColor;
+                this.ctx.lineWidth = this.penWidth;
+                this.ctx.lineCap = 'round';
+                this.ctx.lineJoin = 'round';
+                this.ctx.beginPath();
+                this.ctx.moveTo(prev.x, prev.y);
+                this.ctx.lineTo(pos.x, pos.y);
+                this.ctx.stroke();
+                this.ctx.restore();
+            }
         }
     }
 
@@ -259,7 +268,12 @@ export class TabletCanvas {
         }
 
         if (this.currentQuestionKey) {
-            await IDBStore.saveDrawingStrokes(this.currentQuestionKey, this.strokes);
+            if (this.saveTimeout) clearTimeout(this.saveTimeout);
+            const qKey = this.currentQuestionKey;
+            const currentStrokes = [...this.strokes];
+            this.saveTimeout = setTimeout(async () => {
+                await IDBStore.saveDrawingStrokes(qKey, currentStrokes);
+            }, 300);
         }
     }
 
@@ -296,12 +310,21 @@ export class TabletCanvas {
     }
 
     async loadQuestionStrokes(qKey) {
+        if (this.saveTimeout && this.currentQuestionKey) {
+            clearTimeout(this.saveTimeout);
+            this.saveTimeout = null;
+            await IDBStore.saveDrawingStrokes(this.currentQuestionKey, this.strokes);
+        }
         this.currentQuestionKey = qKey;
         this.strokes = (await IDBStore.getDrawingStrokes(qKey)) || [];
         this.handleResize();
     }
 
     async clearCurrentStrokes() {
+        if (this.saveTimeout) {
+            clearTimeout(this.saveTimeout);
+            this.saveTimeout = null;
+        }
         this.strokes = [];
         this.redraw();
         if (this.currentQuestionKey) {

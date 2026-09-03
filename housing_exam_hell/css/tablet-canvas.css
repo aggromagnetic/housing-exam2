@@ -38,8 +38,7 @@
     position: fixed;
     top: 65px;
     right: 20px;
-    background: rgba(15, 23, 42, 0.95);
-    backdrop-filter: blur(10px);
+    background: #0F172A;
     border: 1.5px solid var(--theme-primary);
     border-radius: 30px;
     padding: 6px 12px;
