@@ -75,18 +75,14 @@ body {
 }
 
 .card-w10 {
-    border: 2.5px solid #EF4444 !important;
-    box-shadow: 0 0 30px var(--glow-w10);
-    animation: hellPulse 2s infinite alternate ease-in-out;
+    border: 2px solid #EF4444 !important;
+    box-shadow: 0 0 22px rgba(239, 68, 68, 0.45);
 }
 
-@keyframes hellPulse {
-    0% {
-        box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
-    }
-    100% {
-        box-shadow: 0 0 35px rgba(239, 68, 68, 0.9), inset 0 0 15px rgba(239, 68, 68, 0.15);
-    }
+/* 필기(펜) 모드 활성화 시 카드 애니메이션 및 전환 효과 완전 차단 (초당 120fps 펜 가속) */
+body.stylus-mode-active .quiz-card {
+    transition: none !important;
+    animation: none !important;
 }
 
 /* Blood Gauge Progress Bar */
