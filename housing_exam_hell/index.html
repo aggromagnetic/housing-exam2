@@ -22,7 +22,7 @@
     <script>
         // Automatic tablet cache buster: Forces tablet WebView to always fetch latest build
         (function() {
-            const CURRENT_BUILD = '2609031935';
+            const CURRENT_BUILD = '2609031940';
             const savedBuild = localStorage.getItem('housing_exam_build_version');
             if (savedBuild !== CURRENT_BUILD) {
                 localStorage.setItem('housing_exam_build_version', CURRENT_BUILD);
@@ -38,9 +38,9 @@
     </script>
     
     <!-- Custom Theme Styles -->
-    <link rel="stylesheet" href="css/dark-theme.css?v=2609031935">
-    <link rel="stylesheet" href="css/quiz-layout.css?v=2609031935">
-    <link rel="stylesheet" href="css/tablet-canvas.css?v=2609031935">
+    <link rel="stylesheet" href="css/dark-theme.css?v=2609031940">
+    <link rel="stylesheet" href="css/quiz-layout.css?v=2609031940">
+    <link rel="stylesheet" href="css/tablet-canvas.css?v=2609031940">
 </head>
 <body data-subject="관계법규">
 
@@ -56,7 +56,7 @@
                 </a>
                 <span id="header-brand-badge" class="brand-badge">관계법규</span>
                 <span id="header-mode-title" class="mode-title">
-                    <i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260903.1935</span>
+                    <i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260903.1940</span>
                 </span>
             </div>
 
@@ -189,37 +189,34 @@
         <!-- 2. QUIZ SCREEN -->
         <section id="screen-quiz" class="screen">
             <div id="quiz-card" class="quiz-card card-w1">
-                <!-- Question Solving Area (Canvas overlay strictly covers this problem-solving arena) -->
-                <div id="quiz-solve-area" class="quiz-solve-area">
-                    <!-- Tablet Canvas Overlay -->
-                    <div class="canvas-overlay-container">
-                        <canvas id="drawing-canvas"></canvas>
-                    </div>
-
-                    <!-- Question Header Meta -->
-                    <div class="question-meta">
-                        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                            <span id="q-num-text" class="q-badge">문항 1 / 40</span>
-                            <span id="q-chapter-badge" style="font-size: 0.8rem; color: var(--text-muted); font-weight: 700;">총칙</span>
-                            <span id="q-combo-badge" class="combo-badge" style="display: none;">🔥 2 COMBO</span>
-                        </div>
-                        <span id="q-weight-badge" class="weight-badge" style="background: rgba(255,255,255,0.06); color: var(--text-main);">
-                            🌱 기본
-                        </span>
-                    </div>
-
-                    <!-- Question Title -->
-                    <h2 id="q-title-text" class="q-title">문제가 로딩 중입니다...</h2>
-
-                    <!-- Passage Box (조건/지문/보기 박스) -->
-                    <div id="q-passage-box" class="passage-box" style="display: none;"></div>
-
-                    <!-- Multiple Choice (1-5) Container -->
-                    <div id="q-options-container" class="options-list"></div>
-
-                    <!-- Subjective (단답형/괄호) Container -->
-                    <div id="q-subjective-container" class="subjective-container" style="display: none;"></div>
+                <!-- Tablet Canvas Overlay (Covers entire quiz card: Question + Passage + Options + Explanation) -->
+                <div class="canvas-overlay-container">
+                    <canvas id="drawing-canvas"></canvas>
                 </div>
+
+                <!-- Question Header Meta -->
+                <div class="question-meta">
+                    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                        <span id="q-num-text" class="q-badge">문항 1 / 40</span>
+                        <span id="q-chapter-badge" style="font-size: 0.8rem; color: var(--text-muted); font-weight: 700;">총칙</span>
+                        <span id="q-combo-badge" class="combo-badge" style="display: none;">🔥 2 COMBO</span>
+                    </div>
+                    <span id="q-weight-badge" class="weight-badge" style="background: rgba(255,255,255,0.06); color: var(--text-main);">
+                        🌱 기본
+                    </span>
+                </div>
+
+                <!-- Question Title -->
+                <h2 id="q-title-text" class="q-title">문제가 로딩 중입니다...</h2>
+
+                <!-- Passage Box (조건/지문/보기 박스) -->
+                <div id="q-passage-box" class="passage-box" style="display: none;"></div>
+
+                <!-- Multiple Choice (1-5) Container -->
+                <div id="q-options-container" class="options-list"></div>
+
+                <!-- Subjective (단답형/괄호) Container -->
+                <div id="q-subjective-container" class="subjective-container" style="display: none;"></div>
 
                 <!-- Explanation & Tip Card -->
                 <div id="explanation-card" class="explanation-card">
@@ -808,18 +805,18 @@
     <!-- Firebase SDK (Compat) for Realtime Cloud Sync -->
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-    <script src="js/cloud-sync.js?v=2609031935"></script>
+    <script src="js/cloud-sync.js?v=2609031940"></script>
 
     <!-- Master Exam Data Bundle (3,959 Questions) -->
-    <script src="data/exam_bank.js?v=2609031935"></script>
+    <script src="data/exam_bank.js?v=2609031940"></script>
 
     <!-- Core Keywords 300 DB (관계법규 300 + 관리실무 300) -->
-    <script src="data/core_keywords_db.js?v=2609031935"></script>
+    <script src="data/core_keywords_db.js?v=2609031940"></script>
 
     <!-- IndexedDB Storage Engine -->
-    <script src="js/idb-store.js?v=2609031935"></script>
+    <script src="js/idb-store.js?v=2609031940"></script>
 
     <!-- Application Script -->
-    <script src="js/app.js?v=2609031935"></script>
+    <script src="js/app.js?v=2609031940"></script>
 </body>
 </html>

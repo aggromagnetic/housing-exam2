@@ -1,9 +1,4 @@
 /* Housing Exam Hell - Tablet Stylus Canvas Styles */
-.quiz-solve-area {
-    position: relative;
-    width: 100%;
-}
-
 .canvas-overlay-container {
     position: absolute;
     top: 0;
@@ -13,7 +8,7 @@
     pointer-events: none;
     z-index: 35;
     overflow: hidden;
-    border-radius: 16px;
+    border-radius: 20px;
 }
 
 #drawing-canvas {
