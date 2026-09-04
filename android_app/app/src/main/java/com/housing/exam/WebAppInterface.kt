@@ -20,4 +20,13 @@ class WebAppInterface(private val context: Context) {
     fun isAndroidNativeApp(): Boolean {
         return true
     }
+
+    @JavascriptInterface
+    fun hideNavigationBars() {
+        if (context is MainActivity) {
+            context.runOnUiThread {
+                context.hideSystemBars()
+            }
+        }
+    }
 }
