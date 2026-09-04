@@ -2281,7 +2281,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260903.2000</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260904.1355</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -2306,7 +2306,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260903.2000</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260904.1355</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
@@ -2687,35 +2687,48 @@
             elements.header.timerBadge.classList.remove('warning', 'overtime-burning');
         }
 
+        let lastTimerState = ''; // 'normal' | 'warning' | 'overtime'
+
         const updateTimerDisplay = () => {
             if (isCountdown) {
                 state.mockRemainingSeconds--;
                 if (state.mockRemainingSeconds >= 0) {
                     const mins = Math.floor(state.mockRemainingSeconds / 60);
                     const secs = state.mockRemainingSeconds % 60;
-                    elements.header.timerBadge.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-                    elements.header.timerBadge.classList.remove('overtime-burning');
-
-                    if (state.mockRemainingSeconds <= 300) {
-                        elements.header.timerBadge.classList.add('warning');
-                    } else {
-                        elements.header.timerBadge.classList.remove('warning');
+                    if (elements.header.timerBadge) {
+                        elements.header.timerBadge.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+                        const nextState = (state.mockRemainingSeconds <= 300) ? 'warning' : 'normal';
+                        if (nextState !== lastTimerState) {
+                            lastTimerState = nextState;
+                            elements.header.timerBadge.classList.toggle('warning', nextState === 'warning');
+                            elements.header.timerBadge.classList.remove('overtime-burning');
+                        }
                     }
                 } else {
-                    // Overtime: -MM:SS with burning flame animation (no forced quit)
+                    // Overtime: -MM:SS with high-contrast crimson badge (no forced quit)
                     const overSecs = Math.abs(state.mockRemainingSeconds);
                     const overMins = Math.floor(overSecs / 60);
                     const overRemSecs = overSecs % 60;
-                    elements.header.timerBadge.textContent = `-${String(overMins).padStart(2, '0')}:${String(overRemSecs).padStart(2, '0')}`;
-                    elements.header.timerBadge.classList.remove('warning');
-                    elements.header.timerBadge.classList.add('overtime-burning');
+                    if (elements.header.timerBadge) {
+                        elements.header.timerBadge.textContent = `-${String(overMins).padStart(2, '0')}:${String(overRemSecs).padStart(2, '0')}`;
+                        if (lastTimerState !== 'overtime') {
+                            lastTimerState = 'overtime';
+                            elements.header.timerBadge.classList.remove('warning');
+                            elements.header.timerBadge.classList.add('overtime-burning');
+                        }
+                    }
                 }
             } else {
                 state.elapsedSeconds++;
                 const mins = Math.floor(state.elapsedSeconds / 60);
                 const secs = state.elapsedSeconds % 60;
-                elements.header.timerBadge.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-                elements.header.timerBadge.classList.remove('warning', 'overtime-burning');
+                if (elements.header.timerBadge) {
+                    elements.header.timerBadge.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+                    if (lastTimerState !== 'normal') {
+                        lastTimerState = 'normal';
+                        elements.header.timerBadge.classList.remove('warning', 'overtime-burning');
+                    }
+                }
             }
         };
 

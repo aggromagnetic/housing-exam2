@@ -90,47 +90,34 @@
 .timer-badge {
     background: #1E293B;
     border: 1px solid var(--border-base);
-    padding: 6px 12px;
+    padding: 6px 10px;
     border-radius: 8px;
-    font-family: monospace;
+    font-family: monospace, -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 0.95rem;
     font-weight: 700;
     color: var(--text-main);
     display: inline-flex;
     align-items: center;
+    justify-content: center;
+    min-width: 68px;
+    text-align: center;
     gap: 6px;
 }
 
 .timer-badge.warning {
     color: #F59E0B;
-    border-color: #F59E0B;
-    animation: timerPulse 1s infinite alternate;
-}
-
-@keyframes flameFlicker {
-    0%, 100% {
-        background: #DC2626;
-        color: #FEF08A;
-        box-shadow: 0 0 10px rgba(239, 68, 68, 0.8), 0 0 20px rgba(249, 115, 22, 0.5);
-        border-color: #F97316;
-    }
-    50% {
-        background: #B91C1C;
-        color: #FFF;
-        box-shadow: 0 0 16px rgba(249, 115, 22, 0.9), 0 0 28px rgba(239, 68, 68, 0.7);
-        border-color: #EF4444;
-    }
+    border: 1.5px solid #F59E0B;
+    background: rgba(245, 158, 11, 0.15);
+    box-shadow: 0 0 8px rgba(245, 158, 11, 0.25);
 }
 
 .timer-badge.overtime-burning {
-    animation: flameFlicker 1.2s infinite ease-in-out;
+    background: #DC2626;
+    color: #FEF08A;
+    border: 1.5px solid #F97316;
     font-weight: 800;
     letter-spacing: 0.05em;
-}
-
-@keyframes timerPulse {
-    0% { transform: scale(1); }
-    100% { transform: scale(1.05); }
+    box-shadow: 0 0 8px rgba(239, 68, 68, 0.4);
 }
 
 /* Home Screen & Mode Cards */
