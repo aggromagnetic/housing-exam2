@@ -18,6 +18,7 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -157,6 +158,13 @@ class MainActivity : AppCompatActivity() {
         webView.clearCache(true)
     }
 
+    fun hideSystemBars() {
+        val controller = WindowCompat.getInsetsController(window, window.decorView)
+        controller.systemBarsBehavior =
+            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        controller.hide(WindowInsetsCompat.Type.navigationBars())
+    }
+
     private fun enableImmersiveStickyMode() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         val controller = WindowCompat.getInsetsController(window, window.decorView)
@@ -164,9 +172,19 @@ class MainActivity : AppCompatActivity() {
             WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         controller.hide(WindowInsetsCompat.Type.systemBars())
 
+        // Continuously suppress navigation bar popups when soft keyboard or stylus handwriting tool opens
+        ViewCompat.setOnApplyWindowInsetsListener(window.decorView) { view, insets ->
+            val insetsController = WindowCompat.getInsetsController(window, window.decorView)
+            insetsController.systemBarsBehavior =
+                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            insetsController.hide(WindowInsetsCompat.Type.navigationBars())
+            view.onApplyWindowInsets(insets.toWindowInsets())
+            insets
+        }
+
         // Re-hide navigation bar after soft keyboard or S-Pen toolbar dismissal
         window.decorView.postDelayed({
-            controller.hide(WindowInsetsCompat.Type.systemBars())
+            controller.hide(WindowInsetsCompat.Type.navigationBars())
         }, 500)
     }
 
