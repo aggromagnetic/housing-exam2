@@ -2168,7 +2168,8 @@
                 btnNext: document.getElementById('btn-next-q'),
                 btnToggleExp: document.getElementById('btn-toggle-exp'),
                 btnRetry: document.getElementById('btn-retry-q'),
-                btnFlagNeedsEdit: document.getElementById('btn-flag-needs-edit')
+                btnFlagNeedsEdit: document.getElementById('btn-flag-needs-edit'),
+                bottomControls: document.getElementById('quiz-bottom-controls')
             },
             manager: {
                 screen: document.getElementById('screen-manager'),
@@ -2281,7 +2282,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260904.1400</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260904.1405</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -2306,7 +2307,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260904.1400</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260904.1405</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
@@ -3314,6 +3315,23 @@
 
             elements.quiz.subjectiveContainer.appendChild(wrapper);
         });
+
+        // Dedicated In-Card Subjective Submit Button (Safe from bottom palm touches)
+        if (state.results[index] === undefined) {
+            const subActionRow = document.createElement('div');
+            subActionRow.className = 'subjective-submit-row';
+            subActionRow.style.cssText = 'display: flex; justify-content: flex-end; margin-top: 14px;';
+            const btnSubmitSub = document.createElement('button');
+            btnSubmitSub.type = 'button';
+            btnSubmitSub.className = 'btn-ctrl btn-primary btn-subjective-submit';
+            btnSubmitSub.style.cssText = 'padding: 10px 22px; font-size: 0.95rem; font-weight: 800; border-radius: 8px; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(56, 189, 248, 0.25);';
+            btnSubmitSub.innerHTML = `<i class="fa-solid fa-circle-check"></i> 주관식 정답 제출 및 채점`;
+            btnSubmitSub.addEventListener('click', async () => {
+                await gradeCurrentQuestion();
+            });
+            subActionRow.appendChild(btnSubmitSub);
+            elements.quiz.subjectiveContainer.appendChild(subActionRow);
+        }
     }
 
     function selectChoice(choiceNum) {
@@ -5370,9 +5388,76 @@
             });
         }
 
+        // 🛡️ High-Precision Palm Rejection Engine for Bottom Controls
+        let lastPenInteractionTime = 0;
+        window.addEventListener('pointerdown', (e) => {
+            if (e.pointerType === 'pen') {
+                lastPenInteractionTime = Date.now();
+            }
+        }, { capture: true, passive: true });
+        window.addEventListener('pointermove', (e) => {
+            if (e.pointerType === 'pen') {
+                lastPenInteractionTime = Date.now();
+            }
+        }, { capture: true, passive: true });
+
+        function isAccidentalPalmTouch(e) {
+            // Intentional stylus taps always pass
+            if (e.pointerType === 'pen') return false;
+
+            // 1. Large contact geometry (> 24px width or height) = 100% palm heel or side of hand
+            if (e.pointerType === 'touch') {
+                const w = e.width || 0;
+                const h = e.height || 0;
+                if (w > 24 || h > 24) {
+                    return true;
+                }
+            }
+
+            // 2. Active input guard: If user is actively typing or writing into a subjective blank, block bottom bar touches
+            const activeEl = document.activeElement;
+            if (activeEl && (activeEl.classList?.contains('blank-input') || (activeEl.tagName === 'INPUT' && activeEl.type === 'text'))) {
+                return true;
+            }
+
+            // 3. Proximity guard: If stylus was used within 1.2 seconds (hand resting on bottom bar while holding pen)
+            if (Date.now() - lastPenInteractionTime < 1200) {
+                return true;
+            }
+
+            return false;
+        }
+
+        const bottomControlsEl = elements.quiz.bottomControls || document.getElementById('quiz-bottom-controls');
+        if (bottomControlsEl) {
+            bottomControlsEl.addEventListener('pointerdown', (e) => {
+                if (isAccidentalPalmTouch(e)) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    bottomControlsEl.dataset.palmBlocked = 'true';
+                } else {
+                    delete bottomControlsEl.dataset.palmBlocked;
+                }
+            }, { capture: true });
+
+            bottomControlsEl.addEventListener('click', (e) => {
+                if (bottomControlsEl.dataset.palmBlocked === 'true') {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    e.stopImmediatePropagation();
+                    delete bottomControlsEl.dataset.palmBlocked;
+                    return false;
+                }
+            }, { capture: true });
+        }
+
         elements.quiz.btnNext.addEventListener('click', nextQuestion);
         elements.quiz.btnPrev.addEventListener('click', prevQuestion);
-        elements.quiz.btnToggleExp.addEventListener('click', async () => {
+        elements.quiz.btnToggleExp.addEventListener('click', async (e) => {
+            if (bottomControlsEl && bottomControlsEl.dataset.palmBlocked === 'true') return;
+            const activeEl = document.activeElement;
+            if (activeEl && activeEl.classList?.contains('blank-input') && e.pointerType === 'touch') return;
+
             const idx = state.currentIndex;
             if (state.results[idx] === undefined) {
                 await gradeCurrentQuestion();
