@@ -79,8 +79,10 @@ body {
     box-shadow: 0 0 22px rgba(239, 68, 68, 0.45);
 }
 
-/* 필기(펜) 모드 활성화 시 카드 애니메이션 및 전환 효과 완전 차단 (초당 120fps 펜 가속) */
-body.stylus-mode-active .quiz-card {
+/* 필기(펜) 모드 활성화 시 헤더/타이머/카드 애니메이션 및 전환 효과 완전 차단 (초당 120fps 펜 가속) */
+body.stylus-mode-active .quiz-card,
+body.stylus-mode-active .app-header,
+body.stylus-mode-active .timer-badge {
     transition: none !important;
     animation: none !important;
 }
