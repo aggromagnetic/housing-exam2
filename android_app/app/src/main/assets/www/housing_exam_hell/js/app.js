@@ -1053,6 +1053,24 @@
             return matches;
         },
 
+        getTopicKey(q) {
+            if (!q) return '';
+            if (q.primaryCoreItem && q.primaryCoreItem.id) {
+                return `core_${q.primaryCoreItem.id}`;
+            }
+            if (q.topCoreMatch && q.topCoreMatch.score >= 4 && q.topCoreMatch.item) {
+                return `core_${q.topCoreMatch.item.id}`;
+            }
+            if (q.title) {
+                const cleanTitle = q.title
+                    .replace(/^(건축|주택|공동주택관리|민간임대|공공주택|소방|승강기|전기사업|도시|시설물|집합건물)법령상\s*/, '')
+                    .replace(/\s*(등|에 관한 설명|의 설명|기준)$/, '')
+                    .trim();
+                if (cleanTitle.length >= 3) return `title_${cleanTitle}`;
+            }
+            return `q_${q.qKey}`;
+        },
+
         _poolCache: {},
 
         getQuestionPool(subject, type) {
@@ -1336,6 +1354,45 @@
             const selectedMC = [];
             const selectedSA = [];
             const pickedKeys = new Set(excludeKeysSet);
+            const usedTopicsSet = new Set();
+            const topicCounts = {};
+
+            const pickWithTopicCap = (items, count, isHy = false) => {
+                const available = items.filter(it => !pickedKeys.has(it.qKey));
+                if (available.length === 0 || count <= 0) return [];
+
+                // 1) Topic Cap: 동일 주제(토픽) 1문항 제한 우선
+                const underCap = available.filter(it => (topicCounts[this.getTopicKey(it)] || 0) < 1);
+                const poolToUse = underCap.length >= count ? underCap : available;
+                let picked = [];
+
+                if (isHy) {
+                    picked = this.pickUnseenHighYieldFirst(poolToUse, statsMap, count, pickedKeys);
+                } else {
+                    picked = this.weightedPick(poolToUse, statsMap, count, pickedKeys);
+                }
+
+                if (picked.length < count && poolToUse === underCap) {
+                    picked.forEach(q => {
+                        pickedKeys.add(q.qKey);
+                        const t = this.getTopicKey(q);
+                        topicCounts[t] = (topicCounts[t] || 0) + 1;
+                        usedTopicsSet.add(t);
+                    });
+                    const remainingNeeded = count - picked.length;
+                    const fallback = this.weightedPick(available, statsMap, remainingNeeded, pickedKeys);
+                    picked.push(...fallback);
+                }
+
+                picked.forEach(q => {
+                    pickedKeys.add(q.qKey);
+                    const t = this.getTopicKey(q);
+                    topicCounts[t] = (topicCounts[t] || 0) + 1;
+                    usedTopicsSet.add(t);
+                });
+
+                return picked;
+            };
 
             blueprint.forEach(rule => {
                 let targetMc = rule.mc;
@@ -1355,61 +1412,41 @@
                 // 1) MC: Guaranteed at least 40% high yield from core 300 candidates
                 if (targetMc > 0) {
                     const hyCandidates = chapterMcList.filter(q => q.isHighYield);
-                    const targetHyMc = Math.min(hyCandidates.length, Math.ceil(targetMc * highYieldRatio));
-                    const pickedHy = this.weightedPick(hyCandidates, statsMap, targetHyMc, pickedKeys);
-
-                    pickedHy.forEach(q => {
-                        pickedKeys.add(q.qKey);
-                        selectedMC.push(q);
-                    });
+                    const targetHyMc = Math.min(hyCandidates.length, Math.round(targetMc * highYieldRatio));
+                    const pickedHy = pickWithTopicCap(hyCandidates, targetHyMc, true);
+                    selectedMC.push(...pickedHy);
 
                     // 2) Remaining quota picked randomly/weighted from all chapter questions
                     const remainingMcCount = targetMc - pickedHy.length;
                     if (remainingMcCount > 0) {
-                        const pickedRest = this.weightedPick(chapterMcList, statsMap, remainingMcCount, pickedKeys);
-                        pickedRest.forEach(q => {
-                            pickedKeys.add(q.qKey);
-                            selectedMC.push(q);
-                        });
+                        const pickedRest = pickWithTopicCap(chapterMcList, remainingMcCount, false);
+                        selectedMC.push(...pickedRest);
                     }
                 }
 
                 // 2) SA: Guaranteed at least 40% high yield from core 300 candidates
                 if (targetSa > 0) {
                     const hyCandidates = chapterSaList.filter(q => q.isHighYield);
-                    const targetHySa = Math.min(hyCandidates.length, Math.ceil(targetSa * highYieldRatio));
-                    const pickedHy = this.weightedPick(hyCandidates, statsMap, targetHySa, pickedKeys);
-
-                    pickedHy.forEach(q => {
-                        pickedKeys.add(q.qKey);
-                        selectedSA.push(q);
-                    });
+                    const targetHySa = Math.min(hyCandidates.length, Math.round(targetSa * highYieldRatio));
+                    const pickedHy = pickWithTopicCap(hyCandidates, targetHySa, true);
+                    selectedSA.push(...pickedHy);
 
                     // Remaining quota picked from all chapter questions
                     const remainingSaCount = targetSa - pickedHy.length;
                     if (remainingSaCount > 0) {
-                        const pickedRest = this.weightedPick(chapterSaList, statsMap, remainingSaCount, pickedKeys);
-                        pickedRest.forEach(q => {
-                            pickedKeys.add(q.qKey);
-                            selectedSA.push(q);
-                        });
+                        const pickedRest = pickWithTopicCap(chapterSaList, remainingSaCount, false);
+                        selectedSA.push(...pickedRest);
                     }
                 }
             });
 
             if (selectedMC.length < 24) {
-                const remainderAll = this.weightedPick(mcPool, statsMap, 24 - selectedMC.length, pickedKeys);
-                remainderAll.forEach(q => {
-                    pickedKeys.add(q.qKey);
-                    selectedMC.push(q);
-                });
+                const remainderAll = pickWithTopicCap(mcPool, 24 - selectedMC.length, false);
+                selectedMC.push(...remainderAll);
             }
             if (selectedSA.length < 16) {
-                const remainderAll = this.weightedPick(saPool, statsMap, 16 - selectedSA.length, pickedKeys);
-                remainderAll.forEach(q => {
-                    pickedKeys.add(q.qKey);
-                    selectedSA.push(q);
-                });
+                const remainderAll = pickWithTopicCap(saPool, 16 - selectedSA.length, false);
+                selectedSA.push(...remainderAll);
             }
 
             // 실전 시험지 순서와 100% 동일하게 정렬:
@@ -1419,9 +1456,9 @@
         },
 
         /**
-         * Generate 40-question Hell Mode Set (20 MC + 20 SA: 50% unseen high-yield + 50% weighted roulette)
+         * Generate 40-question Hell Mode Set (20 MC + 20 SA: 40% unseen high-yield + topic cap + smart roulette)
          */
-        generateHellSubjectSet(subject, statsMap = {}, excludeKeysSet = new Set(), highYieldRatio = 0.50) {
+        generateHellSubjectSet(subject, statsMap = {}, excludeKeysSet = new Set(), highYieldRatio = 0.40, usedTopicsSet = new Set(), maxPerTopic = 1) {
             const mcPool = this.getQuestionPool(subject, 'choice');
             const saPool = this.getQuestionPool(subject, 'short');
             const blueprint = this.getHellBlueprint(subject);
@@ -1430,6 +1467,48 @@
             const selectedSA = [];
             const pickedKeys = new Set(excludeKeysSet);
 
+            const topicCounts = {};
+            usedTopicsSet.forEach(t => {
+                topicCounts[t] = (topicCounts[t] || 0) + 1;
+            });
+
+            const pickWithTopicCap = (items, count, isHy = false) => {
+                const available = items.filter(it => !pickedKeys.has(it.qKey));
+                if (available.length === 0 || count <= 0) return [];
+
+                // 1단계: 세트 내 topic 출제 빈도가 maxPerTopic 미만인 문항 우선
+                const underCap = available.filter(it => (topicCounts[this.getTopicKey(it)] || 0) < maxPerTopic);
+                const poolToUse = underCap.length >= count ? underCap : available;
+                let picked = [];
+
+                if (isHy) {
+                    picked = this.pickUnseenHighYieldFirst(poolToUse, statsMap, count, pickedKeys);
+                } else {
+                    picked = this.weightedPick(poolToUse, statsMap, count, pickedKeys);
+                }
+
+                if (picked.length < count && poolToUse === underCap) {
+                    picked.forEach(q => {
+                        pickedKeys.add(q.qKey);
+                        const t = this.getTopicKey(q);
+                        topicCounts[t] = (topicCounts[t] || 0) + 1;
+                        usedTopicsSet.add(t);
+                    });
+                    const remainingNeeded = count - picked.length;
+                    const fallback = this.weightedPick(available, statsMap, remainingNeeded, pickedKeys);
+                    picked.push(...fallback);
+                }
+
+                picked.forEach(q => {
+                    pickedKeys.add(q.qKey);
+                    const t = this.getTopicKey(q);
+                    topicCounts[t] = (topicCounts[t] || 0) + 1;
+                    usedTopicsSet.add(t);
+                });
+
+                return picked;
+            };
+
             blueprint.forEach(rule => {
                 const targetMc = rule.mc;
                 const targetSa = rule.sa;
@@ -1437,82 +1516,110 @@
                 const chapterMcList = mcPool.filter(q => rule.pattern.test(q.chapterName));
                 const chapterSaList = saPool.filter(q => rule.pattern.test(q.chapterName));
 
-                // 1) MC (20문항): 50%는 안 푼 초특급/핵심 우선 선정 + 50%는 스마트 룰렛
+                // 1) MC (20문항): 40%는 안 푼 초특급/핵심 우선 선정 + 60%는 스마트 룰렛 (토픽 캡 적용)
                 if (targetMc > 0) {
                     const hyCandidates = chapterMcList.filter(q => q.isHighYield);
-                    const targetHyMc = Math.min(hyCandidates.length, Math.ceil(targetMc * highYieldRatio));
-                    const pickedHy = this.pickUnseenHighYieldFirst(hyCandidates, statsMap, targetHyMc, pickedKeys);
-
-                    pickedHy.forEach(q => {
-                        pickedKeys.add(q.qKey);
-                        selectedMC.push(q);
-                    });
+                    const targetHyMc = Math.min(hyCandidates.length, Math.round(targetMc * highYieldRatio));
+                    const pickedHy = pickWithTopicCap(hyCandidates, targetHyMc, true);
+                    selectedMC.push(...pickedHy);
 
                     const remainingMcCount = targetMc - pickedHy.length;
                     if (remainingMcCount > 0) {
-                        const pickedRest = this.weightedPick(chapterMcList, statsMap, remainingMcCount, pickedKeys);
-                        pickedRest.forEach(q => {
-                            pickedKeys.add(q.qKey);
-                            selectedMC.push(q);
-                        });
+                        const pickedRest = pickWithTopicCap(chapterMcList, remainingMcCount, false);
+                        selectedMC.push(...pickedRest);
                     }
                 }
 
-                // 2) SA (20문항): 50%는 안 푼 초특급/핵심 우선 선정 + 50%는 스마트 룰렛
+                // 2) SA (20문항): 40%는 안 푼 초특급/핵심 우선 선정 + 60%는 스마트 룰렛 (토픽 캡 적용)
                 if (targetSa > 0) {
                     const hyCandidates = chapterSaList.filter(q => q.isHighYield);
-                    const targetHySa = Math.min(hyCandidates.length, Math.ceil(targetSa * highYieldRatio));
-                    const pickedHy = this.pickUnseenHighYieldFirst(hyCandidates, statsMap, targetHySa, pickedKeys);
-
-                    pickedHy.forEach(q => {
-                        pickedKeys.add(q.qKey);
-                        selectedSA.push(q);
-                    });
+                    const targetHySa = Math.min(hyCandidates.length, Math.round(targetSa * highYieldRatio));
+                    const pickedHy = pickWithTopicCap(hyCandidates, targetHySa, true);
+                    selectedSA.push(...pickedHy);
 
                     const remainingSaCount = targetSa - pickedHy.length;
                     if (remainingSaCount > 0) {
-                        const pickedRest = this.weightedPick(chapterSaList, statsMap, remainingSaCount, pickedKeys);
-                        pickedRest.forEach(q => {
-                            pickedKeys.add(q.qKey);
-                            selectedSA.push(q);
-                        });
+                        const pickedRest = pickWithTopicCap(chapterSaList, remainingSaCount, false);
+                        selectedSA.push(...pickedRest);
                     }
                 }
             });
 
             // Quota fallback if pool is tight
             if (selectedMC.length < 20) {
-                const remainderAll = this.weightedPick(mcPool, statsMap, 20 - selectedMC.length, pickedKeys);
-                remainderAll.forEach(q => {
-                    pickedKeys.add(q.qKey);
-                    selectedMC.push(q);
-                });
+                const remainderAll = pickWithTopicCap(mcPool, 20 - selectedMC.length, false);
+                selectedMC.push(...remainderAll);
             }
             if (selectedSA.length < 20) {
-                const remainderAll = this.weightedPick(saPool, statsMap, 20 - selectedSA.length, pickedKeys);
-                remainderAll.forEach(q => {
-                    pickedKeys.add(q.qKey);
-                    selectedSA.push(q);
-                });
+                const remainderAll = pickWithTopicCap(saPool, 20 - selectedSA.length, false);
+                selectedSA.push(...remainderAll);
             }
 
             return [...selectedMC.slice(0, 20), ...selectedSA.slice(0, 20)].map(q => ({ ...q }));
         },
 
-        shuffleWithAntiClumping(questions) {
-            const shuffled = [...questions].sort(() => Math.random() - 0.5);
+        /**
+         * Advanced Anti-Clumping Shuffle:
+         * 1) Topic / Core Item Cooldown: Minimum 15 questions distance between same topics
+         * 2) Chapter Spacing: Minimum 4~6 questions distance between same chapters
+         * 3) Subject Alternation: Avoids 3+ consecutive questions of same subject (관계법규 vs 관리실무)
+         * 4) Question Type Interleaving: Balances MC vs SA flow
+         */
+        shuffleWithAntiClumping(questions, windowSize = 15) {
+            const remaining = [...questions].sort(() => Math.random() - 0.5);
             const result = [];
 
-            while (shuffled.length > 0) {
-                let bestIdx = 0;
-                const last = result[result.length - 1];
+            while (remaining.length > 0) {
+                let bestCandidates = [];
+                let minPenalty = Infinity;
 
-                if (last) {
-                    const diffIdx = shuffled.findIndex(q => q.chapterName !== last.chapterName);
-                    if (diffIdx !== -1) bestIdx = diffIdx;
+                for (let i = 0; i < remaining.length; i++) {
+                    const q = remaining[i];
+                    let penalty = 0;
+
+                    const lookback = Math.min(result.length, windowSize);
+                    for (let d = 1; d <= lookback; d++) {
+                        const prev = result[result.length - d];
+
+                        // 1. 동일 주제/키워드(Topic) 패널티: 최근 15문제 내 출제 시 강력한 거리 가중치 부여
+                        if (this.getTopicKey(prev) === this.getTopicKey(q)) {
+                            penalty += (windowSize + 1 - d) * 150;
+                        }
+
+                        // 2. 동일 단원(Chapter) 패널티: 최근 6문제 내 연속 출제 억제
+                        if (d <= 6 && prev.chapterName === q.chapterName) {
+                            penalty += (7 - d) * 25;
+                        }
+                    }
+
+                    // 3. 과목 클러스터링 방지 (관계법규 vs 관리실무): 3문제 이상 연속 동일 과목 출제 방지
+                    if (result.length >= 2) {
+                        const prev1 = result[result.length - 1];
+                        const prev2 = result[result.length - 2];
+                        if (prev1.subject === q.subject && prev2.subject === q.subject) {
+                            penalty += 35;
+                        }
+                    }
+
+                    // 4. 문제 유형 클러스터링 방지 (객관식 vs 주관식): 3문제 이상 연속 동일 유형 출제 방지
+                    if (result.length >= 2) {
+                        const prev1 = result[result.length - 1];
+                        const prev2 = result[result.length - 2];
+                        if (prev1.type === q.type && prev2.type === q.type) {
+                            penalty += 25;
+                        }
+                    }
+
+                    if (penalty < minPenalty) {
+                        minPenalty = penalty;
+                        bestCandidates = [i];
+                    } else if (penalty === minPenalty) {
+                        bestCandidates.push(i);
+                    }
                 }
 
-                result.push(shuffled.splice(bestIdx, 1)[0]);
+                const chosenIdx = bestCandidates[Math.floor(Math.random() * bestCandidates.length)];
+                result.push(remaining.splice(chosenIdx, 1)[0]);
             }
 
             return result;
@@ -1549,18 +1656,21 @@
             return all.sort(() => Math.random() - 0.5).map(q => ({ ...q }));
         },
 
-        generateInfiniteHellSet(statsMap = {}, excludeKeysSet = new Set(), highYieldRatio = 0.50) {
-            // 1. 관계법규 40문항 (객관식 20 + 주관식 20: 50% 안 푼 핵심 보장)
-            const lawSet = this.generateHellSubjectSet('관계법규', statsMap, excludeKeysSet, highYieldRatio);
+        generateInfiniteHellSet(statsMap = {}, excludeKeysSet = new Set(), highYieldRatio = 0.40) {
+            const usedTopicsSet = new Set();
+
+            // 1. 관계법규 40문항 (객관식 20 + 주관식 20: 40% 안 푼 핵심 보장 + 주제별 1문항 캡)
+            const lawSet = this.generateHellSubjectSet('관계법규', statsMap, excludeKeysSet, highYieldRatio, usedTopicsSet, 1);
             
             // 2. 중복 방지를 위한 키 누적
             const lawKeys = new Set(excludeKeysSet);
             lawSet.forEach(q => lawKeys.add(q.qKey));
 
-            // 3. 관리실무 40문항 (객관식 20 + 주관식 20: 50% 안 푼 핵심 보장)
-            const gwanriSet = this.generateHellSubjectSet('관리실무', statsMap, lawKeys, highYieldRatio);
+            // 3. 관리실무 40문항 (객관식 20 + 주관식 20: 40% 안 푼 핵심 보장 + 주제별 1문항 캡)
+            // 관계법규에서 이미 출제된 주제는 usedTopicsSet에 포함되어 관리실무에서도 동일 조문/키워드 중복 회피!
+            const gwanriSet = this.generateHellSubjectSet('관리실무', statsMap, lawKeys, highYieldRatio, usedTopicsSet, 1);
 
-            // 4. 총 80문항 융합 및 군집 방지 셔플 (관계법규 + 관리실무 50:50)
+            // 4. 총 80문항 융합 및 고도화 안티 클럼핑 (15문제 주제 쿨다운 + 단원/과목/유형 교차 배치)
             const combined = [...lawSet, ...gwanriSet];
             return this.shuffleWithAntiClumping(combined).map(q => ({ ...q }));
         },
@@ -2290,7 +2400,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260907.1950</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260908.0010</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -2315,7 +2425,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260907.1950</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260908.0010</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
