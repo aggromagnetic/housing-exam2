@@ -104,6 +104,7 @@
 
             if (!isCorrect) {
                 existing.wrongCount = (existing.wrongCount || 0) + 1;
+                existing.totalWrongCount = (existing.totalWrongCount || (existing.wrongCount - 1) || 0) + 1;
                 if (existing.wrongCount === 1) existing.weight = 2;
                 else if (existing.wrongCount === 2) existing.weight = 4;
                 else if (existing.wrongCount === 3) existing.weight = 6;
@@ -114,7 +115,14 @@
                 existing.lastWrongAt = new Date().toISOString();
             } else {
                 existing.correctCount = (existing.correctCount || 0) + 1;
-                if (existing.weight === 10) existing.weight = 6;
+                // 정답 맞출 때마다 오답 횟수 1회씩 즉시 차감 (0회 도달 시 오답 탭에서 자동 졸업!)
+                if (existing.wrongCount && existing.wrongCount > 0) {
+                    existing.wrongCount = Math.max(0, existing.wrongCount - 1);
+                }
+
+                if (existing.wrongCount === 0) {
+                    existing.weight = 1;
+                } else if (existing.weight === 10) existing.weight = 6;
                 else if (existing.weight === 6) existing.weight = 4;
                 else if (existing.weight === 4) existing.weight = 2;
                 else existing.weight = 1;
@@ -2282,7 +2290,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260904.1405</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260907.1950</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -2307,7 +2315,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260904.1405</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260907.1950</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
