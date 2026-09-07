@@ -109,6 +109,7 @@ export const IDBStore = {
 
         if (!isCorrect) {
             existing.wrongCount = (existing.wrongCount || 0) + 1;
+            existing.totalWrongCount = (existing.totalWrongCount || (existing.wrongCount - 1) || 0) + 1;
             // Spaced repetition escalating weight: 2 -> 4 -> 6 -> 10
             if (existing.wrongCount === 1) existing.weight = 2;
             else if (existing.wrongCount === 2) existing.weight = 4;
@@ -120,8 +121,15 @@ export const IDBStore = {
             existing.lastWrongAt = new Date().toISOString();
         } else {
             existing.correctCount = (existing.correctCount || 0) + 1;
+            // 정답 맞출 때마다 오답 횟수 1회씩 즉시 차감 (0회 도달 시 오답 탭에서 자동 졸업!)
+            if (existing.wrongCount && existing.wrongCount > 0) {
+                existing.wrongCount = Math.max(0, existing.wrongCount - 1);
+            }
+
             // De-escalating step: 10 -> 6 -> 4 -> 2 -> 1
-            if (existing.weight === 10) existing.weight = 6;
+            if (existing.wrongCount === 0) {
+                existing.weight = 1;
+            } else if (existing.weight === 10) existing.weight = 6;
             else if (existing.weight === 6) existing.weight = 4;
             else if (existing.weight === 4) existing.weight = 2;
             else existing.weight = 1;
