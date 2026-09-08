@@ -237,26 +237,33 @@ export class TabletCanvas {
             this.canvas.style.pointerEvents = 'auto';
 
             if (underEl) {
-                // 1. 객관식 선지 영역 터치 시: 필기 모드에서는 번호 원(opt-num) 주변을 터치했을 때만 답 선택!
+                // 1. 객관식 선지 영역 터치 시: 번호 원(.opt-num) 중심 24px 이내 또는 .opt-num 직접 터치 시에만 선택!
                 const optItem = underEl.closest('.option-item');
                 if (optItem) {
                     const optNum = optItem.querySelector('.opt-num');
+                    let isNumClicked = false;
                     if (optNum) {
                         const numRect = optNum.getBoundingClientRect();
                         const centerX = numRect.left + numRect.width / 2;
                         const centerY = numRect.top + numRect.height / 2;
                         const distToCenter = Math.hypot(clientX - centerX, clientY - centerY);
-                        // 번호 원 중심으로부터 40px 반경 이내 또는 원을 직접 터치했을 때만 선택
-                        if (distToCenter <= 40 || underEl.closest('.opt-num')) {
-                            optItem.click();
+                        if (distToCenter <= 24 || underEl.closest('.opt-num')) {
+                            isNumClicked = true;
                         }
-                        // 텍스트/여백 터치는 필기/밑줄용이므로 오답/선택 변경 방지
+                    }
+                    if (isNumClicked && optNum) {
+                        // 번호 원을 정확히 탭한 경우에만 선택
+                        optNum.click();
+                    } else {
+                        // 지문 텍스트나 여백 터치는 필기(점 찍기/체크)이므로 선택을 절대 변경하지 않고 필기 획 복구
+                        this.strokes.push(stroke);
+                        this.redraw();
                     }
                     return;
                 }
 
-                // 2. 일반 대화형 버튼/입력창 터치 처리
-                const targetInteractive = underEl.closest('button, input, textarea, a, .blank-input, .btn-ctrl, .btn-ctrl-sm, .btn-override, .color-dot, .stylus-btn, .btn-toggle-hw');
+                // 2. 일반 대화형 버튼/입력창 터치 처리 (.option-item 제외)
+                const targetInteractive = underEl.closest('button:not(.option-item), input, textarea, a, .blank-input, .btn-ctrl, .btn-ctrl-sm, .btn-override, .color-dot, .stylus-btn, .btn-toggle-hw');
                 if (targetInteractive) {
                     targetInteractive.click();
                     if (['INPUT', 'TEXTAREA'].includes(targetInteractive.tagName)) {
