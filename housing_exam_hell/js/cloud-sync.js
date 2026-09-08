@@ -19,8 +19,12 @@ const CloudSync = {
     db: null,
     isInitialized: false,
     isSyncing: false,
-    syncStatus: "offline", // "synced", "syncing", "offline", "error", "local_only"
+    syncStatus: "offline", // "synced", "syncing", "offline", "error", "local_only", "update_required"
     lastSyncTime: null,
+    isOutdated: false,
+    cloudVersion: null,
+    cloudBuild: null,
+    _idleInterval: null,
     listeners: [],
 
     init() {
@@ -43,11 +47,22 @@ const CloudSync = {
 
             // Initial pull from cloud on startup
             this.pullFromCloud();
+            // Start 3-minute idle background polling
+            this.startIdlePolling();
         } catch (err) {
             console.error("Firebase init error:", err);
             this.syncStatus = "error";
             this.notifyStatusChange();
         }
+    },
+
+    startIdlePolling() {
+        if (this._idleInterval) clearInterval(this._idleInterval);
+        this._idleInterval = setInterval(() => {
+            if (typeof document !== 'undefined' && document.visibilityState === 'visible' && !this.isSyncing) {
+                this.pullFromCloud();
+            }
+        }, 180000); // 3 minutes
     },
 
     onStatusChange(cb) {
@@ -74,15 +89,38 @@ const CloudSync = {
             const syncCol = this.db.collection("exam_hell_sync");
             
             // 1. Fetch metadata and modular documents concurrently
-            const [editsMetaDoc, editsDoc, statsDoc, historyDoc, flagsDoc, reportsDoc, legacyDoc] = await Promise.all([
+            const [editsMetaDoc, editsDoc, statsDoc, historyDoc, flagsDoc, reportsDoc, versionDoc, legacyDoc] = await Promise.all([
                 syncCol.doc("edits_meta").get().catch(() => null),
                 syncCol.doc("edits_store").get().catch(() => null),
                 syncCol.doc("stats_store").get().catch(() => null),
                 syncCol.doc("history_store").get().catch(() => null),
                 syncCol.doc("flags_store").get().catch(() => null),
                 syncCol.doc("reports_store").get().catch(() => null),
+                syncCol.doc("version_meta").get().catch(() => null),
                 syncCol.doc(SYNC_USER_DOC).get().catch(() => null)
             ]);
+
+            // Version check: inspect if cloud has a newer build
+            let cloudBuild = '0';
+            let cloudVer = '';
+            if (versionDoc && versionDoc.exists) {
+                const vData = versionDoc.data() || {};
+                cloudBuild = String(vData.latestBuild || '0');
+                cloudVer = vData.latestVersion || ('v.' + cloudBuild);
+            }
+            const localBuild = String((typeof window !== 'undefined' && window.APP_BUILD_VERSION) || '0');
+            const localVer = (typeof window !== 'undefined' && window.APP_SEMVER) || ('v.' + localBuild);
+
+            if (parseInt(cloudBuild, 10) > parseInt(localBuild, 10)) {
+                this.isOutdated = true;
+                this.cloudBuild = cloudBuild;
+                this.cloudVersion = cloudVer;
+                this.syncStatus = "update_required";
+                console.warn(`📢 [Version Notice] Cloud has newer build: ${cloudVer} (${cloudBuild}) > local: ${localVer} (${localBuild})`);
+                this.notifyStatusChange();
+            } else {
+                this.isOutdated = false;
+            }
 
             let mergedCustomEdits = {};
             let mergedNeedsEdit = {};
@@ -252,11 +290,15 @@ const CloudSync = {
             }
 
             this.lastSyncTime = new Date();
-            this.syncStatus = "synced";
+            if (!this.isOutdated) {
+                this.syncStatus = "synced";
+            }
             console.log("✅ Cloud modular chunk pull complete. Custom edits count:", Object.keys(mergedCustomEdits).length, "Stats count:", mergedStats.length);
             this.notifyStatusChange();
-            // Auto-schedule push 1.5s after pull to merge any local stats/edits missing in cloud
-            this.schedulePush(1500);
+            // Auto-schedule push 1.5s after pull to merge any local stats/edits missing in cloud (only if not outdated!)
+            if (!this.isOutdated) {
+                this.schedulePush(1500);
+            }
             return true;
         } catch (err) {
             console.error("Cloud pull error:", err);
@@ -317,16 +359,30 @@ const CloudSync = {
             const syncCol = this.db.collection("exam_hell_sync");
             const chunkPromises = [];
 
-            // 1. Fetch current cloud edits, stats & history first for bidirectional safe merge
+            // 1. Fetch current cloud edits, stats, history, flags & version for safe bidirectional merge & version check
             let currentCloudEdits = {};
             let currentCloudStats = [];
             let currentCloudHistory = [];
+            let currentCloudNeedsEdit = {};
+            let currentCloudUnflagged = {};
+            let currentCloudDeletedKeys = [];
+            let cloudBuild = '0';
+            let cloudVer = '';
+
             try {
-                const [metaDoc, statsDoc, histDoc] = await Promise.all([
+                const [metaDoc, statsDoc, histDoc, flagsDoc, versionDoc] = await Promise.all([
                     syncCol.doc("edits_meta").get().catch(() => null),
                     syncCol.doc("stats_store").get().catch(() => null),
-                    syncCol.doc("history_store").get().catch(() => null)
+                    syncCol.doc("history_store").get().catch(() => null),
+                    syncCol.doc("flags_store").get().catch(() => null),
+                    syncCol.doc("version_meta").get().catch(() => null)
                 ]);
+
+                if (versionDoc && versionDoc.exists) {
+                    const vData = versionDoc.data() || {};
+                    cloudBuild = String(vData.latestBuild || '0');
+                    cloudVer = vData.latestVersion || ('v.' + cloudBuild);
+                }
 
                 if (metaDoc && metaDoc.exists) {
                     const totalChunks = metaDoc.data()?.totalChunks || 1;
@@ -359,7 +415,37 @@ const CloudSync = {
                         currentCloudHistory = hData.history;
                     }
                 }
-            } catch (e) {}
+
+                if (flagsDoc && flagsDoc.exists) {
+                    const fData = flagsDoc.data() || {};
+                    if (fData.needsEditData) {
+                        try { currentCloudNeedsEdit = JSON.parse(fData.needsEditData); } catch (e) {}
+                    } else if (fData.needsEditMap) {
+                        currentCloudNeedsEdit = fData.needsEditMap;
+                    }
+                    if (fData.unflaggedData) {
+                        try { currentCloudUnflagged = JSON.parse(fData.unflaggedData); } catch (e) {}
+                    }
+                    currentCloudDeletedKeys = fData.deletedKeys || [];
+                }
+            } catch (e) {
+                console.warn("Error fetching cloud data in pushToCloud:", e);
+            }
+
+            // Version Guard: Refuse push if local client is outdated!
+            const localBuild = String((typeof window !== 'undefined' && window.APP_BUILD_VERSION) || '0');
+            const localVer = (typeof window !== 'undefined' && window.APP_SEMVER) || ('v.' + localBuild);
+
+            if (parseInt(cloudBuild, 10) > parseInt(localBuild, 10)) {
+                console.warn(`🛑 [Version Guard] Upload BLOCKED! Cloud build (${cloudBuild}, ${cloudVer}) > local build (${localBuild}, ${localVer}).`);
+                this.isOutdated = true;
+                this.cloudBuild = cloudBuild;
+                this.cloudVersion = cloudVer;
+                this.isSyncing = false;
+                this.syncStatus = "update_required";
+                this.notifyStatusChange();
+                return false;
+            }
 
             // Bidirectional CRDT Merge for Stats
             const mergedStatsMap = new Map();
@@ -429,6 +515,36 @@ const CloudSync = {
             });
             localStorage.setItem("housing_exam_custom_edits", JSON.stringify(mergedToPush));
 
+            // Bidirectional CRDT Merge for Flags (needsEdit, unflagged, deletedKeys)
+            const mergedUnflagged = { ...currentCloudUnflagged, ...unflaggedKeys };
+            localStorage.setItem("housing_exam_unflagged_keys", JSON.stringify(mergedUnflagged));
+
+            const mergedNeedsEdit = { ...currentCloudNeedsEdit };
+            Object.keys(needsEditMap).forEach(k => {
+                const loc = needsEditMap[k];
+                const cld = mergedNeedsEdit[k];
+                if (!cld) {
+                    mergedNeedsEdit[k] = loc;
+                } else {
+                    const lTime = loc.flaggedAt ? new Date(loc.flaggedAt).getTime() : 0;
+                    const cTime = cld.flaggedAt ? new Date(cld.flaggedAt).getTime() : 0;
+                    if (lTime >= cTime) mergedNeedsEdit[k] = loc;
+                }
+            });
+
+            // Clean mergedNeedsEdit against unflagged timestamps
+            Object.keys(mergedNeedsEdit).forEach(k => {
+                const unflagTime = mergedUnflagged[k] ? new Date(mergedUnflagged[k]).getTime() : 0;
+                const flagTime = mergedNeedsEdit[k]?.flaggedAt ? new Date(mergedNeedsEdit[k].flaggedAt).getTime() : 0;
+                if (unflagTime > 0 && unflagTime >= flagTime) {
+                    delete mergedNeedsEdit[k];
+                }
+            });
+            localStorage.setItem("housing_exam_needs_edit", JSON.stringify(mergedNeedsEdit));
+
+            const mergedDelKeys = Array.from(new Set([...deletedKeys, ...currentCloudDeletedKeys]));
+            localStorage.setItem("housing_exam_deleted_keys", JSON.stringify(mergedDelKeys));
+
             // 1. Save Custom Edits into safe 150-item JSON-string chunks
             const editKeys = Object.keys(mergedToPush);
             const CHUNK_SIZE = 150;
@@ -467,11 +583,20 @@ const CloudSync = {
             }));
 
             chunkPromises.push(syncCol.doc("flags_store").set({
-                needsEditData: JSON.stringify(needsEditMap),
-                unflaggedData: JSON.stringify(unflaggedKeys),
-                deletedKeys,
+                needsEditData: JSON.stringify(mergedNeedsEdit),
+                unflaggedData: JSON.stringify(mergedUnflagged),
+                deletedKeys: mergedDelKeys,
                 updatedAt: nowIso
             }));
+
+            // Record latest version in Firestore
+            if (parseInt(localBuild, 10) >= parseInt(cloudBuild, 10)) {
+                chunkPromises.push(syncCol.doc("version_meta").set({
+                    latestBuild: localBuild,
+                    latestVersion: localVer,
+                    updatedAt: nowIso
+                }));
+            }
 
             const tutoringReports = JSON.parse(localStorage.getItem("housing_exam_tutoring_reports") || "[]");
             chunkPromises.push(syncCol.doc("reports_store").set({
