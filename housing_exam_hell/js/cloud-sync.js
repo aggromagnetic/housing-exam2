@@ -253,8 +253,10 @@ const CloudSync = {
 
             this.lastSyncTime = new Date();
             this.syncStatus = "synced";
-            console.log("✅ Cloud modular chunk pull complete. Custom edits count:", Object.keys(mergedCustomEdits).length);
+            console.log("✅ Cloud modular chunk pull complete. Custom edits count:", Object.keys(mergedCustomEdits).length, "Stats count:", mergedStats.length);
             this.notifyStatusChange();
+            // Auto-schedule push 1.5s after pull to merge any local stats/edits missing in cloud
+            this.schedulePush(1500);
             return true;
         } catch (err) {
             console.error("Cloud pull error:", err);
@@ -275,6 +277,15 @@ const CloudSync = {
         }, delayMs);
     },
 
+    flushPendingPush() {
+        if (this._pushTimeout) {
+            clearTimeout(this._pushTimeout);
+            this._pushTimeout = null;
+            return this.pushToCloud();
+        }
+        return Promise.resolve(false);
+    },
+
     async pushToCloud() {
         if (!this.isInitialized || !this.db) return false;
         if (this.isSyncing) return;
@@ -284,13 +295,17 @@ const CloudSync = {
             this.syncStatus = "syncing";
             this.notifyStatusChange();
 
-            let stats = [];
-            let history = [];
+            let localStats = [];
+            let localHistory = [];
             if (window.IDBStore) {
-                const fullBackup = await window.IDBStore.exportBackupJSON();
-                // Filter active stats only (tryCount > 0 or wrongCount > 0 or weight > 1)
-                stats = (fullBackup.stats || []).filter(s => (s.tryCount > 0 || s.wrongCount > 0 || (s.weight && s.weight > 1)));
-                history = (fullBackup.history || []).slice(-100);
+                try {
+                    const fullBackup = await window.IDBStore.exportBackupJSON();
+                    // Filter active stats only (tryCount > 0 or wrongCount > 0 or weight > 1)
+                    localStats = (fullBackup.stats || []).filter(s => (s.tryCount > 0 || s.wrongCount > 0 || (s.weight && s.weight > 1)));
+                    localHistory = (fullBackup.history || []).slice(-100);
+                } catch (e) {
+                    console.error("IDBStore export error in pushToCloud:", e);
+                }
             }
 
             const customEdits = JSON.parse(localStorage.getItem("housing_exam_custom_edits") || "{}");
@@ -302,10 +317,17 @@ const CloudSync = {
             const syncCol = this.db.collection("exam_hell_sync");
             const chunkPromises = [];
 
-            // Fetch current cloud edits first to ensure bidirectional safe merge (never overwrite newer edits)
+            // 1. Fetch current cloud edits, stats & history first for bidirectional safe merge
             let currentCloudEdits = {};
+            let currentCloudStats = [];
+            let currentCloudHistory = [];
             try {
-                const metaDoc = await syncCol.doc("edits_meta").get();
+                const [metaDoc, statsDoc, histDoc] = await Promise.all([
+                    syncCol.doc("edits_meta").get().catch(() => null),
+                    syncCol.doc("stats_store").get().catch(() => null),
+                    syncCol.doc("history_store").get().catch(() => null)
+                ]);
+
                 if (metaDoc && metaDoc.exists) {
                     const totalChunks = metaDoc.data()?.totalChunks || 1;
                     const cPromises = [];
@@ -319,9 +341,69 @@ const CloudSync = {
                         }
                     });
                 }
+
+                if (statsDoc && statsDoc.exists) {
+                    const sData = statsDoc.data() || {};
+                    if (sData.statsData) {
+                        try { currentCloudStats = JSON.parse(sData.statsData); } catch (e) {}
+                    } else if (Array.isArray(sData.stats)) {
+                        currentCloudStats = sData.stats;
+                    }
+                }
+
+                if (histDoc && histDoc.exists) {
+                    const hData = histDoc.data() || {};
+                    if (hData.historyData) {
+                        try { currentCloudHistory = JSON.parse(hData.historyData); } catch (e) {}
+                    } else if (Array.isArray(hData.history)) {
+                        currentCloudHistory = hData.history;
+                    }
+                }
             } catch (e) {}
 
-            // Merge cloud + local by editedAt timestamp
+            // Bidirectional CRDT Merge for Stats
+            const mergedStatsMap = new Map();
+            currentCloudStats.forEach(s => {
+                if (s && s.qKey) mergedStatsMap.set(s.qKey, s);
+            });
+            localStats.forEach(loc => {
+                if (!loc || !loc.qKey) return;
+                const cld = mergedStatsMap.get(loc.qKey);
+                if (!cld) {
+                    mergedStatsMap.set(loc.qKey, loc);
+                } else {
+                    const locTime = loc.lastAttempt ? new Date(loc.lastAttempt).getTime() : 0;
+                    const cldTime = cld.lastAttempt ? new Date(cld.lastAttempt).getTime() : 0;
+                    const base = (locTime >= cldTime) ? { ...loc } : { ...cld };
+                    base.tryCount = Math.max(loc.tryCount || 0, cld.tryCount || 0);
+                    base.totalWrongCount = Math.max(loc.totalWrongCount || 0, cld.totalWrongCount || 0);
+                    base.correctCount = Math.max(loc.correctCount || 0, cld.correctCount || 0);
+                    mergedStatsMap.set(loc.qKey, base);
+                }
+            });
+            const mergedStatsToPush = Array.from(mergedStatsMap.values());
+
+            // Bidirectional merge for History
+            const mergedHistMap = new Map();
+            currentCloudHistory.forEach(h => {
+                if (h && (h.sessionId || h.date)) mergedHistMap.set(h.sessionId || h.date, h);
+            });
+            localHistory.forEach(h => {
+                if (h && (h.sessionId || h.date)) mergedHistMap.set(h.sessionId || h.date, h);
+            });
+            const mergedHistToPush = Array.from(mergedHistMap.values()).slice(-100);
+
+            // If cloud had stats/history that local was missing, update local IDB immediately
+            if (window.IDBStore && (currentCloudStats.length > 0 || currentCloudHistory.length > 0)) {
+                try {
+                    await window.IDBStore.importBackupJSON({
+                        stats: mergedStatsToPush,
+                        history: mergedHistToPush
+                    });
+                } catch (e) {}
+            }
+
+            // Merge cloud + local edits by editedAt timestamp
             const mergedToPush = { ...currentCloudEdits };
             Object.keys(customEdits).forEach(k => {
                 const loc = customEdits[k];
@@ -347,7 +429,7 @@ const CloudSync = {
             });
             localStorage.setItem("housing_exam_custom_edits", JSON.stringify(mergedToPush));
 
-            // 1. Save Custom Edits into safe 150-item JSON-string chunks (max ~75KB each, 100% immune to 1MB limit)
+            // 1. Save Custom Edits into safe 150-item JSON-string chunks
             const editKeys = Object.keys(mergedToPush);
             const CHUNK_SIZE = 150;
             const numChunks = Math.max(1, Math.ceil(editKeys.length / CHUNK_SIZE));
@@ -373,14 +455,14 @@ const CloudSync = {
 
             // 2. Save active Stats, History, and Flags as compact JSON-strings
             chunkPromises.push(syncCol.doc("stats_store").set({
-                statsData: JSON.stringify(stats),
-                count: stats.length,
+                statsData: JSON.stringify(mergedStatsToPush),
+                count: mergedStatsToPush.length,
                 updatedAt: nowIso
             }));
 
             chunkPromises.push(syncCol.doc("history_store").set({
-                historyData: JSON.stringify(history),
-                count: history.length,
+                historyData: JSON.stringify(mergedHistToPush),
+                count: mergedHistToPush.length,
                 updatedAt: nowIso
             }));
 

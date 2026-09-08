@@ -46,7 +46,7 @@ function openDB() {
     return dbPromise;
 }
 
-export const IDBStore = {
+const IDBStore = {
     async init() {
         return await openDB();
     },
@@ -321,20 +321,39 @@ export const IDBStore = {
         const db = await openDB();
         if (db) {
             try {
+                const existingStatsMap = await this.getAllStatsMap();
                 const tx = db.transaction(['question_stats', 'session_history'], 'readwrite');
                 if (Array.isArray(backupData.stats)) {
                     const statsStore = tx.objectStore('question_stats');
                     for (const item of backupData.stats) {
-                        statsStore.put(item);
+                        if (!item || !item.qKey) continue;
+                        const existing = existingStatsMap[item.qKey];
+                        if (!existing) {
+                            statsStore.put(item);
+                        } else {
+                            const existTime = existing.lastAttempt ? new Date(existing.lastAttempt).getTime() : 0;
+                            const itemTime = item.lastAttempt ? new Date(item.lastAttempt).getTime() : 0;
+
+                            const base = (itemTime >= existTime) ? { ...item } : { ...existing };
+                            base.tryCount = Math.max(existing.tryCount || 0, item.tryCount || 0);
+                            base.totalWrongCount = Math.max(existing.totalWrongCount || 0, item.totalWrongCount || 0);
+                            base.correctCount = Math.max(existing.correctCount || 0, item.correctCount || 0);
+
+                            statsStore.put(base);
+                        }
                     }
                 }
                 if (Array.isArray(backupData.history)) {
                     const historyStore = tx.objectStore('session_history');
                     for (const sess of backupData.history) {
-                        historyStore.put(sess);
+                        if (sess && sess.sessionId) {
+                            historyStore.put(sess);
+                        }
                     }
                 }
-            } catch (e) {}
+            } catch (e) {
+                console.error('IDBStore.importBackupJSON error:', e);
+            }
         }
 
         if (backupData.customEdits && typeof backupData.customEdits === 'object') {
@@ -515,3 +534,8 @@ export const IDBStore = {
         });
     }
 };
+
+window.IDBStore = IDBStore;
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { IDBStore };
+}

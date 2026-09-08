@@ -442,20 +442,39 @@
             const db = await openDB();
             if (db) {
                 try {
+                    const existingStatsMap = await this.getAllStatsMap();
                     const tx = db.transaction(['question_stats', 'session_history'], 'readwrite');
                     if (Array.isArray(backupData.stats)) {
                         const statsStore = tx.objectStore('question_stats');
                         for (const item of backupData.stats) {
-                            statsStore.put(item);
+                            if (!item || !item.qKey) continue;
+                            const existing = existingStatsMap[item.qKey];
+                            if (!existing) {
+                                statsStore.put(item);
+                            } else {
+                                const existTime = existing.lastAttempt ? new Date(existing.lastAttempt).getTime() : 0;
+                                const itemTime = item.lastAttempt ? new Date(item.lastAttempt).getTime() : 0;
+
+                                const base = (itemTime >= existTime) ? { ...item } : { ...existing };
+                                base.tryCount = Math.max(existing.tryCount || 0, item.tryCount || 0);
+                                base.totalWrongCount = Math.max(existing.totalWrongCount || 0, item.totalWrongCount || 0);
+                                base.correctCount = Math.max(existing.correctCount || 0, item.correctCount || 0);
+
+                                statsStore.put(base);
+                            }
                         }
                     }
                     if (Array.isArray(backupData.history)) {
                         const historyStore = tx.objectStore('session_history');
                         for (const sess of backupData.history) {
-                            historyStore.put(sess);
+                            if (sess && sess.sessionId) {
+                                historyStore.put(sess);
+                            }
                         }
                     }
-                } catch (e) {}
+                } catch (e) {
+                    console.error('app.js IDBStore.importBackupJSON error:', e);
+                }
             }
 
             if (backupData.customEdits && typeof backupData.customEdits === 'object') {
@@ -496,6 +515,8 @@
             return true;
         }
     };
+
+    window.IDBStore = IDBStore;
 
     // -------------------------------------------------------------
     // Part Progress Save & Resume Manager (Local Storage)
@@ -2400,7 +2421,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260908.0010</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260908.1855</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -2425,7 +2446,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260908.0010</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260908.1855</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
@@ -5999,7 +6020,9 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
                         }
                         renderManagerList();
                     }
-                    showToast(`☁️ 클라우드 동기화 완료! (수정 문제: ${Object.keys(state.customEdits || {}).length}개)`);
+                    const wrongCount = Object.values(state.statsMap || {}).filter(s => (s.wrongCount || 0) > 0).length;
+                    const totalAttempted = Object.values(state.statsMap || {}).filter(s => (s.tryCount || 0) > 0).length;
+                    showToast(`☁️ 클라우드 동기화 완료! (학습 기록: ${totalAttempted}개 / 오답: ${wrongCount}개 / 수정: ${Object.keys(state.customEdits || {}).length}개)`);
                 } else {
                     showToast('⚡ 오프라인 상태 (로컬 저장 유지)');
                 }
@@ -6148,6 +6171,16 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
                 if (window.CloudSync && window.CloudSync.isInitialized) {
                     window.CloudSync.pullFromCloud();
                 }
+            } else if (document.visibilityState === 'hidden') {
+                if (window.CloudSync && window.CloudSync.isInitialized) {
+                    window.CloudSync.flushPendingPush();
+                }
+            }
+        });
+
+        window.addEventListener('pagehide', () => {
+            if (window.CloudSync && window.CloudSync.isInitialized) {
+                window.CloudSync.flushPendingPush();
             }
         });
 
