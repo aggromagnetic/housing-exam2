@@ -2421,7 +2421,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260908.1855</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260908.1920</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -2446,7 +2446,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260908.1855</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260908.1920</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
@@ -6005,10 +6005,39 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
                     showToast('⚡ 오프라인 로컬 저장 모드');
                     return;
                 }
+                if (window.CloudSync.isOutdated) {
+                    if (confirm(`🚨 [최신 버전 배포 안내]\n클라우드에 최신 버전(${window.CloudSync.cloudVersion || '새 버전'})이 있습니다.\n데이터 보호를 위해 구버전 업로드가 차단되었습니다.\n\n지금 최신 버전으로 새로고침하시겠습니까?`)) {
+                        if (typeof window.refreshToLatestVersion === 'function') {
+                            window.refreshToLatestVersion(window.CloudSync.cloudBuild);
+                        } else {
+                            window.location.reload();
+                        }
+                    }
+                    return;
+                }
                 showToast('🔄 클라우드 데이터 실시간 동기화 중...');
                 const ok = await window.CloudSync.pullFromCloud();
+                if (window.CloudSync.isOutdated) {
+                    if (confirm(`🚨 [최신 버전 배포 안내]\n클라우드에 최신 버전(${window.CloudSync.cloudVersion || '새 버전'})이 있습니다.\n데이터 보호를 위해 구버전 업로드가 차단되었습니다.\n\n지금 최신 버전으로 새로고침하시겠습니까?`)) {
+                        if (typeof window.refreshToLatestVersion === 'function') {
+                            window.refreshToLatestVersion(window.CloudSync.cloudBuild);
+                        } else {
+                            window.location.reload();
+                        }
+                    }
+                    return;
+                }
                 if (ok) {
-                    await window.CloudSync.pushToCloud();
+                    const pushOk = await window.CloudSync.pushToCloud();
+                    if (!pushOk && window.CloudSync.isOutdated) {
+                        alert(`🚨 [업로드 차단: 업데이트 필요]\n클라우드에 최신 버전(${window.CloudSync.cloudVersion})이 존재하여 구버전 데이터 업로드가 안전하게 차단되었습니다.\n\n확인을 누르면 최신 버전으로 새로고침합니다.`);
+                        if (typeof window.refreshToLatestVersion === 'function') {
+                            window.refreshToLatestVersion(window.CloudSync.cloudBuild);
+                        } else {
+                            window.location.reload();
+                        }
+                        return;
+                    }
                     state.statsMap = await IDBStore.getAllStatsMap();
                     state.customEdits = await IDBStore.getAllQuestionEditsMap();
                     state.needsEditMap = await IDBStore.getAllNeedsEditMap();
@@ -6147,7 +6176,11 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
                 if (elements.header && elements.header.btnCloudSync) {
                     const icon = elements.header.btnCloudSync.querySelector('i');
                     if (icon) {
-                        if (status === 'synced') {
+                        if (status === 'update_required') {
+                            icon.className = 'fa-solid fa-triangle-exclamation text-rose-500 animate-pulse';
+                            elements.header.btnCloudSync.title = `🚨 최신 버전(${window.CloudSync.cloudVersion || '새 버전'}) 배포됨! 클릭 시 최신 버전으로 즉시 새로고침`;
+                            showToast(`🚨 최신 버전(${window.CloudSync.cloudVersion || '새 버전'}) 배포됨! 상단 구름 아이콘을 눌러 새로고침하세요.`, 6000);
+                        } else if (status === 'synced') {
                             icon.className = 'fa-solid fa-cloud text-emerald-400';
                             elements.header.btnCloudSync.title = `클라우드 실시간 동기화 완료 (${lastTime ? lastTime.toLocaleTimeString() : '최신'}) - 클릭 시 즉시 동기화`;
                         } else if (status === 'syncing') {
