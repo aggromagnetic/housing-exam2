@@ -1906,7 +1906,33 @@
                 this.canvas.style.pointerEvents = 'auto';
 
                 if (underEl) {
-                    const targetInteractive = underEl.closest('button, input, textarea, a, .option-item, .blank-input, .btn-ctrl, .btn-ctrl-sm, .btn-override, .color-dot, .stylus-btn, .btn-toggle-hw');
+                    // 1. 객관식 선지 영역 터치 시: 번호 원(.opt-num) 중심 24px 이내 또는 .opt-num 직접 터치 시에만 선택!
+                    const optItem = underEl.closest('.option-item');
+                    if (optItem) {
+                        const optNum = optItem.querySelector('.opt-num');
+                        let isNumClicked = false;
+                        if (optNum) {
+                            const numRect = optNum.getBoundingClientRect();
+                            const centerX = numRect.left + numRect.width / 2;
+                            const centerY = numRect.top + numRect.height / 2;
+                            const distToCenter = Math.hypot(clientX - centerX, clientY - centerY);
+                            if (distToCenter <= 24 || underEl.closest('.opt-num')) {
+                                isNumClicked = true;
+                            }
+                        }
+                        if (isNumClicked && optNum) {
+                            // 번호 원을 정확히 탭한 경우에만 선택
+                            optNum.click();
+                        } else {
+                            // 지문 텍스트나 여백 터치는 필기(점 찍기/체크)이므로 선택을 절대 변경하지 않고 필기 획 복구
+                            this.strokes.push(stroke);
+                            this.redraw();
+                        }
+                        return;
+                    }
+
+                    // 2. 일반 대화형 버튼/입력창 터치 처리 (.option-item 제외)
+                    const targetInteractive = underEl.closest('button:not(.option-item), input, textarea, a, .blank-input, .btn-ctrl, .btn-ctrl-sm, .btn-override, .color-dot, .stylus-btn, .btn-toggle-hw');
                     if (targetInteractive) {
                         targetInteractive.click();
                         if (['INPUT', 'TEXTAREA'].includes(targetInteractive.tagName)) {
@@ -2421,7 +2447,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260908.1920</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260908.1930</span>';
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -2446,7 +2472,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260908.1920</span>';
+                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260908.1930</span>';
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
@@ -3182,15 +3208,32 @@
             `;
 
             optBtn.addEventListener('click', (e) => {
-                if (state.tabletCanvas && state.tabletCanvas.isEnabled && e.clientX && e.clientY) {
-                    const optNum = optBtn.querySelector('.opt-num');
-                    if (optNum) {
-                        const numRect = optNum.getBoundingClientRect();
-                        const centerX = numRect.left + numRect.width / 2;
-                        const centerY = numRect.top + numRect.height / 2;
-                        const dist = Math.hypot(e.clientX - centerX, e.clientY - centerY);
-                        if (dist > 40 && !e.target.closest('.opt-num')) {
-                            return; // 필기 모드에서는 번호 원 주변 터치 시에만 선택 허용
+                if (state.tabletCanvas && state.tabletCanvas.isEnabled) {
+                    // 필기/캔버스 모드에서는 번호 원(opt-num) 클릭 시에만 답안 선택 허용!
+                    const isDirectNum = !!e.target.closest('.opt-num');
+                    if (!isDirectNum) {
+                        if (e.clientX && e.clientY) {
+                            const optNum = optBtn.querySelector('.opt-num');
+                            if (optNum) {
+                                const numRect = optNum.getBoundingClientRect();
+                                const centerX = numRect.left + numRect.width / 2;
+                                const centerY = numRect.top + numRect.height / 2;
+                                const dist = Math.hypot(e.clientX - centerX, e.clientY - centerY);
+                                if (dist > 24) {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    return; // 지문 텍스트나 여백 클릭은 필기 모드에서 선택 차단
+                                }
+                            } else {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                return;
+                            }
+                        } else {
+                            // clientX/Y가 없는 합성 클릭이거나 opt-num 외부 클릭 차단
+                            e.preventDefault();
+                            e.stopPropagation();
+                            return;
                         }
                     }
                 }
