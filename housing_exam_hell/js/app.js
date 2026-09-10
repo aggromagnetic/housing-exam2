@@ -822,7 +822,13 @@
                 const keys = sortSubjectiveEntries(Object.entries(targetAnswers)).map(([k]) => k);
 
                 if (keys.length === 0) {
-                    return { isCorrect: false, details: {}, userSummary: '', correctSummary: '' };
+                    return {
+                        isCorrect: false,
+                        details: {},
+                        userSummary: '(공란)',
+                        correctSummary: '(정답 데이터 미등록)',
+                        isMissingAnswer: true
+                    };
                 }
 
                 let userObj = userResponse;
@@ -2251,7 +2257,13 @@
     }
 
     function parseSubjectiveAnswers(rawInput, existingAnswers = {}) {
-        const trimmed = (rawInput || '').trim();
+        if (!rawInput) return { answers: {}, answer: '' };
+        if (typeof rawInput === 'object') {
+            const sorted = getSortedAnswersObject(rawInput);
+            const answerStr = Object.entries(sorted).map(([k, v]) => `${k}=${v}`).join(', ');
+            return { answers: sorted, answer: answerStr };
+        }
+        const trimmed = String(rawInput).trim();
         if (!trimmed) return { answers: {}, answer: '' };
 
         const existingKeys = Object.keys(existingAnswers || {});
@@ -2447,7 +2459,8 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260908.1930</span>';
+                const semver = window.APP_SEMVER || 'v.0.260910.1830';
+                elements.header.modeTitle.innerHTML = `<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">${semver}</span>`;
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -2472,7 +2485,8 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260908.1930</span>';
+                const semver = window.APP_SEMVER || 'v.0.260910.1830';
+                elements.header.modeTitle.innerHTML = `<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">${semver}</span>`;
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
@@ -3248,9 +3262,32 @@
         elements.quiz.subjectiveContainer.innerHTML = '';
         const userResponse = state.userAnswers[index] || {};
         const res = state.results[index];
-        const targetAnswers = q.answers || {};
+        let targetAnswers = q.answers || {};
+        let entries = sortSubjectiveEntries(Object.entries(targetAnswers));
 
-        sortSubjectiveEntries(Object.entries(targetAnswers)).forEach(([k]) => {
+        // If answers has no entries, fallback to q.answer
+        if (entries.length === 0 && q.answer) {
+            const parsed = parseSubjectiveAnswers(q.answer);
+            if (Object.keys(parsed.answers).length > 0) {
+                targetAnswers = parsed.answers;
+                q.answers = targetAnswers; // cache
+                entries = sortSubjectiveEntries(Object.entries(targetAnswers));
+            }
+        }
+
+        // If still empty (corrupted/missing answer), show friendly warning banner and provide fallback input
+        if (entries.length === 0) {
+            const warningBanner = document.createElement('div');
+            warningBanner.className = 'empty-answer-warning';
+            warningBanner.style.cssText = 'padding: 12px 14px; margin-bottom: 14px; background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.4); border-radius: 8px; font-size: 0.88rem; color: #f87171; line-height: 1.5; display: flex; align-items: flex-start; gap: 8px;';
+            warningBanner.innerHTML = `<i class="fa-solid fa-triangle-exclamation" style="margin-top: 2px; font-size: 1rem; color: #ef4444;"></i><div><strong>[정답 확인 필요]</strong> 본 문항은 등록된 정답 데이터가 비어 있어 자동 채점이 지원되지 않습니다.<br>상단의 <strong>[수정필요]</strong> 버튼을 눌러 정답을 제보하시거나 하단의 <strong>[정답 및 해설]</strong> 버튼을 눌러 해설을 확인해 주세요.</div>`;
+            elements.quiz.subjectiveContainer.appendChild(warningBanner);
+
+            targetAnswers = { '1': '' };
+            entries = [['1', '']];
+        }
+
+        entries.forEach(([k]) => {
             const wrapper = document.createElement('div');
             wrapper.className = 'blank-row-wrapper';
 
@@ -3784,7 +3821,18 @@
             const q = state.questions[idx];
             let res = state.firstAttemptResults[idx] !== undefined ? state.firstAttemptResults[idx] : state.results[idx];
             if (!res) {
-                res = Grader.grade(q, state.userAnswers[idx]);
+                try {
+                    res = Grader.grade(q, state.userAnswers[idx]);
+                } catch (err) {
+                    console.error('Grader.grade error in finishSession for', q.qKey, err);
+                    res = {
+                        isCorrect: false,
+                        details: {},
+                        userSummary: '(오류)',
+                        correctSummary: '(채점 오류)',
+                        error: true
+                    };
+                }
                 state.results[idx] = res;
                 state.firstAttemptResults[idx] = res;
                 try {
@@ -6188,6 +6236,53 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
         state.customEdits = await IDBStore.getAllQuestionEditsMap();
         state.needsEditMap = await IDBStore.getAllNeedsEditMap();
         state.deletedKeysSet = await IDBStore.getDeletedKeysSet();
+
+        // Auto-seed user-requested blank subjective questions into needsEditMap if not already flagged or unflagged
+        const targetSeedKeys = [
+            {
+                qKey: '관리실무_short_CHAPTER 01 주택의 정의 및 종류_06',
+                subject: '관리실무',
+                chapterName: 'CHAPTER 01 주택의 정의 및 종류',
+                type: 'short',
+                question: '다가구주택의 요건'
+            },
+            {
+                qKey: '관리실무_short_CHAPTER 04 관리조직 및 입주자대표회의_28',
+                subject: '관리실무',
+                chapterName: 'CHAPTER 04 관리조직 및 입주자대표회의',
+                type: 'short',
+                question: '관리주체의 업무'
+            },
+            {
+                qKey: '관리실무_short_CHAPTER 04 관리조직 및 입주자대표회의_91',
+                subject: '관리실무',
+                chapterName: 'CHAPTER 04 관리조직 및 입주자대표회의',
+                type: 'short',
+                question: '하자보수보증금의 예치'
+            },
+            {
+                qKey: '관리실무_short_CHAPTER 11 시설관리_472',
+                subject: '관리실무',
+                chapterName: 'CHAPTER 11 시설관리',
+                type: 'short',
+                question: '승강기 안전관리법 시행령 제27조 제3항(보험의 종류)'
+            }
+        ];
+
+        try {
+            const unflagged = JSON.parse(localStorage.getItem('housing_exam_unflagged_keys') || '{}');
+            for (const item of targetSeedKeys) {
+                if (!state.needsEditMap[item.qKey] && !unflagged[item.qKey]) {
+                    await IDBStore.saveNeedsEdit(item.qKey, item);
+                    state.needsEditMap[item.qKey] = {
+                        ...item,
+                        flaggedAt: new Date().toISOString()
+                    };
+                }
+            }
+        } catch (e) {
+            console.error('Failed to seed needsEditMap items', e);
+        }
 
         const canvasEl = document.getElementById('drawing-canvas');
         const toolbarEl = document.getElementById('stylus-toolbar');

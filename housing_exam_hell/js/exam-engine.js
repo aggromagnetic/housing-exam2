@@ -260,6 +260,33 @@ export const ExamEngine = {
         const pool = [];
         dataset.chapters.forEach(chap => {
             (chap.questions || []).forEach(q => {
+                let normalizedAnswers = q.answers;
+                let normalizedAnswer = q.answer;
+
+                if (type === 'short') {
+                    if (normalizedAnswers && typeof normalizedAnswers === 'object' && Object.keys(normalizedAnswers).length > 0) {
+                        if (!normalizedAnswer || typeof normalizedAnswer === 'object') {
+                            normalizedAnswer = Object.entries(normalizedAnswers).map(([k, v]) => `${k}=${v}`).join(', ');
+                        }
+                    } else if (normalizedAnswer) {
+                        if (typeof normalizedAnswer === 'object') {
+                            normalizedAnswers = { ...normalizedAnswer };
+                            normalizedAnswer = Object.entries(normalizedAnswers).map(([k, v]) => `${k}=${v}`).join(', ');
+                        } else if (typeof normalizedAnswer === 'string' && normalizedAnswer.includes('=')) {
+                            const parsed = {};
+                            normalizedAnswer.split(',').forEach(p => {
+                                const [k, ...v] = p.split('=');
+                                if (k) parsed[k.trim()] = v.join('=').trim();
+                            });
+                            if (Object.keys(parsed).length > 0) {
+                                normalizedAnswers = parsed;
+                            }
+                        }
+                    }
+                    if (!normalizedAnswers || typeof normalizedAnswers !== 'object') normalizedAnswers = {};
+                    if (typeof normalizedAnswer !== 'string') normalizedAnswer = '';
+                }
+
                 const matches = this.matchQuestionKeywords({ ...q, chapterName: chap.chapter }, subject);
                 const topMatch = matches.length > 0 ? matches[0] : null;
                 const topScore = topMatch ? topMatch.score : 0;
@@ -268,6 +295,7 @@ export const ExamEngine = {
                 const isSuperHighYield = topScore >= 6;
                 pool.push({
                     ...q,
+                    ...(type === 'short' ? { answers: normalizedAnswers, answer: normalizedAnswer } : {}),
                     qKey: `${subject}_${type}_${chap.chapter}_${q.id}`,
                     subject,
                     type,
