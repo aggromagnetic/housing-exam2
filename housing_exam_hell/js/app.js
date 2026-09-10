@@ -6237,53 +6237,6 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
         state.needsEditMap = await IDBStore.getAllNeedsEditMap();
         state.deletedKeysSet = await IDBStore.getDeletedKeysSet();
 
-        // Auto-seed user-requested blank subjective questions into needsEditMap if not already flagged or unflagged
-        const targetSeedKeys = [
-            {
-                qKey: '관리실무_short_CHAPTER 01 주택의 정의 및 종류_06',
-                subject: '관리실무',
-                chapterName: 'CHAPTER 01 주택의 정의 및 종류',
-                type: 'short',
-                question: '다가구주택의 요건'
-            },
-            {
-                qKey: '관리실무_short_CHAPTER 04 관리조직 및 입주자대표회의_28',
-                subject: '관리실무',
-                chapterName: 'CHAPTER 04 관리조직 및 입주자대표회의',
-                type: 'short',
-                question: '관리주체의 업무'
-            },
-            {
-                qKey: '관리실무_short_CHAPTER 04 관리조직 및 입주자대표회의_91',
-                subject: '관리실무',
-                chapterName: 'CHAPTER 04 관리조직 및 입주자대표회의',
-                type: 'short',
-                question: '하자보수보증금의 예치'
-            },
-            {
-                qKey: '관리실무_short_CHAPTER 11 시설관리_472',
-                subject: '관리실무',
-                chapterName: 'CHAPTER 11 시설관리',
-                type: 'short',
-                question: '승강기 안전관리법 시행령 제27조 제3항(보험의 종류)'
-            }
-        ];
-
-        try {
-            const unflagged = JSON.parse(localStorage.getItem('housing_exam_unflagged_keys') || '{}');
-            for (const item of targetSeedKeys) {
-                if (!state.needsEditMap[item.qKey] && !unflagged[item.qKey]) {
-                    await IDBStore.saveNeedsEdit(item.qKey, item);
-                    state.needsEditMap[item.qKey] = {
-                        ...item,
-                        flaggedAt: new Date().toISOString()
-                    };
-                }
-            }
-        } catch (e) {
-            console.error('Failed to seed needsEditMap items', e);
-        }
-
         const canvasEl = document.getElementById('drawing-canvas');
         const toolbarEl = document.getElementById('stylus-toolbar');
         if (canvasEl) {
