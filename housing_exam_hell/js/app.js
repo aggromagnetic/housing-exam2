@@ -4860,9 +4860,9 @@
             }
 
             let quickDelBtnHtml = '';
-            if (tabName === 'needs_edit' || isFlagged) {
+            if (tabName === 'needs_edit') {
                 quickDelBtnHtml = `<button type="button" class="mgr-card-quick-unflag" style="background: rgba(52,211,153,0.15); color: #34D399; border: 1px solid rgba(52,211,153,0.4); border-radius: 4px; padding: 2px 7px; font-size: 0.72rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;" title="수정 완료/해결되어 수정필요 목록에서 제외"><i class="fa-solid fa-check"></i> 해결완료</button>`;
-            } else if (stat.wrongCount > 0 || tabName === 'wrong') {
+            } else if (tabName === 'wrong') {
                 quickDelBtnHtml = `<button type="button" class="mgr-card-quick-del" title="오답 기록 삭제 (가중치 초기화)"><i class="fa-solid fa-trash-can"></i> 삭제</button>`;
             }
 
@@ -5304,20 +5304,25 @@
             state.customEdits[qKey] = savedItem || editData;
             applyCustomEdits(q);
 
-            // If question was flagged as '수정필요', auto-unflag it upon saving fix
-            if (state.needsEditMap && state.needsEditMap[qKey]) {
-                await IDBStore.deleteNeedsEdit(qKey);
-                delete state.needsEditMap[qKey];
-                if (elements.manager.btnFlagToggle) elements.manager.btnFlagToggle.classList.remove('active');
-                if (elements.manager.flagText) elements.manager.flagText.textContent = '수정필요';
-                if (elements.manager.flagBadge) elements.manager.flagBadge.style.display = 'none';
-                if (elements.manager.cntNeedsEdit) elements.manager.cntNeedsEdit.textContent = Object.keys(state.needsEditMap).length;
-            }
+            // Auto-unflag from '수정필요' upon saving fix
+            await IDBStore.deleteNeedsEdit(qKey);
+            if (state.needsEditMap) delete state.needsEditMap[qKey];
+            if (elements.manager.btnFlagToggle) elements.manager.btnFlagToggle.classList.remove('active');
+            if (elements.manager.flagText) elements.manager.flagText.textContent = '수정필요';
+            if (elements.manager.flagBadge) elements.manager.flagBadge.style.display = 'none';
+            if (elements.manager.cntNeedsEdit) elements.manager.cntNeedsEdit.textContent = Object.keys(state.needsEditMap || {}).length;
+            if (elements.manager.cntCustomEdits) elements.manager.cntCustomEdits.textContent = Object.keys(state.customEdits || {}).length;
 
             // Update badges and left list card
             if (elements.manager.editedBadge) elements.manager.editedBadge.style.display = 'inline-block';
             const activeCard = document.querySelector(`.mgr-item-card[data-qkey="${qKey}"]`);
             if (activeCard) {
+                // Immediately remove '해결완료' button and '수정요청' flag badge from the card
+                const quickUnflag = activeCard.querySelector('.mgr-card-quick-unflag');
+                if (quickUnflag) quickUnflag.remove();
+                const flagBadge = activeCard.querySelector('.mgr-status-flag');
+                if (flagBadge) flagBadge.remove();
+
                 const snippet = activeCard.querySelector('.mgr-item-snippet');
                 if (snippet) snippet.textContent = q.question || q.title;
                 const header = activeCard.querySelector('.mgr-item-header');
@@ -5329,7 +5334,21 @@
                 }
             }
 
-            showToast(`💾 [${q.id}번 문항] 수정사항이 성공적으로 저장되었습니다!`);
+            // If currently on 'needs_edit' tab, smoothly fade out this card from the list
+            if (state.managerTab === 'needs_edit') {
+                if (activeCard) activeCard.classList.add('reset-done');
+                setTimeout(() => {
+                    renderManagerList();
+                }, 300);
+            }
+
+            // Trigger cloud sync push
+            if (window.CloudSync) {
+                if (window.CloudSync.scheduleFlagsPush) window.CloudSync.scheduleFlagsPush(50);
+                if (window.CloudSync.schedulePush) window.CloudSync.schedulePush(50);
+            }
+
+            showToast(`💾 [${q.id}번 문항] 수정사항이 저장되고 수정필요 목록에서 해결 처리되었습니다!`);
         }
 
         if (elements.manager.editorForm) {
