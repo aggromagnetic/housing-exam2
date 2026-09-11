@@ -138,7 +138,11 @@
                     tx.objectStore('question_stats').put(existing);
                 } catch (e) {}
             }
-            if (window.CloudSync) window.CloudSync.schedulePush();
+            if (window.CloudSync && typeof window.CloudSync.scheduleStatsPush === 'function') {
+                window.CloudSync.scheduleStatsPush(60);
+            } else if (window.CloudSync) {
+                window.CloudSync.schedulePush();
+            }
             return existing;
         },
 
@@ -158,7 +162,11 @@
                     tx.objectStore('question_stats').put(stat);
                 } catch (e) {}
             }
-            if (window.CloudSync) window.CloudSync.schedulePush();
+            if (window.CloudSync && typeof window.CloudSync.scheduleStatsPush === 'function') {
+                window.CloudSync.scheduleStatsPush(60);
+            } else if (window.CloudSync) {
+                window.CloudSync.schedulePush();
+            }
             return stat;
         },
 
@@ -169,6 +177,7 @@
             stat.correctCount = 0;
             stat.tryCount = 0;
             stat.lastAttempt = new Date().toISOString();
+            stat.resetAt = new Date().toISOString(); // Tombstone prevents cloud resurrecting deleted wrong answer
 
             const db = await openDB();
             if (db) {
@@ -177,7 +186,11 @@
                     tx.objectStore('question_stats').put(stat);
                 } catch (e) {}
             }
-            if (window.CloudSync) window.CloudSync.schedulePush();
+            if (window.CloudSync && typeof window.CloudSync.scheduleStatsPush === 'function') {
+                window.CloudSync.scheduleStatsPush(60);
+            } else if (window.CloudSync) {
+                window.CloudSync.schedulePush();
+            }
             return stat;
         },
 
@@ -5717,6 +5730,26 @@
             }
             if (state.mode === 'part') {
                 PartProgressManager.saveProgress(state.subject, state.currentPartPattern, state);
+                // Auto-grade any answered questions so far before leaving!
+                (async () => {
+                    for (let i = 0; i < state.questions.length; i++) {
+                        const q = state.questions[i];
+                        if (q && state.userAnswers[i] !== undefined && state.firstAttemptResults[i] === undefined) {
+                            const gradeRes = Grader.grade(q, state.userAnswers[i]);
+                            state.results[i] = gradeRes;
+                            state.firstAttemptResults[i] = gradeRes;
+                            await IDBStore.recordAnswer(q.qKey, gradeRes.isCorrect, {
+                                subject: q.subject,
+                                type: q.type,
+                                chapter: q.chapterName
+                            });
+                        }
+                    }
+                    if (window.CloudSync && typeof window.CloudSync.scheduleStatsPush === 'function') {
+                        window.CloudSync.scheduleStatsPush(60);
+                    }
+                })().catch(() => {});
+
                 if (confirm(`💾 [${state.currentPartPattern}]\n현재 ${state.currentIndex + 1}번 문항까지의 풀이 진행 상황이 자동 저장되었습니다.\n\n메인 화면으로 나가시겠습니까? (언제든 이어서 풀 수 있습니다)`)) {
                     clearInterval(state.timerInterval);
                     showScreen('home');
@@ -5741,7 +5774,11 @@
                             });
                         }
                     }
-                    if (window.CloudSync) window.CloudSync.schedulePush(200);
+                    if (window.CloudSync && typeof window.CloudSync.scheduleStatsPush === 'function') {
+                        window.CloudSync.scheduleStatsPush(60);
+                    } else if (window.CloudSync) {
+                        window.CloudSync.schedulePush(200);
+                    }
                 })().catch(() => {});
 
                 if (confirm(`💾 [실전 모의고사]\n현재 ${state.currentIndex + 1}번 문항까지의 문제 및 OMR 마킹이 자동 보존되었습니다.\n\n메인 화면으로 이동하시겠습니까? (홈 화면에서 언제든 이어서 풀 수 있습니다)`)) {
@@ -5770,7 +5807,11 @@
                                 });
                             }
                         }
-                        if (window.CloudSync) window.CloudSync.schedulePush(200);
+                        if (window.CloudSync && typeof window.CloudSync.scheduleStatsPush === 'function') {
+                            window.CloudSync.scheduleStatsPush(60);
+                        } else if (window.CloudSync) {
+                            window.CloudSync.schedulePush(200);
+                        }
                     })().catch(() => {});
                 }
                 showScreen('home');
@@ -6321,6 +6362,26 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
                     }
                 }
             });
+
+            // ⚡ Realtime 0.1s Zero-Click Streaming UI Updater
+            if (typeof window.CloudSync.onStatsUpdated === 'function') {
+                window.CloudSync.onStatsUpdated(async () => {
+                    state.statsMap = await IDBStore.getAllStatsMap();
+                    if (state.mode === 'manager' || (elements.screens.manager && elements.screens.manager.classList.contains('active'))) {
+                        renderManagerList();
+                    }
+                });
+            }
+
+            if (typeof window.CloudSync.onFlagsUpdated === 'function') {
+                window.CloudSync.onFlagsUpdated(async () => {
+                    state.needsEditMap = await IDBStore.getAllNeedsEditMap();
+                    state.deletedKeysSet = await IDBStore.getDeletedKeysSet();
+                    if (state.mode === 'manager' || (elements.screens.manager && elements.screens.manager.classList.contains('active'))) {
+                        renderManagerList();
+                    }
+                });
+            }
         }
 
         // 🔄 Background Resume & Wakeup Handler (Screen Turn On / App Reopen from sleep)
