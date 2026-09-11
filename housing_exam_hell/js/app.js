@@ -3709,6 +3709,7 @@
         const card = elements.quiz.card;
 
         card.classList.remove('anim-quake', 'anim-tada');
+        document.body.classList.remove('screen-heavy-quake');
         void card.offsetWidth; // Reflow to restart animation
 
         if (isCorrect) {
@@ -3719,6 +3720,8 @@
             }
         } else {
             card.classList.add('anim-quake');
+            document.body.classList.add('screen-heavy-quake');
+
             // Screen edge red shockwave flash vignette
             const flash = document.createElement('div');
             flash.className = 'screen-quake-flash';
@@ -3726,36 +3729,39 @@
             setTimeout(() => flash.remove(), 600);
 
             if (navigator.vibrate) {
-                try { navigator.vibrate([60, 40, 80]); } catch (e) {}
+                try { navigator.vibrate([100, 40, 140, 50, 100]); } catch (e) {}
             }
         }
 
         setTimeout(() => {
             card.classList.remove('anim-quake', 'anim-tada');
+            document.body.classList.remove('screen-heavy-quake');
         }, 600);
     }
 
     function createSparkleBurst() {
-        if (!elements.quiz.card) return;
-        const card = elements.quiz.card;
-        const rect = card.getBoundingClientRect();
         const container = document.createElement('div');
         container.className = 'sparkle-burst-container';
-        container.style.left = `${rect.left + rect.width / 2}px`;
-        container.style.top = `${rect.top + rect.height / 3}px`;
 
-        const symbols = ['✨', '⭐', '🌟', '🎉', '💥', '🎊', '🔥', '💚', '💎', '👑'];
-        const totalParticles = 24;
-        for (let i = 0; i < totalParticles; i++) {
+        const symbols = ['✨', '⭐', '🌟', '🎉', '💥', '🎊', '🔥', '💎', '👑', '🏆', '💯', '🚀'];
+        const vw = window.innerWidth || document.documentElement.clientWidth || 800;
+        const vh = window.innerHeight || document.documentElement.clientHeight || 600;
+
+        // 1. Bottom-Left Cannon (shoots diagonally up-right)
+        const leftOriginX = vw * 0.12;
+        const leftOriginY = vh * 0.88;
+        for (let i = 0; i < 12; i++) {
             const particle = document.createElement('span');
             particle.className = 'sparkle-particle';
             particle.textContent = symbols[Math.floor(Math.random() * symbols.length)];
-            
-            const angle = (i / totalParticles) * 2 * Math.PI + (Math.random() - 0.5) * 0.35;
-            const distance = 110 + Math.random() * 110;
-            const tx = Math.cos(angle) * distance;
-            const ty = Math.sin(angle) * distance - 45;
-            const rot = (Math.random() - 0.5) * 80;
+            particle.style.left = `${leftOriginX}px`;
+            particle.style.top = `${leftOriginY}px`;
+
+            const angleRad = -((25 + Math.random() * 50) * Math.PI / 180);
+            const dist = (vh * 0.38) + Math.random() * (vh * 0.42);
+            const tx = Math.cos(angleRad) * dist;
+            const ty = Math.sin(angleRad) * dist;
+            const rot = (Math.random() - 0.5) * 140;
 
             particle.style.setProperty('--tx', `${tx}px`);
             particle.style.setProperty('--ty', `${ty}px`);
@@ -3763,8 +3769,61 @@
             particle.style.animationDelay = `${Math.random() * 0.08}s`;
             container.appendChild(particle);
         }
+
+        // 2. Bottom-Right Cannon (shoots diagonally up-left)
+        const rightOriginX = vw * 0.88;
+        const rightOriginY = vh * 0.88;
+        for (let i = 0; i < 12; i++) {
+            const particle = document.createElement('span');
+            particle.className = 'sparkle-particle';
+            particle.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+            particle.style.left = `${rightOriginX}px`;
+            particle.style.top = `${rightOriginY}px`;
+
+            const angleRad = -((105 + Math.random() * 50) * Math.PI / 180);
+            const dist = (vh * 0.38) + Math.random() * (vh * 0.42);
+            const tx = Math.cos(angleRad) * dist;
+            const ty = Math.sin(angleRad) * dist;
+            const rot = (Math.random() - 0.5) * 140;
+
+            particle.style.setProperty('--tx', `${tx}px`);
+            particle.style.setProperty('--ty', `${ty}px`);
+            particle.style.setProperty('--rot', `${rot}deg`);
+            particle.style.animationDelay = `${Math.random() * 0.08}s`;
+            container.appendChild(particle);
+        }
+
+        // 3. Center/Top Wide Burst (around question card / upper center)
+        let centerOriginX = vw * 0.5;
+        let centerOriginY = vh * 0.35;
+        if (elements.quiz.card) {
+            const rect = elements.quiz.card.getBoundingClientRect();
+            centerOriginX = rect.left + rect.width / 2;
+            centerOriginY = rect.top + Math.min(rect.height * 0.35, 180);
+        }
+
+        for (let i = 0; i < 12; i++) {
+            const particle = document.createElement('span');
+            particle.className = 'sparkle-particle';
+            particle.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+            particle.style.left = `${centerOriginX}px`;
+            particle.style.top = `${centerOriginY}px`;
+
+            const angleRad = (i / 12) * 2 * Math.PI + (Math.random() - 0.5) * 0.4;
+            const dist = 140 + Math.random() * 160;
+            const tx = Math.cos(angleRad) * dist;
+            const ty = Math.sin(angleRad) * dist - 30;
+            const rot = (Math.random() - 0.5) * 100;
+
+            particle.style.setProperty('--tx', `${tx}px`);
+            particle.style.setProperty('--ty', `${ty}px`);
+            particle.style.setProperty('--rot', `${rot}deg`);
+            particle.style.animationDelay = `${Math.random() * 0.06}s`;
+            container.appendChild(particle);
+        }
+
         document.body.appendChild(container);
-        setTimeout(() => container.remove(), 1000);
+        setTimeout(() => container.remove(), 1050);
     }
 
     function toggleExplanation(forceOpen) {
