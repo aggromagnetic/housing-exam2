@@ -31,6 +31,7 @@ const CloudSync = {
     isOutdated: false,
     cloudVersion: null,
     cloudBuild: null,
+    sessionStartTime: new Date().toISOString(),
     _idleInterval: null,
     listeners: [],
 
@@ -39,7 +40,7 @@ const CloudSync = {
             console.warn("Firebase SDK not loaded. Running in local-only mode.");
             this.syncStatus = "local_only";
             this.notifyStatusChange();
-            return;
+            return Promise.resolve(false);
         }
 
         try {
@@ -47,19 +48,22 @@ const CloudSync = {
                 firebase.initializeApp(FIREBASE_CONFIG);
             }
             this.db = firebase.firestore();
+            this.sessionStartTime = new Date().toISOString();
             this.isInitialized = true;
-            this.syncStatus = "synced";
+            this.syncStatus = "syncing";
             console.log("☁️ Firebase Cloud Sync Engine initialized successfully.");
             this.notifyStatusChange();
 
-            // Initial pull from cloud on startup
-            this.pullFromCloud();
             // Start 3-minute idle background polling
             this.startIdlePolling();
+
+            // Return initial pull promise so caller can await it
+            return this.pullFromCloud();
         } catch (err) {
             console.error("Firebase init error:", err);
             this.syncStatus = "error";
             this.notifyStatusChange();
+            return Promise.resolve(false);
         }
     },
 
@@ -289,6 +293,9 @@ const CloudSync = {
                 });
                 localStorage.setItem("housing_exam_needs_edit", JSON.stringify(finalNeeds));
             }
+
+            // Wipe stale local deleted_edits so old local tombstones never kill cloud edits!
+            localStorage.removeItem("housing_exam_deleted_edits");
 
             if (mergedDeletedKeys.length > 0) {
                 const localDel = JSON.parse(localStorage.getItem("housing_exam_deleted_keys") || "[]");
@@ -552,10 +559,10 @@ const CloudSync = {
                 }
             });
 
-            // ANTI-SHRINK GUARD: Block upload if custom edits totalCount would shrink!
+            // ANTI-SHRINK GUARD: Block upload if custom edits totalCount would shrink significantly (more than 2 items)!
             const cloudTotalCount = (metaDoc && metaDoc.exists) ? (metaDoc.data()?.totalCount || 0) : 0;
             const localCountToPush = Object.keys(mergedToPush).length;
-            if (cloudTotalCount > 0 && localCountToPush < cloudTotalCount) {
+            if (cloudTotalCount > 0 && (cloudTotalCount - localCountToPush) > 2) {
                 console.warn(`🛑 [CloudSync Anti-Shrink Guard] Upload BLOCKED! Cloud has ${cloudTotalCount} edits, but candidate only has ${localCountToPush}. Aborting push to prevent loss.`);
                 this.isSyncing = false;
                 this.syncStatus = "synced";
@@ -577,6 +584,7 @@ const CloudSync = {
             const mergedNeedsEdit = { ...currentCloudNeedsEdit };
             const cloudFlagsUpdatedTime = (flagsDoc && flagsDoc.exists && flagsDoc.data()?.updatedAt)
                 ? new Date(flagsDoc.data().updatedAt).getTime() : 0;
+            const sessionStartMs = new Date(this.sessionStartTime || Date.now()).getTime();
 
             Object.keys(needsEditMap).forEach(k => {
                 if (PURGED_NEEDS_EDIT_KEYS.has(k)) {
@@ -586,11 +594,10 @@ const CloudSync = {
                 const loc = needsEditMap[k];
                 const cld = mergedNeedsEdit[k];
                 if (!cld) {
-                    // CRITICAL: Only add if loc was flagged AFTER cloudFlagsUpdatedTime!
-                    // If flaggedAt is older than cloud updatedAt, it was cleared/resolved in cloud!
+                    // CRITICAL: Only add if loc was flagged in CURRENT active session!
                     const locTime = loc.flaggedAt ? new Date(loc.flaggedAt).getTime() : 0;
-                    if (cloudFlagsUpdatedTime > 0 && locTime <= cloudFlagsUpdatedTime) {
-                        // Stale ghost flag! Discard it!
+                    if (locTime < sessionStartMs || (cloudFlagsUpdatedTime > 0 && locTime <= cloudFlagsUpdatedTime)) {
+                        // Stale ghost flag from a past session! Discard!
                         return;
                     }
                     mergedNeedsEdit[k] = loc;
