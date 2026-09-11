@@ -15,6 +15,13 @@ const FIREBASE_CONFIG = {
 
 const SYNC_USER_DOC = "main_study_profile";
 
+const PURGED_NEEDS_EDIT_KEYS = new Set([
+    '관리실무_short_CHAPTER 01 주택의 정의 및 종류_06',
+    '관리실무_short_CHAPTER 04 관리조직 및 입주자대표회의_28',
+    '관리실무_short_CHAPTER 04 관리조직 및 입주자대표회의_91',
+    '관리실무_short_CHAPTER 11 시설관리_472'
+]);
+
 const CloudSync = {
     db: null,
     isInitialized: false,
@@ -232,14 +239,23 @@ const CloudSync = {
                 localStorage.setItem("housing_exam_custom_edits", JSON.stringify(finalEdits));
             }
 
-            // Merge local and cloud unflagged records
+            // Merge local and cloud unflagged records with timestamp comparison
             const localUnflagged = JSON.parse(localStorage.getItem("housing_exam_unflagged_keys") || "{}");
-            const mergedUnflagged = { ...localUnflagged, ...cloudUnflagged };
+            const mergedUnflagged = { ...localUnflagged };
+            Object.keys(cloudUnflagged).forEach(k => {
+                const cTime = cloudUnflagged[k] ? new Date(cloudUnflagged[k]).getTime() : 0;
+                const lTime = mergedUnflagged[k] ? new Date(mergedUnflagged[k]).getTime() : 0;
+                if (cTime >= lTime) mergedUnflagged[k] = cloudUnflagged[k];
+            });
             localStorage.setItem("housing_exam_unflagged_keys", JSON.stringify(mergedUnflagged));
 
-            // Clean mergedNeedsEdit against unflagged timestamps
+            // Clean mergedNeedsEdit against unflagged timestamps and PURGED_NEEDS_EDIT_KEYS
             if (mergedNeedsEdit && typeof mergedNeedsEdit === 'object') {
                 Object.keys(mergedNeedsEdit).forEach(k => {
+                    if (PURGED_NEEDS_EDIT_KEYS.has(k)) {
+                        delete mergedNeedsEdit[k];
+                        return;
+                    }
                     const unflagTime = mergedUnflagged[k] ? new Date(mergedUnflagged[k]).getTime() : 0;
                     const flagTime = mergedNeedsEdit[k]?.flaggedAt ? new Date(mergedNeedsEdit[k].flaggedAt).getTime() : 0;
                     if (unflagTime > 0 && unflagTime >= flagTime) {
@@ -253,9 +269,9 @@ const CloudSync = {
             } else if (Object.keys(mergedNeedsEdit).length > 0) {
                 const localNeeds = JSON.parse(localStorage.getItem("housing_exam_needs_edit") || "{}");
                 const finalNeeds = { ...localNeeds, ...mergedNeedsEdit };
-                // Also clean against unflagged
+                // Also clean against unflagged and PURGED_NEEDS_EDIT_KEYS
                 Object.keys(finalNeeds).forEach(k => {
-                    if (mergedUnflagged[k]) delete finalNeeds[k];
+                    if (PURGED_NEEDS_EDIT_KEYS.has(k) || mergedUnflagged[k]) delete finalNeeds[k];
                 });
                 localStorage.setItem("housing_exam_needs_edit", JSON.stringify(finalNeeds));
             }
@@ -516,11 +532,20 @@ const CloudSync = {
             localStorage.setItem("housing_exam_custom_edits", JSON.stringify(mergedToPush));
 
             // Bidirectional CRDT Merge for Flags (needsEdit, unflagged, deletedKeys)
-            const mergedUnflagged = { ...currentCloudUnflagged, ...unflaggedKeys };
+            const mergedUnflagged = { ...currentCloudUnflagged };
+            Object.keys(unflaggedKeys).forEach(k => {
+                const lTime = unflaggedKeys[k] ? new Date(unflaggedKeys[k]).getTime() : 0;
+                const cTime = mergedUnflagged[k] ? new Date(mergedUnflagged[k]).getTime() : 0;
+                if (lTime >= cTime) mergedUnflagged[k] = unflaggedKeys[k];
+            });
             localStorage.setItem("housing_exam_unflagged_keys", JSON.stringify(mergedUnflagged));
 
             const mergedNeedsEdit = { ...currentCloudNeedsEdit };
             Object.keys(needsEditMap).forEach(k => {
+                if (PURGED_NEEDS_EDIT_KEYS.has(k)) {
+                    delete needsEditMap[k];
+                    return;
+                }
                 const loc = needsEditMap[k];
                 const cld = mergedNeedsEdit[k];
                 if (!cld) {
@@ -532,8 +557,12 @@ const CloudSync = {
                 }
             });
 
-            // Clean mergedNeedsEdit against unflagged timestamps
+            // Clean mergedNeedsEdit against unflagged timestamps and PURGED_NEEDS_EDIT_KEYS
             Object.keys(mergedNeedsEdit).forEach(k => {
+                if (PURGED_NEEDS_EDIT_KEYS.has(k)) {
+                    delete mergedNeedsEdit[k];
+                    return;
+                }
                 const unflagTime = mergedUnflagged[k] ? new Date(mergedUnflagged[k]).getTime() : 0;
                 const flagTime = mergedNeedsEdit[k]?.flaggedAt ? new Date(mergedNeedsEdit[k].flaggedAt).getTime() : 0;
                 if (unflagTime > 0 && unflagTime >= flagTime) {
