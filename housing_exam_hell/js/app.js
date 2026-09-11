@@ -6242,11 +6242,6 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
             }
         } catch (e) {}
 
-        state.statsMap = await IDBStore.getAllStatsMap();
-        state.customEdits = await IDBStore.getAllQuestionEditsMap();
-        state.needsEditMap = await IDBStore.getAllNeedsEditMap();
-        state.deletedKeysSet = await IDBStore.getDeletedKeysSet();
-
         // 🛡️ Permanent purge of resolved legacy subjective questions from needsEdit
         const PURGED_NEEDS_EDIT_KEYS = [
             '관리실무_short_CHAPTER 01 주택의 정의 및 종류_06',
@@ -6254,27 +6249,25 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
             '관리실무_short_CHAPTER 04 관리조직 및 입주자대표회의_91',
             '관리실무_short_CHAPTER 11 시설관리_472'
         ];
-        try {
-            let localNeeds = JSON.parse(localStorage.getItem('housing_exam_needs_edit') || '{}');
-            let localUnflagged = JSON.parse(localStorage.getItem('housing_exam_unflagged_keys') || '{}');
-            let changed = false;
-            const nowIso = new Date().toISOString();
-            PURGED_NEEDS_EDIT_KEYS.forEach(k => {
-                if (state.needsEditMap && state.needsEditMap[k]) {
-                    delete state.needsEditMap[k];
-                    changed = true;
-                }
-                if (localNeeds[k]) {
-                    delete localNeeds[k];
-                    changed = true;
-                }
-                localUnflagged[k] = nowIso;
-            });
-            if (changed) {
-                localStorage.setItem('housing_exam_needs_edit', JSON.stringify(localNeeds));
-                localStorage.setItem('housing_exam_unflagged_keys', JSON.stringify(localUnflagged));
+
+        // ☁️ Step 1: Initialize Cloud Sync and AWAIT full pull from cloud FIRST!
+        if (window.CloudSync) {
+            try {
+                await window.CloudSync.init();
+            } catch (e) {
+                console.warn("Initial cloud pull error, continuing with local cache:", e);
             }
-        } catch (e) {}
+        }
+
+        // ☁️ Step 2: NOW load state from the freshly cloud-synchronized stores!
+        state.statsMap = await IDBStore.getAllStatsMap();
+        state.customEdits = await IDBStore.getAllQuestionEditsMap();
+        state.needsEditMap = await IDBStore.getAllNeedsEditMap();
+        state.deletedKeysSet = await IDBStore.getDeletedKeysSet();
+
+        PURGED_NEEDS_EDIT_KEYS.forEach(k => {
+            if (state.needsEditMap && state.needsEditMap[k]) delete state.needsEditMap[k];
+        });
 
         const canvasEl = document.getElementById('drawing-canvas');
         const toolbarEl = document.getElementById('stylus-toolbar');
@@ -6286,9 +6279,8 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
         setSubject(state.subject);
         showScreen('home');
 
-        // Initialize Firebase Realtime Cloud Sync
+        // Cloud status change listener for ongoing sync updates
         if (window.CloudSync) {
-            window.CloudSync.init();
             window.CloudSync.onStatusChange(async (status, lastTime) => {
                 if (status === 'synced') {
                     state.statsMap = await IDBStore.getAllStatsMap();
@@ -6335,7 +6327,18 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
         document.addEventListener('visibilitychange', async () => {
             if (document.visibilityState === 'visible') {
                 if (window.CloudSync && window.CloudSync.isInitialized) {
-                    window.CloudSync.pullFromCloud();
+                    window.CloudSync.sessionStartTime = new Date().toISOString();
+                    await window.CloudSync.pullFromCloud();
+                    state.statsMap = await IDBStore.getAllStatsMap();
+                    state.customEdits = await IDBStore.getAllQuestionEditsMap();
+                    state.needsEditMap = await IDBStore.getAllNeedsEditMap();
+                    state.deletedKeysSet = await IDBStore.getDeletedKeysSet();
+                    if (state.mode === 'manager' || (elements.screens.manager && elements.screens.manager.classList.contains('active'))) {
+                        if (state.questions && state.questions.length > 0) {
+                            state.questions.forEach(applyCustomEdits);
+                        }
+                        renderManagerList();
+                    }
                 }
             } else if (document.visibilityState === 'hidden') {
                 if (window.CloudSync && window.CloudSync.isInitialized) {
@@ -6353,7 +6356,12 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
         window.addEventListener('pageshow', async (e) => {
             if (e.persisted) {
                 if (window.CloudSync && window.CloudSync.isInitialized) {
-                    window.CloudSync.pullFromCloud();
+                    window.CloudSync.sessionStartTime = new Date().toISOString();
+                    await window.CloudSync.pullFromCloud();
+                    state.statsMap = await IDBStore.getAllStatsMap();
+                    state.customEdits = await IDBStore.getAllQuestionEditsMap();
+                    state.needsEditMap = await IDBStore.getAllNeedsEditMap();
+                    state.deletedKeysSet = await IDBStore.getDeletedKeysSet();
                 }
             }
         });
