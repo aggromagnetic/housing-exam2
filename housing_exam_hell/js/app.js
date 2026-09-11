@@ -1835,13 +1835,17 @@
             const dpr = window.devicePixelRatio || 1;
             const targetWidth = Math.round(rect.width);
             const targetHeight = Math.round(rect.height);
+            const expectedW = targetWidth * dpr;
+            const expectedH = targetHeight * dpr;
 
-            this.canvas.width = targetWidth * dpr;
-            this.canvas.height = targetHeight * dpr;
-            this.canvas.style.width = targetWidth + 'px';
-            this.canvas.style.height = targetHeight + 'px';
-
-            this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            // ⚡ GPU Optimization: Only reallocate canvas buffer if size actually changed (e.g. tablet rotation)
+            if (this.canvas.width !== expectedW || this.canvas.height !== expectedH) {
+                this.canvas.width = expectedW;
+                this.canvas.height = expectedH;
+                this.canvas.style.width = targetWidth + 'px';
+                this.canvas.style.height = targetHeight + 'px';
+                this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            }
             this.redraw();
         }
 
@@ -4553,6 +4557,30 @@
         return isNaN(t) ? 0 : t;
     }
 
+    // ⚡ High-Performance Memoized Pool Cache for Manager Modal
+    let _mgrCachedLawPool = null;
+    let _mgrCachedGwanriPool = null;
+    let _mgrCachedAllPool = null;
+    let _mgrCachedPoolMap = null;
+
+    function getManagerPools() {
+        if (!_mgrCachedAllPool) {
+            _mgrCachedLawPool = [...ExamEngine.getQuestionPool('관계법규', 'choice'), ...ExamEngine.getQuestionPool('관계법규', 'short')];
+            _mgrCachedGwanriPool = [...ExamEngine.getQuestionPool('관리실무', 'choice'), ...ExamEngine.getQuestionPool('관리실무', 'short')];
+            _mgrCachedAllPool = [..._mgrCachedLawPool, ..._mgrCachedGwanriPool];
+            _mgrCachedPoolMap = new Map();
+            _mgrCachedAllPool.forEach(q => {
+                if (q && q.qKey) _mgrCachedPoolMap.set(q.qKey, q);
+            });
+        }
+        return {
+            lawPool: _mgrCachedLawPool,
+            gwanriPool: _mgrCachedGwanriPool,
+            allPool: _mgrCachedAllPool,
+            poolMap: _mgrCachedPoolMap
+        };
+    }
+
     function renderManagerList(tabName = state.managerTab, filterSubj = state.managerFilter, query = state.managerSearchQuery) {
         state.managerTab = tabName;
         state.managerFilter = filterSubj;
@@ -4561,9 +4589,7 @@
         if (!elements.manager.itemsList) return;
         elements.manager.itemsList.innerHTML = '';
 
-        const lawPool = [...ExamEngine.getQuestionPool('관계법규', 'choice'), ...ExamEngine.getQuestionPool('관계법규', 'short')];
-        const gwanriPool = [...ExamEngine.getQuestionPool('관리실무', 'choice'), ...ExamEngine.getQuestionPool('관리실무', 'short')];
-        const allPool = [...lawPool, ...gwanriPool];
+        const { lawPool, gwanriPool, allPool, poolMap } = getManagerPools();
 
         PURGED_NEEDS_EDIT_KEYS.forEach(k => {
             if (state.needsEditMap) delete state.needsEditMap[k];
@@ -4723,15 +4749,14 @@
             });
         } else if (tabName === 'needs_edit') {
             list = allNeedsEditKeys.map(k => {
-                const info = state.needsEditMap[k];
-                const pool = info.subject === '관리실무' ? gwanriPool : lawPool;
-                const found = pool.find(item => item.qKey === k);
+                const info = state.needsEditMap[k] || {};
+                const found = poolMap.get(k);
                 return found || {
                     qKey: k,
-                    subject: info.subject,
-                    chapterName: info.chapterName,
-                    type: info.type,
-                    question: info.question,
+                    subject: info.subject || (k.startsWith('관리실무') ? '관리실무' : '관계법규'),
+                    chapterName: info.chapterName || '',
+                    type: info.type || 'choice',
+                    question: info.question || '',
                     id: '?'
                 };
             });
@@ -4745,8 +4770,7 @@
         } else if (tabName === 'custom_edits') {
             list = allCustomEditsKeys.map(k => {
                 const isGwanri = k.startsWith('관리실무');
-                const pool = isGwanri ? gwanriPool : lawPool;
-                const found = pool.find(item => item.qKey === k);
+                const found = poolMap.get(k);
                 const edited = state.customEdits[k] || {};
                 return found || {
                     qKey: k,
@@ -4861,7 +4885,7 @@
 
             let quickDelBtnHtml = '';
             if (tabName === 'needs_edit') {
-                quickDelBtnHtml = `<button type="button" class="mgr-card-quick-unflag" style="background: rgba(52,211,153,0.15); color: #34D399; border: 1px solid rgba(52,211,153,0.4); border-radius: 4px; padding: 2px 7px; font-size: 0.72rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;" title="수정 완료/해결되어 수정필요 목록에서 제외"><i class="fa-solid fa-check"></i> 해결완료</button>`;
+                quickDelBtnHtml = `<button type="button" class="mgr-card-quick-unflag" title="수정 완료/해결되어 수정필요 목록에서 제외"><i class="fa-solid fa-check"></i> 해결완료</button>`;
             } else if (tabName === 'wrong') {
                 quickDelBtnHtml = `<button type="button" class="mgr-card-quick-del" title="오답 기록 삭제 (가중치 초기화)"><i class="fa-solid fa-trash-can"></i> 삭제</button>`;
             }
@@ -5217,11 +5241,13 @@
             });
         });
 
-        // 3. Manager Search: Enter key, Search button, and Clear button
+        // 3. Manager Search: Enter key, 150ms Realtime Debounce, Search button, and Clear button
+        let _mgrSearchDebounceTimer = null;
         if (elements.manager.searchInput) {
             elements.manager.searchInput.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter') {
                     e.preventDefault();
+                    if (_mgrSearchDebounceTimer) clearTimeout(_mgrSearchDebounceTimer);
                     state.managerSearchQuery = e.target.value.trim();
                     state.managerPage = 1;
                     renderManagerList();
@@ -5230,14 +5256,25 @@
             });
 
             elements.manager.searchInput.addEventListener('input', (e) => {
+                const val = e.target.value;
                 if (elements.manager.btnClearSearch) {
-                    elements.manager.btnClearSearch.classList.toggle('show', !!e.target.value);
+                    elements.manager.btnClearSearch.classList.toggle('show', !!val);
                 }
+                if (_mgrSearchDebounceTimer) clearTimeout(_mgrSearchDebounceTimer);
+                _mgrSearchDebounceTimer = setTimeout(() => {
+                    const trimmed = val.trim();
+                    if (trimmed !== state.managerSearchQuery) {
+                        state.managerSearchQuery = trimmed;
+                        state.managerPage = 1;
+                        renderManagerList();
+                    }
+                }, 150);
             });
         }
 
         if (elements.manager.btnSearch) {
             elements.manager.btnSearch.addEventListener('click', () => {
+                if (_mgrSearchDebounceTimer) clearTimeout(_mgrSearchDebounceTimer);
                 if (elements.manager.searchInput) {
                     state.managerSearchQuery = elements.manager.searchInput.value.trim();
                 }
