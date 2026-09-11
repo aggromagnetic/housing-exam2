@@ -21,8 +21,8 @@
     
     <script>
         // Automatic tablet cache buster: Forces tablet WebView to always fetch latest build
-        const CURRENT_BUILD = '2609111925';
-        const APP_SEMVER = 'v.0.260911.1925';
+        const CURRENT_BUILD = '2609111930';
+        const APP_SEMVER = 'v.0.260911.1930';
         window.APP_BUILD_VERSION = CURRENT_BUILD;
         window.APP_SEMVER = APP_SEMVER;
 
@@ -317,6 +317,9 @@
                         </button>
                         <button type="button" class="mgr-tab-btn" data-tab="needs_edit" id="mgr-tab-needs-edit" title="수정 필요 문제">
                             <i class="fa-solid fa-flag text-amber-400"></i> 수정필요
+                        </button>
+                        <button type="button" class="mgr-tab-btn" data-tab="recent" id="mgr-tab-recent" title="최근 풀이한 문제 목록 (오늘 풀이 문항)">
+                            <i class="fa-solid fa-clock-rotate-left text-cyan-400"></i> 최근풀이
                         </button>
                         <button type="button" class="mgr-tab-btn" data-tab="custom_edits" id="mgr-tab-custom-edits" title="수정 완료 문제">
                             <i class="fa-solid fa-pen-to-square text-emerald-400"></i> 수정완료
