@@ -145,14 +145,17 @@ const CloudSync = {
                 const mergedUnflagged = { ...localUnflagged, ...cloudUnflagged };
                 localStorage.setItem("housing_exam_unflagged_keys", JSON.stringify(mergedUnflagged));
 
-                if (Object.keys(cloudNeedsEdit).length > 0) {
-                    Object.keys(cloudNeedsEdit).forEach(k => {
+                // Safe union merge with local needsEdit
+                const localNeeds = JSON.parse(localStorage.getItem("housing_exam_needs_edit") || "{}");
+                const combinedNeeds = { ...localNeeds, ...cloudNeedsEdit };
+                if (Object.keys(combinedNeeds).length > 0) {
+                    Object.keys(combinedNeeds).forEach(k => {
                         if (PURGED_NEEDS_EDIT_KEYS.has(k) || mergedUnflagged[k]) {
-                            delete cloudNeedsEdit[k];
+                            delete combinedNeeds[k];
                         }
                     });
                 }
-                localStorage.setItem("housing_exam_needs_edit", JSON.stringify(cloudNeedsEdit));
+                localStorage.setItem("housing_exam_needs_edit", JSON.stringify(combinedNeeds));
                 if (data.deletedKeys) {
                     const localDel = JSON.parse(localStorage.getItem("housing_exam_deleted_keys") || "[]");
                     localStorage.setItem("housing_exam_deleted_keys", JSON.stringify(Array.from(new Set([...localDel, ...data.deletedKeys]))));
@@ -344,14 +347,18 @@ const CloudSync = {
             const mergedUnflagged = { ...localUnflagged, ...cloudUnflagged };
             localStorage.setItem("housing_exam_unflagged_keys", JSON.stringify(mergedUnflagged));
 
-            if (mergedNeedsEdit && typeof mergedNeedsEdit === "object") {
-                Object.keys(mergedNeedsEdit).forEach(k => {
+            // Safe Bidirectional Union Merge for needsEdit: Never wipe local flags!
+            const localNeeds = JSON.parse(localStorage.getItem("housing_exam_needs_edit") || "{}");
+            const combinedNeeds = { ...localNeeds, ...(mergedNeedsEdit || {}) };
+
+            if (combinedNeeds && typeof combinedNeeds === "object") {
+                Object.keys(combinedNeeds).forEach(k => {
                     if (PURGED_NEEDS_EDIT_KEYS.has(k) || mergedUnflagged[k]) {
-                        delete mergedNeedsEdit[k];
+                        delete combinedNeeds[k];
                     }
                 });
             }
-            localStorage.setItem("housing_exam_needs_edit", JSON.stringify(mergedNeedsEdit || {}));
+            localStorage.setItem("housing_exam_needs_edit", JSON.stringify(combinedNeeds || {}));
 
             if (mergedDeletedKeys.length > 0) {
                 const localDel = JSON.parse(localStorage.getItem("housing_exam_deleted_keys") || "[]");
@@ -497,6 +504,113 @@ const CloudSync = {
             if (this._hasPendingStatsPush) {
                 this._hasPendingStatsPush = false;
                 this.pushStatsOnly();
+            }
+        }
+    },
+
+    /**
+     * Fast real-time flags sync (needsEdit, unflagged, deletedKeys)
+     */
+    _isFlagsPushing: false,
+    _hasPendingFlagsPush: false,
+    _flagsPushTimeout: null,
+
+    scheduleFlagsPush(delayMs = 50) {
+        if (this._flagsPushTimeout) clearTimeout(this._flagsPushTimeout);
+        this._flagsPushTimeout = setTimeout(() => {
+            this.pushFlagsOnly();
+        }, delayMs);
+    },
+
+    async pushFlagsOnly() {
+        if (!this.isInitialized || !this.db) return false;
+        if (this._isFlagsPushing) {
+            this._hasPendingFlagsPush = true;
+            return false;
+        }
+
+        try {
+            this._isFlagsPushing = true;
+            const syncCol = this.db.collection("exam_hell_sync");
+            const flagsDoc = await syncCol.doc("flags_store").get().catch(() => null);
+
+            let currentCloudNeedsEdit = {};
+            let currentCloudUnflagged = {};
+            let currentCloudDeletedKeys = [];
+            if (flagsDoc && flagsDoc.exists) {
+                const fData = flagsDoc.data() || {};
+                if (fData.needsEditData) {
+                    try { currentCloudNeedsEdit = JSON.parse(fData.needsEditData); } catch (e) {}
+                }
+                if (fData.unflaggedData) {
+                    try { currentCloudUnflagged = JSON.parse(fData.unflaggedData); } catch (e) {}
+                }
+                currentCloudDeletedKeys = fData.deletedKeys || [];
+            }
+
+            const localNeedsEdit = JSON.parse(localStorage.getItem("housing_exam_needs_edit") || "{}");
+            const localUnflagged = JSON.parse(localStorage.getItem("housing_exam_unflagged_keys") || "{}");
+            const localDeletedKeys = JSON.parse(localStorage.getItem("housing_exam_deleted_keys") || "[]");
+
+            // Unflagged merge
+            const mergedUnflagged = { ...currentCloudUnflagged };
+            Object.keys(localUnflagged).forEach(k => {
+                const lTime = localUnflagged[k] ? new Date(localUnflagged[k]).getTime() : 0;
+                const cTime = mergedUnflagged[k] ? new Date(mergedUnflagged[k]).getTime() : 0;
+                if (lTime >= cTime) mergedUnflagged[k] = localUnflagged[k];
+            });
+            localStorage.setItem("housing_exam_unflagged_keys", JSON.stringify(mergedUnflagged));
+
+            // NeedsEdit merge
+            const mergedNeedsEdit = { ...currentCloudNeedsEdit };
+            Object.keys(localNeedsEdit).forEach(k => {
+                if (PURGED_NEEDS_EDIT_KEYS.has(k)) return;
+                const loc = localNeedsEdit[k];
+                const cld = mergedNeedsEdit[k];
+                if (!cld) {
+                    mergedNeedsEdit[k] = loc;
+                } else {
+                    const lTime = loc.flaggedAt ? new Date(loc.flaggedAt).getTime() : 0;
+                    const cTime = cld.flaggedAt ? new Date(cld.flaggedAt).getTime() : 0;
+                    if (lTime >= cTime) mergedNeedsEdit[k] = loc;
+                }
+            });
+
+            // Filter unflagged and purged
+            Object.keys(mergedNeedsEdit).forEach(k => {
+                if (PURGED_NEEDS_EDIT_KEYS.has(k) || mergedUnflagged[k]) {
+                    delete mergedNeedsEdit[k];
+                }
+            });
+            localStorage.setItem("housing_exam_needs_edit", JSON.stringify(mergedNeedsEdit));
+
+            const mergedDelKeys = Array.from(new Set([...localDeletedKeys, ...currentCloudDeletedKeys]));
+            localStorage.setItem("housing_exam_deleted_keys", JSON.stringify(mergedDelKeys));
+
+            const nowIso = new Date().toISOString();
+            this._lastPushedFlagsTime = nowIso;
+
+            await syncCol.doc("flags_store").set({
+                needsEditData: JSON.stringify(mergedNeedsEdit),
+                unflaggedData: JSON.stringify(mergedUnflagged),
+                deletedKeys: mergedDelKeys,
+                updatedAt: nowIso
+            });
+
+            this.lastSyncTime = new Date();
+            this.syncStatus = "synced";
+            this.notifyStatusChange();
+            this.notifyFlagsUpdated();
+            console.log(`⚡ [FastSync] Pushed ${Object.keys(mergedNeedsEdit).length} flags in real-time.`);
+            return true;
+        } catch (err) {
+            console.error("pushFlagsOnly error:", err);
+            return false;
+        } finally {
+            this._isFlagsPushing = false;
+            if (this._hasPendingFlagsPush) {
+                this._hasPendingFlagsPush = false;
+                this.pushFlagsOnly();
             }
         }
     },

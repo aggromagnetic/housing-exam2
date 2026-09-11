@@ -512,7 +512,10 @@ const IDBStore = {
                 flaggedAt: new Date().toISOString()
             };
             localStorage.setItem('housing_exam_needs_edit', JSON.stringify(map));
-            if (window.CloudSync) window.CloudSync.schedulePush(200);
+            if (window.CloudSync) {
+                if (window.CloudSync.scheduleFlagsPush) window.CloudSync.scheduleFlagsPush(50);
+                else window.CloudSync.schedulePush(200);
+            }
             return map[qKey];
         } catch (e) { return null; }
     },
@@ -539,7 +542,10 @@ const IDBStore = {
             unflagged[qKey] = new Date().toISOString();
             localStorage.setItem('housing_exam_unflagged_keys', JSON.stringify(unflagged));
 
-            if (window.CloudSync) window.CloudSync.schedulePush(200);
+            if (window.CloudSync) {
+                if (window.CloudSync.scheduleFlagsPush) window.CloudSync.scheduleFlagsPush(50);
+                else window.CloudSync.schedulePush(200);
+            }
         } catch (e) {}
     },
 
@@ -556,7 +562,10 @@ const IDBStore = {
             });
             localStorage.setItem('housing_exam_unflagged_keys', JSON.stringify(unflagged));
             localStorage.removeItem('housing_exam_needs_edit');
-            if (window.CloudSync) window.CloudSync.schedulePush(200);
+            if (window.CloudSync) {
+                if (window.CloudSync.scheduleFlagsPush) window.CloudSync.scheduleFlagsPush(50);
+                else window.CloudSync.schedulePush(200);
+            }
         } catch (e) {}
     },
 
