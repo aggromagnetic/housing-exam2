@@ -142,19 +142,36 @@ const CloudSync = {
                 }
 
                 const localUnflagged = JSON.parse(localStorage.getItem("housing_exam_unflagged_keys") || "{}");
-                const mergedUnflagged = { ...localUnflagged, ...cloudUnflagged };
-                localStorage.setItem("housing_exam_unflagged_keys", JSON.stringify(mergedUnflagged));
+                const safeLocalUnflagged = {};
+                Object.keys(localUnflagged).forEach(k => {
+                    const t = localUnflagged[k];
+                    if (t && t >= "2026-09-11T07:00:00.000Z") safeLocalUnflagged[k] = t;
+                });
+                const safeCloudUnflagged = {};
+                Object.keys(cloudUnflagged).forEach(k => {
+                    const t = cloudUnflagged[k];
+                    if (t && t >= "2026-09-11T07:00:00.000Z") safeCloudUnflagged[k] = t;
+                });
+                const mergedUnflagged = { ...safeLocalUnflagged, ...safeCloudUnflagged };
 
                 // Safe union merge with local needsEdit
                 const localNeeds = JSON.parse(localStorage.getItem("housing_exam_needs_edit") || "{}");
                 const combinedNeeds = { ...localNeeds, ...cloudNeedsEdit };
                 if (Object.keys(combinedNeeds).length > 0) {
                     Object.keys(combinedNeeds).forEach(k => {
-                        if (PURGED_NEEDS_EDIT_KEYS.has(k) || mergedUnflagged[k]) {
+                        const unflagTime = mergedUnflagged[k] ? new Date(mergedUnflagged[k]).getTime() : 0;
+                        const item = combinedNeeds[k];
+                        const flagTime = (item && item.flaggedAt) ? new Date(item.flaggedAt).getTime() : 0;
+                        if (PURGED_NEEDS_EDIT_KEYS.has(k)) {
                             delete combinedNeeds[k];
+                        } else if (unflagTime > 0 && flagTime > 0 && unflagTime > flagTime) {
+                            delete combinedNeeds[k];
+                        } else {
+                            delete mergedUnflagged[k];
                         }
                     });
                 }
+                localStorage.setItem("housing_exam_unflagged_keys", JSON.stringify(mergedUnflagged));
                 localStorage.setItem("housing_exam_needs_edit", JSON.stringify(combinedNeeds));
                 if (data.deletedKeys) {
                     const localDel = JSON.parse(localStorage.getItem("housing_exam_deleted_keys") || "[]");
@@ -344,8 +361,17 @@ const CloudSync = {
 
             // Merge unflagged and clean needsEdit
             const localUnflagged = JSON.parse(localStorage.getItem("housing_exam_unflagged_keys") || "{}");
-            const mergedUnflagged = { ...localUnflagged, ...cloudUnflagged };
-            localStorage.setItem("housing_exam_unflagged_keys", JSON.stringify(mergedUnflagged));
+            const safeLocalUnflagged = {};
+            Object.keys(localUnflagged).forEach(k => {
+                const t = localUnflagged[k];
+                if (t && t >= "2026-09-11T07:00:00.000Z") safeLocalUnflagged[k] = t;
+            });
+            const safeCloudUnflagged = {};
+            Object.keys(cloudUnflagged).forEach(k => {
+                const t = cloudUnflagged[k];
+                if (t && t >= "2026-09-11T07:00:00.000Z") safeCloudUnflagged[k] = t;
+            });
+            const mergedUnflagged = { ...safeLocalUnflagged, ...safeCloudUnflagged };
 
             // Safe Bidirectional Union Merge for needsEdit: Never wipe local flags!
             const localNeeds = JSON.parse(localStorage.getItem("housing_exam_needs_edit") || "{}");
@@ -353,11 +379,19 @@ const CloudSync = {
 
             if (combinedNeeds && typeof combinedNeeds === "object") {
                 Object.keys(combinedNeeds).forEach(k => {
-                    if (PURGED_NEEDS_EDIT_KEYS.has(k) || mergedUnflagged[k]) {
+                    const unflagTime = mergedUnflagged[k] ? new Date(mergedUnflagged[k]).getTime() : 0;
+                    const item = combinedNeeds[k];
+                    const flagTime = (item && item.flaggedAt) ? new Date(item.flaggedAt).getTime() : 0;
+                    if (PURGED_NEEDS_EDIT_KEYS.has(k)) {
                         delete combinedNeeds[k];
+                    } else if (unflagTime > 0 && flagTime > 0 && unflagTime > flagTime) {
+                        delete combinedNeeds[k];
+                    } else {
+                        delete mergedUnflagged[k];
                     }
                 });
             }
+            localStorage.setItem("housing_exam_unflagged_keys", JSON.stringify(mergedUnflagged));
             localStorage.setItem("housing_exam_needs_edit", JSON.stringify(combinedNeeds || {}));
 
             if (mergedDeletedKeys.length > 0) {
@@ -553,14 +587,20 @@ const CloudSync = {
             const localUnflagged = JSON.parse(localStorage.getItem("housing_exam_unflagged_keys") || "{}");
             const localDeletedKeys = JSON.parse(localStorage.getItem("housing_exam_deleted_keys") || "[]");
 
-            // Unflagged merge
-            const mergedUnflagged = { ...currentCloudUnflagged };
-            Object.keys(localUnflagged).forEach(k => {
-                const lTime = localUnflagged[k] ? new Date(localUnflagged[k]).getTime() : 0;
-                const cTime = mergedUnflagged[k] ? new Date(mergedUnflagged[k]).getTime() : 0;
-                if (lTime >= cTime) mergedUnflagged[k] = localUnflagged[k];
+            // Unflagged merge (ignore stale tombstones prior to 16:00 KST / 07:00 UTC)
+            const mergedUnflagged = {};
+            Object.keys(currentCloudUnflagged).forEach(k => {
+                const t = currentCloudUnflagged[k];
+                if (t && t >= "2026-09-11T07:00:00.000Z") mergedUnflagged[k] = t;
             });
-            localStorage.setItem("housing_exam_unflagged_keys", JSON.stringify(mergedUnflagged));
+            Object.keys(localUnflagged).forEach(k => {
+                const t = localUnflagged[k];
+                if (t && t >= "2026-09-11T07:00:00.000Z") {
+                    const lTime = new Date(t).getTime();
+                    const cTime = mergedUnflagged[k] ? new Date(mergedUnflagged[k]).getTime() : 0;
+                    if (lTime >= cTime) mergedUnflagged[k] = t;
+                }
+            });
 
             // NeedsEdit merge
             const mergedNeedsEdit = { ...currentCloudNeedsEdit };
@@ -579,10 +619,18 @@ const CloudSync = {
 
             // Filter unflagged and purged
             Object.keys(mergedNeedsEdit).forEach(k => {
-                if (PURGED_NEEDS_EDIT_KEYS.has(k) || mergedUnflagged[k]) {
+                const unflagTime = mergedUnflagged[k] ? new Date(mergedUnflagged[k]).getTime() : 0;
+                const item = mergedNeedsEdit[k];
+                const flagTime = (item && item.flaggedAt) ? new Date(item.flaggedAt).getTime() : 0;
+                if (PURGED_NEEDS_EDIT_KEYS.has(k)) {
                     delete mergedNeedsEdit[k];
+                } else if (unflagTime > 0 && flagTime > 0 && unflagTime > flagTime) {
+                    delete mergedNeedsEdit[k];
+                } else {
+                    delete mergedUnflagged[k];
                 }
             });
+            localStorage.setItem("housing_exam_unflagged_keys", JSON.stringify(mergedUnflagged));
             localStorage.setItem("housing_exam_needs_edit", JSON.stringify(mergedNeedsEdit));
 
             const mergedDelKeys = Array.from(new Set([...localDeletedKeys, ...currentCloudDeletedKeys]));
@@ -799,14 +847,20 @@ const CloudSync = {
                 }
             });
 
-            // Flags Merge
-            const mergedUnflagged = { ...currentCloudUnflagged };
-            Object.keys(unflaggedKeys).forEach(k => {
-                const lTime = unflaggedKeys[k] ? new Date(unflaggedKeys[k]).getTime() : 0;
-                const cTime = mergedUnflagged[k] ? new Date(mergedUnflagged[k]).getTime() : 0;
-                if (lTime >= cTime) mergedUnflagged[k] = unflaggedKeys[k];
+            // Flags Merge (ignore stale tombstones prior to 16:00 KST / 07:00 UTC)
+            const mergedUnflagged = {};
+            Object.keys(currentCloudUnflagged).forEach(k => {
+                const t = currentCloudUnflagged[k];
+                if (t && t >= "2026-09-11T07:00:00.000Z") mergedUnflagged[k] = t;
             });
-            localStorage.setItem("housing_exam_unflagged_keys", JSON.stringify(mergedUnflagged));
+            Object.keys(unflaggedKeys).forEach(k => {
+                const t = unflaggedKeys[k];
+                if (t && t >= "2026-09-11T07:00:00.000Z") {
+                    const lTime = new Date(t).getTime();
+                    const cTime = mergedUnflagged[k] ? new Date(mergedUnflagged[k]).getTime() : 0;
+                    if (lTime >= cTime) mergedUnflagged[k] = t;
+                }
+            });
 
             const mergedNeedsEdit = { ...currentCloudNeedsEdit };
             Object.keys(needsEditMap).forEach(k => {
@@ -826,10 +880,18 @@ const CloudSync = {
             });
 
             Object.keys(mergedNeedsEdit).forEach(k => {
-                if (PURGED_NEEDS_EDIT_KEYS.has(k) || mergedUnflagged[k]) {
+                const unflagTime = mergedUnflagged[k] ? new Date(mergedUnflagged[k]).getTime() : 0;
+                const item = mergedNeedsEdit[k];
+                const flagTime = (item && item.flaggedAt) ? new Date(item.flaggedAt).getTime() : 0;
+                if (PURGED_NEEDS_EDIT_KEYS.has(k)) {
                     delete mergedNeedsEdit[k];
+                } else if (unflagTime > 0 && flagTime > 0 && unflagTime > flagTime) {
+                    delete mergedNeedsEdit[k];
+                } else {
+                    delete mergedUnflagged[k];
                 }
             });
+            localStorage.setItem("housing_exam_unflagged_keys", JSON.stringify(mergedUnflagged));
             localStorage.setItem("housing_exam_needs_edit", JSON.stringify(mergedNeedsEdit));
 
             const mergedDelKeys = Array.from(new Set([...deletedKeys, ...currentCloudDeletedKeys]));
