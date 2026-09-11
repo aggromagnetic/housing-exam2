@@ -144,7 +144,11 @@ const IDBStore = {
             const store = tx.objectStore('question_stats');
             const req = store.put(existing);
             req.onsuccess = () => {
-                if (window.CloudSync) window.CloudSync.schedulePush();
+                if (window.CloudSync && typeof window.CloudSync.scheduleStatsPush === 'function') {
+                    window.CloudSync.scheduleStatsPush(60);
+                } else if (window.CloudSync) {
+                    window.CloudSync.schedulePush();
+                }
                 resolve(existing);
             };
             req.onerror = () => reject(req.error);
@@ -170,7 +174,43 @@ const IDBStore = {
             const tx = db.transaction('question_stats', 'readwrite');
             const store = tx.objectStore('question_stats');
             const req = store.put(stat);
-            req.onsuccess = () => resolve(stat);
+            req.onsuccess = () => {
+                if (window.CloudSync && typeof window.CloudSync.scheduleStatsPush === 'function') {
+                    window.CloudSync.scheduleStatsPush(60);
+                } else if (window.CloudSync) {
+                    window.CloudSync.schedulePush();
+                }
+                resolve(stat);
+            };
+            req.onerror = () => reject(req.error);
+        });
+    },
+
+    /**
+     * Reset question weight and wrong count (with tombstone to prevent cloud resurrecting it)
+     */
+    async resetQuestionWeight(qKey) {
+        const stat = (await this.getQuestionStat(qKey)) || { qKey };
+        stat.weight = 1;
+        stat.wrongCount = 0;
+        stat.correctCount = 0;
+        stat.tryCount = 0;
+        stat.lastAttempt = new Date().toISOString();
+        stat.resetAt = new Date().toISOString(); // Tombstone!
+
+        const db = await openDB();
+        return new Promise((resolve, reject) => {
+            const tx = db.transaction('question_stats', 'readwrite');
+            const store = tx.objectStore('question_stats');
+            const req = store.put(stat);
+            req.onsuccess = () => {
+                if (window.CloudSync && typeof window.CloudSync.scheduleStatsPush === 'function') {
+                    window.CloudSync.scheduleStatsPush(60);
+                } else if (window.CloudSync) {
+                    window.CloudSync.schedulePush();
+                }
+                resolve(stat);
+            };
             req.onerror = () => reject(req.error);
         });
     },
