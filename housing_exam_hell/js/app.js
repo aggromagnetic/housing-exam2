@@ -5385,6 +5385,13 @@
                     elements.manager.btnFlagToggle.classList.remove('active');
                     if (elements.manager.flagText) elements.manager.flagText.textContent = '수정필요';
                     if (elements.manager.flagBadge) elements.manager.flagBadge.style.display = 'none';
+                    if (state.managerTab === 'needs_edit') {
+                        const activeCard = document.querySelector(`.mgr-item-card[data-qkey="${qKey}"]`);
+                        if (activeCard) activeCard.classList.add('reset-done');
+                        setTimeout(() => {
+                            renderManagerList();
+                        }, 300);
+                    }
                     showToast('🚩 [수정 필요] 목록에서 제외되었습니다.');
                 } else {
                     await IDBStore.saveNeedsEdit(qKey, q);
