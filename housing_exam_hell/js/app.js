@@ -6424,47 +6424,6 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
             if (state.needsEditMap && state.needsEditMap[k]) delete state.needsEditMap[k];
         });
 
-        // 🛡️ Zero-Click Auto Rescue: 16시 이후 오답 문항 무클릭 자동 수정필요 등록
-        try {
-            const allPool = [
-                ...ExamEngine.getQuestionPool('관계법규', 'choice'),
-                ...ExamEngine.getQuestionPool('관계법규', 'short'),
-                ...ExamEngine.getQuestionPool('관리실무', 'choice'),
-                ...ExamEngine.getQuestionPool('관리실무', 'short')
-            ];
-            const poolMap = new Map(allPool.map(q => [q.qKey, q]));
-            let autoRecoveredCount = 0;
-
-            for (const [qKey, stat] of Object.entries(state.statsMap || {})) {
-                if (PURGED_NEEDS_EDIT_KEYS.includes(qKey)) continue;
-                if (stat && stat.lastAttempt && stat.lastAttempt >= '2026-09-11T07:00:00.000Z' && stat.wrongCount > 0) {
-                    if (!state.needsEditMap[qKey]) {
-                        const qObj = poolMap.get(qKey) || stat;
-                        await IDBStore.saveNeedsEdit(qKey, qObj);
-                        state.needsEditMap[qKey] = {
-                            qKey,
-                            subject: qObj.subject || stat.subject || '',
-                            chapterName: qObj.chapterName || stat.chapter || '',
-                            type: qObj.type || stat.type || 'choice',
-                            question: qObj.question || qObj.title || '',
-                            flaggedAt: stat.lastAttempt || new Date().toISOString()
-                        };
-                        autoRecoveredCount++;
-                    }
-                }
-            }
-
-            if (autoRecoveredCount > 0) {
-                console.log(`⚡ [Zero-Click AutoRescue] Automatically restored ${autoRecoveredCount} wrong questions from today 16:00+ into needsEdit.`);
-            }
-            // Always schedule flags & stats push to ensure cloud has latest data
-            if (window.CloudSync) {
-                if (window.CloudSync.scheduleFlagsPush) window.CloudSync.scheduleFlagsPush(50);
-                if (window.CloudSync.scheduleStatsPush) window.CloudSync.scheduleStatsPush(100);
-            }
-        } catch (e) {
-            console.warn("AutoRescue error:", e);
-        }
         
         const canvasEl = document.getElementById('drawing-canvas');
         const toolbarEl = document.getElementById('stylus-toolbar');
