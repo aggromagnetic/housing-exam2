@@ -4739,60 +4739,6 @@
         // Clear items list for rendering
         elements.manager.itemsList.innerHTML = '';
 
-        // 🚑 16시 이후 오답 문항 긴급 복구 배너
-        const todayAfter16Attempted = allPool.filter(q => {
-            const stat = state.statsMap[q.qKey];
-            return stat && stat.lastAttempt && stat.lastAttempt >= '2026-09-11T07:00:00.000Z';
-        });
-
-        if (todayAfter16Attempted.length > 0 && (tabName === 'needs_edit' || tabName === 'wrong')) {
-            const todayAfter16Wrong = todayAfter16Attempted.filter(q => {
-                const stat = state.statsMap[q.qKey];
-                return stat && stat.wrongCount > 0;
-            });
-
-            if (todayAfter16Wrong.length > 0) {
-                const banner = document.createElement('div');
-                banner.style.cssText = 'background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.4); border-radius: 8px; padding: 10px 12px; margin-bottom: 12px; display: flex; flex-direction: column; gap: 6px;';
-                banner.innerHTML = `
-                    <div style="font-size: 0.84rem; font-weight: 800; color: #FCD34D; display: flex; align-items: center; justify-content: space-between;">
-                        <span>⚡ 오늘 16시 이후 오답 문항: <strong>${todayAfter16Wrong.length}건</strong> 감지됨!</span>
-                    </div>
-                    <div style="font-size: 0.74rem; color: #CBD5E1; line-height: 1.4;">
-                        태블릿에 저장된 풀이 기록 중 16시 이후 오답 문항을 <strong>[수정필요] 목록으로 즉시 일괄 복구</strong>합니다.
-                    </div>
-                    <button type="button" id="btn-rescue-flags-action" style="background: #F59E0B; color: #0F172A; font-weight: 800; font-size: 0.78rem; padding: 7px 12px; border-radius: 6px; border: none; cursor: pointer; margin-top: 4px;">
-                        🚩 16시 이후 오답 문항(${todayAfter16Wrong.length}건) 수정필요 일괄 등록
-                    </button>
-                `;
-                elements.manager.itemsList.appendChild(banner);
-
-                const btnRescue = banner.querySelector('#btn-rescue-flags-action');
-                if (btnRescue) {
-                    btnRescue.addEventListener('click', async (e) => {
-                        e.stopPropagation();
-                        for (const q of todayAfter16Wrong) {
-                            await IDBStore.saveNeedsEdit(q.qKey, q);
-                            state.needsEditMap[q.qKey] = {
-                                qKey: q.qKey,
-                                subject: q.subject,
-                                chapterName: q.chapterName,
-                                type: q.type,
-                                question: q.question || q.title,
-                                flaggedAt: new Date().toISOString()
-                            };
-                        }
-                        if (window.CloudSync && window.CloudSync.scheduleFlagsPush) {
-                            window.CloudSync.scheduleFlagsPush(50);
-                        }
-                        showToast(`🚩 16시 이후 오답 ${todayAfter16Wrong.length}건이 [수정필요]에 등록되었습니다!`);
-                        document.querySelectorAll('.mgr-tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === 'needs_edit'));
-                        renderManagerList('needs_edit');
-                    });
-                }
-            }
-        }
-
         if (list.length === 0) {
             let emptyHtml = '';
             if (tabName === 'search_all' && !qLower) {
