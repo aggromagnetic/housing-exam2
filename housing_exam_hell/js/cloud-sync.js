@@ -136,6 +136,7 @@ const CloudSync = {
             let mergedHistory = [];
 
             // A. Load Custom Edits via High-Speed Chunked Store
+            let allChunksLoadedSuccessfully = false;
             if (editsMetaDoc && editsMetaDoc.exists) {
                 const meta = editsMetaDoc.data() || {};
                 const totalChunks = meta.totalChunks || 1;
@@ -144,6 +145,7 @@ const CloudSync = {
                     chunkPromises.push(syncCol.doc(`edits_chunk_${i}`).get().catch(() => null));
                 }
                 const chunkDocs = await Promise.all(chunkPromises);
+                let failedChunks = 0;
                 chunkDocs.forEach(cDoc => {
                     if (cDoc && cDoc.exists) {
                         const cData = cDoc.data() || {};
@@ -151,18 +153,28 @@ const CloudSync = {
                             try {
                                 const parsed = JSON.parse(cData.data);
                                 Object.assign(mergedCustomEdits, parsed);
-                            } catch (e) {}
-                        }
+                            } catch (e) { failedChunks++; }
+                        } else { failedChunks++; }
+                    } else {
+                        failedChunks++;
                     }
                 });
+                const expectedCount = meta.totalCount || 0;
+                if (failedChunks === 0 && Object.keys(mergedCustomEdits).length >= expectedCount) {
+                    allChunksLoadedSuccessfully = true;
+                } else {
+                    console.warn(`🛑 [CloudSync pull] Incomplete chunk load (failed: ${failedChunks}/${totalChunks}, got ${Object.keys(mergedCustomEdits).length}/${expectedCount} edits)! Preserving local custom edits.`);
+                }
             }
 
             // Fallback: If chunked store not yet created, load from legacy docs
             if (Object.keys(mergedCustomEdits).length === 0) {
                 if (editsDoc && editsDoc.exists && editsDoc.data()?.customEdits) {
                     mergedCustomEdits = editsDoc.data().customEdits;
+                    allChunksLoadedSuccessfully = true;
                 } else if (legacyDoc && legacyDoc.exists && legacyDoc.data()?.customEdits) {
                     mergedCustomEdits = legacyDoc.data().customEdits;
+                    allChunksLoadedSuccessfully = true;
                 }
             }
 
@@ -213,30 +225,32 @@ const CloudSync = {
             // Apply merged data to LocalStorage & IndexedDB (Timestamp-based CRDT merge)
             const localEdits = JSON.parse(localStorage.getItem("housing_exam_custom_edits") || "{}");
             const finalEdits = { ...localEdits };
-            if (Object.keys(mergedCustomEdits).length > 0) {
-                Object.keys(mergedCustomEdits).forEach(k => {
-                    const cItem = mergedCustomEdits[k];
-                    const lItem = finalEdits[k];
-                    if (!lItem) {
-                        finalEdits[k] = cItem;
-                    } else {
-                        const cTime = cItem.editedAt ? new Date(cItem.editedAt).getTime() : 0;
-                        const lTime = lItem.editedAt ? new Date(lItem.editedAt).getTime() : 0;
-                        if (cTime > lTime) {
+            if (allChunksLoadedSuccessfully || Object.keys(localEdits).length === 0) {
+                if (Object.keys(mergedCustomEdits).length > 0) {
+                    Object.keys(mergedCustomEdits).forEach(k => {
+                        const cItem = mergedCustomEdits[k];
+                        const lItem = finalEdits[k];
+                        if (!lItem) {
                             finalEdits[k] = cItem;
+                        } else {
+                            const cTime = cItem.editedAt ? new Date(cItem.editedAt).getTime() : 0;
+                            const lTime = lItem.editedAt ? new Date(lItem.editedAt).getTime() : 0;
+                            if (cTime > lTime) {
+                                finalEdits[k] = cItem;
+                            }
                         }
-                    }
-                });
-                // Filter against deletedEdits
-                const localDelEdits = JSON.parse(localStorage.getItem("housing_exam_deleted_edits") || "{}");
-                Object.keys(finalEdits).forEach(k => {
-                    const delTime = localDelEdits[k] ? new Date(localDelEdits[k]).getTime() : 0;
-                    const editTime = finalEdits[k]?.editedAt ? new Date(finalEdits[k].editedAt).getTime() : 0;
-                    if (delTime > 0 && delTime >= editTime) {
-                        delete finalEdits[k];
-                    }
-                });
-                localStorage.setItem("housing_exam_custom_edits", JSON.stringify(finalEdits));
+                    });
+                    // Filter against deletedEdits ONLY if deletion happened strictly after edit
+                    const localDelEdits = JSON.parse(localStorage.getItem("housing_exam_deleted_edits") || "{}");
+                    Object.keys(finalEdits).forEach(k => {
+                        const delTime = localDelEdits[k] ? new Date(localDelEdits[k]).getTime() : 0;
+                        const editTime = finalEdits[k]?.editedAt ? new Date(finalEdits[k].editedAt).getTime() : 0;
+                        if (delTime > 0 && delTime > editTime) {
+                            delete finalEdits[k];
+                        }
+                    });
+                    localStorage.setItem("housing_exam_custom_edits", JSON.stringify(finalEdits));
+                }
             }
 
             // Merge local and cloud unflagged records with timestamp comparison
@@ -311,10 +325,7 @@ const CloudSync = {
             }
             console.log("✅ Cloud modular chunk pull complete. Custom edits count:", Object.keys(mergedCustomEdits).length, "Stats count:", mergedStats.length);
             this.notifyStatusChange();
-            // Auto-schedule push 1.5s after pull to merge any local stats/edits missing in cloud (only if not outdated!)
-            if (!this.isOutdated) {
-                this.schedulePush(1500);
-            }
+            // REMOVED auto-push schedulePush(1500) to prevent ghost overwrites on simple page read!
             return true;
         } catch (err) {
             console.error("Cloud pull error:", err);
@@ -407,11 +418,22 @@ const CloudSync = {
                         cPromises.push(syncCol.doc(`edits_chunk_${i}`).get().catch(() => null));
                     }
                     const cDocs = await Promise.all(cPromises);
+                    let missingChunk = false;
                     cDocs.forEach(cd => {
                         if (cd && cd.exists && cd.data()?.data) {
-                            try { Object.assign(currentCloudEdits, JSON.parse(cd.data().data)); } catch (e) {}
+                            try { Object.assign(currentCloudEdits, JSON.parse(cd.data().data)); } catch (e) { missingChunk = true; }
+                        } else {
+                            missingChunk = true;
                         }
                     });
+                    const expectedTotal = metaDoc.data()?.totalCount || 0;
+                    if (missingChunk || Object.keys(currentCloudEdits).length < expectedTotal) {
+                        console.warn(`🛑 [CloudSync push] Failed to load complete cloud chunks (${Object.keys(currentCloudEdits).length}/${expectedTotal})! Aborting push to protect data.`);
+                        this.isSyncing = false;
+                        this.syncStatus = "synced";
+                        this.notifyStatusChange();
+                        return false;
+                    }
                 }
 
                 if (statsDoc && statsDoc.exists) {
@@ -520,15 +542,27 @@ const CloudSync = {
                     }
                 }
             });
-            // Filter against deletedEdits
+            // Filter against deletedEdits ONLY if deletion happened strictly after edit
             const localDelEdits = JSON.parse(localStorage.getItem("housing_exam_deleted_edits") || "{}");
             Object.keys(mergedToPush).forEach(k => {
                 const delTime = localDelEdits[k] ? new Date(localDelEdits[k]).getTime() : 0;
                 const editTime = mergedToPush[k]?.editedAt ? new Date(mergedToPush[k].editedAt).getTime() : 0;
-                if (delTime > 0 && delTime >= editTime) {
+                if (delTime > 0 && delTime > editTime) {
                     delete mergedToPush[k];
                 }
             });
+
+            // ANTI-SHRINK GUARD: Block upload if custom edits totalCount would shrink!
+            const cloudTotalCount = (metaDoc && metaDoc.exists) ? (metaDoc.data()?.totalCount || 0) : 0;
+            const localCountToPush = Object.keys(mergedToPush).length;
+            if (cloudTotalCount > 0 && localCountToPush < cloudTotalCount) {
+                console.warn(`🛑 [CloudSync Anti-Shrink Guard] Upload BLOCKED! Cloud has ${cloudTotalCount} edits, but candidate only has ${localCountToPush}. Aborting push to prevent loss.`);
+                this.isSyncing = false;
+                this.syncStatus = "synced";
+                this.notifyStatusChange();
+                return false;
+            }
+
             localStorage.setItem("housing_exam_custom_edits", JSON.stringify(mergedToPush));
 
             // Bidirectional CRDT Merge for Flags (needsEdit, unflagged, deletedKeys)
@@ -541,6 +575,9 @@ const CloudSync = {
             localStorage.setItem("housing_exam_unflagged_keys", JSON.stringify(mergedUnflagged));
 
             const mergedNeedsEdit = { ...currentCloudNeedsEdit };
+            const cloudFlagsUpdatedTime = (flagsDoc && flagsDoc.exists && flagsDoc.data()?.updatedAt)
+                ? new Date(flagsDoc.data().updatedAt).getTime() : 0;
+
             Object.keys(needsEditMap).forEach(k => {
                 if (PURGED_NEEDS_EDIT_KEYS.has(k)) {
                     delete needsEditMap[k];
@@ -549,6 +586,13 @@ const CloudSync = {
                 const loc = needsEditMap[k];
                 const cld = mergedNeedsEdit[k];
                 if (!cld) {
+                    // CRITICAL: Only add if loc was flagged AFTER cloudFlagsUpdatedTime!
+                    // If flaggedAt is older than cloud updatedAt, it was cleared/resolved in cloud!
+                    const locTime = loc.flaggedAt ? new Date(loc.flaggedAt).getTime() : 0;
+                    if (cloudFlagsUpdatedTime > 0 && locTime <= cloudFlagsUpdatedTime) {
+                        // Stale ghost flag! Discard it!
+                        return;
+                    }
                     mergedNeedsEdit[k] = loc;
                 } else {
                     const lTime = loc.flaggedAt ? new Date(loc.flaggedAt).getTime() : 0;
