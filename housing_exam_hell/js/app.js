@@ -4717,6 +4717,18 @@
                 if (filterSubj !== 'all') list = list.filter(q => q.subject === filterSubj);
                 list = list.filter(matchesSearch);
             }
+        } else if (tabName === 'recent') {
+            list = allPool.filter(q => {
+                const stat = state.statsMap[q.qKey];
+                return stat && (stat.tryCount > 0 || stat.lastAttempt);
+            });
+            if (filterSubj !== 'all') list = list.filter(q => q.subject === filterSubj);
+            if (qLower) list = list.filter(matchesSearch);
+            list.sort((a, b) => {
+                const timeA = new Date(state.statsMap[a.qKey]?.lastAttempt || 0).getTime();
+                const timeB = new Date(state.statsMap[b.qKey]?.lastAttempt || 0).getTime();
+                return timeB - timeA;
+            });
         }
 
         const totalCount = (tabName === 'search_all' && !qLower) ? 0 : list.length;
@@ -4733,6 +4745,76 @@
                 elements.manager.listCount.innerHTML = `<strong>${startIndex + 1}-${endIndex}</strong> <span style="font-size:0.75rem; color:#64748B;">/ ${totalCount}건</span>`;
             } else {
                 elements.manager.listCount.textContent = `${totalCount}건`;
+            }
+        }
+
+        // Clear items list for rendering
+        elements.manager.itemsList.innerHTML = '';
+
+        // 🚑 16시 이후 풀이 문항 긴급 복구 배너
+        const todayAfter16Attempted = allPool.filter(q => {
+            const stat = state.statsMap[q.qKey];
+            return stat && stat.lastAttempt && stat.lastAttempt >= '2026-09-11T07:00:00.000Z';
+        });
+
+        if (todayAfter16Attempted.length > 0 && (tabName === 'needs_edit' || tabName === 'recent' || tabName === 'wrong')) {
+            const todayAfter16Wrong = todayAfter16Attempted.filter(q => {
+                const stat = state.statsMap[q.qKey];
+                return stat && stat.wrongCount > 0;
+            });
+
+            const banner = document.createElement('div');
+            banner.style.cssText = 'background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.4); border-radius: 8px; padding: 10px 12px; margin-bottom: 12px; display: flex; flex-direction: column; gap: 6px;';
+            banner.innerHTML = `
+                <div style="font-size: 0.84rem; font-weight: 800; color: #FCD34D; display: flex; align-items: center; justify-content: space-between;">
+                    <span>⚡ 오늘 16시 이후 풀이한 문항: <strong>${todayAfter16Attempted.length}건</strong> 발견! (오답: ${todayAfter16Wrong.length}건)</span>
+                </div>
+                <div style="font-size: 0.74rem; color: #CBD5E1; line-height: 1.4;">
+                    태블릿 브라우저에 오늘 오후 풀이하신 이력이 보존되어 있습니다. 아래 버튼을 누르면 16시 이후 오답 문항을 <strong>[수정필요] 목록으로 즉시 일괄 복구</strong>합니다.
+                </div>
+                <div style="display: flex; gap: 6px; margin-top: 4px;">
+                    <button type="button" id="btn-rescue-flags-action" style="flex: 1; background: #F59E0B; color: #0F172A; font-weight: 800; font-size: 0.76rem; padding: 6px 10px; border-radius: 6px; border: none; cursor: pointer;">
+                        🚩 16시 이후 오답 문항(${todayAfter16Wrong.length}건) 수정필요 일괄 등록
+                    </button>
+                    <button type="button" id="btn-rescue-all-action" style="background: rgba(255,255,255,0.1); color: #FCD34D; font-weight: 700; font-size: 0.74rem; padding: 6px 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); cursor: pointer;">
+                        풀이 전체(${todayAfter16Attempted.length}건) 보기
+                    </button>
+                </div>
+            `;
+            elements.manager.itemsList.appendChild(banner);
+
+            const btnRescue = banner.querySelector('#btn-rescue-flags-action');
+            if (btnRescue) {
+                btnRescue.addEventListener('click', async (e) => {
+                    e.stopPropagation();
+                    const targetList = todayAfter16Wrong.length > 0 ? todayAfter16Wrong : todayAfter16Attempted;
+                    for (const q of targetList) {
+                        await IDBStore.saveNeedsEdit(q.qKey, q);
+                        state.needsEditMap[q.qKey] = {
+                            qKey: q.qKey,
+                            subject: q.subject,
+                            chapterName: q.chapterName,
+                            type: q.type,
+                            question: q.question || q.title,
+                            flaggedAt: new Date().toISOString()
+                        };
+                    }
+                    if (window.CloudSync && window.CloudSync.scheduleFlagsPush) {
+                        window.CloudSync.scheduleFlagsPush(50);
+                    }
+                    showToast(`🚩 16시 이후 풀이 문항 ${targetList.length}건이 [수정필요]에 등록되었습니다!`);
+                    document.querySelectorAll('.mgr-tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === 'needs_edit'));
+                    renderManagerList('needs_edit');
+                });
+            }
+
+            const btnViewAll = banner.querySelector('#btn-rescue-all-action');
+            if (btnViewAll) {
+                btnViewAll.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    document.querySelectorAll('.mgr-tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === 'recent'));
+                    renderManagerList('recent');
+                });
             }
         }
 
@@ -4754,7 +4836,9 @@
                     </div>
                 `;
             }
-            elements.manager.itemsList.innerHTML = emptyHtml;
+            const emptyDiv = document.createElement('div');
+            emptyDiv.innerHTML = emptyHtml;
+            elements.manager.itemsList.appendChild(emptyDiv);
             if (elements.manager.editorEmpty) elements.manager.editorEmpty.style.display = 'flex';
             if (elements.manager.editorForm) elements.manager.editorForm.style.display = 'none';
             if (elements.manager.reportViewPanel) elements.manager.reportViewPanel.style.display = 'none';
@@ -6147,8 +6231,20 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
                     showToast('⚡ 오프라인 로컬 저장 모드');
                     return;
                 }
+
+                // 🛡️ 문제 풀이 중에는 절대 새로고침하거나 홈으로 튕기지 않음!
+                const isQuizActive = state.mode && state.mode !== 'home' && state.mode !== 'manager';
+
                 if (window.CloudSync.isOutdated) {
-                    if (confirm(`🚨 [최신 버전 배포 안내]\n클라우드에 최신 버전(${window.CloudSync.cloudVersion || '새 버전'})이 있습니다.\n데이터 보호를 위해 구버전 업로드가 차단되었습니다.\n\n지금 최신 버전으로 새로고침하시겠습니까?`)) {
+                    if (isQuizActive) {
+                        // 문제 풀이 중: 조용히 통계 및 플래그만 안전하게 푸시
+                        if (window.CloudSync.pushStatsOnly) await window.CloudSync.pushStatsOnly();
+                        if (window.CloudSync.pushFlagsOnly) await window.CloudSync.pushFlagsOnly();
+                        showToast('⚡ [풀이 진행 중] 통계/플래그가 클라우드에 안전 저장되었습니다. (풀이 종료 후 새로고침 권장)', 4000);
+                        return;
+                    }
+
+                    if (confirm(`🚨 [최신 버전 배포 안내]\n클라우드에 최신 버전(${window.CloudSync.cloudVersion || '새 버전'})이 있습니다.\n\n지금 최신 버전으로 새로고침하시겠습니까?`)) {
                         if (typeof window.refreshToLatestVersion === 'function') {
                             window.refreshToLatestVersion(window.CloudSync.cloudBuild);
                         } else {
@@ -6157,10 +6253,17 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
                     }
                     return;
                 }
+
                 showToast('🔄 클라우드 데이터 실시간 동기화 중...');
                 const ok = await window.CloudSync.pullFromCloud();
                 if (window.CloudSync.isOutdated) {
-                    if (confirm(`🚨 [최신 버전 배포 안내]\n클라우드에 최신 버전(${window.CloudSync.cloudVersion || '새 버전'})이 있습니다.\n데이터 보호를 위해 구버전 업로드가 차단되었습니다.\n\n지금 최신 버전으로 새로고침하시겠습니까?`)) {
+                    if (isQuizActive) {
+                        if (window.CloudSync.pushStatsOnly) await window.CloudSync.pushStatsOnly();
+                        if (window.CloudSync.pushFlagsOnly) await window.CloudSync.pushFlagsOnly();
+                        showToast('⚡ [풀이 진행 중] 통계/플래그가 클라우드에 안전 저장되었습니다.', 3000);
+                        return;
+                    }
+                    if (confirm(`🚨 [최신 버전 배포 안내]\n클라우드에 최신 버전(${window.CloudSync.cloudVersion || '새 버전'})이 있습니다.\n\n지금 최신 버전으로 새로고침하시겠습니까?`)) {
                         if (typeof window.refreshToLatestVersion === 'function') {
                             window.refreshToLatestVersion(window.CloudSync.cloudBuild);
                         } else {
@@ -6171,15 +6274,6 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
                 }
                 if (ok) {
                     const pushOk = await window.CloudSync.pushToCloud();
-                    if (!pushOk && window.CloudSync.isOutdated) {
-                        alert(`🚨 [업로드 차단: 업데이트 필요]\n클라우드에 최신 버전(${window.CloudSync.cloudVersion})이 존재하여 구버전 데이터 업로드가 안전하게 차단되었습니다.\n\n확인을 누르면 최신 버전으로 새로고침합니다.`);
-                        if (typeof window.refreshToLatestVersion === 'function') {
-                            window.refreshToLatestVersion(window.CloudSync.cloudBuild);
-                        } else {
-                            window.location.reload();
-                        }
-                        return;
-                    }
                     state.statsMap = await IDBStore.getAllStatsMap();
                     state.customEdits = await IDBStore.getAllQuestionEditsMap();
                     state.needsEditMap = await IDBStore.getAllNeedsEditMap();

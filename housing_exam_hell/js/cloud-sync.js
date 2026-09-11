@@ -398,6 +398,7 @@ const CloudSync = {
             // trigger instant stats push so cloud receives them immediately!
             setTimeout(() => {
                 this.pushStatsOnly();
+                this.pushFlagsOnly();
             }, 300);
 
             return true;
