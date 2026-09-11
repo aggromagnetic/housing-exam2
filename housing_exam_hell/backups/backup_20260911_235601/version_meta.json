@@ -1,0 +1,16 @@
+{
+  "name": "projects/housing-exam/databases/(default)/documents/exam_hell_sync/version_meta",
+  "fields": {
+    "latestVersion": {
+      "stringValue": "v.0.260911.2355"
+    },
+    "latestBuild": {
+      "stringValue": "2609112355"
+    },
+    "updatedAt": {
+      "stringValue": "2026-09-11T14:54:25.624Z"
+    }
+  },
+  "createTime": "2026-09-08T10:22:51.793389Z",
+  "updateTime": "2026-09-11T14:54:25.854737Z"
+}
