@@ -4491,12 +4491,22 @@
         const gwanriPool = [...ExamEngine.getQuestionPool('관리실무', 'choice'), ...ExamEngine.getQuestionPool('관리실무', 'short')];
         const allPool = [...lawPool, ...gwanriPool];
 
+        const PURGED_NEEDS_EDIT_KEYS = [
+            '관리실무_short_CHAPTER 01 주택의 정의 및 종류_06',
+            '관리실무_short_CHAPTER 04 관리조직 및 입주자대표회의_28',
+            '관리실무_short_CHAPTER 04 관리조직 및 입주자대표회의_91',
+            '관리실무_short_CHAPTER 11 시설관리_472'
+        ];
+        PURGED_NEEDS_EDIT_KEYS.forEach(k => {
+            if (state.needsEditMap) delete state.needsEditMap[k];
+        });
+
         // Total counts for tabs
         const allWrong = allPool.filter(q => {
             const stat = state.statsMap[q.qKey];
             return stat && stat.wrongCount > 0;
         });
-        const allNeedsEditKeys = Object.keys(state.needsEditMap || {});
+        const allNeedsEditKeys = Object.keys(state.needsEditMap || {}).filter(k => !PURGED_NEEDS_EDIT_KEYS.includes(k));
         const allCustomEditsKeys = Object.keys(state.customEdits || {});
         const allReports = JSON.parse(localStorage.getItem('housing_exam_tutoring_reports') || '[]');
 
@@ -6237,6 +6247,35 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
         state.needsEditMap = await IDBStore.getAllNeedsEditMap();
         state.deletedKeysSet = await IDBStore.getDeletedKeysSet();
 
+        // 🛡️ Permanent purge of resolved legacy subjective questions from needsEdit
+        const PURGED_NEEDS_EDIT_KEYS = [
+            '관리실무_short_CHAPTER 01 주택의 정의 및 종류_06',
+            '관리실무_short_CHAPTER 04 관리조직 및 입주자대표회의_28',
+            '관리실무_short_CHAPTER 04 관리조직 및 입주자대표회의_91',
+            '관리실무_short_CHAPTER 11 시설관리_472'
+        ];
+        try {
+            let localNeeds = JSON.parse(localStorage.getItem('housing_exam_needs_edit') || '{}');
+            let localUnflagged = JSON.parse(localStorage.getItem('housing_exam_unflagged_keys') || '{}');
+            let changed = false;
+            const nowIso = new Date().toISOString();
+            PURGED_NEEDS_EDIT_KEYS.forEach(k => {
+                if (state.needsEditMap && state.needsEditMap[k]) {
+                    delete state.needsEditMap[k];
+                    changed = true;
+                }
+                if (localNeeds[k]) {
+                    delete localNeeds[k];
+                    changed = true;
+                }
+                localUnflagged[k] = nowIso;
+            });
+            if (changed) {
+                localStorage.setItem('housing_exam_needs_edit', JSON.stringify(localNeeds));
+                localStorage.setItem('housing_exam_unflagged_keys', JSON.stringify(localUnflagged));
+            }
+        } catch (e) {}
+
         const canvasEl = document.getElementById('drawing-canvas');
         const toolbarEl = document.getElementById('stylus-toolbar');
         if (canvasEl) {
@@ -6256,6 +6295,9 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
                     state.customEdits = await IDBStore.getAllQuestionEditsMap();
                     state.needsEditMap = await IDBStore.getAllNeedsEditMap();
                     state.deletedKeysSet = await IDBStore.getDeletedKeysSet();
+                    PURGED_NEEDS_EDIT_KEYS.forEach(k => {
+                        if (state.needsEditMap) delete state.needsEditMap[k];
+                    });
                     ExamEngine._poolCache = {};
                     if (state.mode === 'manager' || (elements.screens.manager && elements.screens.manager.classList.contains('active'))) {
                         if (state.questions && state.questions.length > 0) {
