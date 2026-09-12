@@ -3774,9 +3774,7 @@
             requestAnimationFrame(() => {
                 createSparkleBurst();
             });
-            if (navigator.vibrate) {
-                try { navigator.vibrate(35); } catch (e) {}
-            }
+            // 정답 시에는 모터 진동을 배제하여 오답 퀘이크와 확실히 구별되도록 정숙하고 우아한 시각 연출만 유지
         } else {
             card.classList.add('anim-quake');
             if (appContainer) appContainer.classList.add('screen-heavy-quake');

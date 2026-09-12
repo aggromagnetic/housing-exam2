@@ -1521,13 +1521,11 @@
     }
 }
 
-@keyframes tadaPop {
+@keyframes gentleZoomPop {
     0% { transform: scale(1); }
-    15% { transform: scale(0.97) rotate(-1.5deg); }
-    35% { transform: scale(1.035) rotate(1.5deg); }
-    55% { transform: scale(1.025) rotate(-1.0deg); }
-    75% { transform: scale(1.012) rotate(0.5deg); }
-    100% { transform: scale(1) rotate(0); }
+    35% { transform: scale(1.022); }
+    70% { transform: scale(0.992); }
+    100% { transform: scale(1); }
 }
 
 @keyframes correctGlowBurst {
@@ -1537,7 +1535,7 @@
 }
 
 .anim-tada {
-    animation: tadaPop 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.275), correctGlowBurst 0.7s ease !important;
+    animation: gentleZoomPop 0.48s cubic-bezier(0.25, 1, 0.5, 1), correctGlowBurst 0.7s ease !important;
 }
 
 /* Full-Screen Sparkle & Confetti Cannon Burst (Ultra-Smooth 60FPS) */
