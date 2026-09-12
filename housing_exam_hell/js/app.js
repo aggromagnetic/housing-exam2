@@ -3692,7 +3692,7 @@
             }
         }
 
-        renderQuestion(idx);
+        await renderQuestion(idx);
         toggleExplanation(true);
         triggerVisualFeedback(gradeRes.isCorrect);
 
@@ -3707,20 +3707,26 @@
     function triggerVisualFeedback(isCorrect) {
         if (!elements.quiz.card) return;
         const card = elements.quiz.card;
+        const appContainer = document.querySelector('.app-container');
+        const appHeader = document.querySelector('.app-header');
 
         card.classList.remove('anim-quake', 'anim-tada');
-        document.body.classList.remove('screen-heavy-quake');
+        if (appContainer) appContainer.classList.remove('screen-heavy-quake');
+        if (appHeader) appHeader.classList.remove('screen-heavy-quake');
         void card.offsetWidth; // Reflow to restart animation
 
         if (isCorrect) {
             card.classList.add('anim-tada');
-            createSparkleBurst();
+            requestAnimationFrame(() => {
+                createSparkleBurst();
+            });
             if (navigator.vibrate) {
                 try { navigator.vibrate(35); } catch (e) {}
             }
         } else {
             card.classList.add('anim-quake');
-            document.body.classList.add('screen-heavy-quake');
+            if (appContainer) appContainer.classList.add('screen-heavy-quake');
+            if (appHeader) appHeader.classList.add('screen-heavy-quake');
 
             // Screen edge red shockwave flash vignette
             const flash = document.createElement('div');
@@ -3735,7 +3741,8 @@
 
         setTimeout(() => {
             card.classList.remove('anim-quake', 'anim-tada');
-            document.body.classList.remove('screen-heavy-quake');
+            if (appContainer) appContainer.classList.remove('screen-heavy-quake');
+            if (appHeader) appHeader.classList.remove('screen-heavy-quake');
         }, 600);
     }
 
@@ -3747,18 +3754,20 @@
         const vw = window.innerWidth || document.documentElement.clientWidth || 800;
         const vh = window.innerHeight || document.documentElement.clientHeight || 600;
 
-        // 1. Bottom-Left Cannon (shoots diagonally up-right)
+        const fragment = document.createDocumentFragment();
+
+        // 1. Bottom-Left Cannon (shoots diagonally up-right) - 7 particles
         const leftOriginX = vw * 0.12;
         const leftOriginY = vh * 0.88;
-        for (let i = 0; i < 12; i++) {
+        for (let i = 0; i < 7; i++) {
             const particle = document.createElement('span');
             particle.className = 'sparkle-particle';
             particle.textContent = symbols[Math.floor(Math.random() * symbols.length)];
             particle.style.left = `${leftOriginX}px`;
             particle.style.top = `${leftOriginY}px`;
 
-            const angleRad = -((25 + Math.random() * 50) * Math.PI / 180);
-            const dist = (vh * 0.38) + Math.random() * (vh * 0.42);
+            const angleRad = -((26 + Math.random() * 46) * Math.PI / 180);
+            const dist = (vh * 0.38) + Math.random() * (vh * 0.40);
             const tx = Math.cos(angleRad) * dist;
             const ty = Math.sin(angleRad) * dist;
             const rot = (Math.random() - 0.5) * 140;
@@ -3766,22 +3775,22 @@
             particle.style.setProperty('--tx', `${tx}px`);
             particle.style.setProperty('--ty', `${ty}px`);
             particle.style.setProperty('--rot', `${rot}deg`);
-            particle.style.animationDelay = `${Math.random() * 0.08}s`;
-            container.appendChild(particle);
+            particle.style.animationDelay = `${i * 0.02}s`;
+            fragment.appendChild(particle);
         }
 
-        // 2. Bottom-Right Cannon (shoots diagonally up-left)
+        // 2. Bottom-Right Cannon (shoots diagonally up-left) - 7 particles
         const rightOriginX = vw * 0.88;
         const rightOriginY = vh * 0.88;
-        for (let i = 0; i < 12; i++) {
+        for (let i = 0; i < 7; i++) {
             const particle = document.createElement('span');
             particle.className = 'sparkle-particle';
             particle.textContent = symbols[Math.floor(Math.random() * symbols.length)];
             particle.style.left = `${rightOriginX}px`;
             particle.style.top = `${rightOriginY}px`;
 
-            const angleRad = -((105 + Math.random() * 50) * Math.PI / 180);
-            const dist = (vh * 0.38) + Math.random() * (vh * 0.42);
+            const angleRad = -((108 + Math.random() * 46) * Math.PI / 180);
+            const dist = (vh * 0.38) + Math.random() * (vh * 0.40);
             const tx = Math.cos(angleRad) * dist;
             const ty = Math.sin(angleRad) * dist;
             const rot = (Math.random() - 0.5) * 140;
@@ -3789,11 +3798,11 @@
             particle.style.setProperty('--tx', `${tx}px`);
             particle.style.setProperty('--ty', `${ty}px`);
             particle.style.setProperty('--rot', `${rot}deg`);
-            particle.style.animationDelay = `${Math.random() * 0.08}s`;
-            container.appendChild(particle);
+            particle.style.animationDelay = `${i * 0.02}s`;
+            fragment.appendChild(particle);
         }
 
-        // 3. Center/Top Wide Burst (around question card / upper center)
+        // 3. Center/Top Wide Burst (around question card / upper center) - 7 particles
         let centerOriginX = vw * 0.5;
         let centerOriginY = vh * 0.35;
         if (elements.quiz.card) {
@@ -3802,15 +3811,15 @@
             centerOriginY = rect.top + Math.min(rect.height * 0.35, 180);
         }
 
-        for (let i = 0; i < 12; i++) {
+        for (let i = 0; i < 7; i++) {
             const particle = document.createElement('span');
             particle.className = 'sparkle-particle';
             particle.textContent = symbols[Math.floor(Math.random() * symbols.length)];
             particle.style.left = `${centerOriginX}px`;
             particle.style.top = `${centerOriginY}px`;
 
-            const angleRad = (i / 12) * 2 * Math.PI + (Math.random() - 0.5) * 0.4;
-            const dist = 140 + Math.random() * 160;
+            const angleRad = (i / 7) * 2 * Math.PI + (Math.random() - 0.5) * 0.4;
+            const dist = 140 + Math.random() * 150;
             const tx = Math.cos(angleRad) * dist;
             const ty = Math.sin(angleRad) * dist - 30;
             const rot = (Math.random() - 0.5) * 100;
@@ -3818,10 +3827,11 @@
             particle.style.setProperty('--tx', `${tx}px`);
             particle.style.setProperty('--ty', `${ty}px`);
             particle.style.setProperty('--rot', `${rot}deg`);
-            particle.style.animationDelay = `${Math.random() * 0.06}s`;
-            container.appendChild(particle);
+            particle.style.animationDelay = `${i * 0.02}s`;
+            fragment.appendChild(particle);
         }
 
+        container.appendChild(fragment);
         document.body.appendChild(container);
         setTimeout(() => container.remove(), 1050);
     }
