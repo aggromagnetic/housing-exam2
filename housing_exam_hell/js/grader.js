@@ -152,21 +152,31 @@ export const Grader = {
             let keys = Object.keys(targetAnswers);
 
             // Fallback to question.answer if targetAnswers has no keys
-            if (keys.length === 0 && question.answer) {
-                if (typeof question.answer === 'object' && question.answer !== null) {
+            if (keys.length === 0 && (question.answer !== undefined && question.answer !== null)) {
+                if (typeof question.answer === 'object' && !Array.isArray(question.answer)) {
                     targetAnswers = question.answer;
                     keys = Object.keys(targetAnswers);
-                } else if (typeof question.answer === 'string' && question.answer.trim()) {
-                    const parsed = {};
-                    if (question.answer.includes('=')) {
-                        question.answer.split(',').forEach(p => {
-                            const [k, ...v] = p.split('=');
-                            if (k) parsed[k.trim()] = v.join('=').trim();
-                        });
-                    }
-                    if (Object.keys(parsed).length > 0) {
-                        targetAnswers = parsed;
-                        keys = Object.keys(targetAnswers);
+                } else {
+                    const ansStr = String(question.answer).trim();
+                    if (ansStr) {
+                        const parsed = {};
+                        if (ansStr.includes('=')) {
+                            ansStr.split(',').forEach(p => {
+                                const [k, ...v] = p.split('=');
+                                if (k) parsed[k.trim()] = v.join('=').trim();
+                            });
+                        } else {
+                            const values = ansStr.split(/[,，\n]/).map(s => s.trim()).filter(Boolean);
+                            const CIRCLED = ['㉠', '㉡', '㉢', '㉣', '㉤', '㉥', '㉦', '㉧', '㉨', '㉩'];
+                            values.forEach((val, idx) => {
+                                const k = CIRCLED[idx] || String(idx + 1);
+                                parsed[k] = val;
+                            });
+                        }
+                        if (Object.keys(parsed).length > 0) {
+                            targetAnswers = parsed;
+                            keys = Object.keys(targetAnswers);
+                        }
                     }
                 }
             }

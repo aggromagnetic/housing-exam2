@@ -415,6 +415,18 @@ export const ExamEngine = {
             }
         }
 
+        // Fallback: If totalWeight <= 0 but we still need items and available has unpicked items, pick uniformly
+        while (selected.length < count && pickedIndices.size < available.length) {
+            const unpicked = [];
+            for (let i = 0; i < available.length; i++) {
+                if (!pickedIndices.has(i)) unpicked.push(i);
+            }
+            if (unpicked.length === 0) break;
+            const rIdx = unpicked[Math.floor(Math.random() * unpicked.length)];
+            pickedIndices.add(rIdx);
+            selected.push(available[rIdx]);
+        }
+
         return selected;
     },
 
@@ -562,6 +574,17 @@ export const ExamEngine = {
             }
         }
 
+        while (additional.length < remainderNeeded && pickedIndices.size < seen.length) {
+            const unpicked = [];
+            for (let i = 0; i < seen.length; i++) {
+                if (!pickedIndices.has(i)) unpicked.push(i);
+            }
+            if (unpicked.length === 0) break;
+            const rIdx = unpicked[Math.floor(Math.random() * unpicked.length)];
+            pickedIndices.add(rIdx);
+            additional.push(seen[rIdx]);
+        }
+
         return [...selected, ...additional];
     },
 
@@ -595,14 +618,10 @@ export const ExamEngine = {
             }
 
             if (picked.length < count && poolToUse === underCap) {
-                picked.forEach(q => {
-                    pickedKeys.add(q.qKey);
-                    const t = this.getTopicKey(q);
-                    topicCounts[t] = (topicCounts[t] || 0) + 1;
-                    usedTopicsSet.add(t);
-                });
+                const currentPickedKeys = new Set(picked.map(q => q.qKey));
                 const remainingNeeded = count - picked.length;
-                const fallback = this.weightedPick(available, statsMap, remainingNeeded, pickedKeys);
+                const fallbackAvailable = available.filter(it => !currentPickedKeys.has(it.qKey));
+                const fallback = this.weightedPick(fallbackAvailable, statsMap, remainingNeeded, pickedKeys);
                 picked.push(...fallback);
             }
 
@@ -620,16 +639,16 @@ export const ExamEngine = {
             let targetMc = rule.mc;
             let targetSa = rule.sa;
 
+            const chapterMcList = mcPool.filter(q => rule.pattern.test(q.chapterName));
+            const chapterSaList = saPool.filter(q => rule.pattern.test(q.chapterName));
+
             if (rule.randomSwap && (targetMc + targetSa === 1)) {
-                if (Math.random() < 0.5) {
+                if (Math.random() < 0.5 && chapterSaList.length > 0) {
                     targetMc = 0; targetSa = 1;
-                } else {
+                } else if (chapterMcList.length > 0) {
                     targetMc = 1; targetSa = 0;
                 }
             }
-
-            const chapterMcList = mcPool.filter(q => rule.pattern.test(q.chapterName));
-            const chapterSaList = saPool.filter(q => rule.pattern.test(q.chapterName));
 
             // 1) MC: Guaranteed at least 40% high yield from core 300 candidates
             if (targetMc > 0) {
@@ -666,9 +685,24 @@ export const ExamEngine = {
             const remainderAll = pickWithTopicCap(mcPool, 24 - selectedMC.length, false);
             selectedMC.push(...remainderAll);
         }
+        while (selectedMC.length < 24) {
+            const unpicked = mcPool.filter(q => !pickedKeys.has(q.qKey));
+            if (unpicked.length === 0) break;
+            const r = unpicked[Math.floor(Math.random() * unpicked.length)];
+            pickedKeys.add(r.qKey);
+            selectedMC.push(r);
+        }
+
         if (selectedSA.length < 16) {
             const remainderAll = pickWithTopicCap(saPool, 16 - selectedSA.length, false);
             selectedSA.push(...remainderAll);
+        }
+        while (selectedSA.length < 16) {
+            const unpicked = saPool.filter(q => !pickedKeys.has(q.qKey));
+            if (unpicked.length === 0) break;
+            const r = unpicked[Math.floor(Math.random() * unpicked.length)];
+            pickedKeys.add(r.qKey);
+            selectedSA.push(r);
         }
 
         // 실전 시험지 순서 (1~24번 객관식 법률/단원순 -> 25~40번 주관식 법률/단원순)
@@ -708,14 +742,10 @@ export const ExamEngine = {
             }
 
             if (picked.length < count && poolToUse === underCap) {
-                picked.forEach(q => {
-                    pickedKeys.add(q.qKey);
-                    const t = this.getTopicKey(q);
-                    topicCounts[t] = (topicCounts[t] || 0) + 1;
-                    usedTopicsSet.add(t);
-                });
+                const currentPickedKeys = new Set(picked.map(q => q.qKey));
                 const remainingNeeded = count - picked.length;
-                const fallback = this.weightedPick(available, statsMap, remainingNeeded, pickedKeys);
+                const fallbackAvailable = available.filter(it => !currentPickedKeys.has(it.qKey));
+                const fallback = this.weightedPick(fallbackAvailable, statsMap, remainingNeeded, pickedKeys);
                 picked.push(...fallback);
             }
 
@@ -770,9 +800,24 @@ export const ExamEngine = {
             const remainderAll = pickWithTopicCap(mcPool, 20 - selectedMC.length, false);
             selectedMC.push(...remainderAll);
         }
+        while (selectedMC.length < 20) {
+            const unpicked = mcPool.filter(q => !pickedKeys.has(q.qKey));
+            if (unpicked.length === 0) break;
+            const r = unpicked[Math.floor(Math.random() * unpicked.length)];
+            pickedKeys.add(r.qKey);
+            selectedMC.push(r);
+        }
+
         if (selectedSA.length < 20) {
             const remainderAll = pickWithTopicCap(saPool, 20 - selectedSA.length, false);
             selectedSA.push(...remainderAll);
+        }
+        while (selectedSA.length < 20) {
+            const unpicked = saPool.filter(q => !pickedKeys.has(q.qKey));
+            if (unpicked.length === 0) break;
+            const r = unpicked[Math.floor(Math.random() * unpicked.length)];
+            pickedKeys.add(r.qKey);
+            selectedSA.push(r);
         }
 
         return [...selectedMC.slice(0, 20), ...selectedSA.slice(0, 20)];
