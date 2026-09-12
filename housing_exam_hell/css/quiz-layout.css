@@ -1454,29 +1454,30 @@
 /* Visual Feedback Animations (Tada & Full-Screen Heavy Quake) */
 @keyframes quakeShake {
     0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
-    10% { transform: translate3d(-24px, -10px, 0) rotate(-2.2deg); }
-    22% { transform: translate3d(22px, 8px, 0) rotate(2deg); }
-    34% { transform: translate3d(-18px, 6px, 0) rotate(-1.5deg); }
-    46% { transform: translate3d(14px, -5px, 0) rotate(1.1deg); }
-    58% { transform: translate3d(-10px, 4px, 0) rotate(-0.7deg); }
-    70% { transform: translate3d(7px, -2px, 0) rotate(0.4deg); }
-    82% { transform: translate3d(-4px, 1px, 0) rotate(-0.2deg); }
-    92% { transform: translate3d(2px, 0, 0) rotate(0deg); }
+    10% { transform: translate3d(-22px, -8px, 0) rotate(-2deg); }
+    22% { transform: translate3d(20px, 8px, 0) rotate(1.8deg); }
+    34% { transform: translate3d(-16px, 6px, 0) rotate(-1.3deg); }
+    46% { transform: translate3d(12px, -4px, 0) rotate(0.9deg); }
+    58% { transform: translate3d(-8px, 3px, 0) rotate(-0.5deg); }
+    70% { transform: translate3d(5px, -2px, 0) rotate(0.3deg); }
+    82% { transform: translate3d(-3px, 1px, 0) rotate(-0.1deg); }
+    92% { transform: translate3d(1px, 0, 0) rotate(0deg); }
 }
 
 @keyframes screenHeavyQuake {
     0%, 100% { transform: translate3d(0, 0, 0); }
-    12% { transform: translate3d(-14px, 10px, 0); }
-    24% { transform: translate3d(14px, -9px, 0); }
-    36% { transform: translate3d(-11px, -7px, 0); }
-    48% { transform: translate3d(10px, 6px, 0); }
-    62% { transform: translate3d(-6px, 4px, 0); }
-    76% { transform: translate3d(4px, -3px, 0); }
-    88% { transform: translate3d(-2px, 1px, 0); }
+    10% { transform: translate3d(-18px, 8px, 0); }
+    22% { transform: translate3d(16px, -10px, 0); }
+    34% { transform: translate3d(-14px, -6px, 0); }
+    46% { transform: translate3d(11px, 6px, 0); }
+    58% { transform: translate3d(-8px, 4px, 0); }
+    70% { transform: translate3d(5px, -2px, 0); }
+    82% { transform: translate3d(-3px, 1px, 0); }
 }
 
-body.screen-heavy-quake {
+.screen-heavy-quake {
     animation: screenHeavyQuake 0.52s cubic-bezier(0.36, 0.07, 0.19, 0.97) both !important;
+    will-change: transform;
 }
 
 .anim-quake {
@@ -1495,16 +1496,16 @@ body.screen-heavy-quake {
 
 @keyframes screenRedFlash {
     0% { 
-        background: rgba(239, 68, 68, 0.42); 
-        box-shadow: inset 0 0 160px rgba(239, 68, 68, 0.9), inset 0 0 60px rgba(0, 0, 0, 0.6); 
+        background: rgba(239, 68, 68, 0.45); 
+        box-shadow: inset 0 0 160px rgba(239, 68, 68, 0.95), inset 0 0 60px rgba(0, 0, 0, 0.6); 
     }
     22% { 
         background: rgba(239, 68, 68, 0.2); 
         box-shadow: inset 0 0 110px rgba(239, 68, 68, 0.7); 
     }
     42% { 
-        background: rgba(239, 68, 68, 0.35); 
-        box-shadow: inset 0 0 145px rgba(239, 68, 68, 0.85); 
+        background: rgba(239, 68, 68, 0.38); 
+        box-shadow: inset 0 0 145px rgba(239, 68, 68, 0.9); 
     }
     100% { 
         background: transparent; 
@@ -1531,7 +1532,7 @@ body.screen-heavy-quake {
     animation: tadaPop 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.275), correctGlowBurst 0.7s ease !important;
 }
 
-/* Full-Screen Sparkle & Confetti Cannon Burst */
+/* Full-Screen Sparkle & Confetti Cannon Burst (Ultra-Smooth 60FPS) */
 .sparkle-burst-container {
     position: fixed;
     inset: 0;
@@ -1544,10 +1545,11 @@ body.screen-heavy-quake {
 
 .sparkle-particle {
     position: absolute;
-    font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+    font-size: clamp(1.6rem, 3.2vw, 2.2rem);
     user-select: none;
     will-change: transform, opacity;
-    filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.75));
+    /* Clean text-shadow replaces heavy filter: drop-shadow for 60fps mobile GPU smoothness */
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
     animation: flyOut 0.95s cubic-bezier(0.14, 0.82, 0.25, 1) forwards;
     transform: translate(-50%, -50%);
 }
