@@ -166,10 +166,11 @@
             if (!isCorrect) {
                 existing.wrongCount = (existing.wrongCount || 0) + 1;
                 existing.totalWrongCount = (existing.totalWrongCount || (existing.wrongCount - 1) || 0) + 1;
-                if (existing.wrongCount === 1) existing.weight = 2;
-                else if (existing.wrongCount === 2) existing.weight = 4;
-                else if (existing.wrongCount === 3) existing.weight = 6;
-                else existing.weight = 10;
+                // Balanced remind weight: 1.2 -> 1.4 -> 1.6 -> 1.8 (prevents wrong questions from dominating exam)
+                if (existing.wrongCount === 1) existing.weight = 1.2;
+                else if (existing.wrongCount === 2) existing.weight = 1.4;
+                else if (existing.wrongCount === 3) existing.weight = 1.6;
+                else existing.weight = 1.8;
 
                 // 오답 시 3일 망각 임시 감점 즉시 리셋 (원래 본래 Score로 복구)
                 existing.scoreDeductions = 0;
@@ -181,12 +182,12 @@
                     existing.wrongCount = Math.max(0, existing.wrongCount - 1);
                 }
 
+                // De-escalating step
                 if (existing.wrongCount === 0) {
-                    existing.weight = 1;
-                } else if (existing.weight === 10) existing.weight = 6;
-                else if (existing.weight === 6) existing.weight = 4;
-                else if (existing.weight === 4) existing.weight = 2;
-                else existing.weight = 1;
+                    existing.weight = 1.0;
+                } else if (existing.weight > 1.4) existing.weight = 1.4;
+                else if (existing.weight > 1.2) existing.weight = 1.2;
+                else existing.weight = 1.0;
 
                 // 정답 시 임시 Score 1점씩 감점 누적 (3일간 유지) & 최근 정답 시각 기록
                 existing.scoreDeductions = (existing.scoreDeductions || 0) + 1;
@@ -1256,13 +1257,33 @@
             return this.LADDER_WEIGHTS[effectiveScore] || 1.0;
         },
 
+        getUserWeight(question, stat) {
+            if (!stat || !stat.wrongCount || stat.wrongCount <= 0) return 1.0;
+            const topScore = (question && question.topScore !== undefined) ? question.topScore : 0;
+
+            // 1) Score 0~1 (비핵심/잡문제): 틀려도 가중치 증가 0! (1.0 고정 -> 도배 방지)
+            if (topScore <= 1) {
+                return 1.0;
+            }
+
+            // 2) Score 2~4 (알짜 일반 문항): 틀렸을 때 최대 1.4배로 소폭 상승
+            if (topScore < 5) {
+                return stat.wrongCount === 1 ? 1.2 : 1.4;
+            }
+
+            // 3) Score 5~7 (딱지 문항 / 핵심 300선): 최대 1.8배로 캡 (기존 10배 폭등 제거)
+            if (stat.wrongCount === 1) return 1.3;
+            if (stat.wrongCount === 2) return 1.5;
+            return 1.8;
+        },
+
         weightedPick(items, statsMap = {}, count, excludeKeysSet = new Set()) {
             const available = items.filter(it => !excludeKeysSet.has(it.qKey));
             if (available.length <= count) return available;
 
             const weights = available.map(it => {
                 const stat = statsMap[it.qKey];
-                const userWeight = (stat && stat.weight) ? stat.weight : 1.0;
+                const userWeight = this.getUserWeight(it, stat);
                 
                 // 3일 망각 주기 반영된 동적 임시 Score 기반 사다리 가중치
                 const effScore = this.getEffectiveScore(it, stat);
@@ -1408,7 +1429,7 @@
 
             const remainderWeights = seen.map(it => {
                 const stat = statsMap[it.qKey] || {};
-                const userWeight = stat.weight || 1.0;
+                const userWeight = this.getUserWeight(it, stat);
                 const tryCount = stat.tryCount || 1;
                 const effScore = this.getEffectiveScore(it, stat);
                 const scoreWeight = this.getScoreWeight(effScore);
@@ -1731,7 +1752,19 @@
             const saPool = this.getQuestionPool(subject, 'short');
             const all = [...mcPool, ...saPool];
 
-            const weakItems = all.filter(q => (statsMap[q.qKey]?.weight || 1) >= 2);
+            // 오답 이력이 있는 모든 문항 (wrongCount > 0 또는 weight >= 1.2)
+            const weakItems = all.filter(q => (statsMap[q.qKey]?.wrongCount || 0) > 0 || (statsMap[q.qKey]?.weight || 1) >= 1.2);
+
+            // 핵심 빈출(Score 높은 순) 우선 선발하여 비핵심 잡문제 오답 도배 차단!
+            weakItems.sort((a, b) => {
+                const scoreA = (a.topScore !== undefined) ? a.topScore : 0;
+                const scoreB = (b.topScore !== undefined) ? b.topScore : 0;
+                if (scoreB !== scoreA) return scoreB - scoreA;
+                const wA = statsMap[a.qKey]?.wrongCount || 0;
+                const wB = statsMap[b.qKey]?.wrongCount || 0;
+                return wB - wA;
+            });
+
             let picked = [];
 
             if (weakItems.length >= count) {
@@ -2424,6 +2457,7 @@
                 btnToggleExp: document.getElementById('btn-toggle-exp'),
                 btnRetry: document.getElementById('btn-retry-q'),
                 btnFlagNeedsEdit: document.getElementById('btn-flag-needs-edit'),
+                btnExcludeQuestion: document.getElementById('btn-exclude-question'),
                 bottomControls: document.getElementById('quiz-bottom-controls')
             },
             manager: {
@@ -3091,9 +3125,16 @@
         }
 
         const stat = state.statsMap[q.qKey] || { weight: 1, wrongCount: 0 };
+        const wrongCount = stat.wrongCount || 0;
         const weight = stat.weight || 1;
 
-        elements.quiz.card.className = `quiz-card card-w${weight >= 3.0 ? 10 : (weight >= 2.5 ? 6 : (weight >= 2.0 ? 4 : (weight >= 1.5 ? 2 : 1)))}`;
+        const isLv4 = wrongCount >= 4 || weight >= 10;
+        const isLv3 = wrongCount >= 3 || weight >= 6 || weight >= 1.6;
+        const isLv2 = wrongCount >= 2 || weight >= 4 || weight >= 1.4;
+        const isLv1 = wrongCount >= 1 || weight >= 2 || weight >= 1.2;
+
+        const cardW = isLv4 ? 10 : (isLv3 ? 6 : (isLv2 ? 4 : (isLv1 ? 2 : 1)));
+        elements.quiz.card.className = `quiz-card card-w${cardW}`;
 
         if (state.mode === 'infinite') {
             const isLaw = q.subject === '관계법규';
@@ -3144,10 +3185,10 @@
         }
 
         let wIcon = '🌱 기본';
-        if (weight >= 10) wIcon = '🔥 지옥 (Lv.4)';
-        else if (weight >= 6) wIcon = '🚨 취약 (Lv.3)';
-        else if (weight >= 4) wIcon = '⚠️ 주의 (Lv.2)';
-        else if (weight >= 2) wIcon = '⚡ 복습 (Lv.1)';
+        if (isLv4) wIcon = '🔥 지옥 (Lv.4)';
+        else if (isLv3) wIcon = '🚨 취약 (Lv.3)';
+        else if (isLv2) wIcon = '⚠️ 주의 (Lv.2)';
+        else if (isLv1) wIcon = '⚡ 복습 (Lv.1)';
         elements.quiz.weightBadge.textContent = wIcon;
 
         // Smart formatting for Title and Passage
@@ -3224,6 +3265,19 @@
             btnFlagNeedsEdit.innerHTML = isFlagged 
                 ? '<i class="fa-solid fa-flag text-amber-400"></i> 수정요청됨'
                 : '<i class="fa-solid fa-flag"></i> 수정필요';
+        }
+
+        // Update [출제제외] button state
+        const btnExcludeQ = document.getElementById('btn-exclude-question');
+        if (btnExcludeQ) {
+            const isExcluded = !!(state.deletedKeysSet && state.deletedKeysSet.has(q.qKey));
+            btnExcludeQ.classList.toggle('active', isExcluded);
+            btnExcludeQ.innerHTML = isExcluded
+                ? '<i class="fa-solid fa-ban text-red-500"></i> 제외됨'
+                : '<i class="fa-solid fa-ban"></i> 출제제외';
+            btnExcludeQ.title = isExcluded
+                ? '현재 출제 제외된 문항입니다. 클릭하면 출제 풀로 복원할 수 있습니다.'
+                : '이 문제를 앞으로 모의고사 및 헬 모드 출제 풀에서 영구 제외(삭제)합니다.';
         }
 
         // Show [다시 풀기] button ONLY when problem is graded and INCORRECT!
@@ -6092,6 +6146,53 @@
                     btnFlagNeedsEdit.classList.add('active');
                     btnFlagNeedsEdit.innerHTML = '<i class="fa-solid fa-flag text-amber-400"></i> 수정요청됨';
                     showToast(`🚩 [${q.id}번 문항] 수정 필요 목록에 등록되었습니다. (에디터 2834에서 확인 가능)`);
+                }
+            });
+        }
+
+        // 🚫 문항 영구 출제 제외 (토글) 버튼 핸들러
+        const btnExcludeQ = document.getElementById('btn-exclude-question');
+        if (btnExcludeQ) {
+            btnExcludeQ.addEventListener('click', async () => {
+                const q = state.questions[state.currentIndex];
+                if (!q) return;
+
+                const isExcluded = !!(state.deletedKeysSet && state.deletedKeysSet.has(q.qKey));
+                const qTitle = (q.title || q.question || '').slice(0, 30);
+
+                if (isExcluded) {
+                    if (confirm(`♻️ [문항 출제 복원]\n"${qTitle}..."\n\n이 문항을 다시 출제 풀에 복원하시겠습니까?`)) {
+                        await IDBStore.restoreDeletedKey(q.qKey);
+                        if (state.deletedKeysSet) state.deletedKeysSet.delete(q.qKey);
+                        ExamEngine._poolCache = {};
+                        btnExcludeQ.classList.remove('active');
+                        btnExcludeQ.innerHTML = '<i class="fa-solid fa-ban"></i> 출제제외';
+                        btnExcludeQ.title = '이 문제를 앞으로 모의고사 및 헬 모드 출제 풀에서 영구 제외(삭제)합니다.';
+                        showToast(`♻️ [${q.id}번 문항] 출제 풀에 다시 복원되었습니다.`);
+                        if (window.CloudSync && typeof window.CloudSync.syncFlags === 'function') {
+                            const localNeeds = await IDBStore.getAllNeedsEditMap();
+                            const localUnflag = await IDBStore.getAllUnflaggedMap();
+                            const localDel = Array.from(state.deletedKeysSet || []);
+                            window.CloudSync.syncFlags(localNeeds, localUnflag, localDel);
+                        }
+                    }
+                } else {
+                    if (confirm(`🚫 [문항 영구 출제 제외]\n"${qTitle}..."\n\n이 문제를 앞으로 모든 모의고사 및 헬 모드 출제 풀에서 영구 제외하시겠습니까?\n(관리자 모드에서 언제든 다시 복원 가능)`)) {
+                        await IDBStore.saveDeletedKey(q.qKey);
+                        if (!state.deletedKeysSet) state.deletedKeysSet = new Set();
+                        state.deletedKeysSet.add(q.qKey);
+                        ExamEngine._poolCache = {};
+                        btnExcludeQ.classList.add('active');
+                        btnExcludeQ.innerHTML = '<i class="fa-solid fa-ban text-red-500"></i> 제외됨';
+                        btnExcludeQ.title = '현재 출제 제외된 문항입니다. 클릭하면 출제 풀로 복원할 수 있습니다.';
+                        showToast(`🚫 [${q.id}번 문항] 출제에서 영구 제외되었습니다.`);
+                        if (window.CloudSync && typeof window.CloudSync.syncFlags === 'function') {
+                            const localNeeds = await IDBStore.getAllNeedsEditMap();
+                            const localUnflag = await IDBStore.getAllUnflaggedMap();
+                            const localDel = Array.from(state.deletedKeysSet || []);
+                            window.CloudSync.syncFlags(localNeeds, localUnflag, localDel);
+                        }
+                    }
                 }
             });
         }
