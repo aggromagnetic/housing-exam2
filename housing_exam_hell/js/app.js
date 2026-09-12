@@ -3432,7 +3432,7 @@
             }
 
             optBtn.innerHTML = `
-                <span class="opt-num">${choiceNum}</span>
+                <span class="opt-num"><span class="opt-num-text">${choiceNum}</span></span>
                 <span class="${textClass}">${optText}${extraBadge}</span>
             `;
 
@@ -3774,13 +3774,25 @@
 
         state.userAnswers[idx] = choiceNum;
 
-        // Visual selection update
+        // Visual selection update with water bubble pop & ink bloom animation
         const optBtns = elements.quiz.optionsContainer.querySelectorAll('.option-item');
         optBtns.forEach((btn, optIdx) => {
+            const numSpan = btn.querySelector('.opt-num');
             if (optIdx + 1 === choiceNum) {
                 btn.classList.add('selected');
+                btn.classList.remove('item-select-pop');
+                if (numSpan) {
+                    numSpan.classList.remove('opt-num-pop');
+                    requestAnimationFrame(() => {
+                        btn.classList.add('item-select-pop');
+                        numSpan.classList.add('opt-num-pop');
+                    });
+                }
             } else {
-                btn.classList.remove('selected');
+                btn.classList.remove('selected', 'item-select-pop');
+                if (numSpan) {
+                    numSpan.classList.remove('opt-num-pop');
+                }
             }
         });
 

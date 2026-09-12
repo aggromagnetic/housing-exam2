@@ -141,7 +141,6 @@ body.stylus-mode-active .opt-num:active {
 }
 
 body.stylus-mode-active .option-item.selected .opt-num {
-    background: var(--theme-primary) !important;
     color: #000 !important;
     box-shadow: 0 0 14px rgba(56, 189, 248, 0.7);
 }

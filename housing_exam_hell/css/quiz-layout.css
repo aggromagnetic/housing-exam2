@@ -438,7 +438,7 @@
     height: 28px;
     border-radius: 50%;
     background: #1E293B;
-    border: 1px solid var(--border-base);
+    border: 1.5px solid var(--border-base);
     color: var(--text-muted);
     font-size: 0.95rem;
     font-weight: 800;
@@ -447,7 +447,50 @@
     justify-content: center;
     flex-shrink: 0;
     margin-top: 1px;
-    transition: all 0.15s ease;
+    position: relative;
+    overflow: visible;
+    transition: border-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+    z-index: 1;
+}
+
+.opt-num-text {
+    position: relative;
+    z-index: 3;
+    font-weight: 800;
+    line-height: 1;
+    display: inline-block;
+    transition: transform 0.15s ease, color 0.15s ease;
+}
+
+/* 1. Droplet Ink Bloom: expanding circle from the center (작은 원이 커지면서 채워짐) */
+.opt-num::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: 50%;
+    background: var(--theme-primary);
+    transform: scale(0);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 1;
+    transition: transform 0.22s cubic-bezier(0.18, 0.9, 0.32, 1.2), opacity 0.15s ease;
+}
+
+/* 2. Water Droplet / Ripple Pop Ring (물방울이 톡! 터지며 퍼지는 파문) */
+.opt-num::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 50%;
+    border: 2px solid var(--theme-primary);
+    opacity: 0;
+    transform: scale(0.6);
+    pointer-events: none;
+    z-index: 2;
+}
+
+.option-item:active:not(:disabled) .opt-num {
+    transform: scale(0.92);
 }
 
 .option-item.selected {
@@ -457,9 +500,71 @@
 }
 
 .option-item.selected .opt-num {
-    background: var(--theme-primary);
-    color: #000;
     border-color: var(--theme-primary);
+    color: #000;
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.45);
+}
+
+.option-item.selected .opt-num::before {
+    transform: scale(1);
+    opacity: 1;
+}
+
+/* Bubble Pop & Water Ripple Animation */
+.opt-num.opt-num-pop {
+    animation: optNumPop 0.32s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.opt-num.opt-num-pop::after {
+    animation: waterRippleBurst 0.44s cubic-bezier(0.1, 0.8, 0.25, 1) forwards;
+}
+
+.option-item.item-select-pop {
+    animation: rowSelectPop 0.24s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+
+@keyframes optNumPop {
+    0% {
+        transform: scale(0.82);
+    }
+    40% {
+        transform: scale(1.20);
+    }
+    72% {
+        transform: scale(0.96);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes waterRippleBurst {
+    0% {
+        transform: scale(0.65);
+        opacity: 0.95;
+        border-width: 2.5px;
+    }
+    45% {
+        opacity: 0.75;
+        border-width: 2px;
+    }
+    100% {
+        transform: scale(2.1);
+        opacity: 0;
+        border-width: 1px;
+    }
+}
+
+@keyframes rowSelectPop {
+    0% {
+        transform: scale(0.992);
+    }
+    50% {
+        transform: scale(1.008);
+    }
+    100% {
+        transform: scale(1);
+    }
 }
 
 .option-item.correct {
@@ -469,8 +574,18 @@
 }
 
 .option-item.correct .opt-num {
-    background: var(--color-correct) !important;
+    border-color: var(--color-correct) !important;
     color: #000 !important;
+}
+
+.option-item.correct .opt-num::before {
+    background: var(--color-correct) !important;
+    transform: scale(1);
+    opacity: 1;
+}
+
+.option-item.correct .opt-num::after {
+    border-color: var(--color-correct) !important;
 }
 
 .option-item.wrong {
@@ -480,8 +595,18 @@
 }
 
 .option-item.wrong .opt-num {
-    background: var(--color-wrong) !important;
+    border-color: var(--color-wrong) !important;
     color: #FFF !important;
+}
+
+.option-item.wrong .opt-num::before {
+    background: var(--color-wrong) !important;
+    transform: scale(1);
+    opacity: 1;
+}
+
+.option-item.wrong .opt-num::after {
+    border-color: var(--color-wrong) !important;
 }
 
 /* Subjective Blank Inputs & Handwriting Pad */
