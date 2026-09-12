@@ -1987,6 +1987,48 @@
                         if (headerPen) headerPen.classList.remove('active');
                     });
                 }
+
+                // Draggable vertical toolbar support
+                const dragHandle = this.toolbar.querySelector('.stylus-drag-handle');
+                if (dragHandle) {
+                    let isDragging = false;
+                    let startX = 0, startY = 0;
+                    let initialLeft = 0, initialTop = 0;
+
+                    dragHandle.addEventListener('pointerdown', (e) => {
+                        if (e.target.closest('.stylus-btn, .color-dot')) return;
+                        isDragging = true;
+                        startX = e.clientX;
+                        startY = e.clientY;
+                        const rect = this.toolbar.getBoundingClientRect();
+                        initialLeft = rect.left;
+                        initialTop = rect.top;
+                        this.toolbar.style.right = 'auto';
+                        try { dragHandle.setPointerCapture(e.pointerId); } catch (_) {}
+                        e.preventDefault();
+                    });
+
+                    dragHandle.addEventListener('pointermove', (e) => {
+                        if (!isDragging) return;
+                        const dx = e.clientX - startX;
+                        const dy = e.clientY - startY;
+                        const maxLeft = Math.max(0, window.innerWidth - this.toolbar.offsetWidth - 6);
+                        const maxTop = Math.max(50, window.innerHeight - this.toolbar.offsetHeight - 6);
+                        const newLeft = Math.max(6, Math.min(maxLeft, initialLeft + dx));
+                        const newTop = Math.max(56, Math.min(maxTop, initialTop + dy));
+                        this.toolbar.style.left = `${newLeft}px`;
+                        this.toolbar.style.top = `${newTop}px`;
+                    });
+
+                    const stopDrag = (e) => {
+                        if (!isDragging) return;
+                        isDragging = false;
+                        try { dragHandle.releasePointerCapture(e.pointerId); } catch (_) {}
+                    };
+
+                    dragHandle.addEventListener('pointerup', stopDrag);
+                    dragHandle.addEventListener('pointercancel', stopDrag);
+                }
             }
         }
 
@@ -2009,7 +2051,7 @@
                 const underEl = document.elementFromPoint(e.clientX, e.clientY);
                 this.canvas.style.pointerEvents = 'auto';
                 if (underEl) {
-                    const interactive = underEl.closest('.opt-num, button, input, textarea, a, .blank-input, .btn-ctrl, .btn-ctrl-sm, .btn-override, .color-dot, .stylus-btn, .btn-toggle-hw');
+                    const interactive = underEl.closest('.opt-num, button, input, textarea, a, .blank-input, .btn-ctrl, .btn-ctrl-sm, .btn-override, .color-dot, .stylus-btn, .btn-toggle-hw, .stylus-drag-handle');
                     if (interactive) {
                         interactive.click();
                         if (['INPUT', 'TEXTAREA'].includes(interactive.tagName)) {
@@ -2132,7 +2174,7 @@
                     }
 
                     // 2. 일반 대화형 버튼/입력창 터치 처리 (.option-item 제외)
-                    const targetInteractive = underEl.closest('button:not(.option-item), input, textarea, a, .blank-input, .btn-ctrl, .btn-ctrl-sm, .btn-override, .color-dot, .stylus-btn, .btn-toggle-hw');
+                    const targetInteractive = underEl.closest('button:not(.option-item), input, textarea, a, .blank-input, .btn-ctrl, .btn-ctrl-sm, .btn-override, .color-dot, .stylus-btn, .btn-toggle-hw, .stylus-drag-handle');
                     if (targetInteractive) {
                         targetInteractive.click();
                         if (['INPUT', 'TEXTAREA'].includes(targetInteractive.tagName)) {
@@ -3830,15 +3872,14 @@
         const gradeRes = Grader.grade(q, userAns);
         state.results[idx] = gradeRes;
 
+        // 🚀 0ms Instant Optimistic Feedback:
+        // Explode fireworks/confetti and trigger vibrations the exact millisecond of answer determination!
+        // Never wait for IndexedDB disk I/O or DOM rebuilding before feedback!
+        triggerVisualFeedback(gradeRes.isCorrect);
+
         // 최초 시도인 경우에만 오답 가중치 DB 기록 및 시험 성적용 최초 결과 박제!
         if (state.firstAttemptResults[idx] === undefined) {
             state.firstAttemptResults[idx] = gradeRes;
-            const updatedStat = await IDBStore.recordAnswer(q.qKey, gradeRes.isCorrect, {
-                subject: q.subject,
-                type: q.type,
-                chapter: q.chapterName
-            });
-            state.statsMap[q.qKey] = updatedStat;
 
             // 콤보 스트릭 계산
             if (gradeRes.isCorrect) {
@@ -3852,11 +3893,21 @@
             } else {
                 state.currentCombo = 0;
             }
+
+            // Async non-blocking DB record (background parallel execution)
+            IDBStore.recordAnswer(q.qKey, gradeRes.isCorrect, {
+                subject: q.subject,
+                type: q.type,
+                chapter: q.chapterName
+            }).then(updatedStat => {
+                if (updatedStat) state.statsMap[q.qKey] = updatedStat;
+            }).catch(err => {
+                console.warn('[IDBStore] Async recordAnswer error:', err);
+            });
         }
 
         await renderQuestion(idx);
         toggleExplanation(true);
-        triggerVisualFeedback(gradeRes.isCorrect);
 
         if (state.mode === 'part') {
             PartProgressManager.saveProgress(state.subject, state.currentPartPattern, state);
@@ -3867,7 +3918,7 @@
     }
 
     // -------------------------------------------------------------
-    // 5. Zero-DOM GPU Celebration Confetti & Sparkle Engine (120FPS)
+    // 5. Zero-DOM GPU Celebration Confetti & Sparkle Engine (120FPS Pure GPU)
     // -------------------------------------------------------------
     const CelebrationEngine = (function() {
         let canvas = null;
@@ -3877,9 +3928,8 @@
 
         const COLORS = [
             '#F59E0B', '#10B981', '#38BDF8', '#8B5CF6', 
-            '#EC4899', '#EF4444', '#FBBF24', '#34D399', '#60A5FA'
+            '#EC4899', '#EF4444', '#FBBF24', '#34D399', '#60A5FA', '#F472B6'
         ];
-        const EMOJIS = ['✨', '⭐', '🌟', '🎉', '🔥', '👑', '🏆', '💯', '🎊', '💎'];
 
         function init() {
             if (!canvas) {
@@ -3887,7 +3937,7 @@
                 if (!canvas) {
                     canvas = document.createElement('canvas');
                     canvas.id = 'celebration-canvas';
-                    canvas.style.cssText = 'position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:99999;display:none;';
+                    canvas.style.cssText = 'position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:99999;opacity:0;transition:opacity 0.1s linear;will-change:opacity;';
                     document.body.appendChild(canvas);
                 }
                 ctx = canvas.getContext('2d');
@@ -3908,7 +3958,24 @@
             ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         }
 
-        function createParticle(x, y, vx, vy, isEmoji) {
+        // 100% GPU-accelerated 4-pointed diamond sparkle star (Zero CPU font rasterization)
+        function drawSparkleStar(c, size, color) {
+            c.fillStyle = color;
+            c.beginPath();
+            const r = size;
+            const ir = size * 0.24;
+            for (let k = 0; k < 4; k++) {
+                const a1 = (k * Math.PI / 2);
+                const a2 = a1 + Math.PI / 4;
+                if (k === 0) c.moveTo(Math.cos(a1) * r, Math.sin(a1) * r);
+                else c.lineTo(Math.cos(a1) * r, Math.sin(a1) * r);
+                c.lineTo(Math.cos(a2) * ir, Math.sin(a2) * ir);
+            }
+            c.closePath();
+            c.fill();
+        }
+
+        function createParticle(x, y, vx, vy, shape) {
             return {
                 x, y, vx, vy,
                 gravity: 0.28 + Math.random() * 0.16,
@@ -3917,12 +3984,11 @@
                 rotSpeed: (Math.random() - 0.5) * 0.18,
                 tilt: Math.random() * Math.PI * 2,
                 tiltSpeed: (Math.random() - 0.5) * 0.22,
-                size: isEmoji ? (22 + Math.random() * 8) : (7 + Math.random() * 5),
+                size: shape === 'star' ? (12 + Math.random() * 8) : (6 + Math.random() * 4),
                 width: 7 + Math.random() * 5,
                 height: 12 + Math.random() * 7,
                 color: COLORS[Math.floor(Math.random() * COLORS.length)],
-                isEmoji,
-                emoji: EMOJIS[Math.floor(Math.random() * EMOJIS.length)],
+                shape: shape || 'ribbon',
                 birth: performance.now(),
                 duration: 750 + Math.random() * 250
             };
@@ -3935,36 +4001,37 @@
             const vh = window.innerHeight || 600;
 
             const newParticles = [];
+            const SHAPES = ['star', 'ribbon', 'ribbon', 'dot'];
 
-            // 1. Bottom-Left Cannon (Shoots diagonally up-right) - 13 particles
+            // 1. Bottom-Left Cannon (Shoots diagonally up-right) - 14 particles
             const leftX = vw * 0.10;
             const leftY = vh * 0.90;
-            for (let i = 0; i < 13; i++) {
+            for (let i = 0; i < 14; i++) {
                 const angle = -((22 + Math.random() * 48) * Math.PI / 180);
                 const speed = (vh * 0.018) + Math.random() * (vh * 0.014);
-                newParticles.push(createParticle(leftX, leftY, Math.cos(angle) * speed, Math.sin(angle) * speed, i % 3 === 0));
+                newParticles.push(createParticle(leftX, leftY, Math.cos(angle) * speed, Math.sin(angle) * speed, SHAPES[i % SHAPES.length]));
             }
 
-            // 2. Bottom-Right Cannon (Shoots diagonally up-left) - 13 particles
+            // 2. Bottom-Right Cannon (Shoots diagonally up-left) - 14 particles
             const rightX = vw * 0.90;
             const rightY = vh * 0.90;
-            for (let i = 0; i < 13; i++) {
+            for (let i = 0; i < 14; i++) {
                 const angle = -((110 + Math.random() * 48) * Math.PI / 180);
                 const speed = (vh * 0.018) + Math.random() * (vh * 0.014);
-                newParticles.push(createParticle(rightX, rightY, Math.cos(angle) * speed, Math.sin(angle) * speed, i % 3 === 0));
+                newParticles.push(createParticle(rightX, rightY, Math.cos(angle) * speed, Math.sin(angle) * speed, SHAPES[i % SHAPES.length]));
             }
 
-            // 3. Center Screen Burst - 10 particles
+            // 3. Center Screen Burst - 12 particles
             const centerX = vw * 0.5;
             const centerY = vh * 0.36;
-            for (let i = 0; i < 10; i++) {
-                const angle = (i / 10) * Math.PI * 2 + (Math.random() - 0.5) * 0.4;
+            for (let i = 0; i < 12; i++) {
+                const angle = (i / 12) * Math.PI * 2 + (Math.random() - 0.5) * 0.4;
                 const speed = 4 + Math.random() * 6;
-                newParticles.push(createParticle(centerX, centerY, Math.cos(angle) * speed, Math.sin(angle) * speed - 2.5, i % 2 === 0));
+                newParticles.push(createParticle(centerX, centerY, Math.cos(angle) * speed, Math.sin(angle) * speed - 2.5, SHAPES[i % SHAPES.length]));
             }
 
             particles = particles.concat(newParticles);
-            canvas.style.display = 'block';
+            canvas.style.opacity = '1';
 
             if (!animId) {
                 animId = requestAnimationFrame(loop);
@@ -4001,16 +4068,18 @@
                 ctx.translate(p.x, p.y);
                 ctx.rotate(p.rotation);
 
-                if (p.isEmoji) {
-                    ctx.font = `${Math.round(p.size)}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
-                    ctx.textAlign = 'center';
-                    ctx.textBaseline = 'middle';
-                    ctx.fillText(p.emoji, 0, 0);
-                } else {
+                if (p.shape === 'star') {
+                    drawSparkleStar(ctx, p.size, p.color);
+                } else if (p.shape === 'ribbon') {
                     const cosTilt = Math.cos(p.tilt);
                     ctx.scale(1, cosTilt);
                     ctx.fillStyle = p.color;
                     ctx.fillRect(-p.width / 2, -p.height / 2, p.width, p.height);
+                } else {
+                    ctx.fillStyle = p.color;
+                    ctx.beginPath();
+                    ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2);
+                    ctx.fill();
                 }
 
                 ctx.restore();
@@ -4024,7 +4093,7 @@
                 animId = null;
                 particles = [];
                 ctx.clearRect(0, 0, vw, vh);
-                canvas.style.display = 'none';
+                canvas.style.opacity = '0';
             }
         }
 
