@@ -110,11 +110,11 @@ const IDBStore = {
         if (!isCorrect) {
             existing.wrongCount = (existing.wrongCount || 0) + 1;
             existing.totalWrongCount = (existing.totalWrongCount || (existing.wrongCount - 1) || 0) + 1;
-            // Spaced repetition escalating weight: 2 -> 4 -> 6 -> 10
-            if (existing.wrongCount === 1) existing.weight = 2;
-            else if (existing.wrongCount === 2) existing.weight = 4;
-            else if (existing.wrongCount === 3) existing.weight = 6;
-            else existing.weight = 10;
+            // Balanced remind weight: 1.2 -> 1.4 -> 1.6 -> 1.8 (prevents wrong questions from dominating exam)
+            if (existing.wrongCount === 1) existing.weight = 1.2;
+            else if (existing.wrongCount === 2) existing.weight = 1.4;
+            else if (existing.wrongCount === 3) existing.weight = 1.6;
+            else existing.weight = 1.8;
 
             // 오답 시 3일 망각 임시 감점 즉시 리셋 (원래 본래 Score로 복구)
             existing.scoreDeductions = 0;
@@ -126,13 +126,12 @@ const IDBStore = {
                 existing.wrongCount = Math.max(0, existing.wrongCount - 1);
             }
 
-            // De-escalating step: 10 -> 6 -> 4 -> 2 -> 1
+            // De-escalating step
             if (existing.wrongCount === 0) {
-                existing.weight = 1;
-            } else if (existing.weight === 10) existing.weight = 6;
-            else if (existing.weight === 6) existing.weight = 4;
-            else if (existing.weight === 4) existing.weight = 2;
-            else existing.weight = 1;
+                existing.weight = 1.0;
+            } else if (existing.weight > 1.4) existing.weight = 1.4;
+            else if (existing.weight > 1.2) existing.weight = 1.2;
+            else existing.weight = 1.0;
 
             // 정답 시 임시 Score 1점씩 감점 누적 (3일간 유지) & 최근 정답 시각 기록
             existing.scoreDeductions = (existing.scoreDeductions || 0) + 1;

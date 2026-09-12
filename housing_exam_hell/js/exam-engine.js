@@ -346,6 +346,26 @@ export const ExamEngine = {
         return this.LADDER_WEIGHTS[effectiveScore] || 1.0;
     },
 
+    getUserWeight(question, stat) {
+        if (!stat || !stat.wrongCount || stat.wrongCount <= 0) return 1.0;
+        const topScore = (question && question.topScore !== undefined) ? question.topScore : 0;
+
+        // 1) Score 0~1 (비핵심/잡문제): 틀려도 가중치 증가 0! (1.0 고정 -> 도배 방지)
+        if (topScore <= 1) {
+            return 1.0;
+        }
+
+        // 2) Score 2~4 (알짜 일반 문항): 틀렸을 때 최대 1.4배로 소폭 상승
+        if (topScore < 5) {
+            return stat.wrongCount === 1 ? 1.2 : 1.4;
+        }
+
+        // 3) Score 5~7 (딱지 문항 / 핵심 300선): 최대 1.8배로 캡 (기존 10배 폭등 제거)
+        if (stat.wrongCount === 1) return 1.3;
+        if (stat.wrongCount === 2) return 1.5;
+        return 1.8;
+    },
+
     /**
      * Weighted random selection (Roulette Wheel)
      * Probability of question i: P_i = W_i / sum(W_k)
@@ -356,7 +376,7 @@ export const ExamEngine = {
 
         const weights = available.map(it => {
             const stat = statsMap[it.qKey];
-            const userWeight = (stat && stat.weight) ? stat.weight : 1.0;
+            const userWeight = this.getUserWeight(it, stat);
             
             // 3일 망각 주기 반영된 동적 임시 Score 기반 사다리 가중치
             const effScore = this.getEffectiveScore(it, stat);
@@ -506,7 +526,7 @@ export const ExamEngine = {
 
         const remainderWeights = seen.map(it => {
             const stat = statsMap[it.qKey] || {};
-            const userWeight = stat.weight || 1.0;
+            const userWeight = this.getUserWeight(it, stat);
             const tryCount = stat.tryCount || 1;
             const effScore = this.getEffectiveScore(it, stat);
             const scoreWeight = this.getScoreWeight(effScore);
@@ -833,7 +853,19 @@ export const ExamEngine = {
         const saPool = this.getQuestionPool(subject, 'short');
         const all = [...mcPool, ...saPool];
 
-        const weakItems = all.filter(q => (statsMap[q.qKey]?.weight || 1) >= 2);
+        // 오답 이력이 있는 모든 문항 (wrongCount > 0 또는 weight >= 1.2)
+        const weakItems = all.filter(q => (statsMap[q.qKey]?.wrongCount || 0) > 0 || (statsMap[q.qKey]?.weight || 1) >= 1.2);
+
+        // 핵심 빈출(Score 높은 순) 우선 선발하여 비핵심 잡문제 오답 도배 차단!
+        weakItems.sort((a, b) => {
+            const scoreA = (a.topScore !== undefined) ? a.topScore : 0;
+            const scoreB = (b.topScore !== undefined) ? b.topScore : 0;
+            if (scoreB !== scoreA) return scoreB - scoreA;
+            const wA = statsMap[a.qKey]?.wrongCount || 0;
+            const wB = statsMap[b.qKey]?.wrongCount || 0;
+            return wB - wA;
+        });
+
         let picked = [];
 
         if (weakItems.length >= count) {

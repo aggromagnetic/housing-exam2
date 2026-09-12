@@ -1316,6 +1316,14 @@
     box-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
 }
 
+/* Exclude Question Active State */
+#btn-exclude-question.active {
+    background: rgba(239, 68, 68, 0.2) !important;
+    border-color: #EF4444 !important;
+    color: #F87171 !important;
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
+}
+
 /* Filter Tabs */
 .btn-filter {
     background: #0F172A;
