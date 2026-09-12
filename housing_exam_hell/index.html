@@ -21,8 +21,8 @@
     
     <script>
         // Automatic tablet cache buster: Forces tablet WebView to always fetch latest build
-        const CURRENT_BUILD = '2609121645';
-        const APP_SEMVER = 'v.0.260912.1645';
+        const CURRENT_BUILD = '2609121650';
+        const APP_SEMVER = 'v.0.260912.1650';
         window.APP_BUILD_VERSION = CURRENT_BUILD;
         window.APP_SEMVER = APP_SEMVER;
 
@@ -51,9 +51,9 @@
     </script>
     
     <!-- Custom Theme Styles -->
-    <link rel="stylesheet" href="css/dark-theme.css?v=2609121645">
-    <link rel="stylesheet" href="css/quiz-layout.css?v=2609121645">
-    <link rel="stylesheet" href="css/tablet-canvas.css?v=2609121645">
+    <link rel="stylesheet" href="css/dark-theme.css?v=2609121650">
+    <link rel="stylesheet" href="css/quiz-layout.css?v=2609121650">
+    <link rel="stylesheet" href="css/tablet-canvas.css?v=2609121650">
 </head>
 <body data-subject="관계법규">
 
@@ -69,7 +69,7 @@
                 </a>
                 <span id="header-brand-badge" class="brand-badge">관계법규</span>
                 <span id="header-mode-title" class="mode-title">
-                    <i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260912.1645</span>
+                    <i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260912.1650</span>
                 </span>
             </div>
 
@@ -117,6 +117,7 @@
         <div class="color-dot" data-color="#FBBF24" style="background: #FBBF24;" title="노란색"></div>
         <div class="color-dot" data-color="#FFFFFF" style="background: #FFFFFF;" title="흰색"></div>
         <div class="stylus-divider"></div>
+        <button class="stylus-btn" id="btn-stylus-only" title="S펜 전용 모드 (손터치 방지)"><i class="fa-solid fa-hand"></i></button>
         <button class="stylus-btn" id="btn-clear-canvas" title="필기 전체 지우기"><i class="fa-solid fa-trash-can"></i></button>
         <button class="stylus-btn" id="btn-close-stylus" title="필기 닫기"><i class="fa-solid fa-xmark"></i></button>
     </div>
@@ -296,6 +297,9 @@
                             <i class="fa-solid fa-file-arrow-down"></i> 오답 과외 MD 다운로드
                         </button>
                     </div>
+                    <button id="btn-print-result-a4" class="btn-ctrl" style="width: 100%; justify-content: center; padding: 12px; font-size: 0.92rem; background: rgba(244, 63, 94, 0.15); color: #FDA4AF; border-color: rgba(244, 63, 94, 0.4);" title="이번 시험 오답을 시험장 지참용 A4 2단 요약본으로 인쇄/PDF 저장">
+                        <i class="fa-solid fa-print"></i> 📄 이번 시험 오답 A4 인쇄 / PDF
+                    </button>
                     <div style="display: flex; gap: 10px;">
                         <button id="btn-retry-session" class="btn-ctrl" style="flex: 1; justify-content: center;">
                             <i class="fa-solid fa-rotate-right"></i> 다시 풀기
@@ -342,11 +346,14 @@
 
                     <!-- Backup & Restore Buttons Row -->
                     <div style="display: flex; gap: 6px; padding: 0 4px 8px 4px; border-bottom: 1px solid rgba(255,255,255,0.06);">
-                        <button type="button" id="btn-export-backup" class="mgr-pill-btn" style="flex: 1; justify-content: center; background: rgba(56,189,248,0.12); color: #38BDF8; border-color: rgba(56,189,248,0.3); font-size: 0.74rem; padding: 4px 8px; display: inline-flex; align-items: center; gap: 4px;" title="수정한 문제, 오답 통계, 학습 기록을 JSON 파일로 내보내기">
-                            <i class="fa-solid fa-file-arrow-down"></i> 데이터 백업
+                        <button type="button" id="btn-export-backup" class="mgr-pill-btn" style="flex: 1; justify-content: center; background: rgba(56,189,248,0.12); color: #38BDF8; border-color: rgba(56,189,248,0.3); font-size: 0.74rem; padding: 4px 6px; display: inline-flex; align-items: center; gap: 4px;" title="수정한 문제, 오답 통계, 학습 기록을 JSON 파일로 내보내기">
+                            <i class="fa-solid fa-file-arrow-down"></i> 백업
                         </button>
-                        <button type="button" id="btn-import-backup" class="mgr-pill-btn" style="flex: 1; justify-content: center; background: rgba(52,211,153,0.12); color: #34D399; border-color: rgba(52,211,153,0.3); font-size: 0.74rem; padding: 4px 8px; display: inline-flex; align-items: center; gap: 4px;" title="백업 파일(.json)을 불러와 복원">
-                            <i class="fa-solid fa-file-arrow-up"></i> 백업 복원
+                        <button type="button" id="btn-import-backup" class="mgr-pill-btn" style="flex: 1; justify-content: center; background: rgba(52,211,153,0.12); color: #34D399; border-color: rgba(52,211,153,0.3); font-size: 0.74rem; padding: 4px 6px; display: inline-flex; align-items: center; gap: 4px;" title="백업 파일(.json)을 불러와 복원">
+                            <i class="fa-solid fa-file-arrow-up"></i> 복원
+                        </button>
+                        <button type="button" id="btn-print-all-wrongs-a4" class="mgr-pill-btn" style="flex: 1.2; justify-content: center; background: rgba(244,63,94,0.15); color: #FDA4AF; border-color: rgba(244,63,94,0.35); font-size: 0.74rem; padding: 4px 8px; display: inline-flex; align-items: center; gap: 4px;" title="현재 목록의 문제를 시험장 지참용 A4 2단 요약본으로 인쇄/PDF 저장">
+                            <i class="fa-solid fa-print"></i> A4 인쇄
                         </button>
                         <input type="file" id="file-import-backup" accept=".json" style="display: none;">
                     </div>
@@ -791,6 +798,46 @@
         </div>
     </div>
 
+    <!-- 📄 시험장 지참용 오답노트 A4 2단 인쇄 / PDF 미리보기 모달 -->
+    <div id="modal-a4-print" class="modal-overlay a4-print-overlay">
+        <div class="modal-card a4-print-card">
+            <div class="a4-print-controls no-print">
+                <div class="a4-ctrl-left">
+                    <h3 id="a4-print-title" class="a4-modal-title">
+                        <i class="fa-solid fa-print text-sky-400"></i> 시험장 지참용 A4 오답노트
+                    </h3>
+                    <span id="a4-print-count" class="a4-count-pill">0문제</span>
+                </div>
+                <div class="a4-ctrl-center">
+                    <label class="a4-check-opt">
+                        <input type="checkbox" id="a4-opt-show-exp" checked>
+                        <span>상세 해설 포함</span>
+                    </label>
+                    <label class="a4-check-opt">
+                        <input type="checkbox" id="a4-opt-mask-ans">
+                        <span>정답 가리기 (테스트용)</span>
+                    </label>
+                </div>
+                <div class="a4-ctrl-right">
+                    <button type="button" id="btn-trigger-a4-print" class="btn-ctrl btn-primary" style="padding: 8px 18px; font-size: 0.88rem; font-weight: 700;">
+                        <i class="fa-solid fa-print"></i> 인쇄 / PDF 저장
+                    </button>
+                    <button type="button" class="btn-close-modal btn-icon"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+            </div>
+            <div id="a4-print-paper-scroll" class="a4-print-paper-scroll">
+                <div id="a4-print-paper" class="a4-print-paper">
+                    <div id="a4-print-header" class="a4-sheet-header">
+                        <!-- Dynamic Title, Date, Subtitle -->
+                    </div>
+                    <div id="a4-print-content" class="a4-columns">
+                        <!-- 2-column questions dynamically injected -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- 🎲 4-Second Random Exam Loading Overlay Modal -->
     <div id="modal-exam-loading" class="exam-loading-overlay" title="화면을 터치하면 바로 시작됩니다">
         <div class="exam-loading-card">
@@ -821,18 +868,18 @@
     <!-- Firebase SDK (Compat) for Realtime Cloud Sync -->
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-    <script src="js/cloud-sync.js?v=2609121645"></script>
+    <script src="js/cloud-sync.js?v=2609121650"></script>
 
     <!-- Master Exam Data Bundle (3,959 Questions) -->
-    <script src="data/exam_bank.js?v=2609121645"></script>
+    <script src="data/exam_bank.js?v=2609121650"></script>
 
     <!-- Core Keywords 300 DB (관계법규 300 + 관리실무 300) -->
-    <script src="data/core_keywords_db.js?v=2609121645"></script>
+    <script src="data/core_keywords_db.js?v=2609121650"></script>
 
     <!-- IndexedDB Storage Engine -->
-    <script src="js/idb-store.js?v=2609121645"></script>
+    <script src="js/idb-store.js?v=2609121650"></script>
 
     <!-- Application Script -->
-    <script src="js/app.js?v=2609121645"></script>
+    <script src="js/app.js?v=2609121650"></script>
 </body>
 </html>

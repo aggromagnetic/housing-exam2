@@ -102,6 +102,9 @@ const IDBStore = {
             correctCount: 0,
             tryCount: 0
         };
+        if (!existing.subject && meta.subject) existing.subject = meta.subject;
+        if (!existing.chapter && meta.chapter) existing.chapter = meta.chapter;
+        if (!existing.type && meta.type) existing.type = meta.type;
 
         existing.tryCount = (existing.tryCount || 0) + 1;
         existing.lastAttempt = new Date().toISOString();
@@ -373,7 +376,7 @@ const IDBStore = {
                             const existTime = existing.lastAttempt ? new Date(existing.lastAttempt).getTime() : 0;
                             const itemTime = item.lastAttempt ? new Date(item.lastAttempt).getTime() : 0;
 
-                            const base = (itemTime >= existTime) ? { ...item } : { ...existing };
+                            const base = (itemTime >= existTime) ? { ...existing, ...item } : { ...item, ...existing };
                             base.tryCount = Math.max(existing.tryCount || 0, item.tryCount || 0);
                             base.totalWrongCount = Math.max(existing.totalWrongCount || 0, item.totalWrongCount || 0);
                             base.correctCount = Math.max(existing.correctCount || 0, item.correctCount || 0);

@@ -509,6 +509,22 @@ const CloudSync = {
         }, delayMs);
     },
 
+    _pruneStatForCloud(s) {
+        if (!s || !s.qKey) return null;
+        const p = { qKey: s.qKey };
+        if (s.wrongCount) p.wrongCount = s.wrongCount;
+        if (s.totalWrongCount) p.totalWrongCount = s.totalWrongCount;
+        if (s.correctCount) p.correctCount = s.correctCount;
+        if (s.tryCount) p.tryCount = s.tryCount;
+        if (s.weight && s.weight !== 1) p.weight = s.weight;
+        if (s.scoreDeductions) p.scoreDeductions = s.scoreDeductions;
+        if (s.lastAttempt) p.lastAttempt = s.lastAttempt;
+        if (s.lastWrongAt) p.lastWrongAt = s.lastWrongAt;
+        if (s.lastCorrectAt) p.lastCorrectAt = s.lastCorrectAt;
+        if (s.resetAt) p.resetAt = s.resetAt;
+        return p;
+    },
+
     async pushStatsOnly() {
         if (!this.isInitialized || !this.db) return false;
         if (this._isStatsPushing) {
@@ -568,12 +584,15 @@ const CloudSync = {
             });
 
             const mergedStatsToPush = Array.from(mergedStatsMap.values());
+            // Firestore 1MB document limit safeguard:
+            // Prune static redundant question metadata (subject, chapter, type, lastResult)
+            const prunedStatsToPush = mergedStatsToPush.map(s => this._pruneStatForCloud(s)).filter(Boolean);
             const nowIso = new Date().toISOString();
             this._lastPushedStatsTime = nowIso;
 
             await syncCol.doc("stats_store").set({
-                statsData: JSON.stringify(mergedStatsToPush),
-                count: mergedStatsToPush.length,
+                statsData: JSON.stringify(prunedStatsToPush),
+                count: prunedStatsToPush.length,
                 updatedAt: nowIso
             });
 
@@ -984,9 +1003,10 @@ const CloudSync = {
             this._lastPushedStatsTime = nowIso;
             this._lastPushedFlagsTime = nowIso;
 
+            const prunedStatsToPush = mergedStatsToPush.map(s => this._pruneStatForCloud(s)).filter(Boolean);
             chunkPromises.push(syncCol.doc("stats_store").set({
-                statsData: JSON.stringify(mergedStatsToPush),
-                count: mergedStatsToPush.length,
+                statsData: JSON.stringify(prunedStatsToPush),
+                count: prunedStatsToPush.length,
                 updatedAt: nowIso
             }));
 
