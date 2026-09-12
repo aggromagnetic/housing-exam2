@@ -21,8 +21,8 @@
     
     <script>
         // Automatic tablet cache buster: Forces tablet WebView to always fetch latest build
-        const CURRENT_BUILD = '2609121615';
-        const APP_SEMVER = 'v.0.260912.1615';
+        const CURRENT_BUILD = '2609121515';
+        const APP_SEMVER = 'v.0.260912.1515';
         window.APP_BUILD_VERSION = CURRENT_BUILD;
         window.APP_SEMVER = APP_SEMVER;
 
@@ -51,9 +51,9 @@
     </script>
     
     <!-- Custom Theme Styles -->
-    <link rel="stylesheet" href="css/dark-theme.css?v=2609121615">
-    <link rel="stylesheet" href="css/quiz-layout.css?v=2609121615">
-    <link rel="stylesheet" href="css/tablet-canvas.css?v=2609121615">
+    <link rel="stylesheet" href="css/dark-theme.css?v=2609121515">
+    <link rel="stylesheet" href="css/quiz-layout.css?v=2609121515">
+    <link rel="stylesheet" href="css/tablet-canvas.css?v=2609121515">
 </head>
 <body data-subject="관계법규">
 
@@ -64,12 +64,12 @@
                 <button id="btn-go-home" class="btn-icon" title="문제지옥 홈으로 이동">
                     <i class="fa-solid fa-house"></i>
                 </button>
-                <a href="../index.html" class="btn-ctrl-sm" title="전체 강의노트 뷰어 (관계법규 76강 · 관리실무 71강)로 이동" style="display:inline-flex; align-items:center; gap: 5px; text-decoration:none; color: #38BDF8; background: rgba(56, 189, 248, 0.12); border: 1px solid rgba(56, 189, 248, 0.3); font-weight: 700; padding: 4px 10px; border-radius: 6px; font-size: 0.8rem;">
-                    <i class="fa-solid fa-book-open"></i> 강의노트
+                <a href="../index.html" class="btn-icon" title="강의 노트 뷰어로 이동" style="display:inline-flex; align-items:center; justify-content:center; text-decoration:none; color:inherit;">
+                    <i class="fa-solid fa-book-open"></i>
                 </a>
                 <span id="header-brand-badge" class="brand-badge">관계법규</span>
                 <span id="header-mode-title" class="mode-title">
-                    <i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260912.1615</span>
+                    <i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260912.1515</span>
                 </span>
             </div>
 
@@ -182,13 +182,13 @@
                     <span class="mode-badge" style="background: rgba(16, 185, 129, 0.15); color: #34D399;">관계법규 / 관리실무 MD 출력</span>
                 </div>
 
-                <!-- 전체 강의노트 뷰어 바로가기 -->
-                <a href="../index.html" class="mode-card" style="text-decoration: none; color: inherit; cursor: pointer; border-color: rgba(56, 189, 248, 0.35);">
-                    <div class="mode-icon" style="color: #38BDF8; background: rgba(56, 189, 248, 0.12);"><i class="fa-solid fa-book-open"></i></div>
-                    <h3>전체 강의노트 뷰어 📖</h3>
-                    <p>관계법규 76강 · 관리실무 71강 전 단원 본문 및 조문 검색</p>
-                    <span class="mode-badge" style="background: rgba(56, 189, 248, 0.15); color: #38BDF8;">강의노트 페이지 이동</span>
-                </a>
+                <!-- 기능추가중 -->
+                <div class="mode-card" data-mode="coming_soon" style="border-style: dashed;">
+                    <div class="mode-icon" style="color: #A855F7;"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                    <h3>기능추가중</h3>
+                    <p>새로운 맞춤형 학습 기능이 업데이트될 예정입니다</p>
+                    <span class="mode-badge" style="background: rgba(168, 85, 247, 0.15); color: #C084FC;">COMING SOON</span>
+                </div>
 
                 <!-- 관리자 모드 (보안 잠금) -->
                 <div class="mode-card" data-mode="manage_wrong">
@@ -821,18 +821,18 @@
     <!-- Firebase SDK (Compat) for Realtime Cloud Sync -->
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-    <script src="js/cloud-sync.js?v=2609121615"></script>
+    <script src="js/cloud-sync.js?v=2609121515"></script>
 
     <!-- Master Exam Data Bundle (3,959 Questions) -->
-    <script src="data/exam_bank.js?v=2609121615"></script>
+    <script src="data/exam_bank.js?v=2609121515"></script>
 
     <!-- Core Keywords 300 DB (관계법규 300 + 관리실무 300) -->
-    <script src="data/core_keywords_db.js?v=2609121615"></script>
+    <script src="data/core_keywords_db.js?v=2609121515"></script>
 
     <!-- IndexedDB Storage Engine -->
-    <script src="js/idb-store.js?v=2609121615"></script>
+    <script src="js/idb-store.js?v=2609121515"></script>
 
     <!-- Application Script -->
-    <script src="js/app.js?v=2609121615"></script>
+    <script src="js/app.js?v=2609121515"></script>
 </body>
 </html>
