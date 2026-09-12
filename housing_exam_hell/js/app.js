@@ -1733,7 +1733,11 @@
          * 4) Question Type Interleaving: Balances MC vs SA flow
          */
         shuffleWithAntiClumping(questions, windowSize = 15) {
-            const remaining = [...questions].sort(() => Math.random() - 0.5);
+            // ⚡ O(1) Optimization: Pre-compute and cache topic keys to eliminate 48,000+ regex/string calls
+            const remaining = questions.map(q => ({
+                ...q,
+                _topicKey: q._topicKey || this.getTopicKey(q)
+            })).sort(() => Math.random() - 0.5);
             const result = [];
 
             while (remaining.length > 0) {
@@ -1748,8 +1752,8 @@
                     for (let d = 1; d <= lookback; d++) {
                         const prev = result[result.length - d];
 
-                        // 1. 동일 주제/키워드(Topic) 패널티: 최근 15문제 내 출제 시 강력한 거리 가중치 부여
-                        if (this.getTopicKey(prev) === this.getTopicKey(q)) {
+                        // 1. 동일 주제/키워드(Topic) 패널티: 최근 15문제 내 출제 시 강력한 거리 가중치 부여 (O(1) 속도)
+                        if (prev._topicKey === q._topicKey) {
                             penalty += (windowSize + 1 - d) * 150;
                         }
 
@@ -2400,6 +2404,8 @@
 
         infiniteSetCount: 1,
         infiniteUsedKeys: new Set(),
+        nextPreloadedHellSet: null,
+        isPreloadingHellSet: false,
 
         currentCombo: 0,
         maxCombo: 0,
@@ -2933,6 +2939,8 @@
         if (modeKey === 'infinite') {
             state.infiniteSetCount = 1;
             state.infiniteUsedKeys.clear();
+            state.nextPreloadedHellSet = null;
+            state.isPreloadingHellSet = false;
             // 헬 모드: 과목(관계법규+관리실무 50:50) 및 전 단원 블루프린트 100% 반영 80문항 융합 세트
             state.questions = ExamEngine.generateInfiniteHellSet(state.statsMap, state.infiniteUsedKeys);
             state.questions.forEach(q => {
@@ -3401,6 +3409,11 @@
         updateBloodGauge();
         if (state.mode === 'mock') {
             MockSessionManager.saveSession(state);
+        }
+
+        // 🚀 Background Prefetch: Preload next 80 questions in background when within 15 questions of set end
+        if (state.mode === 'infinite' && index >= state.questions.length - 15) {
+            prefetchNextHellSet();
         }
     }
 
@@ -4111,6 +4124,30 @@
     let lastNavTimestamp = 0;
     const NAV_THROTTLE_MS = 320; // 320ms guard prevents tablet double-tap / ghost touch skip
 
+    function prefetchNextHellSet() {
+        if (state.mode !== 'infinite' || state.isPreloadingHellSet || state.nextPreloadedHellSet) return;
+        state.isPreloadingHellSet = true;
+
+        const runner = typeof window !== 'undefined' && window.requestIdleCallback
+            ? window.requestIdleCallback
+            : ((cb) => setTimeout(cb, 40));
+
+        runner(() => {
+            try {
+                // Pre-generate the next 80 questions silently in background idle time
+                const preloaded = ExamEngine.generateInfiniteHellSet(state.statsMap, state.infiniteUsedKeys);
+                if (preloaded && preloaded.length > 0) {
+                    preloaded.forEach(applyCustomEdits);
+                    state.nextPreloadedHellSet = preloaded;
+                }
+            } catch (err) {
+                console.error('prefetchNextHellSet error:', err);
+            } finally {
+                state.isPreloadingHellSet = false;
+            }
+        });
+    }
+
     function nextQuestion() {
         const now = Date.now();
         if (now - lastNavTimestamp < NAV_THROTTLE_MS) return;
@@ -4142,10 +4179,19 @@
         } else {
             if (state.mode === 'infinite') {
                 state.infiniteSetCount++;
-                const nextSet = ExamEngine.generateInfiniteHellSet(state.statsMap, state.infiniteUsedKeys);
-                if (nextSet.length > 0) {
+
+                // ⚡ 0ms Transition: Consume preloaded set immediately without UI freeze!
+                let nextSet = state.nextPreloadedHellSet;
+                state.nextPreloadedHellSet = null;
+
+                if (!nextSet || nextSet.length === 0) {
+                    // Fallback if user skipped directly before background prefetch completed
+                    nextSet = ExamEngine.generateInfiniteHellSet(state.statsMap, state.infiniteUsedKeys);
+                    nextSet.forEach(applyCustomEdits);
+                }
+
+                if (nextSet && nextSet.length > 0) {
                     nextSet.forEach(q => {
-                        applyCustomEdits(q);
                         state.infiniteUsedKeys.add(q.qKey);
                     });
                     state.questions.push(...nextSet);
