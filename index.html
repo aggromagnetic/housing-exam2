@@ -11,9 +11,9 @@
         // Automatic tablet cache buster: Forces tablet WebView to always fetch latest build
         (function() {
             const CURRENT_BUILD = '2608311945';
-            const savedBuild = localStorage.getItem('housing_exam_build_version');
+            const savedBuild = localStorage.getItem('housing_exam_root_build_version');
             if (savedBuild !== CURRENT_BUILD) {
-                localStorage.setItem('housing_exam_build_version', CURRENT_BUILD);
+                localStorage.setItem('housing_exam_root_build_version', CURRENT_BUILD);
                 if (window.caches) {
                     caches.keys().then(names => names.forEach(name => caches.delete(name)));
                 }
