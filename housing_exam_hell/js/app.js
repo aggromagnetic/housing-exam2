@@ -1884,6 +1884,7 @@
             this.penColor = '#38BDF8';
             this.penWidth = 3;
             this.palmRejection = true;
+            this.stylusOnly = typeof localStorage !== 'undefined' && localStorage.getItem('housing_exam_stylus_only') === 'true';
 
             this.currentQuestionKey = null;
             this.strokes = [];
@@ -1959,6 +1960,21 @@
                     clearBtn.addEventListener('click', () => this.clearCurrentStrokes());
                 }
 
+                const stylusOnlyBtn = document.getElementById('btn-stylus-only');
+                if (stylusOnlyBtn) {
+                    stylusOnlyBtn.classList.toggle('active', this.stylusOnly);
+                    stylusOnlyBtn.title = this.stylusOnly ? 'S펜 전용 모드 ON (손터치 방지)' : 'S펜 전용 모드 (손터치 방지)';
+                    stylusOnlyBtn.addEventListener('click', () => {
+                        this.stylusOnly = !this.stylusOnly;
+                        localStorage.setItem('housing_exam_stylus_only', this.stylusOnly ? 'true' : 'false');
+                        stylusOnlyBtn.classList.toggle('active', this.stylusOnly);
+                        stylusOnlyBtn.title = this.stylusOnly ? 'S펜 전용 모드 ON (손터치 방지)' : 'S펜 전용 모드 (손터치 방지)';
+                        if (typeof showToast === 'function') {
+                            showToast(this.stylusOnly ? '✋ S펜 전용 필기 모드 ON (손터치 무시)' : '🖐 터치 필기 허용 모드 ON');
+                        }
+                    });
+                }
+
                 const closeBtn = document.getElementById('btn-close-stylus');
                 if (closeBtn) {
                     closeBtn.addEventListener('click', () => {
@@ -1982,6 +1998,23 @@
             if (!this.isEnabled) return;
 
             if (this.palmRejection && e.pointerType === 'touch' && e.isPrimary === false) return;
+
+            // S-Pen / Stylus Only Palm Rejection: Ignore touch drawing, allow interactive taps
+            if (this.stylusOnly && e.pointerType === 'touch') {
+                this.canvas.style.pointerEvents = 'none';
+                const underEl = document.elementFromPoint(e.clientX, e.clientY);
+                this.canvas.style.pointerEvents = 'auto';
+                if (underEl) {
+                    const interactive = underEl.closest('.opt-num, button, input, textarea, a, .blank-input, .btn-ctrl, .btn-ctrl-sm, .btn-override, .color-dot, .stylus-btn, .btn-toggle-hw');
+                    if (interactive) {
+                        interactive.click();
+                        if (['INPUT', 'TEXTAREA'].includes(interactive.tagName)) {
+                            interactive.focus();
+                        }
+                    }
+                }
+                return;
+            }
 
             this.isDrawing = true;
             this.pointerDownPos = this.getPos(e);
@@ -2008,6 +2041,7 @@
 
         onPointerMove(e) {
             if (!this.isDrawing || !this.currentStroke) return;
+            if (this.stylusOnly && e.pointerType === 'touch') return;
 
             const pos = this.getPos(e);
             if (this.pointerDownPos) {
@@ -2107,8 +2141,8 @@
 
             if (this.currentQuestionKey && state.sessionStrokes) {
                 state.sessionStrokes.set(this.currentQuestionKey, [...this.strokes]);
-                // Memory Guard: If session strokes exceed 35 questions, prune oldest entries to keep RAM low
-                if (state.sessionStrokes.size > 35) {
+                // Memory Guard: If session strokes exceed 150 questions, prune oldest entries to keep RAM low
+                if (state.sessionStrokes.size > 150) {
                     const oldestKey = state.sessionStrokes.keys().next().value;
                     if (oldestKey && oldestKey !== this.currentQuestionKey) {
                         state.sessionStrokes.delete(oldestKey);
@@ -2360,6 +2394,7 @@
         managerSearchQuery: '',
         managerPage: 1,
         managerPageSize: 100,
+        managerCurrentList: [],
         wrongManagerTab: 'wrong',
         wrongManagerFilter: 'all',
 
@@ -2562,6 +2597,7 @@
                 editTip: document.getElementById('mgr-edit-tip'),
                 btnExportBackup: document.getElementById('btn-export-backup'),
                 btnImportBackup: document.getElementById('btn-import-backup'),
+                btnPrintA4: document.getElementById('btn-print-all-wrongs-a4'),
                 fileImportBackup: document.getElementById('file-import-backup')
             },
             modals: {
@@ -2571,6 +2607,7 @@
                 wrongManager: document.getElementById('modal-wrong-manager'),
                 editQuestion: document.getElementById('modal-edit-question'),
                 downloadMd: document.getElementById('modal-download-md'),
+                a4Print: document.getElementById('modal-a4-print'),
                 questionPreview: document.getElementById('modal-question-preview'),
                 omrGrid: document.getElementById('omr-grid-container'),
                 partList: document.getElementById('part-list-container'),
@@ -2596,6 +2633,7 @@
                 timeCount: document.getElementById('res-time-count'),
                 btnCopyAI: document.getElementById('btn-copy-ai-prompt'),
                 btnDownloadAIMD: document.getElementById('btn-download-ai-md'),
+                btnPrintA4: document.getElementById('btn-print-result-a4'),
                 btnRetry: document.getElementById('btn-retry-session'),
                 btnHomeFromRes: document.getElementById('btn-home-from-result')
             },
@@ -4407,6 +4445,222 @@
         showToast(`📥 [${subject}] 실전 모의고사 40제 MD 다운로드 완료!`);
     }
 
+    /**
+     * 📄 시험장 지참용 오답노트 A4 2단 인쇄 / PDF 뷰어
+     */
+    function openA4PrintView({ title = '시험장 지참용 오답 총정리 노트', questions = [] }) {
+        const modal = elements.modals.a4Print || document.getElementById('modal-a4-print');
+        if (!modal) return;
+
+        // 1. Deduplicate questions by qKey 100%
+        const seenKeys = new Set();
+        const dedupedQuestions = [];
+        for (const q of questions) {
+            if (!q || !q.qKey) continue;
+            if (seenKeys.has(q.qKey)) continue;
+            seenKeys.add(q.qKey);
+            dedupedQuestions.push(q);
+        }
+
+        if (dedupedQuestions.length === 0) {
+            showToast('인쇄할 문제가 없습니다.');
+            return;
+        }
+
+        // 2. Sort by total wrong count descending (most failed questions first)
+        dedupedQuestions.sort((a, b) => {
+            const statA = state.statsMap[a.qKey] || {};
+            const statB = state.statsMap[b.qKey] || {};
+            const countA = statA.totalWrongCount || statA.wrongCount || 0;
+            const countB = statB.totalWrongCount || statB.wrongCount || 0;
+            if (countB !== countA) return countB - countA;
+            const wA = statA.weight || 1;
+            const wB = statB.weight || 1;
+            return wB - wA;
+        });
+
+        // 3. Update Title & Count
+        const titleEl = document.getElementById('a4-print-title');
+        const countEl = document.getElementById('a4-print-count');
+        if (titleEl) titleEl.innerHTML = `<i class="fa-solid fa-print text-sky-400"></i> ${escapeHtml(title)}`;
+        if (countEl) countEl.textContent = `${dedupedQuestions.length}문제`;
+
+        // 4. Update Header in Paper
+        const headerEl = document.getElementById('a4-print-header');
+        const now = new Date();
+        const printDateStr = `${now.getFullYear()}년 ${now.getMonth() + 1}월 ${now.getDate()}일 ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+        if (headerEl) {
+            headerEl.innerHTML = `
+                <div>
+                    <h2 class="sheet-title">${escapeHtml(title)}</h2>
+                    <div class="sheet-meta">주택관리사보 2차 시험 대비 핵심 취약/오답 집중 총정리</div>
+                </div>
+                <div class="sheet-stats">
+                    <div><strong>총 ${dedupedQuestions.length}문항</strong> (취약순 정렬)</div>
+                    <div style="font-size: 0.75rem; color: #64748B; margin-top: 2px;">출력일시: ${printDateStr}</div>
+                </div>
+            `;
+        }
+
+        // 5. Build 2-column Questions HTML
+        const contentEl = document.getElementById('a4-print-content');
+        if (contentEl) {
+            let html = '';
+            dedupedQuestions.forEach((q, idx) => {
+                applyCustomEdits(q);
+                const stat = state.statsMap[q.qKey] || {};
+                const wrongTimes = stat.totalWrongCount || stat.wrongCount || 1;
+                const formatted = formatQuestionAndPassage(q);
+
+                // Badges
+                const isLaw = q.subject === '관계법규';
+                const subjBadge = `<span class="a4-badge-subj ${isLaw ? 'law' : 'gwanri'}">${escapeHtml(q.subject)}</span>`;
+                const wrongBadge = `<span class="a4-badge-wrong">❌ ${wrongTimes}회 오답</span>`;
+                const chapText = (q.chapterName || '').replace(/^CHAPTER\s+\d+\s*/i, '');
+                const chapBadge = chapText ? `<span class="a4-badge-chap">${escapeHtml(chapText)}</span>` : '';
+                
+                let coreBadge = '';
+                if (q.isHighYield && q.primaryCoreItem) {
+                    const isSuper = (q.topScore >= 6);
+                    coreBadge = `<span class="a4-badge-core">${isSuper ? '🔥초특급' : '★빈출'} #${String(q.primaryCoreItem.id).padStart(3, '0')}</span>`;
+                }
+
+                // Question Title & Passage
+                let passageHtml = '';
+                if (formatted.passage && formatted.passage.trim()) {
+                    passageHtml = `<div class="a4-passage-box">${escapeHtml(formatted.passage)}</div>`;
+                }
+
+                // Options / Blanks
+                let bodyHtml = '';
+                if (q.type === 'choice') {
+                    if (Array.isArray(q.options) && q.options.length > 0) {
+                        const numChars = ['①', '②', '③', '④', '⑤'];
+                        const optsHtml = q.options.map((opt, oIdx) => {
+                            const numSymbol = numChars[oIdx] || `(${oIdx + 1})`;
+                            const cleanText = opt.replace(/^[①②③④⑤\d\.\s\)\-]+/, '').trim();
+                            return `<div class="a4-option-row"><span class="a4-option-num">${numSymbol}</span> <span>${escapeHtml(cleanText || opt)}</span></div>`;
+                        }).join('');
+                        bodyHtml = `<div class="a4-options-list">${optsHtml}</div>`;
+                    }
+                } else {
+                    let targetAnswers = q.answers || {};
+                    let entries = sortSubjectiveEntries(Object.entries(targetAnswers));
+                    if (entries.length === 0 && q.answer) {
+                        const parsed = parseSubjectiveAnswers(q.answer);
+                        if (Object.keys(parsed.answers).length > 0) {
+                            targetAnswers = parsed.answers;
+                            entries = sortSubjectiveEntries(Object.entries(targetAnswers));
+                        }
+                    }
+                    if (entries.length > 0) {
+                        const blanksList = entries.map(([k]) => `[ 빈칸: ${k} ]`).join(' ');
+                        bodyHtml = `<div class="a4-sa-blanks-box">✍️ 주관식 단답형 기입: ${escapeHtml(blanksList)}</div>`;
+                    }
+                }
+
+                // Answer Display
+                let ansText = '';
+                if (q.type === 'choice') {
+                    const numChars = ['①', '②', '③', '④', '⑤'];
+                    const aNum = parseInt(q.answer, 10);
+                    if (!isNaN(aNum) && aNum >= 1 && aNum <= 5) {
+                        ansText = numChars[aNum - 1];
+                    } else {
+                        ansText = String(q.answer || '');
+                    }
+                } else {
+                    let targetAnswers = q.answers || {};
+                    let entries = sortSubjectiveEntries(Object.entries(targetAnswers));
+                    if (entries.length === 0 && q.answer) {
+                        ansText = String(q.answer || '');
+                    } else {
+                        ansText = entries.map(([k, v]) => `[${k}] ${Array.isArray(v) ? v.join('/') : v}`).join(', ');
+                    }
+                }
+
+                // Explanation & Tip
+                let expBody = (q.explanation || '').trim();
+                let tipBody = (q.tip || '').trim();
+
+                if (expBody.includes('━━━━━━━━━━━━━━━━━━━━━━━━━━━━') || expBody.includes('💡 [일타 팁') || expBody.includes('[일타 팁')) {
+                    const parts = expBody.split(/━━━━━━━━━━━━━━━━━━━━━━━━━━━━|💡\s*\[일타\s*팁[^\]]*\]|\[일타\s*팁[^\]]*\]/);
+                    expBody = (parts[0] || '').trim();
+                    if (!tipBody && parts.length > 1) {
+                        tipBody = parts.slice(1).join('\n').replace(/^\s*(💡\s*)?\[일타\s*팁[^\]]*\]\s*/i, '').trim();
+                    }
+                }
+
+                let expHtml = '';
+                if (expBody || tipBody) {
+                    let cleanExp = escapeHtml(expBody).replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>');
+                    let cleanTip = tipBody ? `<div class="a4-tip-box">💡 <b>[일타 팁]</b> ${escapeHtml(tipBody).replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>')}</div>` : '';
+                    expHtml = `
+                        <div class="a4-exp-box">
+                            <div>${cleanExp}</div>
+                            ${cleanTip}
+                        </div>
+                    `;
+                }
+
+                html += `
+                    <div class="a4-q-item">
+                        <div class="a4-q-header">
+                            <span class="a4-badge-num">${idx + 1}.</span>
+                            ${wrongBadge}
+                            ${subjBadge}
+                            ${chapBadge}
+                            ${coreBadge}
+                        </div>
+                        <div class="a4-q-title">${escapeHtml(formatted.title)}</div>
+                        ${passageHtml}
+                        ${bodyHtml}
+                        <div class="a4-ans-exp-box">
+                            <div class="a4-ans-row">
+                                <span class="a4-ans-tag">정답</span>
+                                <span class="a4-ans-val">${escapeHtml(ansText)}</span>
+                            </div>
+                            ${expHtml}
+                        </div>
+                    </div>
+                `;
+            });
+            contentEl.innerHTML = html;
+        }
+
+        // 6. Reset Checkboxes & Styling
+        const paperEl = document.getElementById('a4-print-paper');
+        const chkShowExp = document.getElementById('a4-opt-show-exp');
+        const chkMaskAns = document.getElementById('a4-opt-mask-ans');
+
+        if (chkShowExp && paperEl) {
+            chkShowExp.checked = true;
+            paperEl.classList.remove('hide-explanations');
+            chkShowExp.onchange = () => {
+                paperEl.classList.toggle('hide-explanations', !chkShowExp.checked);
+            };
+        }
+
+        if (chkMaskAns && paperEl) {
+            chkMaskAns.checked = false;
+            paperEl.classList.remove('mask-answers');
+            chkMaskAns.onchange = () => {
+                paperEl.classList.toggle('mask-answers', chkMaskAns.checked);
+            };
+        }
+
+        // 7. Print Trigger Button
+        const btnPrint = document.getElementById('btn-trigger-a4-print');
+        if (btnPrint) {
+            btnPrint.onclick = () => {
+                window.print();
+            };
+        }
+
+        // 8. Open Modal
+        modal.classList.add('active');
+    }
+
     function openQuestionPreview(q) {
         if (!elements.modals.questionPreview) return;
         const modal = elements.modals.questionPreview;
@@ -4964,6 +5218,7 @@
             }
         }
 
+        state.managerCurrentList = list;
         const totalCount = (tabName === 'search_all' && !qLower) ? 0 : list.length;
         const totalPages = Math.max(1, Math.ceil(totalCount / state.managerPageSize));
         if (state.managerPage > totalPages) state.managerPage = totalPages;
@@ -5906,6 +6161,26 @@
             });
         }
 
+        if (elements.manager.btnPrintA4) {
+            elements.manager.btnPrintA4.addEventListener('click', () => {
+                const questionsToPrint = (state.managerCurrentList && state.managerCurrentList.length > 0)
+                    ? state.managerCurrentList
+                    : [];
+                if (questionsToPrint.length === 0) {
+                    showToast('인쇄할 문제가 없습니다.');
+                    return;
+                }
+                const subTitle = state.managerFilter === 'all' ? '전 과목' : state.managerFilter;
+                const tabTitle = state.managerTab === 'wrong' ? '취약 오답 총정리' :
+                                 state.managerTab === 'needs_edit' ? '수정 필요 문항 정리' :
+                                 state.managerTab === 'custom_edits' ? '수정 완료 문항 정리' : '핵심 문항 정리';
+                openA4PrintView({
+                    title: `주택관리사 2차 ${tabTitle} (${subTitle})`,
+                    questions: questionsToPrint
+                });
+            });
+        }
+
         // PIN Auth Form Listeners
         if (elements.modals.formPin) {
             elements.modals.formPin.addEventListener('submit', (e) => {
@@ -6473,6 +6748,21 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
                 URL.revokeObjectURL(url);
 
                 showToast(`📥 [${filename}] 파일이 저장되었습니다!`);
+            });
+        }
+
+        if (elements.result.btnPrintA4) {
+            elements.result.btnPrintA4.addEventListener('click', () => {
+                const results = state.firstAttemptResults.length > 0 ? state.firstAttemptResults : state.results;
+                const wrongQuestions = state.questions.filter((q, idx) => results[idx] === false);
+                if (wrongQuestions.length === 0) {
+                    showToast('🎉 이번 시험에서 틀린 문제가 없습니다! 완벽합니다.');
+                    return;
+                }
+                openA4PrintView({
+                    title: `실전 모의고사 오답 총정리 노트 (${state.subject})`,
+                    questions: wrongQuestions
+                });
             });
         }
 
