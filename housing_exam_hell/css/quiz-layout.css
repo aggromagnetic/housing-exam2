@@ -159,23 +159,19 @@
     color: var(--theme-primary);
 }
 
-/* 🔥 GPU-Accelerated Clean Flame Animation (Zero CPU, Smooth 60fps) */
+/* 🔥 GPU-Accelerated Clean Flame Animation (Composite-Only 60fps) */
 @keyframes fireFlicker {
     0%, 100% {
         transform: scale(1) rotate(-1deg);
-        filter: drop-shadow(0 0 3px rgba(249, 115, 22, 0.4));
     }
     25% {
         transform: scale(1.06, 1.12) rotate(2.5deg);
-        filter: drop-shadow(0 0 7px rgba(239, 68, 68, 0.6));
     }
     50% {
         transform: scale(0.97, 1.03) rotate(-2deg);
-        filter: drop-shadow(0 0 4px rgba(245, 158, 11, 0.5));
     }
     75% {
         transform: scale(1.10, 1.15) rotate(1.5deg);
-        filter: drop-shadow(0 0 8px rgba(249, 115, 22, 0.7));
     }
 }
 
@@ -184,6 +180,7 @@
     transform-origin: 50% 88%;
     animation: fireFlicker 1.8s ease-in-out infinite;
     will-change: transform;
+    filter: drop-shadow(0 0 5px rgba(249, 115, 22, 0.6));
     vertical-align: baseline;
     margin-left: 4px;
     cursor: default;
@@ -195,6 +192,7 @@
     transform-origin: 50% 88%;
     animation: fireFlicker 2.2s ease-in-out infinite;
     will-change: transform;
+    filter: drop-shadow(0 0 4px rgba(249, 115, 22, 0.5));
     vertical-align: -1px;
 }
 
@@ -1534,10 +1532,26 @@
     will-change: transform;
 }
 
+/* Quiz Card Pseudo-Element for 100% GPU-Accelerated Glow Fade (0ms CPU Repaint) */
+.quiz-card::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    will-change: opacity;
+}
+
 .anim-quake {
     animation: quakeShake 0.52s cubic-bezier(0.36, 0.07, 0.19, 0.97) both !important;
-    box-shadow: 0 0 70px rgba(239, 68, 68, 0.85), inset 0 0 35px rgba(239, 68, 68, 0.4) !important;
-    border-color: rgba(239, 68, 68, 1) !important;
+    will-change: transform;
+}
+
+.anim-quake::after {
+    box-shadow: 0 0 45px rgba(239, 68, 68, 0.85), inset 0 0 25px rgba(239, 68, 68, 0.4);
+    border: 2px solid rgba(239, 68, 68, 1);
+    animation: cardGlowPulse 0.52s cubic-bezier(0.2, 0.8, 0.3, 1) forwards !important;
 }
 
 .screen-quake-flash {
@@ -1545,26 +1559,16 @@
     inset: 0;
     pointer-events: none;
     z-index: 99998;
-    animation: screenRedFlash 0.58s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
+    background: radial-gradient(ellipse at center, rgba(239, 68, 68, 0.22) 15%, rgba(239, 68, 68, 0.82) 100%);
+    animation: screenRedPulse 0.54s cubic-bezier(0.12, 0.9, 0.24, 1) forwards;
+    will-change: opacity;
 }
 
-@keyframes screenRedFlash {
-    0% { 
-        background: rgba(239, 68, 68, 0.45); 
-        box-shadow: inset 0 0 160px rgba(239, 68, 68, 0.95), inset 0 0 60px rgba(0, 0, 0, 0.6); 
-    }
-    22% { 
-        background: rgba(239, 68, 68, 0.2); 
-        box-shadow: inset 0 0 110px rgba(239, 68, 68, 0.7); 
-    }
-    42% { 
-        background: rgba(239, 68, 68, 0.38); 
-        box-shadow: inset 0 0 145px rgba(239, 68, 68, 0.9); 
-    }
-    100% { 
-        background: transparent; 
-        box-shadow: inset 0 0 0 rgba(239, 68, 68, 0); 
-    }
+@keyframes screenRedPulse {
+    0% { opacity: 0.95; }
+    25% { opacity: 0.35; }
+    50% { opacity: 0.82; }
+    100% { opacity: 0; }
 }
 
 @keyframes gentleZoomPop {
@@ -1574,55 +1578,33 @@
     100% { transform: scale(1); }
 }
 
-@keyframes correctGlowBurst {
-    0% { box-shadow: 0 0 0 rgba(52, 211, 153, 0); }
-    32% { box-shadow: 0 0 65px rgba(52, 211, 153, 0.85), inset 0 0 30px rgba(52, 211, 153, 0.4); border-color: rgba(52, 211, 153, 1); }
-    100% { box-shadow: 0 0 12px rgba(52, 211, 153, 0.15); }
+@keyframes cardGlowPulse {
+    0% { opacity: 0; }
+    22% { opacity: 1; }
+    72% { opacity: 0.85; }
+    100% { opacity: 0; }
 }
 
 .anim-tada {
-    animation: gentleZoomPop 0.48s cubic-bezier(0.25, 1, 0.5, 1), correctGlowBurst 0.7s ease !important;
+    animation: gentleZoomPop 0.48s cubic-bezier(0.25, 1, 0.5, 1) !important;
+    will-change: transform;
 }
 
-/* Full-Screen Sparkle & Confetti Cannon Burst (Ultra-Smooth 60FPS) */
-.sparkle-burst-container {
+.anim-tada::after {
+    box-shadow: 0 0 42px rgba(52, 211, 153, 0.8), inset 0 0 22px rgba(52, 211, 153, 0.4);
+    border: 2px solid rgba(52, 211, 153, 0.95);
+    animation: cardGlowPulse 0.68s cubic-bezier(0.2, 0.8, 0.3, 1) forwards !important;
+}
+
+/* High-Performance 120FPS Zero-DOM Celebration Canvas */
+#celebration-canvas {
     position: fixed;
     inset: 0;
     width: 100vw;
     height: 100vh;
     pointer-events: none;
     z-index: 99999;
-    overflow: hidden;
-}
-
-.sparkle-particle {
-    position: absolute;
-    font-size: clamp(1.6rem, 3.2vw, 2.2rem);
-    user-select: none;
-    will-change: transform, opacity;
-    /* Clean text-shadow replaces heavy filter: drop-shadow for 60fps mobile GPU smoothness */
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
-    animation: flyOut 0.95s cubic-bezier(0.14, 0.82, 0.25, 1) forwards;
-    transform: translate(-50%, -50%);
-}
-
-@keyframes flyOut {
-    0% {
-        opacity: 1;
-        transform: translate(-50%, -50%) translate3d(0, 0, 0) scale(0.3) rotate(0deg);
-    }
-    48% {
-        opacity: 1;
-        transform: translate(-50%, -50%) translate3d(var(--tx), var(--ty), 0) scale(1.35) rotate(var(--rot, 25deg));
-    }
-    75% {
-        opacity: 0.9;
-        transform: translate(-50%, -50%) translate3d(calc(var(--tx) * 1.08), calc(var(--ty) + 40px), 0) scale(1.1) rotate(calc(var(--rot, 25deg) * 1.6));
-    }
-    100% {
-        opacity: 0;
-        transform: translate(-50%, -50%) translate3d(calc(var(--tx) * 1.15), calc(var(--ty) + 115px), 0) scale(0.35) rotate(calc(var(--rot, 25deg) * 2.2));
-    }
+    display: none;
 }
 
 /* Problem Edit Modal Styles */

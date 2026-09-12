@@ -3841,6 +3841,173 @@
         }
     }
 
+    // -------------------------------------------------------------
+    // 5. Zero-DOM GPU Celebration Confetti & Sparkle Engine (120FPS)
+    // -------------------------------------------------------------
+    const CelebrationEngine = (function() {
+        let canvas = null;
+        let ctx = null;
+        let animId = null;
+        let particles = [];
+
+        const COLORS = [
+            '#F59E0B', '#10B981', '#38BDF8', '#8B5CF6', 
+            '#EC4899', '#EF4444', '#FBBF24', '#34D399', '#60A5FA'
+        ];
+        const EMOJIS = ['✨', '⭐', '🌟', '🎉', '🔥', '👑', '🏆', '💯', '🎊', '💎'];
+
+        function init() {
+            if (!canvas) {
+                canvas = document.getElementById('celebration-canvas');
+                if (!canvas) {
+                    canvas = document.createElement('canvas');
+                    canvas.id = 'celebration-canvas';
+                    canvas.style.cssText = 'position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:99999;display:none;';
+                    document.body.appendChild(canvas);
+                }
+                ctx = canvas.getContext('2d');
+            }
+        }
+
+        function resize() {
+            if (!canvas) init();
+            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+            const w = window.innerWidth || document.documentElement.clientWidth || 800;
+            const h = window.innerHeight || document.documentElement.clientHeight || 600;
+            const targetW = Math.round(w * dpr);
+            const targetH = Math.round(h * dpr);
+            if (canvas.width !== targetW || canvas.height !== targetH) {
+                canvas.width = targetW;
+                canvas.height = targetH;
+            }
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+
+        function createParticle(x, y, vx, vy, isEmoji) {
+            return {
+                x, y, vx, vy,
+                gravity: 0.28 + Math.random() * 0.16,
+                drag: 0.976,
+                rotation: Math.random() * Math.PI * 2,
+                rotSpeed: (Math.random() - 0.5) * 0.18,
+                tilt: Math.random() * Math.PI * 2,
+                tiltSpeed: (Math.random() - 0.5) * 0.22,
+                size: isEmoji ? (22 + Math.random() * 8) : (7 + Math.random() * 5),
+                width: 7 + Math.random() * 5,
+                height: 12 + Math.random() * 7,
+                color: COLORS[Math.floor(Math.random() * COLORS.length)],
+                isEmoji,
+                emoji: EMOJIS[Math.floor(Math.random() * EMOJIS.length)],
+                birth: performance.now(),
+                duration: 750 + Math.random() * 250
+            };
+        }
+
+        function burst() {
+            init();
+            resize();
+            const vw = window.innerWidth || 800;
+            const vh = window.innerHeight || 600;
+
+            const newParticles = [];
+
+            // 1. Bottom-Left Cannon (Shoots diagonally up-right) - 13 particles
+            const leftX = vw * 0.10;
+            const leftY = vh * 0.90;
+            for (let i = 0; i < 13; i++) {
+                const angle = -((22 + Math.random() * 48) * Math.PI / 180);
+                const speed = (vh * 0.018) + Math.random() * (vh * 0.014);
+                newParticles.push(createParticle(leftX, leftY, Math.cos(angle) * speed, Math.sin(angle) * speed, i % 3 === 0));
+            }
+
+            // 2. Bottom-Right Cannon (Shoots diagonally up-left) - 13 particles
+            const rightX = vw * 0.90;
+            const rightY = vh * 0.90;
+            for (let i = 0; i < 13; i++) {
+                const angle = -((110 + Math.random() * 48) * Math.PI / 180);
+                const speed = (vh * 0.018) + Math.random() * (vh * 0.014);
+                newParticles.push(createParticle(rightX, rightY, Math.cos(angle) * speed, Math.sin(angle) * speed, i % 3 === 0));
+            }
+
+            // 3. Center Screen Burst - 10 particles
+            const centerX = vw * 0.5;
+            const centerY = vh * 0.36;
+            for (let i = 0; i < 10; i++) {
+                const angle = (i / 10) * Math.PI * 2 + (Math.random() - 0.5) * 0.4;
+                const speed = 4 + Math.random() * 6;
+                newParticles.push(createParticle(centerX, centerY, Math.cos(angle) * speed, Math.sin(angle) * speed - 2.5, i % 2 === 0));
+            }
+
+            particles = particles.concat(newParticles);
+            canvas.style.display = 'block';
+
+            if (!animId) {
+                animId = requestAnimationFrame(loop);
+            }
+        }
+
+        function loop(now) {
+            const vw = window.innerWidth || 800;
+            const vh = window.innerHeight || 600;
+
+            ctx.clearRect(0, 0, vw, vh);
+
+            let aliveCount = 0;
+
+            for (let i = 0; i < particles.length; i++) {
+                const p = particles[i];
+                const age = now - p.birth;
+                const progress = age / p.duration;
+
+                if (progress >= 1) continue;
+                aliveCount++;
+
+                p.vx *= p.drag;
+                p.vy = (p.vy * p.drag) + p.gravity;
+                p.x += p.vx;
+                p.y += p.vy;
+                p.rotation += p.rotSpeed;
+                p.tilt += p.tiltSpeed;
+
+                const alpha = progress < 0.52 ? 1 : Math.max(0, 1 - (progress - 0.52) / 0.48);
+                ctx.globalAlpha = alpha;
+
+                ctx.save();
+                ctx.translate(p.x, p.y);
+                ctx.rotate(p.rotation);
+
+                if (p.isEmoji) {
+                    ctx.font = `${Math.round(p.size)}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(p.emoji, 0, 0);
+                } else {
+                    const cosTilt = Math.cos(p.tilt);
+                    ctx.scale(1, cosTilt);
+                    ctx.fillStyle = p.color;
+                    ctx.fillRect(-p.width / 2, -p.height / 2, p.width, p.height);
+                }
+
+                ctx.restore();
+            }
+
+            ctx.globalAlpha = 1;
+
+            if (aliveCount > 0) {
+                animId = requestAnimationFrame(loop);
+            } else {
+                animId = null;
+                particles = [];
+                ctx.clearRect(0, 0, vw, vh);
+                canvas.style.display = 'none';
+            }
+        }
+
+        return {
+            burst
+        };
+    })();
+
     function triggerVisualFeedback(isCorrect) {
         if (!elements.quiz.card) return;
         const card = elements.quiz.card;
@@ -3850,125 +4017,34 @@
         card.classList.remove('anim-quake', 'anim-tada');
         if (appContainer) appContainer.classList.remove('screen-heavy-quake');
         if (appHeader) appHeader.classList.remove('screen-heavy-quake');
-        void card.offsetWidth; // Reflow to restart animation
 
-        if (isCorrect) {
-            card.classList.add('anim-tada');
-            requestAnimationFrame(() => {
-                createSparkleBurst();
-            });
-            // 정답 시에는 모터 진동을 배제하여 오답 퀘이크와 확실히 구별되도록 정숙하고 우아한 시각 연출만 유지
-        } else {
-            card.classList.add('anim-quake');
-            if (appContainer) appContainer.classList.add('screen-heavy-quake');
-            if (appHeader) appHeader.classList.add('screen-heavy-quake');
+        // Zero Forced-Reflow: Trigger GPU animations smoothly on next animation frame
+        requestAnimationFrame(() => {
+            if (isCorrect) {
+                card.classList.add('anim-tada');
+                CelebrationEngine.burst();
+            } else {
+                card.classList.add('anim-quake');
+                if (appContainer) appContainer.classList.add('screen-heavy-quake');
+                if (appHeader) appHeader.classList.add('screen-heavy-quake');
 
-            // Screen edge red shockwave flash vignette
-            const flash = document.createElement('div');
-            flash.className = 'screen-quake-flash';
-            document.body.appendChild(flash);
-            setTimeout(() => flash.remove(), 600);
+                // Screen edge red shockwave vignette (GPU-accelerated opacity pulse)
+                const flash = document.createElement('div');
+                flash.className = 'screen-quake-flash';
+                document.body.appendChild(flash);
+                setTimeout(() => flash.remove(), 550);
 
-            if (navigator.vibrate) {
-                try { navigator.vibrate([100, 40, 140, 50, 100]); } catch (e) {}
+                if (navigator.vibrate) {
+                    try { navigator.vibrate([100, 40, 140, 50, 100]); } catch (e) {}
+                }
             }
-        }
+        });
 
         setTimeout(() => {
             card.classList.remove('anim-quake', 'anim-tada');
             if (appContainer) appContainer.classList.remove('screen-heavy-quake');
             if (appHeader) appHeader.classList.remove('screen-heavy-quake');
-        }, 600);
-    }
-
-    function createSparkleBurst() {
-        const container = document.createElement('div');
-        container.className = 'sparkle-burst-container';
-
-        const symbols = ['✨', '⭐', '🌟', '🎉', '💥', '🎊', '🔥', '💎', '👑', '🏆', '💯', '🚀'];
-        const vw = window.innerWidth || document.documentElement.clientWidth || 800;
-        const vh = window.innerHeight || document.documentElement.clientHeight || 600;
-
-        const fragment = document.createDocumentFragment();
-
-        // 1. Bottom-Left Cannon (shoots diagonally up-right) - 7 particles
-        const leftOriginX = vw * 0.12;
-        const leftOriginY = vh * 0.88;
-        for (let i = 0; i < 7; i++) {
-            const particle = document.createElement('span');
-            particle.className = 'sparkle-particle';
-            particle.textContent = symbols[Math.floor(Math.random() * symbols.length)];
-            particle.style.left = `${leftOriginX}px`;
-            particle.style.top = `${leftOriginY}px`;
-
-            const angleRad = -((26 + Math.random() * 46) * Math.PI / 180);
-            const dist = (vh * 0.38) + Math.random() * (vh * 0.40);
-            const tx = Math.cos(angleRad) * dist;
-            const ty = Math.sin(angleRad) * dist;
-            const rot = (Math.random() - 0.5) * 140;
-
-            particle.style.setProperty('--tx', `${tx}px`);
-            particle.style.setProperty('--ty', `${ty}px`);
-            particle.style.setProperty('--rot', `${rot}deg`);
-            particle.style.animationDelay = `${i * 0.02}s`;
-            fragment.appendChild(particle);
-        }
-
-        // 2. Bottom-Right Cannon (shoots diagonally up-left) - 7 particles
-        const rightOriginX = vw * 0.88;
-        const rightOriginY = vh * 0.88;
-        for (let i = 0; i < 7; i++) {
-            const particle = document.createElement('span');
-            particle.className = 'sparkle-particle';
-            particle.textContent = symbols[Math.floor(Math.random() * symbols.length)];
-            particle.style.left = `${rightOriginX}px`;
-            particle.style.top = `${rightOriginY}px`;
-
-            const angleRad = -((108 + Math.random() * 46) * Math.PI / 180);
-            const dist = (vh * 0.38) + Math.random() * (vh * 0.40);
-            const tx = Math.cos(angleRad) * dist;
-            const ty = Math.sin(angleRad) * dist;
-            const rot = (Math.random() - 0.5) * 140;
-
-            particle.style.setProperty('--tx', `${tx}px`);
-            particle.style.setProperty('--ty', `${ty}px`);
-            particle.style.setProperty('--rot', `${rot}deg`);
-            particle.style.animationDelay = `${i * 0.02}s`;
-            fragment.appendChild(particle);
-        }
-
-        // 3. Center/Top Wide Burst (around question card / upper center) - 7 particles
-        let centerOriginX = vw * 0.5;
-        let centerOriginY = vh * 0.35;
-        if (elements.quiz.card) {
-            const rect = elements.quiz.card.getBoundingClientRect();
-            centerOriginX = rect.left + rect.width / 2;
-            centerOriginY = rect.top + Math.min(rect.height * 0.35, 180);
-        }
-
-        for (let i = 0; i < 7; i++) {
-            const particle = document.createElement('span');
-            particle.className = 'sparkle-particle';
-            particle.textContent = symbols[Math.floor(Math.random() * symbols.length)];
-            particle.style.left = `${centerOriginX}px`;
-            particle.style.top = `${centerOriginY}px`;
-
-            const angleRad = (i / 7) * 2 * Math.PI + (Math.random() - 0.5) * 0.4;
-            const dist = 140 + Math.random() * 150;
-            const tx = Math.cos(angleRad) * dist;
-            const ty = Math.sin(angleRad) * dist - 30;
-            const rot = (Math.random() - 0.5) * 100;
-
-            particle.style.setProperty('--tx', `${tx}px`);
-            particle.style.setProperty('--ty', `${ty}px`);
-            particle.style.setProperty('--rot', `${rot}deg`);
-            particle.style.animationDelay = `${i * 0.02}s`;
-            fragment.appendChild(particle);
-        }
-
-        container.appendChild(fragment);
-        document.body.appendChild(container);
-        setTimeout(() => container.remove(), 1050);
+        }, 750);
     }
 
     function toggleExplanation(forceOpen) {
