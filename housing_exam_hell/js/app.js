@@ -2762,6 +2762,18 @@
         };
     }
 
+    function isTabletOrAndroid() {
+        if (typeof window === 'undefined') return false;
+        if (window.AndroidBridge && typeof window.AndroidBridge.isAndroidNativeApp === 'function') {
+            return true;
+        }
+        const hasTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+        if (!hasTouch) return false;
+        const minDim = Math.min(window.screen.width, window.screen.height);
+        const maxDim = Math.max(window.screen.width, window.screen.height);
+        return minDim >= 600 || maxDim >= 960;
+    }
+
     function showScreen(screenKey) {
         if (!elements.screens) return;
         Object.keys(elements.screens).forEach(k => {
@@ -2792,8 +2804,17 @@
             setTimeout(() => {
                 if (state.tabletCanvas) {
                     state.tabletCanvas.handleResize();
+                    // Tablet & Android App: Default Pen Mode to ON for immediate paper-like solving
+                    const autoPenPref = localStorage.getItem('housing_exam_auto_pen');
+                    const shouldAutoPen = autoPenPref !== 'false' && isTabletOrAndroid();
+                    if (shouldAutoPen && !state.tabletCanvas.isEnabled) {
+                        state.tabletCanvas.togglePen(true);
+                        if (elements.header && elements.header.btnPen) {
+                            elements.header.btnPen.classList.add('active');
+                        }
+                    }
                 }
-            }, 60);
+            }, 80);
         }
 
         // 홈 화면 복귀 시 헤더 타이틀, 타이머, 게이지 깔끔하게 초기화
