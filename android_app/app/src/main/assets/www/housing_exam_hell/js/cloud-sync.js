@@ -512,12 +512,12 @@ const CloudSync = {
     _pruneStatForCloud(s) {
         if (!s || !s.qKey) return null;
         const p = { qKey: s.qKey };
-        if (s.wrongCount) p.wrongCount = s.wrongCount;
-        if (s.totalWrongCount) p.totalWrongCount = s.totalWrongCount;
-        if (s.correctCount) p.correctCount = s.correctCount;
-        if (s.tryCount) p.tryCount = s.tryCount;
-        if (s.weight && s.weight !== 1) p.weight = s.weight;
-        if (s.scoreDeductions) p.scoreDeductions = s.scoreDeductions;
+        if (s.wrongCount !== undefined) p.wrongCount = s.wrongCount;
+        if (s.totalWrongCount !== undefined) p.totalWrongCount = s.totalWrongCount;
+        if (s.correctCount !== undefined) p.correctCount = s.correctCount;
+        if (s.tryCount !== undefined) p.tryCount = s.tryCount;
+        if (s.weight !== undefined) p.weight = s.weight;
+        if (s.scoreDeductions !== undefined) p.scoreDeductions = s.scoreDeductions;
         if (s.lastAttempt) p.lastAttempt = s.lastAttempt;
         if (s.lastWrongAt) p.lastWrongAt = s.lastWrongAt;
         if (s.lastCorrectAt) p.lastCorrectAt = s.lastCorrectAt;
@@ -563,12 +563,20 @@ const CloudSync = {
                 if (!cld) {
                     mergedStatsMap.set(loc.qKey, loc);
                 } else {
-                    // Check Tombstone (resetQuestionWeight)
+                    // Check Tombstone (resetQuestionWeight) on both local and cloud
                     if (loc.resetAt) {
                         const resetTime = new Date(loc.resetAt).getTime();
                         const cldWrongTime = cld.lastWrongAt ? new Date(cld.lastWrongAt).getTime() : 0;
                         if (resetTime >= cldWrongTime) {
                             mergedStatsMap.set(loc.qKey, loc);
+                            return;
+                        }
+                    }
+                    if (cld.resetAt) {
+                        const cldResetTime = new Date(cld.resetAt).getTime();
+                        const locWrongTime = loc.lastWrongAt ? new Date(loc.lastWrongAt).getTime() : 0;
+                        if (cldResetTime >= locWrongTime) {
+                            mergedStatsMap.set(loc.qKey, cld);
                             return;
                         }
                     }
@@ -885,6 +893,14 @@ const CloudSync = {
                         const cldWrongTime = cld.lastWrongAt ? new Date(cld.lastWrongAt).getTime() : 0;
                         if (resetTime >= cldWrongTime) {
                             mergedStatsMap.set(loc.qKey, loc);
+                            return;
+                        }
+                    }
+                    if (cld.resetAt) {
+                        const cldResetTime = new Date(cld.resetAt).getTime();
+                        const locWrongTime = loc.lastWrongAt ? new Date(loc.lastWrongAt).getTime() : 0;
+                        if (cldResetTime >= locWrongTime) {
+                            mergedStatsMap.set(loc.qKey, cld);
                             return;
                         }
                     }
