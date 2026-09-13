@@ -1983,6 +1983,7 @@
                 if (closeBtn) {
                     closeBtn.addEventListener('click', () => {
                         this.togglePen(false);
+                        this.userManuallyDisabled = true;
                         const headerPen = document.getElementById('btn-toggle-pen');
                         if (headerPen) headerPen.classList.remove('active');
                     });
@@ -2762,16 +2763,14 @@
         };
     }
 
-    function isTabletOrAndroid() {
-        if (typeof window === 'undefined') return false;
-        if (window.AndroidBridge && typeof window.AndroidBridge.isAndroidNativeApp === 'function') {
-            return true;
+    function shouldEnableAutoPen() {
+        if (typeof localStorage !== 'undefined' && localStorage.getItem('housing_exam_auto_pen') === 'false') {
+            return false;
         }
-        const hasTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-        if (!hasTouch) return false;
-        const minDim = Math.min(window.screen.width, window.screen.height);
-        const maxDim = Math.max(window.screen.width, window.screen.height);
-        return minDim >= 600 || maxDim >= 960;
+        if (state.tabletCanvas && state.tabletCanvas.userManuallyDisabled) {
+            return false;
+        }
+        return true;
     }
 
     function showScreen(screenKey) {
@@ -2801,20 +2800,20 @@
         }
 
         if (screenKey === 'quiz') {
-            setTimeout(() => {
+            const activatePen = () => {
                 if (state.tabletCanvas) {
                     state.tabletCanvas.handleResize();
-                    // Tablet & Android App: Default Pen Mode to ON for immediate paper-like solving
-                    const autoPenPref = localStorage.getItem('housing_exam_auto_pen');
-                    const shouldAutoPen = autoPenPref !== 'false' && isTabletOrAndroid();
-                    if (shouldAutoPen && !state.tabletCanvas.isEnabled) {
+                    if (shouldEnableAutoPen() && !state.tabletCanvas.isEnabled) {
                         state.tabletCanvas.togglePen(true);
                         if (elements.header && elements.header.btnPen) {
                             elements.header.btnPen.classList.add('active');
                         }
                     }
                 }
-            }, 80);
+            };
+            activatePen();
+            setTimeout(activatePen, 50);
+            setTimeout(activatePen, 200);
         }
 
         // 홈 화면 복귀 시 헤더 타이틀, 타이머, 게이지 깔끔하게 초기화
@@ -2835,9 +2834,14 @@
             if (elements.header.bloodScoreText) {
                 elements.header.bloodScoreText.textContent = '진행 대기 중';
             }
-            if (state.tabletCanvas && state.tabletCanvas.isEnabled) {
-                state.tabletCanvas.togglePen(false);
-                elements.header.btnPen.classList.remove('active');
+            if (state.tabletCanvas) {
+                if (state.tabletCanvas.isEnabled) {
+                    state.tabletCanvas.togglePen(false);
+                }
+                state.tabletCanvas.userManuallyDisabled = false;
+                if (elements.header.btnPen) {
+                    elements.header.btnPen.classList.remove('active');
+                }
             }
         } else if (screenKey === 'result') {
             if (elements.header.modeTitle) {
@@ -3349,6 +3353,12 @@
 
         if (state.tabletCanvas) {
             await state.tabletCanvas.loadQuestionStrokes(q.qKey);
+            if (shouldEnableAutoPen() && !state.tabletCanvas.isEnabled) {
+                state.tabletCanvas.togglePen(true);
+                if (elements.header && elements.header.btnPen) {
+                    elements.header.btnPen.classList.add('active');
+                }
+            }
         }
 
         const stat = state.statsMap[q.qKey] || { weight: 1, wrongCount: 0 };
@@ -6709,6 +6719,7 @@
             }
             if (state.tabletCanvas) {
                 const active = state.tabletCanvas.togglePen();
+                state.tabletCanvas.userManuallyDisabled = !active;
                 elements.header.btnPen.classList.toggle('active', active);
                 if (active) {
                     showToast('✍️ 필기 모드 ON (문제 위에 필기 가능)');
