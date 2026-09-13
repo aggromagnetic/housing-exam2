@@ -3928,7 +3928,7 @@
 
         const COLORS = [
             '#F59E0B', '#10B981', '#38BDF8', '#8B5CF6', 
-            '#EC4899', '#EF4444', '#FBBF24', '#34D399', '#60A5FA', '#F472B6'
+            '#EC4899', '#EF4444', '#FBBF24', '#34D399', '#60A5FA', '#F472B6', '#FFD700'
         ];
 
         function init() {
@@ -3937,7 +3937,7 @@
                 if (!canvas) {
                     canvas = document.createElement('canvas');
                     canvas.id = 'celebration-canvas';
-                    canvas.style.cssText = 'position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:99999;opacity:0;transition:opacity 0.1s linear;will-change:opacity;';
+                    canvas.style.cssText = 'position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:99999;display:none;';
                     document.body.appendChild(canvas);
                 }
                 ctx = canvas.getContext('2d');
@@ -3958,7 +3958,7 @@
             ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         }
 
-        // 100% GPU-accelerated 4-pointed diamond sparkle star (Zero CPU font rasterization)
+        // 100% GPU-accelerated 4-pointed diamond sparkle star
         function drawSparkleStar(c, size, color) {
             c.fillStyle = color;
             c.beginPath();
@@ -3984,13 +3984,13 @@
                 rotSpeed: (Math.random() - 0.5) * 0.18,
                 tilt: Math.random() * Math.PI * 2,
                 tiltSpeed: (Math.random() - 0.5) * 0.22,
-                size: shape === 'star' ? (12 + Math.random() * 8) : (6 + Math.random() * 4),
-                width: 7 + Math.random() * 5,
-                height: 12 + Math.random() * 7,
+                size: shape === 'star' ? (16 + Math.random() * 10) : (7 + Math.random() * 5),
+                width: 8 + Math.random() * 6,
+                height: 14 + Math.random() * 8,
                 color: COLORS[Math.floor(Math.random() * COLORS.length)],
                 shape: shape || 'ribbon',
                 birth: performance.now(),
-                duration: 750 + Math.random() * 250
+                duration: 800 + Math.random() * 300
             };
         }
 
@@ -4001,36 +4001,37 @@
             const vh = window.innerHeight || 600;
 
             const newParticles = [];
-            const SHAPES = ['star', 'ribbon', 'ribbon', 'dot'];
+            const SHAPES = ['star', 'ribbon', 'ribbon', 'star', 'dot', 'ring'];
 
-            // 1. Bottom-Left Cannon (Shoots diagonally up-right) - 14 particles
+            // 1. Bottom-Left Cannon (Shoots diagonally up-right) - 18 particles
             const leftX = vw * 0.10;
             const leftY = vh * 0.90;
-            for (let i = 0; i < 14; i++) {
-                const angle = -((22 + Math.random() * 48) * Math.PI / 180);
-                const speed = (vh * 0.018) + Math.random() * (vh * 0.014);
+            for (let i = 0; i < 18; i++) {
+                const angle = -((22 + Math.random() * 50) * Math.PI / 180);
+                const speed = (vh * 0.020) + Math.random() * (vh * 0.016);
                 newParticles.push(createParticle(leftX, leftY, Math.cos(angle) * speed, Math.sin(angle) * speed, SHAPES[i % SHAPES.length]));
             }
 
-            // 2. Bottom-Right Cannon (Shoots diagonally up-left) - 14 particles
+            // 2. Bottom-Right Cannon (Shoots diagonally up-left) - 18 particles
             const rightX = vw * 0.90;
             const rightY = vh * 0.90;
-            for (let i = 0; i < 14; i++) {
-                const angle = -((110 + Math.random() * 48) * Math.PI / 180);
-                const speed = (vh * 0.018) + Math.random() * (vh * 0.014);
+            for (let i = 0; i < 18; i++) {
+                const angle = -((108 + Math.random() * 50) * Math.PI / 180);
+                const speed = (vh * 0.020) + Math.random() * (vh * 0.016);
                 newParticles.push(createParticle(rightX, rightY, Math.cos(angle) * speed, Math.sin(angle) * speed, SHAPES[i % SHAPES.length]));
             }
 
-            // 3. Center Screen Burst - 12 particles
+            // 3. Center Screen Burst - 16 particles
             const centerX = vw * 0.5;
             const centerY = vh * 0.36;
-            for (let i = 0; i < 12; i++) {
-                const angle = (i / 12) * Math.PI * 2 + (Math.random() - 0.5) * 0.4;
-                const speed = 4 + Math.random() * 6;
-                newParticles.push(createParticle(centerX, centerY, Math.cos(angle) * speed, Math.sin(angle) * speed - 2.5, SHAPES[i % SHAPES.length]));
+            for (let i = 0; i < 16; i++) {
+                const angle = (i / 16) * Math.PI * 2 + (Math.random() - 0.5) * 0.4;
+                const speed = 4.5 + Math.random() * 6.5;
+                newParticles.push(createParticle(centerX, centerY, Math.cos(angle) * speed, Math.sin(angle) * speed - 2.8, SHAPES[i % SHAPES.length]));
             }
 
             particles = particles.concat(newParticles);
+            canvas.style.display = 'block';
             canvas.style.opacity = '1';
 
             if (!animId) {
@@ -4038,7 +4039,8 @@
             }
         }
 
-        function loop(now) {
+        function loop(timestamp) {
+            const now = timestamp || performance.now();
             const vw = window.innerWidth || 800;
             const vh = window.innerHeight || 600;
 
@@ -4061,7 +4063,7 @@
                 p.rotation += p.rotSpeed;
                 p.tilt += p.tiltSpeed;
 
-                const alpha = progress < 0.52 ? 1 : Math.max(0, 1 - (progress - 0.52) / 0.48);
+                const alpha = progress < 0.60 ? 1 : Math.max(0, 1 - (progress - 0.60) / 0.40);
                 ctx.globalAlpha = alpha;
 
                 ctx.save();
@@ -4075,6 +4077,12 @@
                     ctx.scale(1, cosTilt);
                     ctx.fillStyle = p.color;
                     ctx.fillRect(-p.width / 2, -p.height / 2, p.width, p.height);
+                } else if (p.shape === 'ring') {
+                    ctx.strokeStyle = p.color;
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2);
+                    ctx.stroke();
                 } else {
                     ctx.fillStyle = p.color;
                     ctx.beginPath();
@@ -4093,6 +4101,7 @@
                 animId = null;
                 particles = [];
                 ctx.clearRect(0, 0, vw, vh);
+                canvas.style.display = 'none';
                 canvas.style.opacity = '0';
             }
         }
