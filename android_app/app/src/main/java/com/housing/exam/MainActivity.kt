@@ -38,10 +38,13 @@ class MainActivity : AppCompatActivity() {
         // 1. Keep Screen On for uninterrupted study sessions
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
-        // 2. Hide System UI (Immersive Sticky Fullscreen)
+        // 2. Request 120Hz High Refresh Rate for Ultra-Low Latency S-Pen Drawing
+        enableHighRefreshRate()
+
+        // 3. Hide System UI (Immersive Sticky Fullscreen)
         enableImmersiveStickyMode()
 
-        // 3. Initialize WebViewAssetLoader for safe, offline HTTPS domain loading
+        // 4. Initialize WebViewAssetLoader for safe, offline HTTPS domain loading
         assetLoader = WebViewAssetLoader.Builder()
             .setDomain("appassets.androidplatform.net")
             .addPathHandler("/assets/", WebViewAssetLoader.AssetsPathHandler(this))
@@ -51,10 +54,14 @@ class MainActivity : AppCompatActivity() {
             overScrollMode = View.OVER_SCROLL_NEVER
             isVerticalScrollBarEnabled = false
             isHorizontalScrollBarEnabled = false
+            setLayerType(View.LAYER_TYPE_HARDWARE, null)
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                setRendererPriorityPolicy(WebView.RENDERER_PRIORITY_BOUND, false)
+            }
         }
         setContentView(webView)
 
-        // 4. Configure High-Performance WebView Settings
+        // 5. Configure High-Performance WebView Settings (Instant Cold Start)
         configureWebViewSettings(webView.settings)
 
         // 5. JavaScript Interface Bridge
@@ -151,11 +158,26 @@ class MainActivity : AppCompatActivity() {
             builtInZoomControls = true
             displayZoomControls = false
 
-            // Cache & Offline: Always fetch latest version on Wi-Fi
-            cacheMode = WebSettings.LOAD_NO_CACHE
+            // Instant Cold Start with HTTP ETag / Cache-Control validation
+            cacheMode = WebSettings.LOAD_DEFAULT
             mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
         }
-        webView.clearCache(true)
+    }
+
+    private fun enableHighRefreshRate() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+            window.attributes.preferredRefreshRate = 120f
+            window.attributes = window.attributes
+        } else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            @Suppress("DEPRECATION")
+            val display = windowManager.defaultDisplay
+            val modes = display?.supportedModes
+            val maxMode = modes?.maxByOrNull { it.refreshRate }
+            if (maxMode != null && maxMode.refreshRate >= 90f) {
+                window.attributes.preferredDisplayModeId = maxMode.modeId
+                window.attributes = window.attributes
+            }
+        }
     }
 
     fun hideSystemBars() {
@@ -230,7 +252,7 @@ class MainActivity : AppCompatActivity() {
 class StylusPalmRejectionWebView(context: Context) : WebView(context) {
 
     private var lastStylusEventTime: Long = 0
-    private val STYLUS_PROXIMITY_GRACE_PERIOD_MS = 1200L
+    private val STYLUS_PROXIMITY_GRACE_PERIOD_MS = 600L
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
         val toolType = ev.getToolType(0)
@@ -240,11 +262,21 @@ class StylusPalmRejectionWebView(context: Context) : WebView(context) {
             return super.dispatchTouchEvent(ev)
         }
 
-        // If finger touch happens while stylus was active recently (palm resting on screen)
+        // Finger touch evaluation during active stylus writing
         if (toolType == MotionEvent.TOOL_TYPE_FINGER) {
             val elapsed = System.currentTimeMillis() - lastStylusEventTime
             if (elapsed < STYLUS_PROXIMITY_GRACE_PERIOD_MS) {
-                // Ignore finger touch (Palm Rejection)
+                val density = resources.displayMetrics.density
+                val isLeftToolbarArea = ev.x <= (120f * density)
+                val isTopHeaderArea = ev.y <= (65f * density)
+
+                // If user is intentionally tapping the pen toolbar dock on the left with left thumb
+                // or top header buttons, pass the touch immediately!
+                if (isLeftToolbarArea || isTopHeaderArea) {
+                    return super.dispatchTouchEvent(ev)
+                }
+
+                // Discard palm resting on drawing card canvas
                 return false
             }
         }

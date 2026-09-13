@@ -22,6 +22,7 @@ export class TabletCanvas {
         this.penColor = '#38BDF8';
         this.penWidth = 3;
         this.palmRejection = true;
+        this.stylusOnly = typeof localStorage !== 'undefined' && localStorage.getItem('housing_exam_stylus_only') === 'true';
 
         this.currentQuestionKey = null;
         this.strokes = [];
@@ -103,6 +104,21 @@ export class TabletCanvas {
                 clearBtn.addEventListener('click', () => this.clearCurrentStrokes());
             }
 
+            const stylusOnlyBtn = document.getElementById('btn-stylus-only');
+            if (stylusOnlyBtn) {
+                stylusOnlyBtn.classList.toggle('active', this.stylusOnly);
+                stylusOnlyBtn.title = this.stylusOnly ? 'S펜 전용 모드 ON (손터치 방지)' : 'S펜 전용 모드 (손터치 방지)';
+                stylusOnlyBtn.addEventListener('click', () => {
+                    this.stylusOnly = !this.stylusOnly;
+                    localStorage.setItem('housing_exam_stylus_only', this.stylusOnly ? 'true' : 'false');
+                    stylusOnlyBtn.classList.toggle('active', this.stylusOnly);
+                    stylusOnlyBtn.title = this.stylusOnly ? 'S펜 전용 모드 ON (손터치 방지)' : 'S펜 전용 모드 (손터치 방지)';
+                    if (typeof showToast === 'function') {
+                        showToast(this.stylusOnly ? '✋ S펜 전용 필기 모드 ON (손터치 무시)' : '🖐 터치 필기 허용 모드 ON');
+                    }
+                });
+            }
+
             const closeBtn = document.getElementById('btn-close-stylus');
             if (closeBtn) {
                 closeBtn.addEventListener('click', () => {
@@ -126,6 +142,23 @@ export class TabletCanvas {
         if (!this.isEnabled) return;
 
         if (this.palmRejection && e.pointerType === 'touch' && e.isPrimary === false) return;
+
+        // S-Pen / Stylus Only Palm Rejection: Ignore touch drawing, allow interactive taps
+        if (this.stylusOnly && e.pointerType === 'touch') {
+            this.canvas.style.pointerEvents = 'none';
+            const underEl = document.elementFromPoint(e.clientX, e.clientY);
+            this.canvas.style.pointerEvents = 'auto';
+            if (underEl) {
+                const interactive = underEl.closest('.opt-num, button, input, textarea, a, .blank-input, .btn-ctrl, .btn-ctrl-sm, .btn-override, .color-dot, .stylus-btn, .btn-toggle-hw');
+                if (interactive) {
+                    interactive.click();
+                    if (['INPUT', 'TEXTAREA'].includes(interactive.tagName)) {
+                        interactive.focus();
+                    }
+                }
+            }
+            return;
+        }
 
         // 주관식 빈칸 입력창이나 필기인식 서랍 영역인 경우 캔버스 캡처를 피하고 네이티브 펜/키보드 입력 허용
         this.canvas.style.pointerEvents = 'none';
@@ -170,6 +203,7 @@ export class TabletCanvas {
 
     onPointerMove(e) {
         if (!this.isDrawing || !this.currentStroke) return;
+        if (this.stylusOnly && e.pointerType === 'touch') return;
 
         const events = typeof e.getCoalescedEvents === 'function' ? e.getCoalescedEvents() : [e];
         for (const subEvent of events) {

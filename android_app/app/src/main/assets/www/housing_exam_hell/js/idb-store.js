@@ -102,6 +102,9 @@ const IDBStore = {
             correctCount: 0,
             tryCount: 0
         };
+        if (!existing.subject && meta.subject) existing.subject = meta.subject;
+        if (!existing.chapter && meta.chapter) existing.chapter = meta.chapter;
+        if (!existing.type && meta.type) existing.type = meta.type;
 
         existing.tryCount = (existing.tryCount || 0) + 1;
         existing.lastAttempt = new Date().toISOString();
@@ -110,11 +113,11 @@ const IDBStore = {
         if (!isCorrect) {
             existing.wrongCount = (existing.wrongCount || 0) + 1;
             existing.totalWrongCount = (existing.totalWrongCount || (existing.wrongCount - 1) || 0) + 1;
-            // Spaced repetition escalating weight: 2 -> 4 -> 6 -> 10
-            if (existing.wrongCount === 1) existing.weight = 2;
-            else if (existing.wrongCount === 2) existing.weight = 4;
-            else if (existing.wrongCount === 3) existing.weight = 6;
-            else existing.weight = 10;
+            // Balanced remind weight: 1.2 -> 1.4 -> 1.6 -> 1.8 (prevents wrong questions from dominating exam)
+            if (existing.wrongCount === 1) existing.weight = 1.2;
+            else if (existing.wrongCount === 2) existing.weight = 1.4;
+            else if (existing.wrongCount === 3) existing.weight = 1.6;
+            else existing.weight = 1.8;
 
             // 오답 시 3일 망각 임시 감점 즉시 리셋 (원래 본래 Score로 복구)
             existing.scoreDeductions = 0;
@@ -126,13 +129,12 @@ const IDBStore = {
                 existing.wrongCount = Math.max(0, existing.wrongCount - 1);
             }
 
-            // De-escalating step: 10 -> 6 -> 4 -> 2 -> 1
+            // De-escalating step
             if (existing.wrongCount === 0) {
-                existing.weight = 1;
-            } else if (existing.weight === 10) existing.weight = 6;
-            else if (existing.weight === 6) existing.weight = 4;
-            else if (existing.weight === 4) existing.weight = 2;
-            else existing.weight = 1;
+                existing.weight = 1.0;
+            } else if (existing.weight > 1.4) existing.weight = 1.4;
+            else if (existing.weight > 1.2) existing.weight = 1.2;
+            else existing.weight = 1.0;
 
             // 정답 시 임시 Score 1점씩 감점 누적 (3일간 유지) & 최근 정답 시각 기록
             existing.scoreDeductions = (existing.scoreDeductions || 0) + 1;
@@ -144,7 +146,11 @@ const IDBStore = {
             const store = tx.objectStore('question_stats');
             const req = store.put(existing);
             req.onsuccess = () => {
-                if (window.CloudSync) window.CloudSync.schedulePush();
+                if (window.CloudSync && typeof window.CloudSync.scheduleStatsPush === 'function') {
+                    window.CloudSync.scheduleStatsPush(60);
+                } else if (window.CloudSync) {
+                    window.CloudSync.schedulePush();
+                }
                 resolve(existing);
             };
             req.onerror = () => reject(req.error);
@@ -170,7 +176,43 @@ const IDBStore = {
             const tx = db.transaction('question_stats', 'readwrite');
             const store = tx.objectStore('question_stats');
             const req = store.put(stat);
-            req.onsuccess = () => resolve(stat);
+            req.onsuccess = () => {
+                if (window.CloudSync && typeof window.CloudSync.scheduleStatsPush === 'function') {
+                    window.CloudSync.scheduleStatsPush(60);
+                } else if (window.CloudSync) {
+                    window.CloudSync.schedulePush();
+                }
+                resolve(stat);
+            };
+            req.onerror = () => reject(req.error);
+        });
+    },
+
+    /**
+     * Reset question weight and wrong count (with tombstone to prevent cloud resurrecting it)
+     */
+    async resetQuestionWeight(qKey) {
+        const stat = (await this.getQuestionStat(qKey)) || { qKey };
+        stat.weight = 1;
+        stat.wrongCount = 0;
+        stat.correctCount = 0;
+        stat.tryCount = 0;
+        stat.lastAttempt = new Date().toISOString();
+        stat.resetAt = new Date().toISOString(); // Tombstone!
+
+        const db = await openDB();
+        return new Promise((resolve, reject) => {
+            const tx = db.transaction('question_stats', 'readwrite');
+            const store = tx.objectStore('question_stats');
+            const req = store.put(stat);
+            req.onsuccess = () => {
+                if (window.CloudSync && typeof window.CloudSync.scheduleStatsPush === 'function') {
+                    window.CloudSync.scheduleStatsPush(60);
+                } else if (window.CloudSync) {
+                    window.CloudSync.schedulePush();
+                }
+                resolve(stat);
+            };
             req.onerror = () => reject(req.error);
         });
     },
@@ -334,7 +376,7 @@ const IDBStore = {
                             const existTime = existing.lastAttempt ? new Date(existing.lastAttempt).getTime() : 0;
                             const itemTime = item.lastAttempt ? new Date(item.lastAttempt).getTime() : 0;
 
-                            const base = (itemTime >= existTime) ? { ...item } : { ...existing };
+                            const base = (itemTime >= existTime) ? { ...existing, ...item } : { ...item, ...existing };
                             base.tryCount = Math.max(existing.tryCount || 0, item.tryCount || 0);
                             base.totalWrongCount = Math.max(existing.totalWrongCount || 0, item.totalWrongCount || 0);
                             base.correctCount = Math.max(existing.correctCount || 0, item.correctCount || 0);
@@ -472,7 +514,10 @@ const IDBStore = {
                 flaggedAt: new Date().toISOString()
             };
             localStorage.setItem('housing_exam_needs_edit', JSON.stringify(map));
-            if (window.CloudSync) window.CloudSync.schedulePush(200);
+            if (window.CloudSync) {
+                if (window.CloudSync.scheduleFlagsPush) window.CloudSync.scheduleFlagsPush(50);
+                else window.CloudSync.schedulePush(200);
+            }
             return map[qKey];
         } catch (e) { return null; }
     },
@@ -499,7 +544,10 @@ const IDBStore = {
             unflagged[qKey] = new Date().toISOString();
             localStorage.setItem('housing_exam_unflagged_keys', JSON.stringify(unflagged));
 
-            if (window.CloudSync) window.CloudSync.schedulePush(200);
+            if (window.CloudSync) {
+                if (window.CloudSync.scheduleFlagsPush) window.CloudSync.scheduleFlagsPush(50);
+                else window.CloudSync.schedulePush(200);
+            }
         } catch (e) {}
     },
 
@@ -516,7 +564,10 @@ const IDBStore = {
             });
             localStorage.setItem('housing_exam_unflagged_keys', JSON.stringify(unflagged));
             localStorage.removeItem('housing_exam_needs_edit');
-            if (window.CloudSync) window.CloudSync.schedulePush(200);
+            if (window.CloudSync) {
+                if (window.CloudSync.scheduleFlagsPush) window.CloudSync.scheduleFlagsPush(50);
+                else window.CloudSync.schedulePush(200);
+            }
         } catch (e) {}
     },
 
