@@ -165,16 +165,21 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun enableHighRefreshRate() {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
-            window.attributes.preferredRefreshRate = 120f
-            window.attributes = window.attributes
-        } else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            @Suppress("DEPRECATION")
-            val display = windowManager.defaultDisplay
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            val display = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+                display
+            } else {
+                @Suppress("DEPRECATION")
+                windowManager.defaultDisplay
+            }
             val modes = display?.supportedModes
+            // Dynamically query device hardware maximum refresh rate (e.g. 90Hz on Lenovo TB335FC, 120Hz on Galaxy Tab)
             val maxMode = modes?.maxByOrNull { it.refreshRate }
-            if (maxMode != null && maxMode.refreshRate >= 90f) {
+            if (maxMode != null && maxMode.refreshRate >= 80f) {
                 window.attributes.preferredDisplayModeId = maxMode.modeId
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+                    window.attributes.preferredRefreshRate = maxMode.refreshRate
+                }
                 window.attributes = window.attributes
             }
         }
