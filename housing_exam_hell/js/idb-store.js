@@ -195,6 +195,7 @@ const IDBStore = {
         const stat = (await this.getQuestionStat(qKey)) || { qKey };
         stat.weight = 1;
         stat.wrongCount = 0;
+        stat.totalWrongCount = 0;
         stat.correctCount = 0;
         stat.tryCount = 0;
         stat.lastAttempt = new Date().toISOString();
@@ -373,6 +374,24 @@ const IDBStore = {
                         if (!existing) {
                             statsStore.put(item);
                         } else {
+                            // Check Tombstones before merging to prevent resurrecting reset stats
+                            if (existing.resetAt) {
+                                const resetTime = new Date(existing.resetAt).getTime();
+                                const itemWrongTime = item.lastWrongAt ? new Date(item.lastWrongAt).getTime() : 0;
+                                if (resetTime >= itemWrongTime) {
+                                    statsStore.put(existing);
+                                    continue;
+                                }
+                            }
+                            if (item.resetAt) {
+                                const itemResetTime = new Date(item.resetAt).getTime();
+                                const existWrongTime = existing.lastWrongAt ? new Date(existing.lastWrongAt).getTime() : 0;
+                                if (itemResetTime >= existWrongTime) {
+                                    statsStore.put(item);
+                                    continue;
+                                }
+                            }
+
                             const existTime = existing.lastAttempt ? new Date(existing.lastAttempt).getTime() : 0;
                             const itemTime = item.lastAttempt ? new Date(item.lastAttempt).getTime() : 0;
 

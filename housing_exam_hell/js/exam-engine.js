@@ -33,15 +33,33 @@ export const ExamEngine = {
             "받아야", "하는", "받은", "정기적", "신청", "소유자", "결과", "기한", "설비", "공사",
             "안전관리", "안전관리법", "관리법", "시행규칙", "시행령", "법률", "규칙", "조례",
             "실시", "통보", "작성", "제출", "보고", "검사", "점검", "정기검사", "자체점검", "수시검사",
-            "어느", "하나", "각호", "해당", "규정", "또는", "위한", "통해", "대해", "암기", "시기"
+            "어느", "하나", "각호", "해당", "규정", "또는", "위한", "통해", "대해", "암기", "시기",
+            // 🛡️ 기능적 보조사, 조사 및 불필요한 동사 활용형 배제
+            "등", "등이", "등은", "등을", "등에", "등의", "등과", "등으로", "등에게",
+            "받아", "받고", "받는", "받음", "받으며", "받거나", "받았",
+            "하고", "하며", "하면", "하여", "하던", "한", "하여야", "하지", "하게", "하도록", "하기", "했다", "한다",
+            "되고", "되며", "되면", "되어", "되는", "되거나", "된", "되어야", "되지", "되게", "되도록", "되기", "된다",
+            "있고", "있으며", "있어", "있는", "있거나", "있어야", "있다",
+            "없고", "없으며", "없어", "없는", "없거나", "없어야", "없다",
+            "위해", "위해서", "위하여", "위함",
+            "대해", "대해서", "대하여",
+            "따라", "따르고", "따르면",
+            "통해", "통하여",
+            "지나", "지나야", "지나면", "지난",
+            "거쳐", "거쳐야", "거친",
+            "바탕", "따름", "때문", "관련해", "가능함",
+            "각각", "그밖", "그밖에", "그밖의", "이외"
         ]),
 
-        SUFFIX_2CHAR_REGEX: /(으로|에서|에게|부터|까지|마다|따라|따른|관한|대한|위한|통해|대해)$/,
-        SUFFIX_1CHAR_REGEX: /(은|는|이|을|를|의|에|와|과|도|만|상|별|등|용)$/,
+        SUFFIX_MULTI_REGEX: /(으로부터|로부터|으로서|로서|위하여|대하여|통하여|하여야|되어야|받아야|위해서|대해서|가능함)$/,
+        SUFFIX_2CHAR_REGEX: /(으로|에서|에게|부터|까지|마다|따라|따른|관한|대한|위한|통해|대해|하기|하는|하여|하며|하면|되고|되며|되면|되어|되는|되기|받고|받는|받은|받아|지나)$/,
+        SUFFIX_1CHAR_REGEX: /(은|는|이|을|를|의|에|와|과|도|만|상|별|용|로|한|된)$/,
 
         cleanWord(w) {
             if (!w) return "";
             let cleaned = w.trim();
+            if (/^등[은는이을를의에과로]/.test(cleaned)) return '등';
+            cleaned = cleaned.replace(this.SUFFIX_MULTI_REGEX, "");
             cleaned = cleaned.replace(this.SUFFIX_2CHAR_REGEX, "");
             if (cleaned.length >= 3) {
                 cleaned = cleaned.replace(this.SUFFIX_1CHAR_REGEX, "");
@@ -511,47 +529,34 @@ export const ExamEngine = {
     },
 
     /**
-     * Pick unseen high-yield questions first. If exhausted, pick least-attempted + high wrong-rate questions.
+     * Pick high-yield questions with Score-First priority and smart unseen tie-breaker.
+     * Guarantees top-tier high-yield questions (Score 7, 6...) are NEVER discarded simply because they were solved.
+     * When scores are equal or similar, unseen questions (tryCount === 0) receive a healthy tie-breaker advantage (1.15x).
      */
     pickUnseenHighYieldFirst(items, statsMap = {}, count, excludeKeysSet = new Set()) {
         const available = items.filter(it => !excludeKeysSet.has(it.qKey));
         if (available.length <= count) return available;
 
-        // 1단계: 한 번도 안 푼 문제 (tryCount === 0 또는 미등록)
-        const unseen = available.filter(it => {
-            const stat = statsMap[it.qKey];
-            return !stat || !stat.tryCount || stat.tryCount === 0;
-        });
-
-        // 안 푼 문제가 목표 수량 이상이면 그 안에서 가중치 추첨
-        if (unseen.length >= count) {
-            return this.weightedPick(unseen, statsMap, count, excludeKeysSet);
-        }
-
-        // 2단계: 안 푼 문제는 전원 선발
-        const selected = [...unseen];
-        const pickedKeys = new Set(unseen.map(it => it.qKey));
-
-        // 3단계: 부족분은 풀어본 것 중 [덜 푼 것(낮은 tryCount)] + [자주 틀린 오답(높은 weight)] 우선 가중치 추첨
-        const seen = available.filter(it => !pickedKeys.has(it.qKey));
-        const remainderNeeded = count - selected.length;
-
-        const remainderWeights = seen.map(it => {
+        const weights = available.map(it => {
             const stat = statsMap[it.qKey] || {};
-            const userWeight = this.getUserWeight(it, stat);
-            const tryCount = stat.tryCount || 1;
             const effScore = this.getEffectiveScore(it, stat);
-            const scoreWeight = this.getScoreWeight(effScore);
-            return (userWeight * scoreWeight) / Math.sqrt(tryCount);
+            const baseScoreWeight = this.LADDER_WEIGHTS[effScore] || 1.0;
+            const userWeight = this.getUserWeight(it, stat); // elevated if wrongCount > 0
+            const tryCount = stat.tryCount || 0;
+
+            // Score-first priority: unseen question gets a 1.15x tie-breaker bonus at the same score,
+            // while Score 7 (1.8) and Score 6 (1.7) will always beat lower score questions naturally.
+            const unseenMultiplier = tryCount === 0 ? 1.15 : 1.0;
+            return userWeight * baseScoreWeight * unseenMultiplier;
         });
 
-        const additional = [];
+        const selected = [];
         const pickedIndices = new Set();
 
-        for (let step = 0; step < remainderNeeded; step++) {
+        for (let step = 0; step < count; step++) {
             let totalWeight = 0;
-            for (let i = 0; i < seen.length; i++) {
-                if (!pickedIndices.has(i)) totalWeight += remainderWeights[i];
+            for (let i = 0; i < available.length; i++) {
+                if (!pickedIndices.has(i)) totalWeight += weights[i];
             }
             if (totalWeight <= 0) break;
 
@@ -559,9 +564,9 @@ export const ExamEngine = {
             let current = 0;
             let chosenIdx = -1;
 
-            for (let i = 0; i < seen.length; i++) {
+            for (let i = 0; i < available.length; i++) {
                 if (pickedIndices.has(i)) continue;
-                current += remainderWeights[i];
+                current += weights[i];
                 if (rnd <= current) {
                     chosenIdx = i;
                     break;
@@ -570,22 +575,23 @@ export const ExamEngine = {
 
             if (chosenIdx !== -1) {
                 pickedIndices.add(chosenIdx);
-                additional.push(seen[chosenIdx]);
+                selected.push(available[chosenIdx]);
             }
         }
 
-        while (additional.length < remainderNeeded && pickedIndices.size < seen.length) {
+        // Uniform fallback if weights exhausted
+        while (selected.length < count && pickedIndices.size < available.length) {
             const unpicked = [];
-            for (let i = 0; i < seen.length; i++) {
+            for (let i = 0; i < available.length; i++) {
                 if (!pickedIndices.has(i)) unpicked.push(i);
             }
             if (unpicked.length === 0) break;
             const rIdx = unpicked[Math.floor(Math.random() * unpicked.length)];
             pickedIndices.add(rIdx);
-            additional.push(seen[rIdx]);
+            selected.push(available[rIdx]);
         }
 
-        return [...selected, ...additional];
+        return selected;
     },
 
     /**
