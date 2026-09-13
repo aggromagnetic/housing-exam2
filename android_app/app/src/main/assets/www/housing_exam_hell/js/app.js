@@ -2062,11 +2062,52 @@
                 return;
             }
 
+            // Subjective container / handwriting drawer bypass
+            this.canvas.style.pointerEvents = 'none';
+            const underEl = document.elementFromPoint(e.clientX, e.clientY);
+            this.canvas.style.pointerEvents = 'auto';
+
+            if (underEl) {
+                const inputTarget = underEl.closest('.subjective-container, .blank-row-wrapper, .blank-input, .hw-drawer, .btn-toggle-hw, .hw-canvas, .hw-cand-chip, .btn-hw-action');
+                if (inputTarget) {
+                    this.isDrawing = false;
+                    this.currentStroke = null;
+                    const realInput = underEl.closest('input, textarea') || inputTarget.querySelector('input, textarea');
+                    if (realInput) realInput.focus();
+                    return;
+                }
+            }
+
+            // Hit-test interactive target (option circles, buttons, toolbar dots, controls)
+            let interactiveTarget = null;
+            if (underEl) {
+                const optItem = underEl.closest('.option-item');
+                if (optItem) {
+                    const optNum = optItem.querySelector('.opt-num');
+                    if (optNum) {
+                        const numRect = optNum.getBoundingClientRect();
+                        const centerX = numRect.left + numRect.width / 2;
+                        const centerY = numRect.top + numRect.height / 2;
+                        const distToCenter = Math.hypot(e.clientX - centerX, e.clientY - centerY);
+                        if (distToCenter <= 36 || underEl.closest('.opt-num')) {
+                            interactiveTarget = optNum;
+                        }
+                    }
+                } else {
+                    const btn = underEl.closest('button, input, textarea, a, .blank-input, .btn-ctrl, .btn-ctrl-sm, .btn-override, .color-dot, .stylus-btn, .btn-toggle-hw, .stylus-drag-handle, .nav-btn, .tab-btn');
+                    if (btn) {
+                        interactiveTarget = btn;
+                    }
+                }
+            }
+
             this.isDrawing = true;
             this.pointerDownPos = this.getPos(e);
             this.pointerDownClient = { x: e.clientX, y: e.clientY };
             this.pointerDownTime = Date.now();
             this.pointerMoved = false;
+            this.targetInteractiveEl = interactiveTarget;
+            this.isPendingInteractive = !!interactiveTarget;
 
             try {
                 this.canvas.setPointerCapture(e.pointerId);
@@ -2079,10 +2120,13 @@
                 width: this.currentTool === 'eraser' ? 24 : this.penWidth,
                 points: [pos]
             };
-            this.strokes.push(this.currentStroke);
 
-            this.ctx.beginPath();
-            this.ctx.moveTo(pos.x, pos.y);
+            // If starting on a button or option number, suppress live ink preview until deliberate movement (>26px)
+            if (!this.isPendingInteractive) {
+                this.strokes.push(this.currentStroke);
+                this.ctx.beginPath();
+                this.ctx.moveTo(pos.x, pos.y);
+            }
         }
 
         onPointerMove(e) {
@@ -2090,10 +2134,26 @@
             if (this.stylusOnly && e.pointerType === 'touch') return;
 
             const pos = this.getPos(e);
+            let dist = 0;
             if (this.pointerDownPos) {
-                const dist = Math.hypot(pos.x - this.pointerDownPos.x, pos.y - this.pointerDownPos.y);
+                dist = Math.hypot(pos.x - this.pointerDownPos.x, pos.y - this.pointerDownPos.y);
                 if (dist > 5) {
                     this.pointerMoved = true;
+                }
+            }
+
+            // If started on an interactive element:
+            if (this.isPendingInteractive) {
+                if (dist > 26) {
+                    // Stylus moved more than 26px: intentional scratch/cross-out gesture! Convert to drawing stroke
+                    this.isPendingInteractive = false;
+                    this.targetInteractiveEl = null;
+                    this.strokes.push(this.currentStroke);
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(this.pointerDownPos.x, this.pointerDownPos.y);
+                } else {
+                    // Small stylus tip slip on tablet glass: suppress ink drawing
+                    return;
                 }
             }
 
@@ -2130,25 +2190,37 @@
             } catch (err) {}
 
             const duration = Date.now() - (this.pointerDownTime || 0);
-            const totalDist = (stroke && stroke.points && stroke.points.length > 1) ? 
-                Math.hypot(
-                    stroke.points[stroke.points.length - 1].x - stroke.points[0].x,
-                    stroke.points[stroke.points.length - 1].y - stroke.points[0].y
-                ) : 0;
+            const clientX = (e && e.clientX) ? e.clientX : (this.pointerDownClient ? this.pointerDownClient.x : 0);
+            const clientY = (e && e.clientY) ? e.clientY : (this.pointerDownClient ? this.pointerDownClient.y : 0);
+            const totalDist = (this.pointerDownPos && e) ? 
+                Math.hypot(this.getPos(e).x - this.pointerDownPos.x, this.getPos(e).y - this.pointerDownPos.y) : 0;
 
-            // If this was a quick tap (< 8px movement and < 350ms), pass click through to underlying buttons/options/inputs
-            if (!this.pointerMoved && totalDist < 8 && duration < 350) {
-                this.strokes.pop();
-                this.redraw();
+            // 1. Pending Interactive Target (Button / Option circle tapped directly)
+            if (this.isPendingInteractive && this.targetInteractiveEl) {
+                const target = this.targetInteractiveEl;
+                this.isPendingInteractive = false;
+                this.targetInteractiveEl = null;
 
+                if (totalDist <= 26 && duration <= 650) {
+                    target.click();
+                    if (['INPUT', 'TEXTAREA'].includes(target.tagName)) {
+                        target.focus();
+                    }
+                    return;
+                } else {
+                    // Exceeded threshold without previous move promotion: restore stroke
+                    this.strokes.push(stroke);
+                    this.redraw();
+                }
+            }
+
+            // 2. Fallback quick tap check for empty canvas or small stylus taps (< 14px movement and < 400ms)
+            if ((!this.pointerMoved || totalDist < 14) && duration < 400) {
                 this.canvas.style.pointerEvents = 'none';
-                const clientX = (e && e.clientX) ? e.clientX : (this.pointerDownClient ? this.pointerDownClient.x : 0);
-                const clientY = (e && e.clientY) ? e.clientY : (this.pointerDownClient ? this.pointerDownClient.y : 0);
                 const underEl = document.elementFromPoint(clientX, clientY);
                 this.canvas.style.pointerEvents = 'auto';
 
                 if (underEl) {
-                    // 1. 객관식 선지 영역 터치 시: 번호 원(.opt-num) 중심 24px 이내 또는 .opt-num 직접 터치 시에만 선택!
                     const optItem = underEl.closest('.option-item');
                     if (optItem) {
                         const optNum = optItem.querySelector('.opt-num');
@@ -2158,29 +2230,30 @@
                             const centerX = numRect.left + numRect.width / 2;
                             const centerY = numRect.top + numRect.height / 2;
                             const distToCenter = Math.hypot(clientX - centerX, clientY - centerY);
-                            if (distToCenter <= 24 || underEl.closest('.opt-num')) {
+                            if (distToCenter <= 36 || underEl.closest('.opt-num')) {
                                 isNumClicked = true;
                             }
                         }
                         if (isNumClicked && optNum) {
-                            // 번호 원을 정확히 탭한 경우에만 선택
-                            optNum.click();
-                        } else {
-                            // 지문 텍스트나 여백 터치는 필기(점 찍기/체크)이므로 선택을 절대 변경하지 않고 필기 획 복구
-                            this.strokes.push(stroke);
+                            // Discard accidental ink dot and cleanly select option
+                            const idx = this.strokes.indexOf(stroke);
+                            if (idx !== -1) this.strokes.splice(idx, 1);
                             this.redraw();
+                            optNum.click();
+                            return;
                         }
-                        return;
-                    }
-
-                    // 2. 일반 대화형 버튼/입력창 터치 처리 (.option-item 제외)
-                    const targetInteractive = underEl.closest('button:not(.option-item), input, textarea, a, .blank-input, .btn-ctrl, .btn-ctrl-sm, .btn-override, .color-dot, .stylus-btn, .btn-toggle-hw, .stylus-drag-handle');
-                    if (targetInteractive) {
-                        targetInteractive.click();
-                        if (['INPUT', 'TEXTAREA'].includes(targetInteractive.tagName)) {
-                            targetInteractive.focus();
+                    } else {
+                        const targetInteractive = underEl.closest('button, input, textarea, a, .blank-input, .btn-ctrl, .btn-ctrl-sm, .btn-override, .color-dot, .stylus-btn, .btn-toggle-hw, .stylus-drag-handle, .nav-btn, .tab-btn');
+                        if (targetInteractive) {
+                            const idx = this.strokes.indexOf(stroke);
+                            if (idx !== -1) this.strokes.splice(idx, 1);
+                            this.redraw();
+                            targetInteractive.click();
+                            if (['INPUT', 'TEXTAREA'].includes(targetInteractive.tagName)) {
+                                targetInteractive.focus();
+                            }
+                            return;
                         }
-                        return;
                     }
                 }
             }

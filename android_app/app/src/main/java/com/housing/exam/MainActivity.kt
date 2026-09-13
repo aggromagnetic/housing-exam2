@@ -3,7 +3,13 @@ package com.housing.exam
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Configuration
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
+import android.net.NetworkRequest
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
@@ -30,15 +36,71 @@ class MainActivity : AppCompatActivity() {
     private lateinit var webView: StylusPalmRejectionWebView
     private lateinit var assetLoader: WebViewAssetLoader
     private var lastBackPressTime: Long = 0
+    private var networkCallback: ConnectivityManager.NetworkCallback? = null
+
+    // Library Battery Saver: Automatically release FLAG_KEEP_SCREEN_ON after 15 minutes of inactivity
+    private val IDLE_SCREEN_TIMEOUT_MS = 15 * 60 * 1000L
+    private val idleHandler = Handler(Looper.getMainLooper())
+    private val idleRunnable = Runnable {
+        window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+    }
+
+    fun resetUserActivity() {
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        idleHandler.removeCallbacks(idleRunnable)
+        idleHandler.postDelayed(idleRunnable, IDLE_SCREEN_TIMEOUT_MS)
+    }
+
+    fun isNetworkAvailable(): Boolean {
+        val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager ?: return false
+        val activeNetwork = cm.activeNetwork ?: return false
+        val capabilities = cm.getNetworkCapabilities(activeNetwork) ?: return false
+        return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    }
+
+    private fun registerNetworkCallback() {
+        val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager ?: return
+        val request = NetworkRequest.Builder()
+            .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+            .build()
+
+        val cb = object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                runOnUiThread {
+                    // Seamless non-intrusive online notification: Web app triggers cloud sync without reloading!
+                    webView.evaluateJavascript(
+                        "if (window.dispatchEvent) { window.dispatchEvent(new Event('online')); }",
+                        null
+                    )
+                }
+            }
+
+            override fun onLost(network: Network) {
+                runOnUiThread {
+                    webView.evaluateJavascript(
+                        "if (window.dispatchEvent) { window.dispatchEvent(new Event('offline')); }",
+                        null
+                    )
+                }
+            }
+        }
+        networkCallback = cb
+        try {
+            cm.registerNetworkCallback(request, cb)
+        } catch (e: Exception) {}
+    }
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // 1. Keep Screen On for uninterrupted study sessions
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        // 1. Keep Screen On with Idle Battery Management for Library Study
+        resetUserActivity()
 
-        // 2. Request 120Hz High Refresh Rate for Ultra-Low Latency S-Pen Drawing
+        // 2. Register Network Callback for Seamless Mid-session Online Reconnection
+        registerNetworkCallback()
+
+        // 3. Request High Refresh Rate (90Hz on Lenovo TB335FC, 120Hz on Galaxy Tab)
         enableHighRefreshRate()
 
         // 3. Hide System UI (Immersive Sticky Fullscreen)
@@ -126,15 +188,31 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // 7. Load Dedicated Housing Exam Hell App with Auto-Updates (Falls back to local asset if offline)
+        // 7. Load Dedicated Housing Exam Hell App with Zero-Wait Offline First check
         if (savedInstanceState == null) {
-            webView.loadUrl("https://aggromagnetic.github.io/housing-exam2/housing_exam_hell/")
+            if (isNetworkAvailable()) {
+                webView.loadUrl("https://aggromagnetic.github.io/housing-exam2/housing_exam_hell/")
+            } else {
+                // Zero-wait offline launch in 0.05s without waiting for DNS timeouts
+                webView.loadUrl("https://appassets.androidplatform.net/assets/www/housing_exam_hell/index.html")
+            }
         } else {
             webView.restoreState(savedInstanceState)
         }
 
         // 8. Handle Back Button (Prevent Accidental Exits)
         setupBackPressHandler()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        idleHandler.removeCallbacks(idleRunnable)
+        networkCallback?.let {
+            val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
+            try {
+                cm?.unregisterNetworkCallback(it)
+            } catch (e: Exception) {}
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -260,6 +338,7 @@ class StylusPalmRejectionWebView(context: Context) : WebView(context) {
     private val STYLUS_PROXIMITY_GRACE_PERIOD_MS = 600L
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        (context as? MainActivity)?.resetUserActivity()
         val toolType = ev.getToolType(0)
 
         if (toolType == MotionEvent.TOOL_TYPE_STYLUS || toolType == MotionEvent.TOOL_TYPE_ERASER) {
@@ -290,6 +369,7 @@ class StylusPalmRejectionWebView(context: Context) : WebView(context) {
     }
 
     override fun dispatchGenericMotionEvent(ev: MotionEvent): Boolean {
+        (context as? MainActivity)?.resetUserActivity()
         val toolType = ev.getToolType(0)
         if (toolType == MotionEvent.TOOL_TYPE_STYLUS || toolType == MotionEvent.TOOL_TYPE_ERASER) {
             lastStylusEventTime = System.currentTimeMillis()
