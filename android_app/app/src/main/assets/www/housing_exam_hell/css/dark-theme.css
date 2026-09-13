@@ -2,21 +2,23 @@
 
 :root {
     --bg-main: #090D16;
-    --bg-card: #131B2E;
-    --bg-card-hover: #1A243D;
-    --bg-input: #0D1322;
-    --border-base: #222F4C;
+    --bg-card: #111827;
+    --bg-card-subtle: rgba(17, 24, 39, 0.75);
+    --bg-card-hover: #1F293D;
+    --bg-input: #0B101D;
+    --border-base: #1E293B;
+    --border-subtle: rgba(255, 255, 255, 0.08);
     --border-focus: #38BDF8;
 
-    --text-main: #F1F5F9;
+    --text-main: #F8FAFC;
     --text-muted: #94A3B8;
     --text-dim: #64748B;
 
     /* Subject Themes (Default: 관계법규 Cyan) */
     --theme-primary: #38BDF8;
     --theme-primary-hover: #0EA5E9;
-    --theme-glow: rgba(56, 189, 248, 0.25);
-    --theme-badge-bg: rgba(56, 189, 248, 0.12);
+    --theme-glow: rgba(56, 189, 248, 0.3);
+    --theme-badge-bg: rgba(56, 189, 248, 0.14);
 
     --color-correct: #10B981;
     --color-wrong: #F43F5E;
@@ -27,14 +29,16 @@
     --glow-w4: rgba(249, 115, 22, 0.45);
     --glow-w6: rgba(244, 63, 94, 0.6);
     --glow-w10: rgba(239, 68, 68, 0.85);
+
+    --shadow-card: 0 12px 32px -10px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.05);
 }
 
 /* 관리실무 Emerald Theme Override */
 body[data-subject="관리실무"] {
     --theme-primary: #34D399;
     --theme-primary-hover: #10B981;
-    --theme-glow: rgba(52, 211, 153, 0.25);
-    --theme-badge-bg: rgba(52, 211, 153, 0.12);
+    --theme-glow: rgba(52, 211, 153, 0.3);
+    --theme-badge-bg: rgba(52, 211, 153, 0.14);
 }
 
 * {
@@ -52,6 +56,9 @@ body {
     display: flex;
     flex-direction: column;
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
 }
 
 /* Weight Badge & Card Glow Effects */

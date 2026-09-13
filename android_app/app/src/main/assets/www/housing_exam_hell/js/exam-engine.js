@@ -260,6 +260,33 @@ export const ExamEngine = {
         const pool = [];
         dataset.chapters.forEach(chap => {
             (chap.questions || []).forEach(q => {
+                let normalizedAnswers = q.answers;
+                let normalizedAnswer = q.answer;
+
+                if (type === 'short') {
+                    if (normalizedAnswers && typeof normalizedAnswers === 'object' && Object.keys(normalizedAnswers).length > 0) {
+                        if (!normalizedAnswer || typeof normalizedAnswer === 'object') {
+                            normalizedAnswer = Object.entries(normalizedAnswers).map(([k, v]) => `${k}=${v}`).join(', ');
+                        }
+                    } else if (normalizedAnswer) {
+                        if (typeof normalizedAnswer === 'object') {
+                            normalizedAnswers = { ...normalizedAnswer };
+                            normalizedAnswer = Object.entries(normalizedAnswers).map(([k, v]) => `${k}=${v}`).join(', ');
+                        } else if (typeof normalizedAnswer === 'string' && normalizedAnswer.includes('=')) {
+                            const parsed = {};
+                            normalizedAnswer.split(',').forEach(p => {
+                                const [k, ...v] = p.split('=');
+                                if (k) parsed[k.trim()] = v.join('=').trim();
+                            });
+                            if (Object.keys(parsed).length > 0) {
+                                normalizedAnswers = parsed;
+                            }
+                        }
+                    }
+                    if (!normalizedAnswers || typeof normalizedAnswers !== 'object') normalizedAnswers = {};
+                    if (typeof normalizedAnswer !== 'string') normalizedAnswer = '';
+                }
+
                 const matches = this.matchQuestionKeywords({ ...q, chapterName: chap.chapter }, subject);
                 const topMatch = matches.length > 0 ? matches[0] : null;
                 const topScore = topMatch ? topMatch.score : 0;
@@ -268,6 +295,7 @@ export const ExamEngine = {
                 const isSuperHighYield = topScore >= 6;
                 pool.push({
                     ...q,
+                    ...(type === 'short' ? { answers: normalizedAnswers, answer: normalizedAnswer } : {}),
                     qKey: `${subject}_${type}_${chap.chapter}_${q.id}`,
                     subject,
                     type,
@@ -318,6 +346,26 @@ export const ExamEngine = {
         return this.LADDER_WEIGHTS[effectiveScore] || 1.0;
     },
 
+    getUserWeight(question, stat) {
+        if (!stat || !stat.wrongCount || stat.wrongCount <= 0) return 1.0;
+        const topScore = (question && question.topScore !== undefined) ? question.topScore : 0;
+
+        // 1) Score 0~1 (비핵심/잡문제): 틀려도 가중치 증가 0! (1.0 고정 -> 도배 방지)
+        if (topScore <= 1) {
+            return 1.0;
+        }
+
+        // 2) Score 2~4 (알짜 일반 문항): 틀렸을 때 최대 1.4배로 소폭 상승
+        if (topScore < 5) {
+            return stat.wrongCount === 1 ? 1.2 : 1.4;
+        }
+
+        // 3) Score 5~7 (딱지 문항 / 핵심 300선): 최대 1.8배로 캡 (기존 10배 폭등 제거)
+        if (stat.wrongCount === 1) return 1.3;
+        if (stat.wrongCount === 2) return 1.5;
+        return 1.8;
+    },
+
     /**
      * Weighted random selection (Roulette Wheel)
      * Probability of question i: P_i = W_i / sum(W_k)
@@ -328,7 +376,7 @@ export const ExamEngine = {
 
         const weights = available.map(it => {
             const stat = statsMap[it.qKey];
-            const userWeight = (stat && stat.weight) ? stat.weight : 1.0;
+            const userWeight = this.getUserWeight(it, stat);
             
             // 3일 망각 주기 반영된 동적 임시 Score 기반 사다리 가중치
             const effScore = this.getEffectiveScore(it, stat);
@@ -365,6 +413,18 @@ export const ExamEngine = {
                 pickedIndices.add(chosenIdx);
                 selected.push(available[chosenIdx]);
             }
+        }
+
+        // Fallback: If totalWeight <= 0 but we still need items and available has unpicked items, pick uniformly
+        while (selected.length < count && pickedIndices.size < available.length) {
+            const unpicked = [];
+            for (let i = 0; i < available.length; i++) {
+                if (!pickedIndices.has(i)) unpicked.push(i);
+            }
+            if (unpicked.length === 0) break;
+            const rIdx = unpicked[Math.floor(Math.random() * unpicked.length)];
+            pickedIndices.add(rIdx);
+            selected.push(available[rIdx]);
         }
 
         return selected;
@@ -478,7 +538,7 @@ export const ExamEngine = {
 
         const remainderWeights = seen.map(it => {
             const stat = statsMap[it.qKey] || {};
-            const userWeight = stat.weight || 1.0;
+            const userWeight = this.getUserWeight(it, stat);
             const tryCount = stat.tryCount || 1;
             const effScore = this.getEffectiveScore(it, stat);
             const scoreWeight = this.getScoreWeight(effScore);
@@ -514,6 +574,17 @@ export const ExamEngine = {
             }
         }
 
+        while (additional.length < remainderNeeded && pickedIndices.size < seen.length) {
+            const unpicked = [];
+            for (let i = 0; i < seen.length; i++) {
+                if (!pickedIndices.has(i)) unpicked.push(i);
+            }
+            if (unpicked.length === 0) break;
+            const rIdx = unpicked[Math.floor(Math.random() * unpicked.length)];
+            pickedIndices.add(rIdx);
+            additional.push(seen[rIdx]);
+        }
+
         return [...selected, ...additional];
     },
 
@@ -547,14 +618,10 @@ export const ExamEngine = {
             }
 
             if (picked.length < count && poolToUse === underCap) {
-                picked.forEach(q => {
-                    pickedKeys.add(q.qKey);
-                    const t = this.getTopicKey(q);
-                    topicCounts[t] = (topicCounts[t] || 0) + 1;
-                    usedTopicsSet.add(t);
-                });
+                const currentPickedKeys = new Set(picked.map(q => q.qKey));
                 const remainingNeeded = count - picked.length;
-                const fallback = this.weightedPick(available, statsMap, remainingNeeded, pickedKeys);
+                const fallbackAvailable = available.filter(it => !currentPickedKeys.has(it.qKey));
+                const fallback = this.weightedPick(fallbackAvailable, statsMap, remainingNeeded, pickedKeys);
                 picked.push(...fallback);
             }
 
@@ -572,16 +639,16 @@ export const ExamEngine = {
             let targetMc = rule.mc;
             let targetSa = rule.sa;
 
+            const chapterMcList = mcPool.filter(q => rule.pattern.test(q.chapterName));
+            const chapterSaList = saPool.filter(q => rule.pattern.test(q.chapterName));
+
             if (rule.randomSwap && (targetMc + targetSa === 1)) {
-                if (Math.random() < 0.5) {
+                if (Math.random() < 0.5 && chapterSaList.length > 0) {
                     targetMc = 0; targetSa = 1;
-                } else {
+                } else if (chapterMcList.length > 0) {
                     targetMc = 1; targetSa = 0;
                 }
             }
-
-            const chapterMcList = mcPool.filter(q => rule.pattern.test(q.chapterName));
-            const chapterSaList = saPool.filter(q => rule.pattern.test(q.chapterName));
 
             // 1) MC: Guaranteed at least 40% high yield from core 300 candidates
             if (targetMc > 0) {
@@ -618,9 +685,24 @@ export const ExamEngine = {
             const remainderAll = pickWithTopicCap(mcPool, 24 - selectedMC.length, false);
             selectedMC.push(...remainderAll);
         }
+        while (selectedMC.length < 24) {
+            const unpicked = mcPool.filter(q => !pickedKeys.has(q.qKey));
+            if (unpicked.length === 0) break;
+            const r = unpicked[Math.floor(Math.random() * unpicked.length)];
+            pickedKeys.add(r.qKey);
+            selectedMC.push(r);
+        }
+
         if (selectedSA.length < 16) {
             const remainderAll = pickWithTopicCap(saPool, 16 - selectedSA.length, false);
             selectedSA.push(...remainderAll);
+        }
+        while (selectedSA.length < 16) {
+            const unpicked = saPool.filter(q => !pickedKeys.has(q.qKey));
+            if (unpicked.length === 0) break;
+            const r = unpicked[Math.floor(Math.random() * unpicked.length)];
+            pickedKeys.add(r.qKey);
+            selectedSA.push(r);
         }
 
         // 실전 시험지 순서 (1~24번 객관식 법률/단원순 -> 25~40번 주관식 법률/단원순)
@@ -660,14 +742,10 @@ export const ExamEngine = {
             }
 
             if (picked.length < count && poolToUse === underCap) {
-                picked.forEach(q => {
-                    pickedKeys.add(q.qKey);
-                    const t = this.getTopicKey(q);
-                    topicCounts[t] = (topicCounts[t] || 0) + 1;
-                    usedTopicsSet.add(t);
-                });
+                const currentPickedKeys = new Set(picked.map(q => q.qKey));
                 const remainingNeeded = count - picked.length;
-                const fallback = this.weightedPick(available, statsMap, remainingNeeded, pickedKeys);
+                const fallbackAvailable = available.filter(it => !currentPickedKeys.has(it.qKey));
+                const fallback = this.weightedPick(fallbackAvailable, statsMap, remainingNeeded, pickedKeys);
                 picked.push(...fallback);
             }
 
@@ -722,9 +800,24 @@ export const ExamEngine = {
             const remainderAll = pickWithTopicCap(mcPool, 20 - selectedMC.length, false);
             selectedMC.push(...remainderAll);
         }
+        while (selectedMC.length < 20) {
+            const unpicked = mcPool.filter(q => !pickedKeys.has(q.qKey));
+            if (unpicked.length === 0) break;
+            const r = unpicked[Math.floor(Math.random() * unpicked.length)];
+            pickedKeys.add(r.qKey);
+            selectedMC.push(r);
+        }
+
         if (selectedSA.length < 20) {
             const remainderAll = pickWithTopicCap(saPool, 20 - selectedSA.length, false);
             selectedSA.push(...remainderAll);
+        }
+        while (selectedSA.length < 20) {
+            const unpicked = saPool.filter(q => !pickedKeys.has(q.qKey));
+            if (unpicked.length === 0) break;
+            const r = unpicked[Math.floor(Math.random() * unpicked.length)];
+            pickedKeys.add(r.qKey);
+            selectedSA.push(r);
         }
 
         return [...selectedMC.slice(0, 20), ...selectedSA.slice(0, 20)];
@@ -805,7 +898,19 @@ export const ExamEngine = {
         const saPool = this.getQuestionPool(subject, 'short');
         const all = [...mcPool, ...saPool];
 
-        const weakItems = all.filter(q => (statsMap[q.qKey]?.weight || 1) >= 2);
+        // 오답 이력이 있는 모든 문항 (wrongCount > 0 또는 weight >= 1.2)
+        const weakItems = all.filter(q => (statsMap[q.qKey]?.wrongCount || 0) > 0 || (statsMap[q.qKey]?.weight || 1) >= 1.2);
+
+        // 핵심 빈출(Score 높은 순) 우선 선발하여 비핵심 잡문제 오답 도배 차단!
+        weakItems.sort((a, b) => {
+            const scoreA = (a.topScore !== undefined) ? a.topScore : 0;
+            const scoreB = (b.topScore !== undefined) ? b.topScore : 0;
+            if (scoreB !== scoreA) return scoreB - scoreA;
+            const wA = statsMap[a.qKey]?.wrongCount || 0;
+            const wB = statsMap[b.qKey]?.wrongCount || 0;
+            return wB - wA;
+        });
+
         let picked = [];
 
         if (weakItems.length >= count) {

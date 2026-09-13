@@ -33,26 +33,58 @@
     border-color: var(--theme-primary) !important;
 }
 
-/* Floating Stylus Toolbar */
+/* Floating Stylus Toolbar (Vertical Dock at Top-Left) */
 .stylus-toolbar {
     position: fixed;
-    top: 65px;
-    right: 20px;
-    background: #0F172A;
+    top: 70px;
+    left: 16px;
+    right: auto;
+    background: rgba(15, 23, 42, 0.94);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
     border: 1.5px solid var(--theme-primary);
-    border-radius: 30px;
-    padding: 6px 12px;
+    border-radius: 26px;
+    padding: 8px 6px;
     display: none;
+    flex-direction: column;
     align-items: center;
-    gap: 8px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+    gap: 7px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.65), 0 0 16px rgba(56, 189, 248, 0.15);
     z-index: 100;
     pointer-events: auto;
     animation: fadeIn 0.2s ease;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
 }
 
 .stylus-toolbar.active {
     display: flex;
+}
+
+.stylus-drag-handle {
+    width: 28px;
+    height: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748B;
+    font-size: 0.75rem;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: none;
+    transition: color 0.15s ease;
+    margin-bottom: 1px;
+}
+
+.stylus-drag-handle:hover,
+.stylus-drag-handle:active {
+    color: var(--theme-primary);
+}
+
+.stylus-drag-handle:active {
+    cursor: grabbing;
 }
 
 .stylus-btn {
@@ -68,6 +100,7 @@
     font-size: 0.9rem;
     cursor: pointer;
     transition: all 0.15s ease;
+    flex-shrink: 0;
 }
 
 .stylus-btn:hover {
@@ -83,10 +116,11 @@
 }
 
 .stylus-divider {
-    width: 1px;
-    height: 20px;
+    width: 22px;
+    height: 1px;
     background: #334155;
-    margin: 0 2px;
+    margin: 2px 0;
+    flex-shrink: 0;
 }
 
 .color-dot {
@@ -97,6 +131,7 @@
     border: 2px solid transparent;
     transition: transform 0.15s ease;
     box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+    flex-shrink: 0;
 }
 
 .color-dot:hover {
@@ -107,6 +142,27 @@
     border-color: #FFF;
     transform: scale(1.25);
     box-shadow: 0 0 8px rgba(255,255,255,0.7);
+}
+
+@media (max-width: 640px) {
+    .stylus-toolbar {
+        top: 62px;
+        left: 8px;
+        padding: 6px 4px;
+        gap: 5px;
+    }
+    .stylus-btn {
+        width: 30px;
+        height: 30px;
+        font-size: 0.82rem;
+    }
+    .color-dot {
+        width: 17px;
+        height: 17px;
+    }
+    .stylus-divider {
+        width: 18px;
+    }
 }
 
 /* -------------------------------------------------------------
@@ -141,7 +197,6 @@ body.stylus-mode-active .opt-num:active {
 }
 
 body.stylus-mode-active .option-item.selected .opt-num {
-    background: var(--theme-primary) !important;
     color: #000 !important;
     box-shadow: 0 0 14px rgba(56, 189, 248, 0.7);
 }

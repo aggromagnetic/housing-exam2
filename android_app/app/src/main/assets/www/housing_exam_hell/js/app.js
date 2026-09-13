@@ -13,6 +13,67 @@
     const DB_VERSION = 1;
     let dbPromise = null;
 
+    // 🛡️ Master Purged Needs-Edit Keys (53 old baked items + 4 legacy items)
+    const PURGED_NEEDS_EDIT_KEYS = [
+        "관리실무_short_CHAPTER 01 주택의 정의 및 종류_06",
+        "관리실무_short_CHAPTER 04 관리조직 및 입주자대표회의_28",
+        "관리실무_short_CHAPTER 04 관리조직 및 입주자대표회의_91",
+        "관리실무_short_CHAPTER 11 시설관리_472",
+        "관계법규_choice_CHAPTER 02 공동주택관리법_88",
+        "관계법규_short_CHAPTER 09 소방기본법_06",
+        "관계법규_choice_CHAPTER 11 소방시설 설치 및 관리에 관한 법률_15",
+        "관계법규_short_CHAPTER 01 주택법_89",
+        "관계법규_choice_CHAPTER 04 공공주택 특별법_14",
+        "관리실무_short_CHAPTER 11 시설관리_109",
+        "관계법규_short_CHAPTER 02 공동주택관리법_32",
+        "관리실무_choice_CHAPTER 04 관리조직 및 입주자대표회의_83",
+        "관리실무_short_CHAPTER 07 입주자관리 및 자치규약_04",
+        "관리실무_choice_CHAPTER 04 관리조직 및 입주자대표회의_15",
+        "관계법규_short_CHAPTER 02 공동주택관리법_특강_윤동섭_SA_39",
+        "관계법규_short_CHAPTER 08 시설물의 안전 및 유지관리에 관한 특별법_05",
+        "관리실무_choice_CHAPTER 08 사무 및 인사관리_199",
+        "관리실무_short_CHAPTER 03 공동주택의 관리방법_57",
+        "관계법규_short_CHAPTER 05 건축법_44",
+        "관계법규_short_CHAPTER 02 공동주택관리법_83",
+        "관리실무_choice_CHAPTER 08 사무 및 인사관리_138",
+        "관리실무_choice_CHAPTER 11 시설관리_254",
+        "관계법규_short_CHAPTER 01 주택법_102",
+        "관리실무_short_CHAPTER 12 환경 및 안전관리_특강_박성진_SA_01",
+        "관리실무_short_CHAPTER 08 사무 및 인사관리_119",
+        "관계법규_choice_CHAPTER 10 화재의 예방 및 안전관리에 관한 법률_19",
+        "관리실무_short_CHAPTER 12 환경 및 안전관리_특강_박성진_SA_36",
+        "관리실무_short_CHAPTER 11 시설관리_140",
+        "관리실무_choice_CHAPTER 11 시설관리_322",
+        "관리실무_choice_CHAPTER 11 시설관리_538",
+        "관계법규_short_CHAPTER 01 주택법_특강_출제유력_SA_01",
+        "관계법규_choice_CHAPTER 01 주택법_98",
+        "관계법규_choice_CHAPTER 02 공동주택관리법_89",
+        "관계법규_choice_CHAPTER 03 민간임대주택에 관한 특별법_44",
+        "관계법규_choice_CHAPTER 05 건축법_84",
+        "관계법규_choice_CHAPTER 10 화재의 예방 및 안전관리에 관한 법률_03",
+        "관계법규_short_CHAPTER 01 주택법_110",
+        "관계법규_short_CHAPTER 04 공공주택 특별법_13",
+        "관계법규_short_CHAPTER 05 건축법_24",
+        "관계법규_short_CHAPTER 06 도시 및 주거환경정비법_23",
+        "관계법규_short_CHAPTER 08 시설물의 안전 및 유지관리에 관한 특별법_17",
+        "관계법규_short_CHAPTER 13 승강기 안전관리법_20",
+        "관리실무_choice_CHAPTER 03 공동주택의 관리방법_24",
+        "관리실무_choice_CHAPTER 04 관리조직 및 입주자대표회의_32",
+        "관리실무_choice_CHAPTER 08 사무 및 인사관리_66",
+        "관리실무_choice_CHAPTER 08 사무 및 인사관리_46",
+        "관리실무_choice_CHAPTER 08 사무 및 인사관리_184",
+        "관리실무_choice_CHAPTER 09 대외업무 및 리모델링_24",
+        "관리실무_choice_CHAPTER 11 시설관리_특강_김영곤_MC_75",
+        "관리실무_choice_CHAPTER 11 시설관리_239",
+        "관리실무_choice_CHAPTER 11 시설관리_특강_김영곤_MC_92",
+        "관리실무_choice_CHAPTER 12 환경 및 안전관리_45",
+        "관리실무_short_CHAPTER 03 공동주택의 관리방법_39",
+        "관리실무_short_CHAPTER 04 관리조직 및 입주자대표회의_13",
+        "관리실무_short_CHAPTER 08 사무 및 인사관리_100",
+        "관리실무_short_CHAPTER 08 사무 및 인사관리_169",
+        "관리실무_short_CHAPTER 12 환경 및 안전관리_특강_박성진_SA_04"
+    ];
+
     function openDB() {
         if (dbPromise) return dbPromise;
 
@@ -105,10 +166,11 @@
             if (!isCorrect) {
                 existing.wrongCount = (existing.wrongCount || 0) + 1;
                 existing.totalWrongCount = (existing.totalWrongCount || (existing.wrongCount - 1) || 0) + 1;
-                if (existing.wrongCount === 1) existing.weight = 2;
-                else if (existing.wrongCount === 2) existing.weight = 4;
-                else if (existing.wrongCount === 3) existing.weight = 6;
-                else existing.weight = 10;
+                // Balanced remind weight: 1.2 -> 1.4 -> 1.6 -> 1.8 (prevents wrong questions from dominating exam)
+                if (existing.wrongCount === 1) existing.weight = 1.2;
+                else if (existing.wrongCount === 2) existing.weight = 1.4;
+                else if (existing.wrongCount === 3) existing.weight = 1.6;
+                else existing.weight = 1.8;
 
                 // 오답 시 3일 망각 임시 감점 즉시 리셋 (원래 본래 Score로 복구)
                 existing.scoreDeductions = 0;
@@ -120,12 +182,12 @@
                     existing.wrongCount = Math.max(0, existing.wrongCount - 1);
                 }
 
+                // De-escalating step
                 if (existing.wrongCount === 0) {
-                    existing.weight = 1;
-                } else if (existing.weight === 10) existing.weight = 6;
-                else if (existing.weight === 6) existing.weight = 4;
-                else if (existing.weight === 4) existing.weight = 2;
-                else existing.weight = 1;
+                    existing.weight = 1.0;
+                } else if (existing.weight > 1.4) existing.weight = 1.4;
+                else if (existing.weight > 1.2) existing.weight = 1.2;
+                else existing.weight = 1.0;
 
                 // 정답 시 임시 Score 1점씩 감점 누적 (3일간 유지) & 최근 정답 시각 기록
                 existing.scoreDeductions = (existing.scoreDeductions || 0) + 1;
@@ -138,7 +200,11 @@
                     tx.objectStore('question_stats').put(existing);
                 } catch (e) {}
             }
-            if (window.CloudSync) window.CloudSync.schedulePush();
+            if (window.CloudSync && typeof window.CloudSync.scheduleStatsPush === 'function') {
+                window.CloudSync.scheduleStatsPush(60);
+            } else if (window.CloudSync) {
+                window.CloudSync.schedulePush();
+            }
             return existing;
         },
 
@@ -158,7 +224,11 @@
                     tx.objectStore('question_stats').put(stat);
                 } catch (e) {}
             }
-            if (window.CloudSync) window.CloudSync.schedulePush();
+            if (window.CloudSync && typeof window.CloudSync.scheduleStatsPush === 'function') {
+                window.CloudSync.scheduleStatsPush(60);
+            } else if (window.CloudSync) {
+                window.CloudSync.schedulePush();
+            }
             return stat;
         },
 
@@ -169,6 +239,7 @@
             stat.correctCount = 0;
             stat.tryCount = 0;
             stat.lastAttempt = new Date().toISOString();
+            stat.resetAt = new Date().toISOString(); // Tombstone prevents cloud resurrecting deleted wrong answer
 
             const db = await openDB();
             if (db) {
@@ -177,7 +248,11 @@
                     tx.objectStore('question_stats').put(stat);
                 } catch (e) {}
             }
-            if (window.CloudSync) window.CloudSync.schedulePush();
+            if (window.CloudSync && typeof window.CloudSync.scheduleStatsPush === 'function') {
+                window.CloudSync.scheduleStatsPush(60);
+            } else if (window.CloudSync) {
+                window.CloudSync.schedulePush();
+            }
             return stat;
         },
 
@@ -822,7 +897,13 @@
                 const keys = sortSubjectiveEntries(Object.entries(targetAnswers)).map(([k]) => k);
 
                 if (keys.length === 0) {
-                    return { isCorrect: false, details: {}, userSummary: '', correctSummary: '' };
+                    return {
+                        isCorrect: false,
+                        details: {},
+                        userSummary: '(공란)',
+                        correctSummary: '(정답 데이터 미등록)',
+                        isMissingAnswer: true
+                    };
                 }
 
                 let userObj = userResponse;
@@ -1176,13 +1257,33 @@
             return this.LADDER_WEIGHTS[effectiveScore] || 1.0;
         },
 
+        getUserWeight(question, stat) {
+            if (!stat || !stat.wrongCount || stat.wrongCount <= 0) return 1.0;
+            const topScore = (question && question.topScore !== undefined) ? question.topScore : 0;
+
+            // 1) Score 0~1 (비핵심/잡문제): 틀려도 가중치 증가 0! (1.0 고정 -> 도배 방지)
+            if (topScore <= 1) {
+                return 1.0;
+            }
+
+            // 2) Score 2~4 (알짜 일반 문항): 틀렸을 때 최대 1.4배로 소폭 상승
+            if (topScore < 5) {
+                return stat.wrongCount === 1 ? 1.2 : 1.4;
+            }
+
+            // 3) Score 5~7 (딱지 문항 / 핵심 300선): 최대 1.8배로 캡 (기존 10배 폭등 제거)
+            if (stat.wrongCount === 1) return 1.3;
+            if (stat.wrongCount === 2) return 1.5;
+            return 1.8;
+        },
+
         weightedPick(items, statsMap = {}, count, excludeKeysSet = new Set()) {
             const available = items.filter(it => !excludeKeysSet.has(it.qKey));
             if (available.length <= count) return available;
 
             const weights = available.map(it => {
                 const stat = statsMap[it.qKey];
-                const userWeight = (stat && stat.weight) ? stat.weight : 1.0;
+                const userWeight = this.getUserWeight(it, stat);
                 
                 // 3일 망각 주기 반영된 동적 임시 Score 기반 사다리 가중치
                 const effScore = this.getEffectiveScore(it, stat);
@@ -1219,6 +1320,18 @@
                     pickedIndices.add(chosenIdx);
                     selected.push(available[chosenIdx]);
                 }
+            }
+
+            // Fallback: If totalWeight <= 0 but we still need items and available has unpicked items, pick uniformly
+            while (selected.length < count && pickedIndices.size < available.length) {
+                const unpicked = [];
+                for (let i = 0; i < available.length; i++) {
+                    if (!pickedIndices.has(i)) unpicked.push(i);
+                }
+                if (unpicked.length === 0) break;
+                const rIdx = unpicked[Math.floor(Math.random() * unpicked.length)];
+                pickedIndices.add(rIdx);
+                selected.push(available[rIdx]);
             }
 
             return selected;
@@ -1328,7 +1441,7 @@
 
             const remainderWeights = seen.map(it => {
                 const stat = statsMap[it.qKey] || {};
-                const userWeight = stat.weight || 1.0;
+                const userWeight = this.getUserWeight(it, stat);
                 const tryCount = stat.tryCount || 1;
                 const effScore = this.getEffectiveScore(it, stat);
                 const scoreWeight = this.getScoreWeight(effScore);
@@ -1364,6 +1477,17 @@
                 }
             }
 
+            while (additional.length < remainderNeeded && pickedIndices.size < seen.length) {
+                const unpicked = [];
+                for (let i = 0; i < seen.length; i++) {
+                    if (!pickedIndices.has(i)) unpicked.push(i);
+                }
+                if (unpicked.length === 0) break;
+                const rIdx = unpicked[Math.floor(Math.random() * unpicked.length)];
+                pickedIndices.add(rIdx);
+                additional.push(seen[rIdx]);
+            }
+
             return [...selected, ...additional];
         },
 
@@ -1394,14 +1518,10 @@
                 }
 
                 if (picked.length < count && poolToUse === underCap) {
-                    picked.forEach(q => {
-                        pickedKeys.add(q.qKey);
-                        const t = this.getTopicKey(q);
-                        topicCounts[t] = (topicCounts[t] || 0) + 1;
-                        usedTopicsSet.add(t);
-                    });
+                    const currentPickedKeys = new Set(picked.map(q => q.qKey));
                     const remainingNeeded = count - picked.length;
-                    const fallback = this.weightedPick(available, statsMap, remainingNeeded, pickedKeys);
+                    const fallbackAvailable = available.filter(it => !currentPickedKeys.has(it.qKey));
+                    const fallback = this.weightedPick(fallbackAvailable, statsMap, remainingNeeded, pickedKeys);
                     picked.push(...fallback);
                 }
 
@@ -1419,16 +1539,16 @@
                 let targetMc = rule.mc;
                 let targetSa = rule.sa;
 
+                const chapterMcList = mcPool.filter(q => rule.pattern.test(q.chapterName));
+                const chapterSaList = saPool.filter(q => rule.pattern.test(q.chapterName));
+
                 if (rule.randomSwap && (targetMc + targetSa === 1)) {
-                    if (Math.random() < 0.5) {
+                    if (Math.random() < 0.5 && chapterSaList.length > 0) {
                         targetMc = 0; targetSa = 1;
-                    } else {
+                    } else if (chapterMcList.length > 0) {
                         targetMc = 1; targetSa = 0;
                     }
                 }
-
-                const chapterMcList = mcPool.filter(q => rule.pattern.test(q.chapterName));
-                const chapterSaList = saPool.filter(q => rule.pattern.test(q.chapterName));
 
                 // 1) MC: Guaranteed at least 40% high yield from core 300 candidates
                 if (targetMc > 0) {
@@ -1465,9 +1585,24 @@
                 const remainderAll = pickWithTopicCap(mcPool, 24 - selectedMC.length, false);
                 selectedMC.push(...remainderAll);
             }
+            while (selectedMC.length < 24) {
+                const unpicked = mcPool.filter(q => !pickedKeys.has(q.qKey));
+                if (unpicked.length === 0) break;
+                const r = unpicked[Math.floor(Math.random() * unpicked.length)];
+                pickedKeys.add(r.qKey);
+                selectedMC.push(r);
+            }
+
             if (selectedSA.length < 16) {
                 const remainderAll = pickWithTopicCap(saPool, 16 - selectedSA.length, false);
                 selectedSA.push(...remainderAll);
+            }
+            while (selectedSA.length < 16) {
+                const unpicked = saPool.filter(q => !pickedKeys.has(q.qKey));
+                if (unpicked.length === 0) break;
+                const r = unpicked[Math.floor(Math.random() * unpicked.length)];
+                pickedKeys.add(r.qKey);
+                selectedSA.push(r);
             }
 
             // 실전 시험지 순서와 100% 동일하게 정렬:
@@ -1509,14 +1644,10 @@
                 }
 
                 if (picked.length < count && poolToUse === underCap) {
-                    picked.forEach(q => {
-                        pickedKeys.add(q.qKey);
-                        const t = this.getTopicKey(q);
-                        topicCounts[t] = (topicCounts[t] || 0) + 1;
-                        usedTopicsSet.add(t);
-                    });
+                    const currentPickedKeys = new Set(picked.map(q => q.qKey));
                     const remainingNeeded = count - picked.length;
-                    const fallback = this.weightedPick(available, statsMap, remainingNeeded, pickedKeys);
+                    const fallbackAvailable = available.filter(it => !currentPickedKeys.has(it.qKey));
+                    const fallback = this.weightedPick(fallbackAvailable, statsMap, remainingNeeded, pickedKeys);
                     picked.push(...fallback);
                 }
 
@@ -1571,9 +1702,24 @@
                 const remainderAll = pickWithTopicCap(mcPool, 20 - selectedMC.length, false);
                 selectedMC.push(...remainderAll);
             }
+            while (selectedMC.length < 20) {
+                const unpicked = mcPool.filter(q => !pickedKeys.has(q.qKey));
+                if (unpicked.length === 0) break;
+                const r = unpicked[Math.floor(Math.random() * unpicked.length)];
+                pickedKeys.add(r.qKey);
+                selectedMC.push(r);
+            }
+
             if (selectedSA.length < 20) {
                 const remainderAll = pickWithTopicCap(saPool, 20 - selectedSA.length, false);
                 selectedSA.push(...remainderAll);
+            }
+            while (selectedSA.length < 20) {
+                const unpicked = saPool.filter(q => !pickedKeys.has(q.qKey));
+                if (unpicked.length === 0) break;
+                const r = unpicked[Math.floor(Math.random() * unpicked.length)];
+                pickedKeys.add(r.qKey);
+                selectedSA.push(r);
             }
 
             return [...selectedMC.slice(0, 20), ...selectedSA.slice(0, 20)].map(q => ({ ...q }));
@@ -1587,7 +1733,11 @@
          * 4) Question Type Interleaving: Balances MC vs SA flow
          */
         shuffleWithAntiClumping(questions, windowSize = 15) {
-            const remaining = [...questions].sort(() => Math.random() - 0.5);
+            // ⚡ O(1) Optimization: Pre-compute and cache topic keys to eliminate 48,000+ regex/string calls
+            const remaining = questions.map(q => ({
+                ...q,
+                _topicKey: q._topicKey || this.getTopicKey(q)
+            })).sort(() => Math.random() - 0.5);
             const result = [];
 
             while (remaining.length > 0) {
@@ -1602,8 +1752,8 @@
                     for (let d = 1; d <= lookback; d++) {
                         const prev = result[result.length - d];
 
-                        // 1. 동일 주제/키워드(Topic) 패널티: 최근 15문제 내 출제 시 강력한 거리 가중치 부여
-                        if (this.getTopicKey(prev) === this.getTopicKey(q)) {
+                        // 1. 동일 주제/키워드(Topic) 패널티: 최근 15문제 내 출제 시 강력한 거리 가중치 부여 (O(1) 속도)
+                        if (prev._topicKey === q._topicKey) {
                             penalty += (windowSize + 1 - d) * 150;
                         }
 
@@ -1651,7 +1801,19 @@
             const saPool = this.getQuestionPool(subject, 'short');
             const all = [...mcPool, ...saPool];
 
-            const weakItems = all.filter(q => (statsMap[q.qKey]?.weight || 1) >= 2);
+            // 오답 이력이 있는 모든 문항 (wrongCount > 0 또는 weight >= 1.2)
+            const weakItems = all.filter(q => (statsMap[q.qKey]?.wrongCount || 0) > 0 || (statsMap[q.qKey]?.weight || 1) >= 1.2);
+
+            // 핵심 빈출(Score 높은 순) 우선 선발하여 비핵심 잡문제 오답 도배 차단!
+            weakItems.sort((a, b) => {
+                const scoreA = (a.topScore !== undefined) ? a.topScore : 0;
+                const scoreB = (b.topScore !== undefined) ? b.topScore : 0;
+                if (scoreB !== scoreA) return scoreB - scoreA;
+                const wA = statsMap[a.qKey]?.wrongCount || 0;
+                const wB = statsMap[b.qKey]?.wrongCount || 0;
+                return wB - wA;
+            });
+
             let picked = [];
 
             if (weakItems.length >= count) {
@@ -1726,6 +1888,7 @@
             this.penColor = '#38BDF8';
             this.penWidth = 3;
             this.palmRejection = true;
+            this.stylusOnly = typeof localStorage !== 'undefined' && localStorage.getItem('housing_exam_stylus_only') === 'true';
 
             this.currentQuestionKey = null;
             this.strokes = [];
@@ -1755,13 +1918,17 @@
             const dpr = window.devicePixelRatio || 1;
             const targetWidth = Math.round(rect.width);
             const targetHeight = Math.round(rect.height);
+            const expectedW = targetWidth * dpr;
+            const expectedH = targetHeight * dpr;
 
-            this.canvas.width = targetWidth * dpr;
-            this.canvas.height = targetHeight * dpr;
-            this.canvas.style.width = targetWidth + 'px';
-            this.canvas.style.height = targetHeight + 'px';
-
-            this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            // ⚡ GPU Optimization: Only reallocate canvas buffer if size actually changed (e.g. tablet rotation)
+            if (this.canvas.width !== expectedW || this.canvas.height !== expectedH) {
+                this.canvas.width = expectedW;
+                this.canvas.height = expectedH;
+                this.canvas.style.width = targetWidth + 'px';
+                this.canvas.style.height = targetHeight + 'px';
+                this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            }
             this.redraw();
         }
 
@@ -1797,6 +1964,21 @@
                     clearBtn.addEventListener('click', () => this.clearCurrentStrokes());
                 }
 
+                const stylusOnlyBtn = document.getElementById('btn-stylus-only');
+                if (stylusOnlyBtn) {
+                    stylusOnlyBtn.classList.toggle('active', this.stylusOnly);
+                    stylusOnlyBtn.title = this.stylusOnly ? 'S펜 전용 모드 ON (손터치 방지)' : 'S펜 전용 모드 (손터치 방지)';
+                    stylusOnlyBtn.addEventListener('click', () => {
+                        this.stylusOnly = !this.stylusOnly;
+                        localStorage.setItem('housing_exam_stylus_only', this.stylusOnly ? 'true' : 'false');
+                        stylusOnlyBtn.classList.toggle('active', this.stylusOnly);
+                        stylusOnlyBtn.title = this.stylusOnly ? 'S펜 전용 모드 ON (손터치 방지)' : 'S펜 전용 모드 (손터치 방지)';
+                        if (typeof showToast === 'function') {
+                            showToast(this.stylusOnly ? '✋ S펜 전용 필기 모드 ON (손터치 무시)' : '🖐 터치 필기 허용 모드 ON');
+                        }
+                    });
+                }
+
                 const closeBtn = document.getElementById('btn-close-stylus');
                 if (closeBtn) {
                     closeBtn.addEventListener('click', () => {
@@ -1804,6 +1986,48 @@
                         const headerPen = document.getElementById('btn-toggle-pen');
                         if (headerPen) headerPen.classList.remove('active');
                     });
+                }
+
+                // Draggable vertical toolbar support
+                const dragHandle = this.toolbar.querySelector('.stylus-drag-handle');
+                if (dragHandle) {
+                    let isDragging = false;
+                    let startX = 0, startY = 0;
+                    let initialLeft = 0, initialTop = 0;
+
+                    dragHandle.addEventListener('pointerdown', (e) => {
+                        if (e.target.closest('.stylus-btn, .color-dot')) return;
+                        isDragging = true;
+                        startX = e.clientX;
+                        startY = e.clientY;
+                        const rect = this.toolbar.getBoundingClientRect();
+                        initialLeft = rect.left;
+                        initialTop = rect.top;
+                        this.toolbar.style.right = 'auto';
+                        try { dragHandle.setPointerCapture(e.pointerId); } catch (_) {}
+                        e.preventDefault();
+                    });
+
+                    dragHandle.addEventListener('pointermove', (e) => {
+                        if (!isDragging) return;
+                        const dx = e.clientX - startX;
+                        const dy = e.clientY - startY;
+                        const maxLeft = Math.max(0, window.innerWidth - this.toolbar.offsetWidth - 6);
+                        const maxTop = Math.max(50, window.innerHeight - this.toolbar.offsetHeight - 6);
+                        const newLeft = Math.max(6, Math.min(maxLeft, initialLeft + dx));
+                        const newTop = Math.max(56, Math.min(maxTop, initialTop + dy));
+                        this.toolbar.style.left = `${newLeft}px`;
+                        this.toolbar.style.top = `${newTop}px`;
+                    });
+
+                    const stopDrag = (e) => {
+                        if (!isDragging) return;
+                        isDragging = false;
+                        try { dragHandle.releasePointerCapture(e.pointerId); } catch (_) {}
+                    };
+
+                    dragHandle.addEventListener('pointerup', stopDrag);
+                    dragHandle.addEventListener('pointercancel', stopDrag);
                 }
             }
         }
@@ -1820,6 +2044,23 @@
             if (!this.isEnabled) return;
 
             if (this.palmRejection && e.pointerType === 'touch' && e.isPrimary === false) return;
+
+            // S-Pen / Stylus Only Palm Rejection: Ignore touch drawing, allow interactive taps
+            if (this.stylusOnly && e.pointerType === 'touch') {
+                this.canvas.style.pointerEvents = 'none';
+                const underEl = document.elementFromPoint(e.clientX, e.clientY);
+                this.canvas.style.pointerEvents = 'auto';
+                if (underEl) {
+                    const interactive = underEl.closest('.opt-num, button, input, textarea, a, .blank-input, .btn-ctrl, .btn-ctrl-sm, .btn-override, .color-dot, .stylus-btn, .btn-toggle-hw, .stylus-drag-handle');
+                    if (interactive) {
+                        interactive.click();
+                        if (['INPUT', 'TEXTAREA'].includes(interactive.tagName)) {
+                            interactive.focus();
+                        }
+                    }
+                }
+                return;
+            }
 
             this.isDrawing = true;
             this.pointerDownPos = this.getPos(e);
@@ -1846,6 +2087,7 @@
 
         onPointerMove(e) {
             if (!this.isDrawing || !this.currentStroke) return;
+            if (this.stylusOnly && e.pointerType === 'touch') return;
 
             const pos = this.getPos(e);
             if (this.pointerDownPos) {
@@ -1932,7 +2174,7 @@
                     }
 
                     // 2. 일반 대화형 버튼/입력창 터치 처리 (.option-item 제외)
-                    const targetInteractive = underEl.closest('button:not(.option-item), input, textarea, a, .blank-input, .btn-ctrl, .btn-ctrl-sm, .btn-override, .color-dot, .stylus-btn, .btn-toggle-hw');
+                    const targetInteractive = underEl.closest('button:not(.option-item), input, textarea, a, .blank-input, .btn-ctrl, .btn-ctrl-sm, .btn-override, .color-dot, .stylus-btn, .btn-toggle-hw, .stylus-drag-handle');
                     if (targetInteractive) {
                         targetInteractive.click();
                         if (['INPUT', 'TEXTAREA'].includes(targetInteractive.tagName)) {
@@ -1945,8 +2187,8 @@
 
             if (this.currentQuestionKey && state.sessionStrokes) {
                 state.sessionStrokes.set(this.currentQuestionKey, [...this.strokes]);
-                // Memory Guard: If session strokes exceed 35 questions, prune oldest entries to keep RAM low
-                if (state.sessionStrokes.size > 35) {
+                // Memory Guard: If session strokes exceed 150 questions, prune oldest entries to keep RAM low
+                if (state.sessionStrokes.size > 150) {
                     const oldestKey = state.sessionStrokes.keys().next().value;
                     if (oldestKey && oldestKey !== this.currentQuestionKey) {
                         state.sessionStrokes.delete(oldestKey);
@@ -2198,11 +2440,14 @@
         managerSearchQuery: '',
         managerPage: 1,
         managerPageSize: 100,
+        managerCurrentList: [],
         wrongManagerTab: 'wrong',
         wrongManagerFilter: 'all',
 
         infiniteSetCount: 1,
         infiniteUsedKeys: new Set(),
+        nextPreloadedHellSet: null,
+        isPreloadingHellSet: false,
 
         currentCombo: 0,
         maxCombo: 0,
@@ -2251,7 +2496,13 @@
     }
 
     function parseSubjectiveAnswers(rawInput, existingAnswers = {}) {
-        const trimmed = (rawInput || '').trim();
+        if (!rawInput) return { answers: {}, answer: '' };
+        if (typeof rawInput === 'object') {
+            const sorted = getSortedAnswersObject(rawInput);
+            const answerStr = Object.entries(sorted).map(([k, v]) => `${k}=${v}`).join(', ');
+            return { answers: sorted, answer: answerStr };
+        }
+        const trimmed = String(rawInput).trim();
         if (!trimmed) return { answers: {}, answer: '' };
 
         const existingKeys = Object.keys(existingAnswers || {});
@@ -2334,6 +2585,7 @@
                 btnToggleExp: document.getElementById('btn-toggle-exp'),
                 btnRetry: document.getElementById('btn-retry-q'),
                 btnFlagNeedsEdit: document.getElementById('btn-flag-needs-edit'),
+                btnExcludeQuestion: document.getElementById('btn-exclude-question'),
                 bottomControls: document.getElementById('quiz-bottom-controls')
             },
             manager: {
@@ -2393,6 +2645,7 @@
                 editTip: document.getElementById('mgr-edit-tip'),
                 btnExportBackup: document.getElementById('btn-export-backup'),
                 btnImportBackup: document.getElementById('btn-import-backup'),
+                btnPrintA4: document.getElementById('btn-print-all-wrongs-a4'),
                 fileImportBackup: document.getElementById('file-import-backup')
             },
             modals: {
@@ -2402,6 +2655,7 @@
                 wrongManager: document.getElementById('modal-wrong-manager'),
                 editQuestion: document.getElementById('modal-edit-question'),
                 downloadMd: document.getElementById('modal-download-md'),
+                a4Print: document.getElementById('modal-a4-print'),
                 questionPreview: document.getElementById('modal-question-preview'),
                 omrGrid: document.getElementById('omr-grid-container'),
                 partList: document.getElementById('part-list-container'),
@@ -2427,6 +2681,7 @@
                 timeCount: document.getElementById('res-time-count'),
                 btnCopyAI: document.getElementById('btn-copy-ai-prompt'),
                 btnDownloadAIMD: document.getElementById('btn-download-ai-md'),
+                btnPrintA4: document.getElementById('btn-print-result-a4'),
                 btnRetry: document.getElementById('btn-retry-session'),
                 btnHomeFromRes: document.getElementById('btn-home-from-result')
             },
@@ -2447,7 +2702,8 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260908.1930</span>';
+                const semver = window.APP_SEMVER || 'v.0.260910.1830';
+                elements.header.modeTitle.innerHTML = `<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">${semver}</span>`;
             }
         } else {
             if (elements.body) elements.body.classList.remove('manager-mode');
@@ -2472,7 +2728,8 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                elements.header.modeTitle.innerHTML = '<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260908.1930</span>';
+                const semver = window.APP_SEMVER || 'v.0.260910.1830';
+                elements.header.modeTitle.innerHTML = `<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">${semver}</span>`;
             }
             if (elements.header.timerBadge) {
                 elements.header.timerBadge.textContent = '00:00';
@@ -2724,6 +2981,8 @@
         if (modeKey === 'infinite') {
             state.infiniteSetCount = 1;
             state.infiniteUsedKeys.clear();
+            state.nextPreloadedHellSet = null;
+            state.isPreloadingHellSet = false;
             // 헬 모드: 과목(관계법규+관리실무 50:50) 및 전 단원 블루프린트 100% 반영 80문항 융합 세트
             state.questions = ExamEngine.generateInfiniteHellSet(state.statsMap, state.infiniteUsedKeys);
             state.questions.forEach(q => {
@@ -2999,9 +3258,16 @@
         }
 
         const stat = state.statsMap[q.qKey] || { weight: 1, wrongCount: 0 };
+        const wrongCount = stat.wrongCount || 0;
         const weight = stat.weight || 1;
 
-        elements.quiz.card.className = `quiz-card card-w${weight >= 3.0 ? 10 : (weight >= 2.5 ? 6 : (weight >= 2.0 ? 4 : (weight >= 1.5 ? 2 : 1)))}`;
+        const isLv4 = wrongCount >= 4 || weight >= 10;
+        const isLv3 = wrongCount >= 3 || weight >= 6 || weight >= 1.6;
+        const isLv2 = wrongCount >= 2 || weight >= 4 || weight >= 1.4;
+        const isLv1 = wrongCount >= 1 || weight >= 2 || weight >= 1.2;
+
+        const cardW = isLv4 ? 10 : (isLv3 ? 6 : (isLv2 ? 4 : (isLv1 ? 2 : 1)));
+        elements.quiz.card.className = `quiz-card card-w${cardW}`;
 
         if (state.mode === 'infinite') {
             const isLaw = q.subject === '관계법규';
@@ -3052,10 +3318,10 @@
         }
 
         let wIcon = '🌱 기본';
-        if (weight >= 10) wIcon = '🔥 지옥 (Lv.4)';
-        else if (weight >= 6) wIcon = '🚨 취약 (Lv.3)';
-        else if (weight >= 4) wIcon = '⚠️ 주의 (Lv.2)';
-        else if (weight >= 2) wIcon = '⚡ 복습 (Lv.1)';
+        if (isLv4) wIcon = '🔥 지옥 (Lv.4)';
+        else if (isLv3) wIcon = '🚨 취약 (Lv.3)';
+        else if (isLv2) wIcon = '⚠️ 주의 (Lv.2)';
+        else if (isLv1) wIcon = '⚡ 복습 (Lv.1)';
         elements.quiz.weightBadge.textContent = wIcon;
 
         // Smart formatting for Title and Passage
@@ -3134,6 +3400,19 @@
                 : '<i class="fa-solid fa-flag"></i> 수정필요';
         }
 
+        // Update [출제제외] button state
+        const btnExcludeQ = document.getElementById('btn-exclude-question');
+        if (btnExcludeQ) {
+            const isExcluded = !!(state.deletedKeysSet && state.deletedKeysSet.has(q.qKey));
+            btnExcludeQ.classList.toggle('active', isExcluded);
+            btnExcludeQ.innerHTML = isExcluded
+                ? '<i class="fa-solid fa-ban text-red-500"></i> 제외됨'
+                : '<i class="fa-solid fa-ban"></i> 출제제외';
+            btnExcludeQ.title = isExcluded
+                ? '현재 출제 제외된 문항입니다. 클릭하면 출제 풀로 복원할 수 있습니다.'
+                : '이 문제를 앞으로 모의고사 및 헬 모드 출제 풀에서 영구 제외(삭제)합니다.';
+        }
+
         // Show [다시 풀기] button ONLY when problem is graded and INCORRECT!
         if (elements.quiz.btnRetry) {
             const res = state.results[index];
@@ -3173,6 +3452,11 @@
         if (state.mode === 'mock') {
             MockSessionManager.saveSession(state);
         }
+
+        // 🚀 Background Prefetch: Preload next 80 questions in background when within 15 questions of set end
+        if (state.mode === 'infinite' && index >= state.questions.length - 15) {
+            prefetchNextHellSet();
+        }
     }
 
     function renderChoiceOptions(q, index) {
@@ -3203,7 +3487,7 @@
             }
 
             optBtn.innerHTML = `
-                <span class="opt-num">${choiceNum}</span>
+                <span class="opt-num"><span class="opt-num-text">${choiceNum}</span></span>
                 <span class="${textClass}">${optText}${extraBadge}</span>
             `;
 
@@ -3248,9 +3532,32 @@
         elements.quiz.subjectiveContainer.innerHTML = '';
         const userResponse = state.userAnswers[index] || {};
         const res = state.results[index];
-        const targetAnswers = q.answers || {};
+        let targetAnswers = q.answers || {};
+        let entries = sortSubjectiveEntries(Object.entries(targetAnswers));
 
-        sortSubjectiveEntries(Object.entries(targetAnswers)).forEach(([k]) => {
+        // If answers has no entries, fallback to q.answer
+        if (entries.length === 0 && q.answer) {
+            const parsed = parseSubjectiveAnswers(q.answer);
+            if (Object.keys(parsed.answers).length > 0) {
+                targetAnswers = parsed.answers;
+                q.answers = targetAnswers; // cache
+                entries = sortSubjectiveEntries(Object.entries(targetAnswers));
+            }
+        }
+
+        // If still empty (corrupted/missing answer), show friendly warning banner and provide fallback input
+        if (entries.length === 0) {
+            const warningBanner = document.createElement('div');
+            warningBanner.className = 'empty-answer-warning';
+            warningBanner.style.cssText = 'padding: 12px 14px; margin-bottom: 14px; background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.4); border-radius: 8px; font-size: 0.88rem; color: #f87171; line-height: 1.5; display: flex; align-items: flex-start; gap: 8px;';
+            warningBanner.innerHTML = `<i class="fa-solid fa-triangle-exclamation" style="margin-top: 2px; font-size: 1rem; color: #ef4444;"></i><div><strong>[정답 확인 필요]</strong> 본 문항은 등록된 정답 데이터가 비어 있어 자동 채점이 지원되지 않습니다.<br>상단의 <strong>[수정필요]</strong> 버튼을 눌러 정답을 제보하시거나 하단의 <strong>[정답 및 해설]</strong> 버튼을 눌러 해설을 확인해 주세요.</div>`;
+            elements.quiz.subjectiveContainer.appendChild(warningBanner);
+
+            targetAnswers = { '1': '' };
+            entries = [['1', '']];
+        }
+
+        entries.forEach(([k]) => {
             const wrapper = document.createElement('div');
             wrapper.className = 'blank-row-wrapper';
 
@@ -3522,13 +3829,25 @@
 
         state.userAnswers[idx] = choiceNum;
 
-        // Visual selection update
+        // Visual selection update with water bubble pop & ink bloom animation
         const optBtns = elements.quiz.optionsContainer.querySelectorAll('.option-item');
         optBtns.forEach((btn, optIdx) => {
+            const numSpan = btn.querySelector('.opt-num');
             if (optIdx + 1 === choiceNum) {
                 btn.classList.add('selected');
+                btn.classList.remove('item-select-pop');
+                if (numSpan) {
+                    numSpan.classList.remove('opt-num-pop');
+                    requestAnimationFrame(() => {
+                        btn.classList.add('item-select-pop');
+                        numSpan.classList.add('opt-num-pop');
+                    });
+                }
             } else {
-                btn.classList.remove('selected');
+                btn.classList.remove('selected', 'item-select-pop');
+                if (numSpan) {
+                    numSpan.classList.remove('opt-num-pop');
+                }
             }
         });
 
@@ -3553,15 +3872,14 @@
         const gradeRes = Grader.grade(q, userAns);
         state.results[idx] = gradeRes;
 
+        // 🚀 0ms Instant Optimistic Feedback:
+        // Explode fireworks/confetti and trigger vibrations the exact millisecond of answer determination!
+        // Never wait for IndexedDB disk I/O or DOM rebuilding before feedback!
+        triggerVisualFeedback(gradeRes.isCorrect);
+
         // 최초 시도인 경우에만 오답 가중치 DB 기록 및 시험 성적용 최초 결과 박제!
         if (state.firstAttemptResults[idx] === undefined) {
             state.firstAttemptResults[idx] = gradeRes;
-            const updatedStat = await IDBStore.recordAnswer(q.qKey, gradeRes.isCorrect, {
-                subject: q.subject,
-                type: q.type,
-                chapter: q.chapterName
-            });
-            state.statsMap[q.qKey] = updatedStat;
 
             // 콤보 스트릭 계산
             if (gradeRes.isCorrect) {
@@ -3575,11 +3893,21 @@
             } else {
                 state.currentCombo = 0;
             }
+
+            // Async non-blocking DB record (background parallel execution)
+            IDBStore.recordAnswer(q.qKey, gradeRes.isCorrect, {
+                subject: q.subject,
+                type: q.type,
+                chapter: q.chapterName
+            }).then(updatedStat => {
+                if (updatedStat) state.statsMap[q.qKey] = updatedStat;
+            }).catch(err => {
+                console.warn('[IDBStore] Async recordAnswer error:', err);
+            });
         }
 
-        renderQuestion(idx);
+        await renderQuestion(idx);
         toggleExplanation(true);
-        triggerVisualFeedback(gradeRes.isCorrect);
 
         if (state.mode === 'part') {
             PartProgressManager.saveProgress(state.subject, state.currentPartPattern, state);
@@ -3589,67 +3917,228 @@
         }
     }
 
+    // -------------------------------------------------------------
+    // 5. Zero-DOM GPU Celebration Confetti & Sparkle Engine (120FPS Pure GPU)
+    // -------------------------------------------------------------
+    const CelebrationEngine = (function() {
+        let canvas = null;
+        let ctx = null;
+        let animId = null;
+        let particles = [];
+
+        const COLORS = [
+            '#F59E0B', '#10B981', '#38BDF8', '#8B5CF6', 
+            '#EC4899', '#EF4444', '#FBBF24', '#34D399', '#60A5FA', '#F472B6'
+        ];
+
+        function init() {
+            if (!canvas) {
+                canvas = document.getElementById('celebration-canvas');
+                if (!canvas) {
+                    canvas = document.createElement('canvas');
+                    canvas.id = 'celebration-canvas';
+                    canvas.style.cssText = 'position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:99999;opacity:0;transition:opacity 0.1s linear;will-change:opacity;';
+                    document.body.appendChild(canvas);
+                }
+                ctx = canvas.getContext('2d');
+            }
+        }
+
+        function resize() {
+            if (!canvas) init();
+            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+            const w = window.innerWidth || document.documentElement.clientWidth || 800;
+            const h = window.innerHeight || document.documentElement.clientHeight || 600;
+            const targetW = Math.round(w * dpr);
+            const targetH = Math.round(h * dpr);
+            if (canvas.width !== targetW || canvas.height !== targetH) {
+                canvas.width = targetW;
+                canvas.height = targetH;
+            }
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+
+        // 100% GPU-accelerated 4-pointed diamond sparkle star (Zero CPU font rasterization)
+        function drawSparkleStar(c, size, color) {
+            c.fillStyle = color;
+            c.beginPath();
+            const r = size;
+            const ir = size * 0.24;
+            for (let k = 0; k < 4; k++) {
+                const a1 = (k * Math.PI / 2);
+                const a2 = a1 + Math.PI / 4;
+                if (k === 0) c.moveTo(Math.cos(a1) * r, Math.sin(a1) * r);
+                else c.lineTo(Math.cos(a1) * r, Math.sin(a1) * r);
+                c.lineTo(Math.cos(a2) * ir, Math.sin(a2) * ir);
+            }
+            c.closePath();
+            c.fill();
+        }
+
+        function createParticle(x, y, vx, vy, shape) {
+            return {
+                x, y, vx, vy,
+                gravity: 0.28 + Math.random() * 0.16,
+                drag: 0.976,
+                rotation: Math.random() * Math.PI * 2,
+                rotSpeed: (Math.random() - 0.5) * 0.18,
+                tilt: Math.random() * Math.PI * 2,
+                tiltSpeed: (Math.random() - 0.5) * 0.22,
+                size: shape === 'star' ? (12 + Math.random() * 8) : (6 + Math.random() * 4),
+                width: 7 + Math.random() * 5,
+                height: 12 + Math.random() * 7,
+                color: COLORS[Math.floor(Math.random() * COLORS.length)],
+                shape: shape || 'ribbon',
+                birth: performance.now(),
+                duration: 750 + Math.random() * 250
+            };
+        }
+
+        function burst() {
+            init();
+            resize();
+            const vw = window.innerWidth || 800;
+            const vh = window.innerHeight || 600;
+
+            const newParticles = [];
+            const SHAPES = ['star', 'ribbon', 'ribbon', 'dot'];
+
+            // 1. Bottom-Left Cannon (Shoots diagonally up-right) - 14 particles
+            const leftX = vw * 0.10;
+            const leftY = vh * 0.90;
+            for (let i = 0; i < 14; i++) {
+                const angle = -((22 + Math.random() * 48) * Math.PI / 180);
+                const speed = (vh * 0.018) + Math.random() * (vh * 0.014);
+                newParticles.push(createParticle(leftX, leftY, Math.cos(angle) * speed, Math.sin(angle) * speed, SHAPES[i % SHAPES.length]));
+            }
+
+            // 2. Bottom-Right Cannon (Shoots diagonally up-left) - 14 particles
+            const rightX = vw * 0.90;
+            const rightY = vh * 0.90;
+            for (let i = 0; i < 14; i++) {
+                const angle = -((110 + Math.random() * 48) * Math.PI / 180);
+                const speed = (vh * 0.018) + Math.random() * (vh * 0.014);
+                newParticles.push(createParticle(rightX, rightY, Math.cos(angle) * speed, Math.sin(angle) * speed, SHAPES[i % SHAPES.length]));
+            }
+
+            // 3. Center Screen Burst - 12 particles
+            const centerX = vw * 0.5;
+            const centerY = vh * 0.36;
+            for (let i = 0; i < 12; i++) {
+                const angle = (i / 12) * Math.PI * 2 + (Math.random() - 0.5) * 0.4;
+                const speed = 4 + Math.random() * 6;
+                newParticles.push(createParticle(centerX, centerY, Math.cos(angle) * speed, Math.sin(angle) * speed - 2.5, SHAPES[i % SHAPES.length]));
+            }
+
+            particles = particles.concat(newParticles);
+            canvas.style.opacity = '1';
+
+            if (!animId) {
+                animId = requestAnimationFrame(loop);
+            }
+        }
+
+        function loop(now) {
+            const vw = window.innerWidth || 800;
+            const vh = window.innerHeight || 600;
+
+            ctx.clearRect(0, 0, vw, vh);
+
+            let aliveCount = 0;
+
+            for (let i = 0; i < particles.length; i++) {
+                const p = particles[i];
+                const age = now - p.birth;
+                const progress = age / p.duration;
+
+                if (progress >= 1) continue;
+                aliveCount++;
+
+                p.vx *= p.drag;
+                p.vy = (p.vy * p.drag) + p.gravity;
+                p.x += p.vx;
+                p.y += p.vy;
+                p.rotation += p.rotSpeed;
+                p.tilt += p.tiltSpeed;
+
+                const alpha = progress < 0.52 ? 1 : Math.max(0, 1 - (progress - 0.52) / 0.48);
+                ctx.globalAlpha = alpha;
+
+                ctx.save();
+                ctx.translate(p.x, p.y);
+                ctx.rotate(p.rotation);
+
+                if (p.shape === 'star') {
+                    drawSparkleStar(ctx, p.size, p.color);
+                } else if (p.shape === 'ribbon') {
+                    const cosTilt = Math.cos(p.tilt);
+                    ctx.scale(1, cosTilt);
+                    ctx.fillStyle = p.color;
+                    ctx.fillRect(-p.width / 2, -p.height / 2, p.width, p.height);
+                } else {
+                    ctx.fillStyle = p.color;
+                    ctx.beginPath();
+                    ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                ctx.restore();
+            }
+
+            ctx.globalAlpha = 1;
+
+            if (aliveCount > 0) {
+                animId = requestAnimationFrame(loop);
+            } else {
+                animId = null;
+                particles = [];
+                ctx.clearRect(0, 0, vw, vh);
+                canvas.style.opacity = '0';
+            }
+        }
+
+        return {
+            burst
+        };
+    })();
+
     function triggerVisualFeedback(isCorrect) {
         if (!elements.quiz.card) return;
         const card = elements.quiz.card;
+        const appContainer = document.querySelector('.app-container');
+        const appHeader = document.querySelector('.app-header');
 
         card.classList.remove('anim-quake', 'anim-tada');
-        void card.offsetWidth; // Reflow to restart animation
+        if (appContainer) appContainer.classList.remove('screen-heavy-quake');
+        if (appHeader) appHeader.classList.remove('screen-heavy-quake');
 
-        if (isCorrect) {
-            card.classList.add('anim-tada');
-            createSparkleBurst();
-            if (navigator.vibrate) {
-                try { navigator.vibrate(35); } catch (e) {}
-            }
-        } else {
-            card.classList.add('anim-quake');
-            // Screen edge red shockwave flash vignette
-            const flash = document.createElement('div');
-            flash.className = 'screen-quake-flash';
-            document.body.appendChild(flash);
-            setTimeout(() => flash.remove(), 600);
+        // Zero Forced-Reflow: Trigger GPU animations smoothly on next animation frame
+        requestAnimationFrame(() => {
+            if (isCorrect) {
+                card.classList.add('anim-tada');
+                CelebrationEngine.burst();
+            } else {
+                card.classList.add('anim-quake');
+                if (appContainer) appContainer.classList.add('screen-heavy-quake');
+                if (appHeader) appHeader.classList.add('screen-heavy-quake');
 
-            if (navigator.vibrate) {
-                try { navigator.vibrate([60, 40, 80]); } catch (e) {}
+                // Screen edge red shockwave vignette (GPU-accelerated opacity pulse)
+                const flash = document.createElement('div');
+                flash.className = 'screen-quake-flash';
+                document.body.appendChild(flash);
+                setTimeout(() => flash.remove(), 550);
+
+                if (navigator.vibrate) {
+                    try { navigator.vibrate([100, 40, 140, 50, 100]); } catch (e) {}
+                }
             }
-        }
+        });
 
         setTimeout(() => {
             card.classList.remove('anim-quake', 'anim-tada');
-        }, 600);
-    }
-
-    function createSparkleBurst() {
-        if (!elements.quiz.card) return;
-        const card = elements.quiz.card;
-        const rect = card.getBoundingClientRect();
-        const container = document.createElement('div');
-        container.className = 'sparkle-burst-container';
-        container.style.left = `${rect.left + rect.width / 2}px`;
-        container.style.top = `${rect.top + rect.height / 3}px`;
-
-        const symbols = ['✨', '⭐', '🌟', '🎉', '💥', '🎊', '🔥', '💚', '💎', '👑'];
-        const totalParticles = 24;
-        for (let i = 0; i < totalParticles; i++) {
-            const particle = document.createElement('span');
-            particle.className = 'sparkle-particle';
-            particle.textContent = symbols[Math.floor(Math.random() * symbols.length)];
-            
-            const angle = (i / totalParticles) * 2 * Math.PI + (Math.random() - 0.5) * 0.35;
-            const distance = 110 + Math.random() * 110;
-            const tx = Math.cos(angle) * distance;
-            const ty = Math.sin(angle) * distance - 45;
-            const rot = (Math.random() - 0.5) * 80;
-
-            particle.style.setProperty('--tx', `${tx}px`);
-            particle.style.setProperty('--ty', `${ty}px`);
-            particle.style.setProperty('--rot', `${rot}deg`);
-            particle.style.animationDelay = `${Math.random() * 0.08}s`;
-            container.appendChild(particle);
-        }
-        document.body.appendChild(container);
-        setTimeout(() => container.remove(), 1000);
+            if (appContainer) appContainer.classList.remove('screen-heavy-quake');
+            if (appHeader) appHeader.classList.remove('screen-heavy-quake');
+        }, 750);
     }
 
     function toggleExplanation(forceOpen) {
@@ -3704,6 +4193,30 @@
     let lastNavTimestamp = 0;
     const NAV_THROTTLE_MS = 320; // 320ms guard prevents tablet double-tap / ghost touch skip
 
+    function prefetchNextHellSet() {
+        if (state.mode !== 'infinite' || state.isPreloadingHellSet || state.nextPreloadedHellSet) return;
+        state.isPreloadingHellSet = true;
+
+        const runner = typeof window !== 'undefined' && window.requestIdleCallback
+            ? window.requestIdleCallback
+            : ((cb) => setTimeout(cb, 40));
+
+        runner(() => {
+            try {
+                // Pre-generate the next 80 questions silently in background idle time
+                const preloaded = ExamEngine.generateInfiniteHellSet(state.statsMap, state.infiniteUsedKeys);
+                if (preloaded && preloaded.length > 0) {
+                    preloaded.forEach(applyCustomEdits);
+                    state.nextPreloadedHellSet = preloaded;
+                }
+            } catch (err) {
+                console.error('prefetchNextHellSet error:', err);
+            } finally {
+                state.isPreloadingHellSet = false;
+            }
+        });
+    }
+
     function nextQuestion() {
         const now = Date.now();
         if (now - lastNavTimestamp < NAV_THROTTLE_MS) return;
@@ -3735,10 +4248,19 @@
         } else {
             if (state.mode === 'infinite') {
                 state.infiniteSetCount++;
-                const nextSet = ExamEngine.generateInfiniteHellSet(state.statsMap, state.infiniteUsedKeys);
-                if (nextSet.length > 0) {
+
+                // ⚡ 0ms Transition: Consume preloaded set immediately without UI freeze!
+                let nextSet = state.nextPreloadedHellSet;
+                state.nextPreloadedHellSet = null;
+
+                if (!nextSet || nextSet.length === 0) {
+                    // Fallback if user skipped directly before background prefetch completed
+                    nextSet = ExamEngine.generateInfiniteHellSet(state.statsMap, state.infiniteUsedKeys);
+                    nextSet.forEach(applyCustomEdits);
+                }
+
+                if (nextSet && nextSet.length > 0) {
                     nextSet.forEach(q => {
-                        applyCustomEdits(q);
                         state.infiniteUsedKeys.add(q.qKey);
                     });
                     state.questions.push(...nextSet);
@@ -3784,7 +4306,18 @@
             const q = state.questions[idx];
             let res = state.firstAttemptResults[idx] !== undefined ? state.firstAttemptResults[idx] : state.results[idx];
             if (!res) {
-                res = Grader.grade(q, state.userAnswers[idx]);
+                try {
+                    res = Grader.grade(q, state.userAnswers[idx]);
+                } catch (err) {
+                    console.error('Grader.grade error in finishSession for', q.qKey, err);
+                    res = {
+                        isCorrect: false,
+                        details: {},
+                        userSummary: '(오류)',
+                        correctSummary: '(채점 오류)',
+                        error: true
+                    };
+                }
                 state.results[idx] = res;
                 state.firstAttemptResults[idx] = res;
                 try {
@@ -4115,6 +4648,222 @@
         showToast(`📥 [${subject}] 실전 모의고사 40제 MD 다운로드 완료!`);
     }
 
+    /**
+     * 📄 시험장 지참용 오답노트 A4 2단 인쇄 / PDF 뷰어
+     */
+    function openA4PrintView({ title = '시험장 지참용 오답 총정리 노트', questions = [] }) {
+        const modal = elements.modals.a4Print || document.getElementById('modal-a4-print');
+        if (!modal) return;
+
+        // 1. Deduplicate questions by qKey 100%
+        const seenKeys = new Set();
+        const dedupedQuestions = [];
+        for (const q of questions) {
+            if (!q || !q.qKey) continue;
+            if (seenKeys.has(q.qKey)) continue;
+            seenKeys.add(q.qKey);
+            dedupedQuestions.push(q);
+        }
+
+        if (dedupedQuestions.length === 0) {
+            showToast('인쇄할 문제가 없습니다.');
+            return;
+        }
+
+        // 2. Sort by total wrong count descending (most failed questions first)
+        dedupedQuestions.sort((a, b) => {
+            const statA = state.statsMap[a.qKey] || {};
+            const statB = state.statsMap[b.qKey] || {};
+            const countA = statA.totalWrongCount || statA.wrongCount || 0;
+            const countB = statB.totalWrongCount || statB.wrongCount || 0;
+            if (countB !== countA) return countB - countA;
+            const wA = statA.weight || 1;
+            const wB = statB.weight || 1;
+            return wB - wA;
+        });
+
+        // 3. Update Title & Count
+        const titleEl = document.getElementById('a4-print-title');
+        const countEl = document.getElementById('a4-print-count');
+        if (titleEl) titleEl.innerHTML = `<i class="fa-solid fa-print text-sky-400"></i> ${escapeHtml(title)}`;
+        if (countEl) countEl.textContent = `${dedupedQuestions.length}문제`;
+
+        // 4. Update Header in Paper
+        const headerEl = document.getElementById('a4-print-header');
+        const now = new Date();
+        const printDateStr = `${now.getFullYear()}년 ${now.getMonth() + 1}월 ${now.getDate()}일 ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+        if (headerEl) {
+            headerEl.innerHTML = `
+                <div>
+                    <h2 class="sheet-title">${escapeHtml(title)}</h2>
+                    <div class="sheet-meta">주택관리사보 2차 시험 대비 핵심 취약/오답 집중 총정리</div>
+                </div>
+                <div class="sheet-stats">
+                    <div><strong>총 ${dedupedQuestions.length}문항</strong> (취약순 정렬)</div>
+                    <div style="font-size: 0.75rem; color: #64748B; margin-top: 2px;">출력일시: ${printDateStr}</div>
+                </div>
+            `;
+        }
+
+        // 5. Build 2-column Questions HTML
+        const contentEl = document.getElementById('a4-print-content');
+        if (contentEl) {
+            let html = '';
+            dedupedQuestions.forEach((q, idx) => {
+                applyCustomEdits(q);
+                const stat = state.statsMap[q.qKey] || {};
+                const wrongTimes = stat.totalWrongCount || stat.wrongCount || 1;
+                const formatted = formatQuestionAndPassage(q);
+
+                // Badges
+                const isLaw = q.subject === '관계법규';
+                const subjBadge = `<span class="a4-badge-subj ${isLaw ? 'law' : 'gwanri'}">${escapeHtml(q.subject)}</span>`;
+                const wrongBadge = `<span class="a4-badge-wrong">❌ ${wrongTimes}회 오답</span>`;
+                const chapText = (q.chapterName || '').replace(/^CHAPTER\s+\d+\s*/i, '');
+                const chapBadge = chapText ? `<span class="a4-badge-chap">${escapeHtml(chapText)}</span>` : '';
+                
+                let coreBadge = '';
+                if (q.isHighYield && q.primaryCoreItem) {
+                    const isSuper = (q.topScore >= 6);
+                    coreBadge = `<span class="a4-badge-core">${isSuper ? '🔥초특급' : '★빈출'} #${String(q.primaryCoreItem.id).padStart(3, '0')}</span>`;
+                }
+
+                // Question Title & Passage
+                let passageHtml = '';
+                if (formatted.passage && formatted.passage.trim()) {
+                    passageHtml = `<div class="a4-passage-box">${escapeHtml(formatted.passage)}</div>`;
+                }
+
+                // Options / Blanks
+                let bodyHtml = '';
+                if (q.type === 'choice') {
+                    if (Array.isArray(q.options) && q.options.length > 0) {
+                        const numChars = ['①', '②', '③', '④', '⑤'];
+                        const optsHtml = q.options.map((opt, oIdx) => {
+                            const numSymbol = numChars[oIdx] || `(${oIdx + 1})`;
+                            const cleanText = opt.replace(/^[①②③④⑤\d\.\s\)\-]+/, '').trim();
+                            return `<div class="a4-option-row"><span class="a4-option-num">${numSymbol}</span> <span>${escapeHtml(cleanText || opt)}</span></div>`;
+                        }).join('');
+                        bodyHtml = `<div class="a4-options-list">${optsHtml}</div>`;
+                    }
+                } else {
+                    let targetAnswers = q.answers || {};
+                    let entries = sortSubjectiveEntries(Object.entries(targetAnswers));
+                    if (entries.length === 0 && q.answer) {
+                        const parsed = parseSubjectiveAnswers(q.answer);
+                        if (Object.keys(parsed.answers).length > 0) {
+                            targetAnswers = parsed.answers;
+                            entries = sortSubjectiveEntries(Object.entries(targetAnswers));
+                        }
+                    }
+                    if (entries.length > 0) {
+                        const blanksList = entries.map(([k]) => `[ 빈칸: ${k} ]`).join(' ');
+                        bodyHtml = `<div class="a4-sa-blanks-box">✍️ 주관식 단답형 기입: ${escapeHtml(blanksList)}</div>`;
+                    }
+                }
+
+                // Answer Display
+                let ansText = '';
+                if (q.type === 'choice') {
+                    const numChars = ['①', '②', '③', '④', '⑤'];
+                    const aNum = parseInt(q.answer, 10);
+                    if (!isNaN(aNum) && aNum >= 1 && aNum <= 5) {
+                        ansText = numChars[aNum - 1];
+                    } else {
+                        ansText = String(q.answer || '');
+                    }
+                } else {
+                    let targetAnswers = q.answers || {};
+                    let entries = sortSubjectiveEntries(Object.entries(targetAnswers));
+                    if (entries.length === 0 && q.answer) {
+                        ansText = String(q.answer || '');
+                    } else {
+                        ansText = entries.map(([k, v]) => `[${k}] ${Array.isArray(v) ? v.join('/') : v}`).join(', ');
+                    }
+                }
+
+                // Explanation & Tip
+                let expBody = (q.explanation || '').trim();
+                let tipBody = (q.tip || '').trim();
+
+                if (expBody.includes('━━━━━━━━━━━━━━━━━━━━━━━━━━━━') || expBody.includes('💡 [일타 팁') || expBody.includes('[일타 팁')) {
+                    const parts = expBody.split(/━━━━━━━━━━━━━━━━━━━━━━━━━━━━|💡\s*\[일타\s*팁[^\]]*\]|\[일타\s*팁[^\]]*\]/);
+                    expBody = (parts[0] || '').trim();
+                    if (!tipBody && parts.length > 1) {
+                        tipBody = parts.slice(1).join('\n').replace(/^\s*(💡\s*)?\[일타\s*팁[^\]]*\]\s*/i, '').trim();
+                    }
+                }
+
+                let expHtml = '';
+                if (expBody || tipBody) {
+                    let cleanExp = escapeHtml(expBody).replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>');
+                    let cleanTip = tipBody ? `<div class="a4-tip-box">💡 <b>[일타 팁]</b> ${escapeHtml(tipBody).replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>')}</div>` : '';
+                    expHtml = `
+                        <div class="a4-exp-box">
+                            <div>${cleanExp}</div>
+                            ${cleanTip}
+                        </div>
+                    `;
+                }
+
+                html += `
+                    <div class="a4-q-item">
+                        <div class="a4-q-header">
+                            <span class="a4-badge-num">${idx + 1}.</span>
+                            ${wrongBadge}
+                            ${subjBadge}
+                            ${chapBadge}
+                            ${coreBadge}
+                        </div>
+                        <div class="a4-q-title">${escapeHtml(formatted.title)}</div>
+                        ${passageHtml}
+                        ${bodyHtml}
+                        <div class="a4-ans-exp-box">
+                            <div class="a4-ans-row">
+                                <span class="a4-ans-tag">정답</span>
+                                <span class="a4-ans-val">${escapeHtml(ansText)}</span>
+                            </div>
+                            ${expHtml}
+                        </div>
+                    </div>
+                `;
+            });
+            contentEl.innerHTML = html;
+        }
+
+        // 6. Reset Checkboxes & Styling
+        const paperEl = document.getElementById('a4-print-paper');
+        const chkShowExp = document.getElementById('a4-opt-show-exp');
+        const chkMaskAns = document.getElementById('a4-opt-mask-ans');
+
+        if (chkShowExp && paperEl) {
+            chkShowExp.checked = true;
+            paperEl.classList.remove('hide-explanations');
+            chkShowExp.onchange = () => {
+                paperEl.classList.toggle('hide-explanations', !chkShowExp.checked);
+            };
+        }
+
+        if (chkMaskAns && paperEl) {
+            chkMaskAns.checked = false;
+            paperEl.classList.remove('mask-answers');
+            chkMaskAns.onchange = () => {
+                paperEl.classList.toggle('mask-answers', chkMaskAns.checked);
+            };
+        }
+
+        // 7. Print Trigger Button
+        const btnPrint = document.getElementById('btn-trigger-a4-print');
+        if (btnPrint) {
+            btnPrint.onclick = () => {
+                window.print();
+            };
+        }
+
+        // 8. Open Modal
+        modal.classList.add('active');
+    }
+
     function openQuestionPreview(q) {
         if (!elements.modals.questionPreview) return;
         const modal = elements.modals.questionPreview;
@@ -4431,6 +5180,30 @@
         return isNaN(t) ? 0 : t;
     }
 
+    // ⚡ High-Performance Memoized Pool Cache for Manager Modal
+    let _mgrCachedLawPool = null;
+    let _mgrCachedGwanriPool = null;
+    let _mgrCachedAllPool = null;
+    let _mgrCachedPoolMap = null;
+
+    function getManagerPools() {
+        if (!_mgrCachedAllPool) {
+            _mgrCachedLawPool = [...ExamEngine.getQuestionPool('관계법규', 'choice'), ...ExamEngine.getQuestionPool('관계법규', 'short')];
+            _mgrCachedGwanriPool = [...ExamEngine.getQuestionPool('관리실무', 'choice'), ...ExamEngine.getQuestionPool('관리실무', 'short')];
+            _mgrCachedAllPool = [..._mgrCachedLawPool, ..._mgrCachedGwanriPool];
+            _mgrCachedPoolMap = new Map();
+            _mgrCachedAllPool.forEach(q => {
+                if (q && q.qKey) _mgrCachedPoolMap.set(q.qKey, q);
+            });
+        }
+        return {
+            lawPool: _mgrCachedLawPool,
+            gwanriPool: _mgrCachedGwanriPool,
+            allPool: _mgrCachedAllPool,
+            poolMap: _mgrCachedPoolMap
+        };
+    }
+
     function renderManagerList(tabName = state.managerTab, filterSubj = state.managerFilter, query = state.managerSearchQuery) {
         state.managerTab = tabName;
         state.managerFilter = filterSubj;
@@ -4439,16 +5212,18 @@
         if (!elements.manager.itemsList) return;
         elements.manager.itemsList.innerHTML = '';
 
-        const lawPool = [...ExamEngine.getQuestionPool('관계법규', 'choice'), ...ExamEngine.getQuestionPool('관계법규', 'short')];
-        const gwanriPool = [...ExamEngine.getQuestionPool('관리실무', 'choice'), ...ExamEngine.getQuestionPool('관리실무', 'short')];
-        const allPool = [...lawPool, ...gwanriPool];
+        const { lawPool, gwanriPool, allPool, poolMap } = getManagerPools();
+
+        PURGED_NEEDS_EDIT_KEYS.forEach(k => {
+            if (state.needsEditMap) delete state.needsEditMap[k];
+        });
 
         // Total counts for tabs
         const allWrong = allPool.filter(q => {
             const stat = state.statsMap[q.qKey];
             return stat && stat.wrongCount > 0;
         });
-        const allNeedsEditKeys = Object.keys(state.needsEditMap || {});
+        const allNeedsEditKeys = Object.keys(state.needsEditMap || {}).filter(k => !PURGED_NEEDS_EDIT_KEYS.includes(k));
         const allCustomEditsKeys = Object.keys(state.customEdits || {});
         const allReports = JSON.parse(localStorage.getItem('housing_exam_tutoring_reports') || '[]');
 
@@ -4597,15 +5372,14 @@
             });
         } else if (tabName === 'needs_edit') {
             list = allNeedsEditKeys.map(k => {
-                const info = state.needsEditMap[k];
-                const pool = info.subject === '관리실무' ? gwanriPool : lawPool;
-                const found = pool.find(item => item.qKey === k);
+                const info = state.needsEditMap[k] || {};
+                const found = poolMap.get(k);
                 return found || {
                     qKey: k,
-                    subject: info.subject,
-                    chapterName: info.chapterName,
-                    type: info.type,
-                    question: info.question,
+                    subject: info.subject || (k.startsWith('관리실무') ? '관리실무' : '관계법규'),
+                    chapterName: info.chapterName || '',
+                    type: info.type || 'choice',
+                    question: info.question || '',
                     id: '?'
                 };
             });
@@ -4619,8 +5393,7 @@
         } else if (tabName === 'custom_edits') {
             list = allCustomEditsKeys.map(k => {
                 const isGwanri = k.startsWith('관리실무');
-                const pool = isGwanri ? gwanriPool : lawPool;
-                const found = pool.find(item => item.qKey === k);
+                const found = poolMap.get(k);
                 const edited = state.customEdits[k] || {};
                 return found || {
                     qKey: k,
@@ -4648,6 +5421,7 @@
             }
         }
 
+        state.managerCurrentList = list;
         const totalCount = (tabName === 'search_all' && !qLower) ? 0 : list.length;
         const totalPages = Math.max(1, Math.ceil(totalCount / state.managerPageSize));
         if (state.managerPage > totalPages) state.managerPage = totalPages;
@@ -4664,6 +5438,9 @@
                 elements.manager.listCount.textContent = `${totalCount}건`;
             }
         }
+
+        // Clear items list for rendering
+        elements.manager.itemsList.innerHTML = '';
 
         if (list.length === 0) {
             let emptyHtml = '';
@@ -4683,7 +5460,9 @@
                     </div>
                 `;
             }
-            elements.manager.itemsList.innerHTML = emptyHtml;
+            const emptyDiv = document.createElement('div');
+            emptyDiv.innerHTML = emptyHtml;
+            elements.manager.itemsList.appendChild(emptyDiv);
             if (elements.manager.editorEmpty) elements.manager.editorEmpty.style.display = 'flex';
             if (elements.manager.editorForm) elements.manager.editorForm.style.display = 'none';
             if (elements.manager.reportViewPanel) elements.manager.reportViewPanel.style.display = 'none';
@@ -4729,9 +5508,9 @@
             }
 
             let quickDelBtnHtml = '';
-            if (tabName === 'needs_edit' || isFlagged) {
-                quickDelBtnHtml = `<button type="button" class="mgr-card-quick-unflag" style="background: rgba(52,211,153,0.15); color: #34D399; border: 1px solid rgba(52,211,153,0.4); border-radius: 4px; padding: 2px 7px; font-size: 0.72rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;" title="수정 완료/해결되어 수정필요 목록에서 제외"><i class="fa-solid fa-check"></i> 해결완료</button>`;
-            } else if (stat.wrongCount > 0 || tabName === 'wrong') {
+            if (tabName === 'needs_edit') {
+                quickDelBtnHtml = `<button type="button" class="mgr-card-quick-unflag" title="수정 완료/해결되어 수정필요 목록에서 제외"><i class="fa-solid fa-check"></i> 해결완료</button>`;
+            } else if (tabName === 'wrong') {
                 quickDelBtnHtml = `<button type="button" class="mgr-card-quick-del" title="오답 기록 삭제 (가중치 초기화)"><i class="fa-solid fa-trash-can"></i> 삭제</button>`;
             }
 
@@ -5086,11 +5865,13 @@
             });
         });
 
-        // 3. Manager Search: Enter key, Search button, and Clear button
+        // 3. Manager Search: Enter key, 150ms Realtime Debounce, Search button, and Clear button
+        let _mgrSearchDebounceTimer = null;
         if (elements.manager.searchInput) {
             elements.manager.searchInput.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter') {
                     e.preventDefault();
+                    if (_mgrSearchDebounceTimer) clearTimeout(_mgrSearchDebounceTimer);
                     state.managerSearchQuery = e.target.value.trim();
                     state.managerPage = 1;
                     renderManagerList();
@@ -5099,14 +5880,25 @@
             });
 
             elements.manager.searchInput.addEventListener('input', (e) => {
+                const val = e.target.value;
                 if (elements.manager.btnClearSearch) {
-                    elements.manager.btnClearSearch.classList.toggle('show', !!e.target.value);
+                    elements.manager.btnClearSearch.classList.toggle('show', !!val);
                 }
+                if (_mgrSearchDebounceTimer) clearTimeout(_mgrSearchDebounceTimer);
+                _mgrSearchDebounceTimer = setTimeout(() => {
+                    const trimmed = val.trim();
+                    if (trimmed !== state.managerSearchQuery) {
+                        state.managerSearchQuery = trimmed;
+                        state.managerPage = 1;
+                        renderManagerList();
+                    }
+                }, 150);
             });
         }
 
         if (elements.manager.btnSearch) {
             elements.manager.btnSearch.addEventListener('click', () => {
+                if (_mgrSearchDebounceTimer) clearTimeout(_mgrSearchDebounceTimer);
                 if (elements.manager.searchInput) {
                     state.managerSearchQuery = elements.manager.searchInput.value.trim();
                 }
@@ -5173,20 +5965,25 @@
             state.customEdits[qKey] = savedItem || editData;
             applyCustomEdits(q);
 
-            // If question was flagged as '수정필요', auto-unflag it upon saving fix
-            if (state.needsEditMap && state.needsEditMap[qKey]) {
-                await IDBStore.deleteNeedsEdit(qKey);
-                delete state.needsEditMap[qKey];
-                if (elements.manager.btnFlagToggle) elements.manager.btnFlagToggle.classList.remove('active');
-                if (elements.manager.flagText) elements.manager.flagText.textContent = '수정필요';
-                if (elements.manager.flagBadge) elements.manager.flagBadge.style.display = 'none';
-                if (elements.manager.cntNeedsEdit) elements.manager.cntNeedsEdit.textContent = Object.keys(state.needsEditMap).length;
-            }
+            // Auto-unflag from '수정필요' upon saving fix
+            await IDBStore.deleteNeedsEdit(qKey);
+            if (state.needsEditMap) delete state.needsEditMap[qKey];
+            if (elements.manager.btnFlagToggle) elements.manager.btnFlagToggle.classList.remove('active');
+            if (elements.manager.flagText) elements.manager.flagText.textContent = '수정필요';
+            if (elements.manager.flagBadge) elements.manager.flagBadge.style.display = 'none';
+            if (elements.manager.cntNeedsEdit) elements.manager.cntNeedsEdit.textContent = Object.keys(state.needsEditMap || {}).length;
+            if (elements.manager.cntCustomEdits) elements.manager.cntCustomEdits.textContent = Object.keys(state.customEdits || {}).length;
 
             // Update badges and left list card
             if (elements.manager.editedBadge) elements.manager.editedBadge.style.display = 'inline-block';
             const activeCard = document.querySelector(`.mgr-item-card[data-qkey="${qKey}"]`);
             if (activeCard) {
+                // Immediately remove '해결완료' button and '수정요청' flag badge from the card
+                const quickUnflag = activeCard.querySelector('.mgr-card-quick-unflag');
+                if (quickUnflag) quickUnflag.remove();
+                const flagBadge = activeCard.querySelector('.mgr-status-flag');
+                if (flagBadge) flagBadge.remove();
+
                 const snippet = activeCard.querySelector('.mgr-item-snippet');
                 if (snippet) snippet.textContent = q.question || q.title;
                 const header = activeCard.querySelector('.mgr-item-header');
@@ -5198,7 +5995,21 @@
                 }
             }
 
-            showToast(`💾 [${q.id}번 문항] 수정사항이 성공적으로 저장되었습니다!`);
+            // If currently on 'needs_edit' tab, smoothly fade out this card from the list
+            if (state.managerTab === 'needs_edit') {
+                if (activeCard) activeCard.classList.add('reset-done');
+                setTimeout(() => {
+                    renderManagerList();
+                }, 300);
+            }
+
+            // Trigger cloud sync push
+            if (window.CloudSync) {
+                if (window.CloudSync.scheduleFlagsPush) window.CloudSync.scheduleFlagsPush(50);
+                if (window.CloudSync.schedulePush) window.CloudSync.schedulePush(50);
+            }
+
+            showToast(`💾 [${q.id}번 문항] 수정사항이 저장되고 수정필요 목록에서 해결 처리되었습니다!`);
         }
 
         if (elements.manager.editorForm) {
@@ -5235,6 +6046,13 @@
                     elements.manager.btnFlagToggle.classList.remove('active');
                     if (elements.manager.flagText) elements.manager.flagText.textContent = '수정필요';
                     if (elements.manager.flagBadge) elements.manager.flagBadge.style.display = 'none';
+                    if (state.managerTab === 'needs_edit') {
+                        const activeCard = document.querySelector(`.mgr-item-card[data-qkey="${qKey}"]`);
+                        if (activeCard) activeCard.classList.add('reset-done');
+                        setTimeout(() => {
+                            renderManagerList();
+                        }, 300);
+                    }
                     showToast('🚩 [수정 필요] 목록에서 제외되었습니다.');
                 } else {
                     await IDBStore.saveNeedsEdit(qKey, q);
@@ -5546,6 +6364,26 @@
             });
         }
 
+        if (elements.manager.btnPrintA4) {
+            elements.manager.btnPrintA4.addEventListener('click', () => {
+                const questionsToPrint = (state.managerCurrentList && state.managerCurrentList.length > 0)
+                    ? state.managerCurrentList
+                    : [];
+                if (questionsToPrint.length === 0) {
+                    showToast('인쇄할 문제가 없습니다.');
+                    return;
+                }
+                const subTitle = state.managerFilter === 'all' ? '전 과목' : state.managerFilter;
+                const tabTitle = state.managerTab === 'wrong' ? '취약 오답 총정리' :
+                                 state.managerTab === 'needs_edit' ? '수정 필요 문항 정리' :
+                                 state.managerTab === 'custom_edits' ? '수정 완료 문항 정리' : '핵심 문항 정리';
+                openA4PrintView({
+                    title: `주택관리사 2차 ${tabTitle} (${subTitle})`,
+                    questions: questionsToPrint
+                });
+            });
+        }
+
         // PIN Auth Form Listeners
         if (elements.modals.formPin) {
             elements.modals.formPin.addEventListener('submit', (e) => {
@@ -5659,6 +6497,26 @@
             }
             if (state.mode === 'part') {
                 PartProgressManager.saveProgress(state.subject, state.currentPartPattern, state);
+                // Auto-grade any answered questions so far before leaving!
+                (async () => {
+                    for (let i = 0; i < state.questions.length; i++) {
+                        const q = state.questions[i];
+                        if (q && state.userAnswers[i] !== undefined && state.firstAttemptResults[i] === undefined) {
+                            const gradeRes = Grader.grade(q, state.userAnswers[i]);
+                            state.results[i] = gradeRes;
+                            state.firstAttemptResults[i] = gradeRes;
+                            await IDBStore.recordAnswer(q.qKey, gradeRes.isCorrect, {
+                                subject: q.subject,
+                                type: q.type,
+                                chapter: q.chapterName
+                            });
+                        }
+                    }
+                    if (window.CloudSync && typeof window.CloudSync.scheduleStatsPush === 'function') {
+                        window.CloudSync.scheduleStatsPush(60);
+                    }
+                })().catch(() => {});
+
                 if (confirm(`💾 [${state.currentPartPattern}]\n현재 ${state.currentIndex + 1}번 문항까지의 풀이 진행 상황이 자동 저장되었습니다.\n\n메인 화면으로 나가시겠습니까? (언제든 이어서 풀 수 있습니다)`)) {
                     clearInterval(state.timerInterval);
                     showScreen('home');
@@ -5683,7 +6541,11 @@
                             });
                         }
                     }
-                    if (window.CloudSync) window.CloudSync.schedulePush(200);
+                    if (window.CloudSync && typeof window.CloudSync.scheduleStatsPush === 'function') {
+                        window.CloudSync.scheduleStatsPush(60);
+                    } else if (window.CloudSync) {
+                        window.CloudSync.schedulePush(200);
+                    }
                 })().catch(() => {});
 
                 if (confirm(`💾 [실전 모의고사]\n현재 ${state.currentIndex + 1}번 문항까지의 문제 및 OMR 마킹이 자동 보존되었습니다.\n\n메인 화면으로 이동하시겠습니까? (홈 화면에서 언제든 이어서 풀 수 있습니다)`)) {
@@ -5712,7 +6574,11 @@
                                 });
                             }
                         }
-                        if (window.CloudSync) window.CloudSync.schedulePush(200);
+                        if (window.CloudSync && typeof window.CloudSync.scheduleStatsPush === 'function') {
+                            window.CloudSync.scheduleStatsPush(60);
+                        } else if (window.CloudSync) {
+                            window.CloudSync.schedulePush(200);
+                        }
                     })().catch(() => {});
                 }
                 showScreen('home');
@@ -5801,6 +6667,53 @@
                     btnFlagNeedsEdit.classList.add('active');
                     btnFlagNeedsEdit.innerHTML = '<i class="fa-solid fa-flag text-amber-400"></i> 수정요청됨';
                     showToast(`🚩 [${q.id}번 문항] 수정 필요 목록에 등록되었습니다. (에디터 2834에서 확인 가능)`);
+                }
+            });
+        }
+
+        // 🚫 문항 영구 출제 제외 (토글) 버튼 핸들러
+        const btnExcludeQ = document.getElementById('btn-exclude-question');
+        if (btnExcludeQ) {
+            btnExcludeQ.addEventListener('click', async () => {
+                const q = state.questions[state.currentIndex];
+                if (!q) return;
+
+                const isExcluded = !!(state.deletedKeysSet && state.deletedKeysSet.has(q.qKey));
+                const qTitle = (q.title || q.question || '').slice(0, 30);
+
+                if (isExcluded) {
+                    if (confirm(`♻️ [문항 출제 복원]\n"${qTitle}..."\n\n이 문항을 다시 출제 풀에 복원하시겠습니까?`)) {
+                        await IDBStore.restoreDeletedKey(q.qKey);
+                        if (state.deletedKeysSet) state.deletedKeysSet.delete(q.qKey);
+                        ExamEngine._poolCache = {};
+                        btnExcludeQ.classList.remove('active');
+                        btnExcludeQ.innerHTML = '<i class="fa-solid fa-ban"></i> 출제제외';
+                        btnExcludeQ.title = '이 문제를 앞으로 모의고사 및 헬 모드 출제 풀에서 영구 제외(삭제)합니다.';
+                        showToast(`♻️ [${q.id}번 문항] 출제 풀에 다시 복원되었습니다.`);
+                        if (window.CloudSync && typeof window.CloudSync.syncFlags === 'function') {
+                            const localNeeds = await IDBStore.getAllNeedsEditMap();
+                            const localUnflag = await IDBStore.getAllUnflaggedMap();
+                            const localDel = Array.from(state.deletedKeysSet || []);
+                            window.CloudSync.syncFlags(localNeeds, localUnflag, localDel);
+                        }
+                    }
+                } else {
+                    if (confirm(`🚫 [문항 영구 출제 제외]\n"${qTitle}..."\n\n이 문제를 앞으로 모든 모의고사 및 헬 모드 출제 풀에서 영구 제외하시겠습니까?\n(관리자 모드에서 언제든 다시 복원 가능)`)) {
+                        await IDBStore.saveDeletedKey(q.qKey);
+                        if (!state.deletedKeysSet) state.deletedKeysSet = new Set();
+                        state.deletedKeysSet.add(q.qKey);
+                        ExamEngine._poolCache = {};
+                        btnExcludeQ.classList.add('active');
+                        btnExcludeQ.innerHTML = '<i class="fa-solid fa-ban text-red-500"></i> 제외됨';
+                        btnExcludeQ.title = '현재 출제 제외된 문항입니다. 클릭하면 출제 풀로 복원할 수 있습니다.';
+                        showToast(`🚫 [${q.id}번 문항] 출제에서 영구 제외되었습니다.`);
+                        if (window.CloudSync && typeof window.CloudSync.syncFlags === 'function') {
+                            const localNeeds = await IDBStore.getAllNeedsEditMap();
+                            const localUnflag = await IDBStore.getAllUnflaggedMap();
+                            const localDel = Array.from(state.deletedKeysSet || []);
+                            window.CloudSync.syncFlags(localNeeds, localUnflag, localDel);
+                        }
+                    }
                 }
             });
         }
@@ -6041,6 +6954,21 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
             });
         }
 
+        if (elements.result.btnPrintA4) {
+            elements.result.btnPrintA4.addEventListener('click', () => {
+                const results = state.firstAttemptResults.length > 0 ? state.firstAttemptResults : state.results;
+                const wrongQuestions = state.questions.filter((q, idx) => results[idx] === false);
+                if (wrongQuestions.length === 0) {
+                    showToast('🎉 이번 시험에서 틀린 문제가 없습니다! 완벽합니다.');
+                    return;
+                }
+                openA4PrintView({
+                    title: `실전 모의고사 오답 총정리 노트 (${state.subject})`,
+                    questions: wrongQuestions
+                });
+            });
+        }
+
         // Cloud Sync Header Button Trigger
         if (elements.header.btnCloudSync) {
             elements.header.btnCloudSync.addEventListener('click', async () => {
@@ -6048,8 +6976,20 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
                     showToast('⚡ 오프라인 로컬 저장 모드');
                     return;
                 }
+
+                // 🛡️ 문제 풀이 중에는 절대 새로고침하거나 홈으로 튕기지 않음!
+                const isQuizActive = state.mode && state.mode !== 'home' && state.mode !== 'manager';
+
                 if (window.CloudSync.isOutdated) {
-                    if (confirm(`🚨 [최신 버전 배포 안내]\n클라우드에 최신 버전(${window.CloudSync.cloudVersion || '새 버전'})이 있습니다.\n데이터 보호를 위해 구버전 업로드가 차단되었습니다.\n\n지금 최신 버전으로 새로고침하시겠습니까?`)) {
+                    if (isQuizActive) {
+                        // 문제 풀이 중: 조용히 통계 및 플래그만 안전하게 푸시
+                        if (window.CloudSync.pushStatsOnly) await window.CloudSync.pushStatsOnly();
+                        if (window.CloudSync.pushFlagsOnly) await window.CloudSync.pushFlagsOnly();
+                        showToast('⚡ [풀이 진행 중] 통계/플래그가 클라우드에 안전 저장되었습니다. (풀이 종료 후 새로고침 권장)', 4000);
+                        return;
+                    }
+
+                    if (confirm(`🚨 [최신 버전 배포 안내]\n클라우드에 최신 버전(${window.CloudSync.cloudVersion || '새 버전'})이 있습니다.\n\n지금 최신 버전으로 새로고침하시겠습니까?`)) {
                         if (typeof window.refreshToLatestVersion === 'function') {
                             window.refreshToLatestVersion(window.CloudSync.cloudBuild);
                         } else {
@@ -6058,10 +6998,17 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
                     }
                     return;
                 }
+
                 showToast('🔄 클라우드 데이터 실시간 동기화 중...');
                 const ok = await window.CloudSync.pullFromCloud();
                 if (window.CloudSync.isOutdated) {
-                    if (confirm(`🚨 [최신 버전 배포 안내]\n클라우드에 최신 버전(${window.CloudSync.cloudVersion || '새 버전'})이 있습니다.\n데이터 보호를 위해 구버전 업로드가 차단되었습니다.\n\n지금 최신 버전으로 새로고침하시겠습니까?`)) {
+                    if (isQuizActive) {
+                        if (window.CloudSync.pushStatsOnly) await window.CloudSync.pushStatsOnly();
+                        if (window.CloudSync.pushFlagsOnly) await window.CloudSync.pushFlagsOnly();
+                        showToast('⚡ [풀이 진행 중] 통계/플래그가 클라우드에 안전 저장되었습니다.', 3000);
+                        return;
+                    }
+                    if (confirm(`🚨 [최신 버전 배포 안내]\n클라우드에 최신 버전(${window.CloudSync.cloudVersion || '새 버전'})이 있습니다.\n\n지금 최신 버전으로 새로고침하시겠습니까?`)) {
                         if (typeof window.refreshToLatestVersion === 'function') {
                             window.refreshToLatestVersion(window.CloudSync.cloudBuild);
                         } else {
@@ -6072,15 +7019,6 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
                 }
                 if (ok) {
                     const pushOk = await window.CloudSync.pushToCloud();
-                    if (!pushOk && window.CloudSync.isOutdated) {
-                        alert(`🚨 [업로드 차단: 업데이트 필요]\n클라우드에 최신 버전(${window.CloudSync.cloudVersion})이 존재하여 구버전 데이터 업로드가 안전하게 차단되었습니다.\n\n확인을 누르면 최신 버전으로 새로고침합니다.`);
-                        if (typeof window.refreshToLatestVersion === 'function') {
-                            window.refreshToLatestVersion(window.CloudSync.cloudBuild);
-                        } else {
-                            window.location.reload();
-                        }
-                        return;
-                    }
                     state.statsMap = await IDBStore.getAllStatsMap();
                     state.customEdits = await IDBStore.getAllQuestionEditsMap();
                     state.needsEditMap = await IDBStore.getAllNeedsEditMap();
@@ -6174,6 +7112,32 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
     window.addEventListener('DOMContentLoaded', async () => {
         initDOMElements();
         await IDBStore.init();
+
+        // 1. Sanitize local unflagged keys (wipe all stale tombstones prior to 16:00 KST / 07:00 UTC)
+        try {
+            const rawUnflagged = JSON.parse(localStorage.getItem('housing_exam_unflagged_keys') || '{}');
+            const cleanUnflagged = {};
+            const cutoff = '2026-09-11T07:00:00.000Z';
+            for (const [k, v] of Object.entries(rawUnflagged)) {
+                if (typeof v === 'string' && v >= cutoff) cleanUnflagged[k] = v;
+            }
+            localStorage.setItem('housing_exam_unflagged_keys', JSON.stringify(cleanUnflagged));
+        } catch (e) {}
+
+        // 2. Sanitize local needs-edit (permanently strip all 53 previously baked questions)
+        try {
+            const rawNeeds = JSON.parse(localStorage.getItem('housing_exam_needs_edit') || '{}');
+            let needsChanged = false;
+            PURGED_NEEDS_EDIT_KEYS.forEach(k => {
+                if (rawNeeds[k]) {
+                    delete rawNeeds[k];
+                    needsChanged = true;
+                }
+            });
+            if (needsChanged) {
+                localStorage.setItem('housing_exam_needs_edit', JSON.stringify(rawNeeds));
+            }
+        } catch (e) {}
         
         // Purge old persistent drawing strokes from IndexedDB to ensure 0 MB storage overhead
         try {
@@ -6184,11 +7148,26 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
             }
         } catch (e) {}
 
+        // ☁️ Step 1: Initialize Cloud Sync and AWAIT full pull from cloud FIRST!
+        if (window.CloudSync) {
+            try {
+                await window.CloudSync.init();
+            } catch (e) {
+                console.warn("Initial cloud pull error, continuing with local cache:", e);
+            }
+        }
+
+        // ☁️ Step 2: NOW load state from the freshly cloud-synchronized stores!
         state.statsMap = await IDBStore.getAllStatsMap();
         state.customEdits = await IDBStore.getAllQuestionEditsMap();
         state.needsEditMap = await IDBStore.getAllNeedsEditMap();
         state.deletedKeysSet = await IDBStore.getDeletedKeysSet();
 
+        PURGED_NEEDS_EDIT_KEYS.forEach(k => {
+            if (state.needsEditMap && state.needsEditMap[k]) delete state.needsEditMap[k];
+        });
+
+        
         const canvasEl = document.getElementById('drawing-canvas');
         const toolbarEl = document.getElementById('stylus-toolbar');
         if (canvasEl) {
@@ -6199,15 +7178,17 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
         setSubject(state.subject);
         showScreen('home');
 
-        // Initialize Firebase Realtime Cloud Sync
+        // Cloud status change listener for ongoing sync updates
         if (window.CloudSync) {
-            window.CloudSync.init();
             window.CloudSync.onStatusChange(async (status, lastTime) => {
                 if (status === 'synced') {
                     state.statsMap = await IDBStore.getAllStatsMap();
                     state.customEdits = await IDBStore.getAllQuestionEditsMap();
                     state.needsEditMap = await IDBStore.getAllNeedsEditMap();
                     state.deletedKeysSet = await IDBStore.getDeletedKeysSet();
+                    PURGED_NEEDS_EDIT_KEYS.forEach(k => {
+                        if (state.needsEditMap) delete state.needsEditMap[k];
+                    });
                     ExamEngine._poolCache = {};
                     if (state.mode === 'manager' || (elements.screens.manager && elements.screens.manager.classList.contains('active'))) {
                         if (state.questions && state.questions.length > 0) {
@@ -6239,13 +7220,44 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
                     }
                 }
             });
+
+            // ⚡ Realtime 0.1s Zero-Click Streaming UI Updater
+            if (typeof window.CloudSync.onStatsUpdated === 'function') {
+                window.CloudSync.onStatsUpdated(async () => {
+                    state.statsMap = await IDBStore.getAllStatsMap();
+                    if (state.mode === 'manager' || (elements.screens.manager && elements.screens.manager.classList.contains('active'))) {
+                        renderManagerList();
+                    }
+                });
+            }
+
+            if (typeof window.CloudSync.onFlagsUpdated === 'function') {
+                window.CloudSync.onFlagsUpdated(async () => {
+                    state.needsEditMap = await IDBStore.getAllNeedsEditMap();
+                    state.deletedKeysSet = await IDBStore.getDeletedKeysSet();
+                    if (state.mode === 'manager' || (elements.screens.manager && elements.screens.manager.classList.contains('active'))) {
+                        renderManagerList();
+                    }
+                });
+            }
         }
 
         // 🔄 Background Resume & Wakeup Handler (Screen Turn On / App Reopen from sleep)
         document.addEventListener('visibilitychange', async () => {
             if (document.visibilityState === 'visible') {
                 if (window.CloudSync && window.CloudSync.isInitialized) {
-                    window.CloudSync.pullFromCloud();
+                    window.CloudSync.sessionStartTime = new Date().toISOString();
+                    await window.CloudSync.pullFromCloud();
+                    state.statsMap = await IDBStore.getAllStatsMap();
+                    state.customEdits = await IDBStore.getAllQuestionEditsMap();
+                    state.needsEditMap = await IDBStore.getAllNeedsEditMap();
+                    state.deletedKeysSet = await IDBStore.getDeletedKeysSet();
+                    if (state.mode === 'manager' || (elements.screens.manager && elements.screens.manager.classList.contains('active'))) {
+                        if (state.questions && state.questions.length > 0) {
+                            state.questions.forEach(applyCustomEdits);
+                        }
+                        renderManagerList();
+                    }
                 }
             } else if (document.visibilityState === 'hidden') {
                 if (window.CloudSync && window.CloudSync.isInitialized) {
@@ -6263,7 +7275,12 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
         window.addEventListener('pageshow', async (e) => {
             if (e.persisted) {
                 if (window.CloudSync && window.CloudSync.isInitialized) {
-                    window.CloudSync.pullFromCloud();
+                    window.CloudSync.sessionStartTime = new Date().toISOString();
+                    await window.CloudSync.pullFromCloud();
+                    state.statsMap = await IDBStore.getAllStatsMap();
+                    state.customEdits = await IDBStore.getAllQuestionEditsMap();
+                    state.needsEditMap = await IDBStore.getAllNeedsEditMap();
+                    state.deletedKeysSet = await IDBStore.getDeletedKeysSet();
                 }
             }
         });

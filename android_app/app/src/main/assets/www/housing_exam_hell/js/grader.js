@@ -148,11 +148,66 @@ export const Grader = {
                 correctSummary: `${targetChoice}번`
             };
         } else {
-            const targetAnswers = question.answers || {};
-            const keys = Object.keys(targetAnswers);
+            let targetAnswers = question.answers || {};
+            let keys = Object.keys(targetAnswers);
+
+            // Fallback to question.answer if targetAnswers has no keys
+            if (keys.length === 0 && (question.answer !== undefined && question.answer !== null)) {
+                if (typeof question.answer === 'object' && !Array.isArray(question.answer)) {
+                    targetAnswers = question.answer;
+                    keys = Object.keys(targetAnswers);
+                } else {
+                    const ansStr = String(question.answer).trim();
+                    if (ansStr) {
+                        const parsed = {};
+                        if (ansStr.includes('=')) {
+                            ansStr.split(',').forEach(p => {
+                                const [k, ...v] = p.split('=');
+                                if (k) parsed[k.trim()] = v.join('=').trim();
+                            });
+                        } else {
+                            const values = ansStr.split(/[,，\n]/).map(s => s.trim()).filter(Boolean);
+                            const CIRCLED = ['㉠', '㉡', '㉢', '㉣', '㉤', '㉥', '㉦', '㉧', '㉨', '㉩'];
+                            values.forEach((val, idx) => {
+                                const k = CIRCLED[idx] || String(idx + 1);
+                                parsed[k] = val;
+                            });
+                        }
+                        if (Object.keys(parsed).length > 0) {
+                            targetAnswers = parsed;
+                            keys = Object.keys(targetAnswers);
+                        }
+                    }
+                }
+            }
 
             if (keys.length === 0) {
-                return { isCorrect: false, details: {}, userSummary: '', correctSummary: '' };
+                return {
+                    isCorrect: false,
+                    details: {},
+                    userSummary: '(공란)',
+                    correctSummary: '(정답 데이터 미등록)',
+                    isMissingAnswer: true
+                };
+            }
+
+            let userObj = userResponse;
+            if (typeof userResponse === 'string') {
+                userObj = {};
+                if (userResponse.includes('=')) {
+                    userResponse.split(',').forEach(p => {
+                        const [k, ...v] = p.split('=');
+                        if (k) userObj[k.trim()] = v.join('=').trim();
+                    });
+                } else {
+                    const values = userResponse.split(/[,，\n]/).map(s => s.trim()).filter(Boolean);
+                    values.forEach((val, idx) => {
+                        const key = keys[idx] || String(idx + 1);
+                        userObj[key] = val;
+                    });
+                }
+            } else if (!userObj || typeof userObj !== 'object') {
+                userObj = {};
             }
 
             const details = {};
@@ -161,7 +216,7 @@ export const Grader = {
             const correctParts = [];
 
             keys.forEach(k => {
-                const userVal = (userResponse && userResponse[k]) ? String(userResponse[k]).trim() : '';
+                const userVal = (userObj && userObj[k]) ? String(userObj[k]).trim() : '';
                 const targetVal = targetAnswers[k] || '';
                 const match = this.isMatch(userVal, targetVal);
 
