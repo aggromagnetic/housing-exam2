@@ -2726,6 +2726,9 @@
                 pageNumbers: document.getElementById('mgr-page-numbers'),
                 editorPanel: document.getElementById('mgr-editor-panel'),
                 editorEmpty: document.getElementById('mgr-editor-empty'),
+                reportsEmpty: document.getElementById('mgr-reports-empty'),
+                btnHeroPrintA4: document.getElementById('btn-hero-print-a4'),
+                tutoringA4Box: document.getElementById('mgr-tutoring-a4-box'),
                 editorForm: document.getElementById('mgr-editor-form'),
                 reportViewPanel: document.getElementById('mgr-report-view-panel'),
                 reportSubject: document.getElementById('mgr-report-subject'),
@@ -2829,7 +2832,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                const semver = window.APP_SEMVER || 'v.0.260914.1935';
+                const semver = window.APP_SEMVER || 'v.0.260914.1945';
                 elements.header.modeTitle.innerHTML = `<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">${semver}</span>`;
             }
         } else {
@@ -2864,7 +2867,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                const semver = window.APP_SEMVER || 'v.0.260914.1935';
+                const semver = window.APP_SEMVER || 'v.0.260914.1945';
                 elements.header.modeTitle.innerHTML = `<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">${semver}</span>`;
             }
             if (elements.header.timerBadge) {
@@ -5764,10 +5767,25 @@ ${paperHtml}
 
         const qLower = (state.managerSearchQuery || '').trim().toLowerCase();
 
+        // 🔄 오답 과외 A4 인쇄 / 요약 메뉴 박스 표시 토글 (오답과외 탭에서만 전용 노출)
+        const tutoringA4Box = document.getElementById('mgr-tutoring-a4-box');
+        if (tutoringA4Box) {
+            tutoringA4Box.style.display = (tabName === 'reports') ? 'block' : 'none';
+            if (tabName === 'reports') {
+                const rangePills = tutoringA4Box.querySelectorAll('.mgr-range-pill');
+                rangePills.forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.range === (state.managerWrongRange || 'top50'));
+                });
+                const elWrongAllCnt = document.getElementById('mgr-cnt-wrong-all');
+                if (elWrongAllCnt) elWrongAllCnt.textContent = allWrong.length;
+            }
+        }
+
         // 📝 오답 과외 보관함 탭 처리
         if (tabName === 'reports') {
             if (elements.manager.reportViewPanel) elements.manager.reportViewPanel.style.display = 'none';
             if (elements.manager.editorForm) elements.manager.editorForm.style.display = 'none';
+            if (elements.manager.editorEmpty) elements.manager.editorEmpty.style.display = 'none';
 
             let reportList = allReports;
             if (filterSubj !== 'all') reportList = reportList.filter(r => r.subject === filterSubj);
@@ -5797,14 +5815,17 @@ ${paperHtml}
                 }
             }
 
+            const reportsEmptyEl = document.getElementById('mgr-reports-empty');
+
             if (totalReportCount === 0) {
                 elements.manager.itemsList.innerHTML = `
                     <div style="text-align: center; padding: 40px 16px; color: var(--text-muted);">
                         <i class="fa-solid fa-book-bookmark" style="font-size: 2.2rem; color: #A78BFA; margin-bottom: 10px; display: block;"></i>
-                        ${qLower ? `"${qLower}" 검색 결과가 없습니다.` : '보관된 오답 과외 보고서가 없습니다.<br><span style="font-size:0.8rem; color:#64748B; margin-top:4px; display:inline-block;">실전모의고사나 헬 모드를 풀면 자동으로 여기에 저장됩니다.</span>'}
+                        ${qLower ? `"${qLower}" 검색 결과가 없습니다.` : '보관된 오답 과외 보고서가 없습니다.<br><span style="font-size:0.8rem; color:#64748B; margin-top:4px; display:inline-block;">실전모의고사나 헬 모드를 풀면 자동으로 여기에 과외 보고서가 저장됩니다.</span>'}
                     </div>
                 `;
-                if (elements.manager.editorEmpty) elements.manager.editorEmpty.style.display = 'flex';
+                if (reportsEmptyEl) reportsEmptyEl.style.display = 'flex';
+                if (elements.manager.editorEmpty) elements.manager.editorEmpty.style.display = 'none';
                 if (elements.manager.editorForm) elements.manager.editorForm.style.display = 'none';
                 if (elements.manager.reportViewPanel) elements.manager.reportViewPanel.style.display = 'none';
                 renderManagerPagination(0, 1, state.managerPageSize);
@@ -5850,7 +5871,9 @@ ${paperHtml}
             return;
         }
 
-        // Non-reports tabs: Ensure report panel is hidden
+        // Non-reports tabs: Ensure report panel & reports empty hero are hidden
+        const reportsEmptyEl = document.getElementById('mgr-reports-empty');
+        if (reportsEmptyEl) reportsEmptyEl.style.display = 'none';
         if (elements.manager.reportViewPanel) elements.manager.reportViewPanel.style.display = 'none';
 
         const matchesSearch = (q) => {
@@ -5870,20 +5893,7 @@ ${paperHtml}
                    ans.includes(qLower) || ansObj.includes(qLower) || idStr === qLower;
         };
 
-        // 🔄 오답 범위 서브 필터 바 표시 및 버튼 동기화
-        const wrongRangeBar = document.getElementById('mgr-wrong-range-bar');
-        if (wrongRangeBar) {
-            wrongRangeBar.style.display = (tabName === 'wrong') ? 'flex' : 'none';
-            const rangePills = wrongRangeBar.querySelectorAll('.mgr-range-pill');
-            rangePills.forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.range === (state.managerWrongRange || 'top50'));
-            });
-            const elWrongAllCnt = document.getElementById('mgr-cnt-wrong-all');
-            if (elWrongAllCnt) elWrongAllCnt.textContent = allWrong.length;
-        }
-
         let list = [];
-        let wrongTotalBeforeRange = 0;
         if (tabName === 'wrong') {
             list = allWrong;
             if (filterSubj !== 'all') list = list.filter(q => q.subject === filterSubj);
@@ -5904,34 +5914,8 @@ ${paperHtml}
                 return timeB - timeA;
             });
 
-            wrongTotalBeforeRange = list.length;
-            const rangeChoice = state.managerWrongRange || 'top50';
-            const now = Date.now();
-            const oneDayMs = 24 * 60 * 60 * 1000;
-            const twoDaysMs = 48 * 60 * 60 * 1000;
-
-            if (rangeChoice === 'top50') {
-                list = list.slice(0, 50);
-            } else if (rangeChoice === 'top30') {
-                list = list.slice(0, 30);
-            } else if (rangeChoice === 'today') {
-                list = list.filter(q => (now - getStatTime(state.statsMap[q.qKey])) <= oneDayMs);
-            } else if (rangeChoice === 'recent2') {
-                list = list.filter(q => (now - getStatTime(state.statsMap[q.qKey])) <= twoDaysMs);
-            }
-            // 'all' keeps full list
-
             if (elements.manager.cntWrong) {
-                elements.manager.cntWrong.textContent = (rangeChoice === 'top50') 
-                    ? `Top 50` 
-                    : (rangeChoice === 'top30') 
-                    ? `Top 30` 
-                    : list.length;
-            }
-            if (elements.manager.btnPrintA4) {
-                const pTitle = (rangeChoice === 'top50') ? '🔥 Top 50 A4 인쇄' :
-                               (rangeChoice === 'top30') ? '★ Top 30 A4 인쇄' : '📄 A4 인쇄';
-                elements.manager.btnPrintA4.innerHTML = `<i class="fa-solid fa-print"></i> ${pTitle}`;
+                elements.manager.cntWrong.textContent = allWrong.length;
             }
         } else if (tabName === 'needs_edit') {
             list = allNeedsEditKeys.map(k => {
@@ -5995,9 +5979,7 @@ ${paperHtml}
         const pagedList = list.slice(startIndex, endIndex);
 
         if (elements.manager.listCount) {
-            if (tabName === 'wrong' && (state.managerWrongRange || 'top50') !== 'all') {
-                elements.manager.listCount.innerHTML = `<strong>${list.length}문항 선택</strong> <span style="font-size:0.74rem; color:#94A3B8;">(누적 취약 ${wrongTotalBeforeRange}문항 중)</span>`;
-            } else if (totalCount > state.managerPageSize) {
+            if (totalCount > state.managerPageSize) {
                 elements.manager.listCount.innerHTML = `<strong>${startIndex + 1}-${endIndex}</strong> <span style="font-size:0.75rem; color:#64748B;">/ ${totalCount}건</span>`;
             } else {
                 elements.manager.listCount.textContent = `${totalCount}건`;
@@ -6170,6 +6152,7 @@ ${paperHtml}
         });
 
         if (elements.manager.editorEmpty) elements.manager.editorEmpty.style.display = 'none';
+        if (elements.manager.reportsEmpty) elements.manager.reportsEmpty.style.display = 'none';
         if (elements.manager.editorForm) elements.manager.editorForm.style.display = 'none';
         if (elements.manager.reportViewPanel) elements.manager.reportViewPanel.style.display = 'block';
 
@@ -6202,6 +6185,7 @@ ${paperHtml}
         });
 
         if (elements.manager.reportViewPanel) elements.manager.reportViewPanel.style.display = 'none';
+        if (elements.manager.reportsEmpty) elements.manager.reportsEmpty.style.display = 'none';
         if (elements.manager.editorEmpty) elements.manager.editorEmpty.style.display = 'none';
         if (elements.manager.editorForm) elements.manager.editorForm.style.display = 'flex';
 
@@ -6436,9 +6420,14 @@ ${paperHtml}
                 document.querySelectorAll('.mgr-range-pill').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 state.managerWrongRange = btn.dataset.range || 'top50';
-                state.managerPage = 1;
-                renderManagerList();
-                if (elements.manager.itemsList) elements.manager.itemsList.scrollTop = 0;
+                const rNames = {
+                    top50: 'Top 50 (최다 취약 50문항)',
+                    top30: 'Top 30 (초압축 30문항)',
+                    today: '오늘 푼 오답',
+                    recent2: '최근 2일간 오답',
+                    all: '누적 전체 오답'
+                };
+                showToast(`📄 A4 인쇄 범위: [${rNames[state.managerWrongRange] || state.managerWrongRange}]`);
             });
         });
 
@@ -6941,45 +6930,37 @@ ${paperHtml}
             });
         }
 
-        if (elements.manager.btnPrintA4) {
-            elements.manager.btnPrintA4.addEventListener('click', () => {
-                let questionsToPrint = (state.managerCurrentList && state.managerCurrentList.length > 0)
-                    ? [...state.managerCurrentList]
-                    : [];
-                if (questionsToPrint.length === 0) {
-                    showToast('인쇄할 문제가 없습니다.');
-                    return;
-                }
-                const subTitle = state.managerFilter === 'all' ? '전 과목' : state.managerFilter;
-                let tabTitle = '핵심 문항 정리';
-                let rangeChoice = 'all';
-
-                if (state.managerTab === 'wrong') {
-                    rangeChoice = state.managerWrongRange || 'top50';
-                    if (rangeChoice === 'top50') {
-                        tabTitle = '최다 취약 오답 Top 50';
-                        questionsToPrint = questionsToPrint.slice(0, 50);
-                    } else if (rangeChoice === 'top30') {
-                        tabTitle = '시험장 직전 초압축 Top 30';
-                        questionsToPrint = questionsToPrint.slice(0, 30);
-                    } else if (rangeChoice === 'today') {
-                        tabTitle = '오늘 푼 취약 오답 정리';
-                    } else if (rangeChoice === 'recent2') {
-                        tabTitle = '최근 2일간 취약 오답 정리';
-                    } else {
-                        tabTitle = '전체 누적 오답 총정리';
-                    }
-                } else if (state.managerTab === 'needs_edit') {
-                    tabTitle = '수정 필요 문항 정리';
-                } else if (state.managerTab === 'custom_edits') {
-                    tabTitle = '수정 완료 문항 정리';
-                }
-                openA4PrintView({
-                    title: `주택관리사 2차 ${tabTitle} (${subTitle})`,
-                    questions: questionsToPrint,
-                    rangeChoice: rangeChoice
-                });
+        function triggerTutoringA4Print() {
+            const { allPool } = getManagerPools();
+            let wrongs = allPool.filter(q => {
+                const stat = state.statsMap[q.qKey];
+                return stat && stat.wrongCount > 0;
             });
+            if (state.managerFilter !== 'all') {
+                wrongs = wrongs.filter(q => q.subject === state.managerFilter);
+            }
+            if (wrongs.length === 0) {
+                showToast('인쇄할 오답 문제가 없습니다.');
+                return;
+            }
+            const subTitle = state.managerFilter === 'all' ? '전 과목' : state.managerFilter;
+            const rangeChoice = state.managerWrongRange || 'top50';
+            let tabTitle = (rangeChoice === 'top50') ? '최다 취약 오답 Top 50' :
+                           (rangeChoice === 'top30') ? '시험장 직전 초압축 Top 30' :
+                           (rangeChoice === 'today') ? '오늘 푼 취약 오답 정리' :
+                           (rangeChoice === 'recent2') ? '최근 2일간 취약 오답 정리' : '전체 누적 오답 총정리';
+            openA4PrintView({
+                title: `주택관리사 2차 ${tabTitle} (${subTitle})`,
+                questions: wrongs,
+                rangeChoice: rangeChoice
+            });
+        }
+
+        if (elements.manager.btnPrintA4) {
+            elements.manager.btnPrintA4.addEventListener('click', triggerTutoringA4Print);
+        }
+        if (elements.manager.btnHeroPrintA4) {
+            elements.manager.btnHeroPrintA4.addEventListener('click', triggerTutoringA4Print);
         }
 
         // PIN Auth Form Listeners

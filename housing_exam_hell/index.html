@@ -21,8 +21,8 @@
     
     <script>
         // Automatic tablet cache buster: Forces tablet WebView to always fetch latest build
-        const CURRENT_BUILD = '2609141935';
-        const APP_SEMVER = 'v.0.260914.1935';
+        const CURRENT_BUILD = '2609141945';
+        const APP_SEMVER = 'v.0.260914.1945';
         window.APP_BUILD_VERSION = CURRENT_BUILD;
         window.APP_SEMVER = APP_SEMVER;
 
@@ -66,9 +66,9 @@
     </script>
     
     <!-- Custom Theme Styles -->
-    <link rel="stylesheet" href="css/dark-theme.css?v=2609141935">
-    <link rel="stylesheet" href="css/quiz-layout.css?v=2609141935">
-    <link rel="stylesheet" href="css/tablet-canvas.css?v=2609141935">
+    <link rel="stylesheet" href="css/dark-theme.css?v=2609141945">
+    <link rel="stylesheet" href="css/quiz-layout.css?v=2609141945">
+    <link rel="stylesheet" href="css/tablet-canvas.css?v=2609141945">
 </head>
 <body data-subject="관계법규">
 
@@ -84,7 +84,7 @@
                 </a>
                 <span id="header-brand-badge" class="brand-badge">관계법규</span>
                 <span id="header-mode-title" class="mode-title">
-                    <i class="fa-solid fa-fire text-amber-500 fire-anim-header"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260914.1815</span>
+                    <i class="fa-solid fa-fire text-amber-500 fire-anim-header"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">v.0.260914.1945</span>
                 </span>
             </div>
 
@@ -368,9 +368,6 @@
                         <button type="button" id="btn-import-backup" class="mgr-pill-btn" style="flex: 1; justify-content: center; background: rgba(52,211,153,0.12); color: #34D399; border-color: rgba(52,211,153,0.3); font-size: 0.74rem; padding: 4px 6px; display: inline-flex; align-items: center; gap: 4px;" title="백업 파일(.json)을 불러와 복원">
                             <i class="fa-solid fa-file-arrow-up"></i> 복원
                         </button>
-                        <button type="button" id="btn-print-all-wrongs-a4" class="mgr-pill-btn" style="flex: 1.2; justify-content: center; background: rgba(244,63,94,0.15); color: #FDA4AF; border-color: rgba(244,63,94,0.35); font-size: 0.74rem; padding: 4px 8px; display: inline-flex; align-items: center; gap: 4px;" title="현재 목록의 문제를 시험장 지참용 A4 2단 요약본으로 인쇄/PDF 저장">
-                            <i class="fa-solid fa-print"></i> A4 인쇄
-                        </button>
                         <input type="file" id="file-import-backup" accept=".json" style="display: none;">
                     </div>
 
@@ -389,13 +386,24 @@
                         </div>
                     </div>
 
-                    <!-- Wrong Range Sub-Filters Bar (Only visible in 'wrong' tab) -->
-                    <div id="mgr-wrong-range-bar" style="display: flex; gap: 4px; padding: 0 4px 8px 4px; overflow-x: auto; flex-wrap: wrap;">
-                        <button type="button" class="mgr-pill-btn active mgr-range-pill" data-range="top50" title="가장 많이 틀린 최다 취약 50문항 (기본)">🔥 Top 50</button>
-                        <button type="button" class="mgr-pill-btn mgr-range-pill" data-range="top30" title="시험장 직전 초압축 30문항">★ Top 30</button>
-                        <button type="button" class="mgr-pill-btn mgr-range-pill" data-range="today" title="오늘 틀린 오답만">⚡ 오늘</button>
-                        <button type="button" class="mgr-pill-btn mgr-range-pill" data-range="recent2" title="최근 2일간(어제+오늘) 오답">📅 최근2일</button>
-                        <button type="button" class="mgr-pill-btn mgr-range-pill" data-range="all" title="3주간 누적 전체 오답">📚 전체(<span id="mgr-cnt-wrong-all">0</span>)</button>
+                    <!-- Tutoring & A4 Exam Prep Menu Box (ONLY displayed in 'reports' / 오답과외 tab) -->
+                    <div id="mgr-tutoring-a4-box" style="display: none; margin: 0 4px 10px 4px; padding: 10px 12px; background: linear-gradient(135deg, rgba(244,63,94,0.12), rgba(168,85,247,0.12)); border: 1px solid rgba(244,63,94,0.3); border-radius: 8px;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+                            <span style="font-size: 0.8rem; font-weight: 800; color: #FDA4AF; display: flex; align-items: center; gap: 5px;">
+                                <i class="fa-solid fa-print text-rose-400"></i> 시험장 A4 오답노트 인쇄
+                            </span>
+                            <button type="button" id="btn-print-all-wrongs-a4" class="mgr-pill-btn" style="background: #E11D48; color: #FFF; font-weight: 800; font-size: 0.74rem; padding: 3px 8px; border: none; display: inline-flex; align-items: center; gap: 4px; cursor: pointer;" title="시험장 지참용 A4 2단 요약본 인쇄 / PDF 저장창 열기">
+                                <i class="fa-solid fa-print"></i> 인쇄하기
+                            </button>
+                        </div>
+                        <div style="font-size: 0.72rem; color: #94A3B8; margin-bottom: 6px;">인쇄할 범위를 선택하세요:</div>
+                        <div id="mgr-wrong-range-bar" style="display: flex; gap: 3px; overflow-x: auto; flex-wrap: wrap;">
+                            <button type="button" class="mgr-pill-btn active mgr-range-pill" data-range="top50" title="가장 많이 틀린 최다 취약 50문항 (기본)">🔥 Top 50</button>
+                            <button type="button" class="mgr-pill-btn mgr-range-pill" data-range="top30" title="시험장 직전 초압축 30문항">★ Top 30</button>
+                            <button type="button" class="mgr-pill-btn mgr-range-pill" data-range="today" title="오늘 틀린 오답만">⚡ 오늘</button>
+                            <button type="button" class="mgr-pill-btn mgr-range-pill" data-range="recent2" title="최근 2일간(어제+오늘) 오답">📅 최근2일</button>
+                            <button type="button" class="mgr-pill-btn mgr-range-pill" data-range="all" title="3주간 누적 전체 오답">📚 전체(<span id="mgr-cnt-wrong-all">0</span>)</button>
+                        </div>
                     </div>
 
                     <!-- Scrollable Question Items List -->
@@ -425,6 +433,21 @@
                         <p style="font-size: 0.88rem; color: #64748B; max-width: 360px; line-height: 1.6;">
                             문제를 클릭하면 지문, 선택 보기, 정답, 상세 해설 및 일타 팁을 확인하고 실시간으로 수정·저장할 수 있습니다.
                         </p>
+                    </div>
+
+                    <!-- Empty / Welcome state for 'reports' tab -->
+                    <div id="mgr-reports-empty" class="mgr-editor-empty" style="display: none;">
+                        <i class="fa-solid fa-book-bookmark" style="font-size: 2.5rem; color: #A78BFA; margin-bottom: 16px;"></i>
+                        <h3 style="font-size: 1.15rem; font-weight: 800; color: #F1F5F9; margin-bottom: 6px;">오답 과외 보고서 & 시험장 A4 요약본</h3>
+                        <p style="font-size: 0.88rem; color: #64748B; max-width: 400px; line-height: 1.6; text-align: center;">
+                            실전 모의고사 및 헬 모드 응시 후 생성된 AI 과외 보고서를 열람하거나,<br>
+                            시험장에 지참할 <strong>A4 2단 오답노트(Top 50/30)</strong>를 인쇄·PDF로 출력할 수 있습니다.
+                        </p>
+                        <div style="margin-top: 18px;">
+                            <button type="button" id="btn-hero-print-a4" class="btn-ctrl btn-primary" style="padding: 10px 22px; font-weight: 800; font-size: 0.92rem; background: linear-gradient(135deg, #E11D48, #A855F7); border: none; cursor: pointer;">
+                                <i class="fa-solid fa-print"></i> 시험장 Top 50 A4 인쇄 / PDF 열기
+                            </button>
+                        </div>
                     </div>
 
                     <form id="mgr-editor-form" class="mgr-editor-form" style="display: none;" onsubmit="return false;">
@@ -1023,18 +1046,18 @@
     <!-- Firebase SDK (Compat) for Realtime Cloud Sync (Local Offline-First) -->
     <script src="js/libs/firebase-app-compat.js"></script>
     <script src="js/libs/firebase-firestore-compat.js"></script>
-    <script src="js/cloud-sync.js?v=2609141935"></script>
+    <script src="js/cloud-sync.js?v=2609141945"></script>
 
     <!-- Master Exam Data Bundle (3,959 Questions) -->
-    <script src="data/exam_bank.js?v=2609141935"></script>
+    <script src="data/exam_bank.js?v=2609141945"></script>
 
     <!-- Core Keywords 300 DB (관계법규 300 + 관리실무 300) -->
-    <script src="data/core_keywords_db.js?v=2609141935"></script>
+    <script src="data/core_keywords_db.js?v=2609141945"></script>
 
     <!-- IndexedDB Storage Engine -->
-    <script src="js/idb-store.js?v=2609141935"></script>
+    <script src="js/idb-store.js?v=2609141945"></script>
 
     <!-- Application Script -->
-    <script src="js/app.js?v=2609141935"></script>
+    <script src="js/app.js?v=2609141945"></script>
 </body>
 </html>
