@@ -13,3 +13,4 @@ android_app/build/
 android_app/local.properties
 android_app/.idea/
 android_app/*.iml
+backups_snapshot/
