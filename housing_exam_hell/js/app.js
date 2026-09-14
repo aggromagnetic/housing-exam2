@@ -2829,7 +2829,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                const semver = window.APP_SEMVER || 'v.0.260914.1910';
+                const semver = window.APP_SEMVER || 'v.0.260914.1935';
                 elements.header.modeTitle.innerHTML = `<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">${semver}</span>`;
             }
         } else {
@@ -2864,7 +2864,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                const semver = window.APP_SEMVER || 'v.0.260914.1910';
+                const semver = window.APP_SEMVER || 'v.0.260914.1935';
                 elements.header.modeTitle.innerHTML = `<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">${semver}</span>`;
             }
             if (elements.header.timerBadge) {
@@ -5032,27 +5032,27 @@
     /**
      * 📄 시험장 지참용 오답노트 A4 2단 인쇄 / PDF 뷰어
      */
-    function openA4PrintView({ title = '시험장 지참용 오답 총정리 노트', questions = [] }) {
+    function openA4PrintView({ title = '시험장 지참용 오답 총정리 노트', questions = [], rangeChoice = null }) {
         const modal = elements.modals.a4Print || document.getElementById('modal-a4-print');
         if (!modal) return;
 
         // 1. Deduplicate questions by qKey 100%
         const seenKeys = new Set();
-        const dedupedQuestions = [];
+        const basePool = [];
         for (const q of questions) {
             if (!q || !q.qKey) continue;
             if (seenKeys.has(q.qKey)) continue;
             seenKeys.add(q.qKey);
-            dedupedQuestions.push(q);
+            basePool.push(q);
         }
 
-        if (dedupedQuestions.length === 0) {
+        if (basePool.length === 0) {
             showToast('인쇄할 문제가 없습니다.');
             return;
         }
 
-        // 2. Sort by total wrong count descending (most failed questions first)
-        dedupedQuestions.sort((a, b) => {
+        // 2. Sort base pool by weakness descending (most failed questions first)
+        basePool.sort((a, b) => {
             const statA = state.statsMap[a.qKey] || {};
             const statB = state.statsMap[b.qKey] || {};
             const countA = statA.totalWrongCount || statA.wrongCount || 0;
@@ -5060,156 +5060,215 @@
             if (countB !== countA) return countB - countA;
             const wA = statA.weight || 1;
             const wB = statB.weight || 1;
-            return wB - wA;
+            if (wB !== wA) return wB - wA;
+            const timeA = getStatTime(statA);
+            const timeB = getStatTime(statB);
+            return timeB - timeA;
         });
 
-        // 3. Update Title & Count
-        const titleEl = document.getElementById('a4-print-title');
-        const countEl = document.getElementById('a4-print-count');
-        if (titleEl) titleEl.innerHTML = `<i class="fa-solid fa-print text-sky-400"></i> ${escapeHtml(title)}`;
-        if (countEl) countEl.textContent = `${dedupedQuestions.length}문제`;
+        let currentActiveRange = rangeChoice || (title.includes('Top 30') ? 'top30' : (title.includes('전체') ? 'all' : 'top50'));
+        let activeDocTitle = title;
 
-        // 4. Update Header in Paper
-        const headerEl = document.getElementById('a4-print-header');
-        const now = new Date();
-        const printDateStr = `${now.getFullYear()}년 ${now.getMonth() + 1}월 ${now.getDate()}일 ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-        if (headerEl) {
-            headerEl.innerHTML = `
-                <div>
-                    <h2 class="sheet-title">${escapeHtml(title)}</h2>
-                    <div class="sheet-meta">주택관리사보 2차 시험 대비 핵심 취약/오답 집중 총정리</div>
-                </div>
-                <div class="sheet-stats">
-                    <div><strong>총 ${dedupedQuestions.length}문항</strong> (취약순 정렬)</div>
-                    <div style="font-size: 0.75rem; color: #64748B; margin-top: 2px;">출력일시: ${printDateStr}</div>
-                </div>
-            `;
-        }
+        function renderA4Document(selectedRange) {
+            currentActiveRange = selectedRange || currentActiveRange;
+            let displayQuestions = [...basePool];
 
-        // 5. Build 2-column Questions HTML
-        const contentEl = document.getElementById('a4-print-content');
-        if (contentEl) {
-            let html = '';
-            dedupedQuestions.forEach((q, idx) => {
-                applyCustomEdits(q);
-                const stat = state.statsMap[q.qKey] || {};
-                const wrongTimes = stat.totalWrongCount || stat.wrongCount || 1;
-                const formatted = formatQuestionAndPassage(q);
+            const nowTime = Date.now();
+            const oneDayMs = 24 * 60 * 60 * 1000;
+            const twoDaysMs = 48 * 60 * 60 * 1000;
 
-                // Badges
-                const isLaw = q.subject === '관계법규';
-                const subjBadge = `<span class="a4-badge-subj ${isLaw ? 'law' : 'gwanri'}">${escapeHtml(q.subject)}</span>`;
-                const wrongBadge = `<span class="a4-badge-wrong">❌ ${wrongTimes}회 오답</span>`;
-                const chapText = (q.chapterName || '').replace(/^CHAPTER\s+\d+\s*/i, '');
-                const chapBadge = chapText ? `<span class="a4-badge-chap">${escapeHtml(chapText)}</span>` : '';
-                
-                let coreBadge = '';
-                if (q.isHighYield && q.primaryCoreItem) {
-                    const isSuper = (q.topScore >= 6);
-                    coreBadge = `<span class="a4-badge-core">${isSuper ? '🔥초특급' : '★빈출'} #${String(q.primaryCoreItem.id).padStart(3, '0')}</span>`;
-                }
+            let rangeName = '최다 취약 오답 Top 50';
+            let approxPages = 'A4 약 5~6페이지';
 
-                // Question Title & Passage
-                let passageHtml = '';
-                if (formatted.passage && formatted.passage.trim()) {
-                    passageHtml = `<div class="a4-passage-box">${escapeHtml(formatted.passage)}</div>`;
-                }
+            // 🛡️ STRICT HARD SLICE GUARD: Top 50 is ALWAYS capped at 50, Top 30 at 30!
+            if (currentActiveRange === 'top50') {
+                displayQuestions = displayQuestions.slice(0, 50);
+                rangeName = '최다 취약 오답 Top 50';
+                approxPages = 'A4 약 5~6페이지';
+            } else if (currentActiveRange === 'top30') {
+                displayQuestions = displayQuestions.slice(0, 30);
+                rangeName = '시험장 직전 초압축 Top 30';
+                approxPages = 'A4 약 3~4페이지';
+            } else if (currentActiveRange === 'today') {
+                displayQuestions = displayQuestions.filter(q => (nowTime - getStatTime(state.statsMap[q.qKey])) <= oneDayMs);
+                rangeName = '오늘 푼 취약 오답 총정리';
+                approxPages = `A4 약 ${Math.max(1, Math.ceil(displayQuestions.length / 8))}페이지`;
+            } else if (currentActiveRange === 'recent2') {
+                displayQuestions = displayQuestions.filter(q => (nowTime - getStatTime(state.statsMap[q.qKey])) <= twoDaysMs);
+                rangeName = '최근 2일간 취약 오답 총정리';
+                approxPages = `A4 약 ${Math.max(1, Math.ceil(displayQuestions.length / 8))}페이지`;
+            } else {
+                rangeName = '전체 누적 오답 총정리';
+                approxPages = `A4 약 ${Math.max(1, Math.ceil(displayQuestions.length / 8))}페이지`;
+            }
 
-                // Options / Blanks
-                let bodyHtml = '';
-                if (q.type === 'choice') {
-                    if (Array.isArray(q.options) && q.options.length > 0) {
-                        const numChars = ['①', '②', '③', '④', '⑤'];
-                        const optsHtml = q.options.map((opt, oIdx) => {
-                            const numSymbol = numChars[oIdx] || `(${oIdx + 1})`;
-                            const cleanText = opt.replace(/^[①②③④⑤\d\.\s\)\-]+/, '').trim();
-                            return `<div class="a4-option-row"><span class="a4-option-num">${numSymbol}</span> <span>${escapeHtml(cleanText || opt)}</span></div>`;
-                        }).join('');
-                        bodyHtml = `<div class="a4-options-list">${optsHtml}</div>`;
-                    }
-                } else {
-                    let targetAnswers = q.answers || {};
-                    let entries = sortSubjectiveEntries(Object.entries(targetAnswers));
-                    if (entries.length === 0 && q.answer) {
-                        const parsed = parseSubjectiveAnswers(q.answer);
-                        if (Object.keys(parsed.answers).length > 0) {
-                            targetAnswers = parsed.answers;
-                            entries = sortSubjectiveEntries(Object.entries(targetAnswers));
-                        }
-                    }
-                    if (entries.length > 0) {
-                        const blanksList = entries.map(([k]) => `[ 빈칸: ${k} ]`).join(' ');
-                        bodyHtml = `<div class="a4-sa-blanks-box">✍️ 주관식 단답형 기입: ${escapeHtml(blanksList)}</div>`;
-                    }
-                }
+            // Extract subject from title if present
+            const subMatch = title.match(/\(([^)]+)\)/);
+            const subSuffix = subMatch ? ` (${subMatch[1]})` : '';
+            activeDocTitle = `주택관리사 2차 ${rangeName}${subSuffix}`;
 
-                // Answer Display
-                let ansText = '';
-                if (q.type === 'choice') {
-                    const numChars = ['①', '②', '③', '④', '⑤'];
-                    const aNum = parseInt(q.answer, 10);
-                    if (!isNaN(aNum) && aNum >= 1 && aNum <= 5) {
-                        ansText = numChars[aNum - 1];
-                    } else {
-                        ansText = String(q.answer || '');
-                    }
-                } else {
-                    let targetAnswers = q.answers || {};
-                    let entries = sortSubjectiveEntries(Object.entries(targetAnswers));
-                    if (entries.length === 0 && q.answer) {
-                        ansText = String(q.answer || '');
-                    } else {
-                        ansText = entries.map(([k, v]) => `[${k}] ${Array.isArray(v) ? v.join('/') : v}`).join(', ');
-                    }
-                }
+            // 3. Update Title & Count
+            const titleEl = document.getElementById('a4-print-title');
+            const countEl = document.getElementById('a4-print-count');
+            if (titleEl) titleEl.innerHTML = `<i class="fa-solid fa-print text-sky-400"></i> ${escapeHtml(activeDocTitle)}`;
+            if (countEl) countEl.textContent = `${displayQuestions.length}문제`;
 
-                // Explanation & Tip
-                let expBody = (q.explanation || '').trim();
-                let tipBody = (q.tip || '').trim();
+            // Update in-modal range buttons
+            const modalRangeBar = document.getElementById('a4-modal-range-bar');
+            if (modalRangeBar) {
+                modalRangeBar.querySelectorAll('.a4-preview-range-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.range === currentActiveRange);
+                });
+            }
 
-                if (expBody.includes('━━━━━━━━━━━━━━━━━━━━━━━━━━━━') || expBody.includes('💡 [일타 팁') || expBody.includes('[일타 팁')) {
-                    const parts = expBody.split(/━━━━━━━━━━━━━━━━━━━━━━━━━━━━|💡\s*\[일타\s*팁[^\]]*\]|\[일타\s*팁[^\]]*\]/);
-                    expBody = (parts[0] || '').trim();
-                    if (!tipBody && parts.length > 1) {
-                        tipBody = parts.slice(1).join('\n').replace(/^\s*(💡\s*)?\[일타\s*팁[^\]]*\]\s*/i, '').trim();
-                    }
-                }
-
-                let expHtml = '';
-                if (expBody || tipBody) {
-                    let cleanExp = escapeHtml(expBody).replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>');
-                    let cleanTip = tipBody ? `<div class="a4-tip-box">💡 <b>[일타 팁]</b> ${escapeHtml(tipBody).replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>')}</div>` : '';
-                    expHtml = `
-                        <div class="a4-exp-box">
-                            <div>${cleanExp}</div>
-                            ${cleanTip}
-                        </div>
-                    `;
-                }
-
-                html += `
-                    <div class="a4-q-item">
-                        <div class="a4-q-header">
-                            <span class="a4-badge-num">${idx + 1}.</span>
-                            ${wrongBadge}
-                            ${subjBadge}
-                            ${chapBadge}
-                            ${coreBadge}
-                        </div>
-                        <div class="a4-q-title">${escapeHtml(formatted.title)}</div>
-                        ${passageHtml}
-                        ${bodyHtml}
-                        <div class="a4-ans-exp-box">
-                            <div class="a4-ans-row">
-                                <span class="a4-ans-tag">정답</span>
-                                <span class="a4-ans-val">${escapeHtml(ansText)}</span>
-                            </div>
-                            ${expHtml}
-                        </div>
+            // 4. Update Header in Paper
+            const headerEl = document.getElementById('a4-print-header');
+            const now = new Date();
+            const printDateStr = `${now.getFullYear()}년 ${now.getMonth() + 1}월 ${now.getDate()}일 ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+            if (headerEl) {
+                headerEl.innerHTML = `
+                    <div>
+                        <h2 class="sheet-title">${escapeHtml(activeDocTitle)}</h2>
+                        <div class="sheet-meta">주택관리사보 2차 시험 대비 핵심 취약/오답 집중 총정리</div>
+                    </div>
+                    <div class="sheet-stats">
+                        <div><strong>총 ${displayQuestions.length}문항</strong> (취약순 엄선 / ${approxPages})</div>
+                        <div style="font-size: 0.75rem; color: #64748B; margin-top: 2px;">출력일시: ${printDateStr}</div>
                     </div>
                 `;
+            }
+
+            // 5. Build 2-column Questions HTML
+            const contentEl = document.getElementById('a4-print-content');
+            if (contentEl) {
+                if (displayQuestions.length === 0) {
+                    contentEl.innerHTML = `
+                        <div style="grid-column: span 2; text-align: center; padding: 40px 16px; color: #64748B;">
+                            선택한 범위에 해당하는 오답 문제가 없습니다.
+                        </div>
+                    `;
+                    return;
+                }
+                let html = '';
+                displayQuestions.forEach((q, idx) => {
+                    applyCustomEdits(q);
+                    const stat = state.statsMap[q.qKey] || {};
+                    const wrongTimes = stat.totalWrongCount || stat.wrongCount || 1;
+                    const formatted = formatQuestionAndPassage(q);
+
+                    // Badges
+                    const isLaw = q.subject === '관계법규';
+                    const subjBadge = `<span class="a4-badge-subj ${isLaw ? 'law' : 'gwanri'}">${escapeHtml(q.subject)}</span>`;
+                    const wrongBadge = `<span class="a4-badge-wrong">❌ ${wrongTimes}회 오답</span>`;
+                    const chapText = (q.chapterName || '').replace(/^CHAPTER\s+\d+\s*/i, '');
+                    const chapBadge = chapText ? `<span class="a4-badge-chap">${escapeHtml(chapText)}</span>` : '';
+                    
+                    let coreBadge = '';
+                    if (q.isHighYield && q.primaryCoreItem) {
+                        const isSuper = (q.topScore >= 6);
+                        coreBadge = `<span class="a4-badge-core">${isSuper ? '🔥초특급' : '★빈출'} #${String(q.primaryCoreItem.id).padStart(3, '0')}</span>`;
+                    }
+
+                    // Question Title & Passage
+                    let passageHtml = '';
+                    if (formatted.passage && formatted.passage.trim()) {
+                        passageHtml = `<div class="a4-passage-box">${escapeHtml(formatted.passage)}</div>`;
+                    }
+
+                    // Options / Blanks
+                    let bodyHtml = '';
+                    if (q.type === 'choice') {
+                        if (Array.isArray(q.options) && q.options.length > 0) {
+                            const numChars = ['①', '②', '③', '④', '⑤'];
+                            const optsHtml = q.options.map((opt, oIdx) => {
+                                const numSymbol = numChars[oIdx] || `(${oIdx + 1})`;
+                                const cleanText = opt.replace(/^[①②③④⑤\d\.\s\)\-]+/, '').trim();
+                                return `<div class="a4-option-row"><span class="a4-option-num">${numSymbol}</span> <span>${escapeHtml(cleanText || opt)}</span></div>`;
+                            }).join('');
+                            bodyHtml = `<div class="a4-options-list">${optsHtml}</div>`;
+                        }
+                    } else {
+                        let targetAnswers = q.answers || {};
+                        let entries = sortSubjectiveEntries(Object.entries(targetAnswers));
+                        if (entries.length === 0 && q.answer) {
+                            const parsed = parseSubjectiveAnswers(q.answer);
+                            if (Object.keys(parsed.answers).length > 0) {
+                                targetAnswers = parsed.answers;
+                                entries = sortSubjectiveEntries(Object.entries(targetAnswers));
+                            }
+                        }
+                        if (entries.length > 0) {
+                            const blanksList = entries.map(([k]) => `[ 빈칸: ${k} ]`).join(' ');
+                            bodyHtml = `<div class="a4-sa-blanks-box">✍️ 주관식 단답형 기입: ${escapeHtml(blanksList)}</div>`;
+                        }
+                    }
+
+                    // Answer Display
+                    let ansText = '';
+                    if (q.type === 'choice') {
+                        const numChars = ['①', '②', '③', '④', '⑤'];
+                        const aNum = parseInt(q.answer, 10);
+                        if (!isNaN(aNum) && aNum >= 1 && aNum <= 5) {
+                            ansText = numChars[aNum - 1];
+                        } else {
+                            ansText = String(q.answer || '');
+                        }
+                    } else {
+                        let targetAnswers = q.answers || {};
+                        let entries = sortSubjectiveEntries(Object.entries(targetAnswers));
+                        if (entries.length === 0 && q.answer) {
+                            ansText = String(q.answer || '');
+                        } else {
+                            ansText = entries.map(([k, v]) => `[${k}] ${Array.isArray(v) ? v[0] : v}`).join(' | ');
+                        }
+                    }
+
+                    // Explanations & Tips
+                    let expHtml = '';
+                    if (q.explanation && q.explanation.trim()) {
+                        expHtml += `<div class="a4-exp-box">${escapeHtml(q.explanation)}</div>`;
+                    }
+                    if (q.tip && q.tip.trim()) {
+                        expHtml += `<div class="a4-tip-box">💡 <strong>핵심 포인트:</strong> ${escapeHtml(q.tip)}</div>`;
+                    }
+
+                    html += `
+                        <div class="a4-q-item">
+                            <div class="a4-q-header">
+                                <span class="a4-badge-num">문항 ${idx + 1}</span>
+                                ${subjBadge}
+                                ${wrongBadge}
+                                ${chapBadge}
+                                ${coreBadge}
+                            </div>
+                            <div class="a4-q-title">${escapeHtml(formatted.title || q.question || '')}</div>
+                            ${passageHtml}
+                            ${bodyHtml}
+                            <div class="a4-ans-exp-box">
+                                <div class="a4-ans-row">
+                                    <span class="a4-ans-tag">정답</span>
+                                    <span class="a4-ans-val">${escapeHtml(ansText)}</span>
+                                </div>
+                                ${expHtml}
+                            </div>
+                        </div>
+                    `;
+                });
+                contentEl.innerHTML = html;
+            }
+        }
+
+        // Render initial view
+        renderA4Document(currentActiveRange);
+
+        // 5-1. Wire in-modal range switcher pills
+        const modalRangeBar = document.getElementById('a4-modal-range-bar');
+        if (modalRangeBar) {
+            modalRangeBar.querySelectorAll('.a4-preview-range-btn').forEach(btn => {
+                btn.onclick = () => {
+                    renderA4Document(btn.dataset.range);
+                };
             });
-            contentEl.innerHTML = html;
         }
 
         // 6. Reset Checkboxes & Styling
@@ -5237,7 +5296,7 @@
         const btnPrint = document.getElementById('btn-trigger-a4-print');
         if (btnPrint) {
             btnPrint.onclick = () => {
-                const cleanTitle = title.replace(/[\/\\:*?"<>|]/g, '_');
+                const cleanTitle = (activeDocTitle || title).replace(/[\/\\:*?"<>|]/g, '_');
                 if (window.AndroidBridge && typeof window.AndroidBridge.printA4Document === 'function') {
                     window.AndroidBridge.printA4Document(cleanTitle);
                 } else {
@@ -5250,7 +5309,7 @@
         const btnDownloadHtml = document.getElementById('btn-download-a4-html');
         if (btnDownloadHtml) {
             btnDownloadHtml.onclick = () => {
-                const cleanTitle = title.replace(/[\/\\:*?"<>|]/g, '_');
+                const cleanTitle = (activeDocTitle || title).replace(/[\/\\:*?"<>|]/g, '_');
                 const paperHtml = paperEl ? paperEl.innerHTML : '';
                 const isHideExp = paperEl && paperEl.classList.contains('hide-explanations');
                 const isMaskAns = paperEl && paperEl.classList.contains('mask-answers');
@@ -5511,6 +5570,7 @@ ${paperHtml}
         state.mode = 'manager';
         state.managerTab = 'wrong';
         state.managerFilter = 'all';
+        state.managerWrongRange = 'top50'; // 🛡️ Strict Top 50 Default
         state.managerSearchQuery = '';
         state.statsMap = await IDBStore.getAllStatsMap();
         state.needsEditMap = await IDBStore.getAllNeedsEditMap();
@@ -5524,8 +5584,11 @@ ${paperHtml}
         document.querySelectorAll('.mgr-tab-btn').forEach(btn => {
             btn.classList.toggle('active', btn.dataset.tab === 'wrong');
         });
-        document.querySelectorAll('.mgr-pill-btn').forEach(btn => {
+        document.querySelectorAll('.mgr-subject-pills .mgr-pill-btn').forEach(btn => {
             btn.classList.toggle('active', btn.dataset.subject === 'all');
+        });
+        document.querySelectorAll('.mgr-range-pill').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.range === 'top50');
         });
 
         showScreen('manager');
@@ -5865,6 +5928,11 @@ ${paperHtml}
                     ? `Top 30` 
                     : list.length;
             }
+            if (elements.manager.btnPrintA4) {
+                const pTitle = (rangeChoice === 'top50') ? '🔥 Top 50 A4 인쇄' :
+                               (rangeChoice === 'top30') ? '★ Top 30 A4 인쇄' : '📄 A4 인쇄';
+                elements.manager.btnPrintA4.innerHTML = `<i class="fa-solid fa-print"></i> ${pTitle}`;
+            }
         } else if (tabName === 'needs_edit') {
             list = allNeedsEditKeys.map(k => {
                 const info = state.needsEditMap[k] || {};
@@ -5928,7 +5996,7 @@ ${paperHtml}
 
         if (elements.manager.listCount) {
             if (tabName === 'wrong' && (state.managerWrongRange || 'top50') !== 'all') {
-                elements.manager.listCount.innerHTML = `<strong>${list.length}건</strong> <span style="font-size:0.72rem; color:#64748B;">(전체 ${wrongTotalBeforeRange}건 중)</span>`;
+                elements.manager.listCount.innerHTML = `<strong>${list.length}문항 선택</strong> <span style="font-size:0.74rem; color:#94A3B8;">(누적 취약 ${wrongTotalBeforeRange}문항 중)</span>`;
             } else if (totalCount > state.managerPageSize) {
                 elements.manager.listCount.innerHTML = `<strong>${startIndex + 1}-${endIndex}</strong> <span style="font-size:0.75rem; color:#64748B;">/ ${totalCount}건</span>`;
             } else {
@@ -6875,8 +6943,8 @@ ${paperHtml}
 
         if (elements.manager.btnPrintA4) {
             elements.manager.btnPrintA4.addEventListener('click', () => {
-                const questionsToPrint = (state.managerCurrentList && state.managerCurrentList.length > 0)
-                    ? state.managerCurrentList
+                let questionsToPrint = (state.managerCurrentList && state.managerCurrentList.length > 0)
+                    ? [...state.managerCurrentList]
                     : [];
                 if (questionsToPrint.length === 0) {
                     showToast('인쇄할 문제가 없습니다.');
@@ -6884,12 +6952,23 @@ ${paperHtml}
                 }
                 const subTitle = state.managerFilter === 'all' ? '전 과목' : state.managerFilter;
                 let tabTitle = '핵심 문항 정리';
+                let rangeChoice = 'all';
+
                 if (state.managerTab === 'wrong') {
-                    const rangeChoice = state.managerWrongRange || 'top50';
-                    tabTitle = (rangeChoice === 'top50') ? '최다 취약 오답 Top 50' :
-                               (rangeChoice === 'top30') ? '시험장 직전 초압축 Top 30' :
-                               (rangeChoice === 'today') ? '오늘 푼 취약 오답 정리' :
-                               (rangeChoice === 'recent2') ? '최근 2일간 취약 오답 정리' : '전체 누적 오답 총정리';
+                    rangeChoice = state.managerWrongRange || 'top50';
+                    if (rangeChoice === 'top50') {
+                        tabTitle = '최다 취약 오답 Top 50';
+                        questionsToPrint = questionsToPrint.slice(0, 50);
+                    } else if (rangeChoice === 'top30') {
+                        tabTitle = '시험장 직전 초압축 Top 30';
+                        questionsToPrint = questionsToPrint.slice(0, 30);
+                    } else if (rangeChoice === 'today') {
+                        tabTitle = '오늘 푼 취약 오답 정리';
+                    } else if (rangeChoice === 'recent2') {
+                        tabTitle = '최근 2일간 취약 오답 정리';
+                    } else {
+                        tabTitle = '전체 누적 오답 총정리';
+                    }
                 } else if (state.managerTab === 'needs_edit') {
                     tabTitle = '수정 필요 문항 정리';
                 } else if (state.managerTab === 'custom_edits') {
@@ -6897,7 +6976,8 @@ ${paperHtml}
                 }
                 openA4PrintView({
                     title: `주택관리사 2차 ${tabTitle} (${subTitle})`,
-                    questions: questionsToPrint
+                    questions: questionsToPrint,
+                    rangeChoice: rangeChoice
                 });
             });
         }
