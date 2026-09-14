@@ -6698,7 +6698,8 @@
             elements.quiz.btnRetry.addEventListener('click', retryCurrentQuestion);
         }
 
-        elements.header.btnHome.addEventListener('click', () => {
+        if (elements.header && elements.header.btnHome) {
+            elements.header.btnHome.addEventListener('click', () => {
             if (state.mode === 'home') return;
             if (state.mode === 'manager' || (elements.screens.manager && elements.screens.manager.classList.contains('active'))) {
                 showScreen('home');
@@ -6792,10 +6793,13 @@
                 }
                 showScreen('home');
             }
-        });
+            });
+        }
 
-        elements.header.btnOMR.addEventListener('click', openOMR);
-        if (elements.header.btnManager) {
+        if (elements.header && elements.header.btnOMR) {
+            elements.header.btnOMR.addEventListener('click', openOMR);
+        }
+        if (elements.header && elements.header.btnManager) {
             elements.header.btnManager.addEventListener('click', () => {
                 openPINAuthModal(() => {
                     openManagerScreen();
@@ -6803,35 +6807,39 @@
                 });
             });
         }
-        if (elements.quiz.qNum) {
+        if (elements.quiz && elements.quiz.qNum) {
             elements.quiz.qNum.addEventListener('click', openOMR);
             elements.quiz.qNum.title = '클릭하여 다른 문항 번호로 즉시 이동 (OMR)';
         }
-        elements.header.btnPen.addEventListener('click', () => {
-            const isQuizScreen = elements.screens.quiz && elements.screens.quiz.classList.contains('active');
-            if (!isQuizScreen) {
-                showToast('✍️ 문제 풀이 화면에서 필기 모드를 사용할 수 있습니다.');
-                return;
-            }
-            if (state.tabletCanvas) {
-                const active = state.tabletCanvas.togglePen();
-                state.tabletCanvas.userManuallyDisabled = !active;
-                elements.header.btnPen.classList.toggle('active', active);
-                if (active) {
-                    showToast('✍️ 필기 모드 ON (문제 위에 필기 가능)');
-                } else {
-                    showToast('필기 모드 OFF');
+        if (elements.header && elements.header.btnPen) {
+            elements.header.btnPen.addEventListener('click', () => {
+                const isQuizScreen = elements.screens.quiz && elements.screens.quiz.classList.contains('active');
+                if (!isQuizScreen) {
+                    showToast('✍️ 문제 풀이 화면에서 필기 모드를 사용할 수 있습니다.');
+                    return;
                 }
-            }
-        });
+                if (state.tabletCanvas) {
+                    const active = state.tabletCanvas.togglePen();
+                    state.tabletCanvas.userManuallyDisabled = !active;
+                    elements.header.btnPen.classList.toggle('active', active);
+                    if (active) {
+                        showToast('✍️ 필기 모드 ON (문제 위에 필기 가능)');
+                    } else {
+                        showToast('필기 모드 OFF');
+                    }
+                }
+            });
+        }
 
-        elements.header.btnFullscreen.addEventListener('click', () => {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen().catch(() => {});
-            } else {
-                document.exitFullscreen().catch(() => {});
-            }
-        });
+        if (elements.header && elements.header.btnFullscreen) {
+            elements.header.btnFullscreen.addEventListener('click', () => {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen().catch(() => {});
+                } else {
+                    document.exitFullscreen().catch(() => {});
+                }
+            });
+        }
 
         const btnHardRefresh = document.getElementById('btn-hard-refresh');
         if (btnHardRefresh) {
@@ -7118,9 +7126,14 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
             });
         }
 
-        elements.result.btnHomeFromRes.addEventListener('click', () => showScreen('home'));
-        elements.result.btnRetry.addEventListener('click', () => showExamLoading(() => startMode(state.mode, state.currentPartPattern)));
-        elements.result.btnCopyAI.addEventListener('click', () => {
+        if (elements.result && elements.result.btnHomeFromRes) {
+            elements.result.btnHomeFromRes.addEventListener('click', () => showScreen('home'));
+        }
+        if (elements.result && elements.result.btnRetry) {
+            elements.result.btnRetry.addEventListener('click', () => showExamLoading(() => startMode(state.mode, state.currentPartPattern)));
+        }
+        if (elements.result && elements.result.btnCopyAI) {
+            elements.result.btnCopyAI.addEventListener('click', () => {
             const mdText = OMRSheet.buildAIPrompt({
                 subject: state.subject,
                 score: (elements.result.scoreText.textContent || '0').replace('점', ''),
@@ -7136,7 +7149,8 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
             }).catch(() => {
                 alert('클립보드 복사 권한을 확인해주세요.');
             });
-        });
+            });
+        }
 
         if (elements.result.btnDownloadAIMD) {
             elements.result.btnDownloadAIMD.addEventListener('click', () => {
