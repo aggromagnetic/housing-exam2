@@ -249,6 +249,17 @@ const CloudSync = {
                     this.cloudVersion = cloudVer;
                     this.syncStatus = "update_required";
                     this.notifyStatusChange();
+
+                    try {
+                        const quizScreen = document.getElementById('screen-quiz');
+                        const isQuizActive = quizScreen && quizScreen.classList.contains('active');
+                        if (!isQuizActive && typeof window.refreshToLatestVersion === 'function') {
+                            console.log('⚡ Auto-refreshing to latest build in 400ms:', cloudBuild);
+                            setTimeout(() => {
+                                window.refreshToLatestVersion(cloudBuild);
+                            }, 400);
+                        }
+                    } catch (e) {}
                 }
             }, err => console.warn("version onSnapshot warning:", err));
             this._unsubs.push(unsubVer);
