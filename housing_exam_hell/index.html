@@ -21,8 +21,8 @@
     
     <script>
         // Automatic tablet cache buster: Forces tablet WebView to always fetch latest build
-        const CURRENT_BUILD = '2609141815';
-        const APP_SEMVER = 'v.0.260914.1815';
+        const CURRENT_BUILD = '2609141910';
+        const APP_SEMVER = 'v.0.260914.1910';
         window.APP_BUILD_VERSION = CURRENT_BUILD;
         window.APP_SEMVER = APP_SEMVER;
 
@@ -66,9 +66,9 @@
     </script>
     
     <!-- Custom Theme Styles -->
-    <link rel="stylesheet" href="css/dark-theme.css?v=2609141740">
-    <link rel="stylesheet" href="css/quiz-layout.css?v=2609141740">
-    <link rel="stylesheet" href="css/tablet-canvas.css?v=2609141740">
+    <link rel="stylesheet" href="css/dark-theme.css?v=2609141910">
+    <link rel="stylesheet" href="css/quiz-layout.css?v=2609141910">
+    <link rel="stylesheet" href="css/tablet-canvas.css?v=2609141910">
 </head>
 <body data-subject="관계법규">
 
@@ -387,6 +387,15 @@
                                 표시: <span id="mgr-list-count" class="text-sky-400">0건</span>
                             </div>
                         </div>
+                    </div>
+
+                    <!-- Wrong Range Sub-Filters Bar (Only visible in 'wrong' tab) -->
+                    <div id="mgr-wrong-range-bar" style="display: flex; gap: 4px; padding: 0 4px 8px 4px; overflow-x: auto; flex-wrap: wrap;">
+                        <button type="button" class="mgr-pill-btn active mgr-range-pill" data-range="top50" title="가장 많이 틀린 최다 취약 50문항 (기본)">🔥 Top 50</button>
+                        <button type="button" class="mgr-pill-btn mgr-range-pill" data-range="top30" title="시험장 직전 초압축 30문항">★ Top 30</button>
+                        <button type="button" class="mgr-pill-btn mgr-range-pill" data-range="today" title="오늘 틀린 오답만">⚡ 오늘</button>
+                        <button type="button" class="mgr-pill-btn mgr-range-pill" data-range="recent2" title="최근 2일간(어제+오늘) 오답">📅 최근2일</button>
+                        <button type="button" class="mgr-pill-btn mgr-range-pill" data-range="all" title="3주간 누적 전체 오답">📚 전체(<span id="mgr-cnt-wrong-all">0</span>)</button>
                     </div>
 
                     <!-- Scrollable Question Items List -->
@@ -1007,18 +1016,18 @@
     <!-- Firebase SDK (Compat) for Realtime Cloud Sync (Local Offline-First) -->
     <script src="js/libs/firebase-app-compat.js"></script>
     <script src="js/libs/firebase-firestore-compat.js"></script>
-    <script src="js/cloud-sync.js?v=2609141815"></script>
+    <script src="js/cloud-sync.js?v=2609141910"></script>
 
     <!-- Master Exam Data Bundle (3,959 Questions) -->
-    <script src="data/exam_bank.js?v=2609141815"></script>
+    <script src="data/exam_bank.js?v=2609141910"></script>
 
     <!-- Core Keywords 300 DB (관계법규 300 + 관리실무 300) -->
-    <script src="data/core_keywords_db.js?v=2609141815"></script>
+    <script src="data/core_keywords_db.js?v=2609141910"></script>
 
     <!-- IndexedDB Storage Engine -->
-    <script src="js/idb-store.js?v=2609141815"></script>
+    <script src="js/idb-store.js?v=2609141910"></script>
 
     <!-- Application Script -->
-    <script src="js/app.js?v=2609141815"></script>
+    <script src="js/app.js?v=2609141910"></script>
 </body>
 </html>

@@ -2551,6 +2551,7 @@
         customEdits: {},
         needsEditMap: {},
         managerTab: 'wrong',
+        managerWrongRange: 'top50',
         managerFilter: 'all',
         managerSearchQuery: '',
         managerPage: 1,
@@ -2828,7 +2829,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                const semver = window.APP_SEMVER || 'v.0.260914.1815';
+                const semver = window.APP_SEMVER || 'v.0.260914.1910';
                 elements.header.modeTitle.innerHTML = `<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">${semver}</span>`;
             }
         } else {
@@ -2863,7 +2864,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                const semver = window.APP_SEMVER || 'v.0.260914.1815';
+                const semver = window.APP_SEMVER || 'v.0.260914.1910';
                 elements.header.modeTitle.innerHTML = `<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">${semver}</span>`;
             }
             if (elements.header.timerBadge) {
@@ -5806,23 +5807,64 @@ ${paperHtml}
                    ans.includes(qLower) || ansObj.includes(qLower) || idStr === qLower;
         };
 
+        // 🔄 오답 범위 서브 필터 바 표시 및 버튼 동기화
+        const wrongRangeBar = document.getElementById('mgr-wrong-range-bar');
+        if (wrongRangeBar) {
+            wrongRangeBar.style.display = (tabName === 'wrong') ? 'flex' : 'none';
+            const rangePills = wrongRangeBar.querySelectorAll('.mgr-range-pill');
+            rangePills.forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.range === (state.managerWrongRange || 'top50'));
+            });
+            const elWrongAllCnt = document.getElementById('mgr-cnt-wrong-all');
+            if (elWrongAllCnt) elWrongAllCnt.textContent = allWrong.length;
+        }
+
         let list = [];
+        let wrongTotalBeforeRange = 0;
         if (tabName === 'wrong') {
             list = allWrong;
             if (filterSubj !== 'all') list = list.filter(q => q.subject === filterSubj);
             if (qLower) list = list.filter(matchesSearch);
-            // 📌 오답 추가된 순서(최신 오답 시간 우선, 그 다음 가중치 높은 순)
+
+            // 📌 최다 오답 순(오답 횟수 내림차순, 가중치 내림차순, 최신 오답 시간순)
             list.sort((a, b) => {
-                const statA = state.statsMap[a.qKey];
-                const statB = state.statsMap[b.qKey];
-                const timeA = getStatTime(statA);
-                const timeB = getStatTime(statB);
-                if (timeB !== timeA) return timeB - timeA;
+                const statA = state.statsMap[a.qKey] || {};
+                const statB = state.statsMap[b.qKey] || {};
+                const countA = statA.totalWrongCount || statA.wrongCount || 0;
+                const countB = statB.totalWrongCount || statB.wrongCount || 0;
+                if (countB !== countA) return countB - countA;
                 const wA = statA?.weight || 1;
                 const wB = statB?.weight || 1;
                 if (wB !== wA) return wB - wA;
-                return (statB?.wrongCount || 0) - (statA?.wrongCount || 0);
+                const timeA = getStatTime(statA);
+                const timeB = getStatTime(statB);
+                return timeB - timeA;
             });
+
+            wrongTotalBeforeRange = list.length;
+            const rangeChoice = state.managerWrongRange || 'top50';
+            const now = Date.now();
+            const oneDayMs = 24 * 60 * 60 * 1000;
+            const twoDaysMs = 48 * 60 * 60 * 1000;
+
+            if (rangeChoice === 'top50') {
+                list = list.slice(0, 50);
+            } else if (rangeChoice === 'top30') {
+                list = list.slice(0, 30);
+            } else if (rangeChoice === 'today') {
+                list = list.filter(q => (now - getStatTime(state.statsMap[q.qKey])) <= oneDayMs);
+            } else if (rangeChoice === 'recent2') {
+                list = list.filter(q => (now - getStatTime(state.statsMap[q.qKey])) <= twoDaysMs);
+            }
+            // 'all' keeps full list
+
+            if (elements.manager.cntWrong) {
+                elements.manager.cntWrong.textContent = (rangeChoice === 'top50') 
+                    ? `Top 50` 
+                    : (rangeChoice === 'top30') 
+                    ? `Top 30` 
+                    : list.length;
+            }
         } else if (tabName === 'needs_edit') {
             list = allNeedsEditKeys.map(k => {
                 const info = state.needsEditMap[k] || {};
@@ -5885,7 +5927,9 @@ ${paperHtml}
         const pagedList = list.slice(startIndex, endIndex);
 
         if (elements.manager.listCount) {
-            if (totalCount > state.managerPageSize) {
+            if (tabName === 'wrong' && (state.managerWrongRange || 'top50') !== 'all') {
+                elements.manager.listCount.innerHTML = `<strong>${list.length}건</strong> <span style="font-size:0.72rem; color:#64748B;">(전체 ${wrongTotalBeforeRange}건 중)</span>`;
+            } else if (totalCount > state.managerPageSize) {
                 elements.manager.listCount.innerHTML = `<strong>${startIndex + 1}-${endIndex}</strong> <span style="font-size:0.75rem; color:#64748B;">/ ${totalCount}건</span>`;
             } else {
                 elements.manager.listCount.textContent = `${totalCount}건`;
@@ -6308,12 +6352,24 @@ ${paperHtml}
         });
 
         // 2. Manager Subject Filter Pills
-        document.querySelectorAll('.mgr-pill-btn').forEach(btn => {
+        document.querySelectorAll('.mgr-subject-pills .mgr-pill-btn').forEach(btn => {
             btn.addEventListener('click', () => {
-                document.querySelectorAll('.mgr-pill-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.mgr-subject-pills .mgr-pill-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 state.managerPage = 1;
                 renderManagerList(state.managerTab, btn.dataset.subject);
+                if (elements.manager.itemsList) elements.manager.itemsList.scrollTop = 0;
+            });
+        });
+
+        // 2-1. Manager Wrong Range Sub-Filters (Top 50, Top 30, Today, Recent 2 Days, All)
+        document.querySelectorAll('.mgr-range-pill').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.mgr-range-pill').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                state.managerWrongRange = btn.dataset.range || 'top50';
+                state.managerPage = 1;
+                renderManagerList();
                 if (elements.manager.itemsList) elements.manager.itemsList.scrollTop = 0;
             });
         });
@@ -6819,10 +6875,6 @@ ${paperHtml}
 
         if (elements.manager.btnPrintA4) {
             elements.manager.btnPrintA4.addEventListener('click', () => {
-                if (state.managerTab === 'wrong') {
-                    openA4RangeSelectModal();
-                    return;
-                }
                 const questionsToPrint = (state.managerCurrentList && state.managerCurrentList.length > 0)
                     ? state.managerCurrentList
                     : [];
@@ -6831,8 +6883,18 @@ ${paperHtml}
                     return;
                 }
                 const subTitle = state.managerFilter === 'all' ? '전 과목' : state.managerFilter;
-                const tabTitle = state.managerTab === 'needs_edit' ? '수정 필요 문항 정리' :
-                                 state.managerTab === 'custom_edits' ? '수정 완료 문항 정리' : '핵심 문항 정리';
+                let tabTitle = '핵심 문항 정리';
+                if (state.managerTab === 'wrong') {
+                    const rangeChoice = state.managerWrongRange || 'top50';
+                    tabTitle = (rangeChoice === 'top50') ? '최다 취약 오답 Top 50' :
+                               (rangeChoice === 'top30') ? '시험장 직전 초압축 Top 30' :
+                               (rangeChoice === 'today') ? '오늘 푼 취약 오답 정리' :
+                               (rangeChoice === 'recent2') ? '최근 2일간 취약 오답 정리' : '전체 누적 오답 총정리';
+                } else if (state.managerTab === 'needs_edit') {
+                    tabTitle = '수정 필요 문항 정리';
+                } else if (state.managerTab === 'custom_edits') {
+                    tabTitle = '수정 완료 문항 정리';
+                }
                 openA4PrintView({
                     title: `주택관리사 2차 ${tabTitle} (${subTitle})`,
                     questions: questionsToPrint
@@ -7680,8 +7742,8 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
                         if (status === 'update_required') {
                             icon.className = 'fa-solid fa-triangle-exclamation text-rose-500 animate-pulse';
                             elements.header.btnCloudSync.title = `🚨 최신 버전(${window.CloudSync.cloudVersion || '새 버전'}) 배포됨! 클릭 시 최신 버전으로 즉시 새로고침`;
-                            if (state.mode === 'home' && typeof window.refreshToLatestVersion === 'function' && window.CloudSync.cloudBuild) {
-                                console.log('⚡ Auto-refreshing home screen to latest build:', window.CloudSync.cloudBuild);
+                            if ((state.mode === 'home' || state.mode === 'manager') && typeof window.refreshToLatestVersion === 'function' && window.CloudSync.cloudBuild) {
+                                console.log('⚡ Auto-refreshing screen to latest build:', window.CloudSync.cloudBuild);
                                 window.refreshToLatestVersion(window.CloudSync.cloudBuild);
                                 return;
                             }
