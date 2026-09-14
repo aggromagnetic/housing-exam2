@@ -2827,7 +2827,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                const semver = window.APP_SEMVER || 'v.0.260914.1735';
+                const semver = window.APP_SEMVER || 'v.0.260914.1740';
                 elements.header.modeTitle.innerHTML = `<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">${semver}</span>`;
             }
         } else {
@@ -2862,7 +2862,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                const semver = window.APP_SEMVER || 'v.0.260914.1735';
+                const semver = window.APP_SEMVER || 'v.0.260914.1740';
                 elements.header.modeTitle.innerHTML = `<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">${semver}</span>`;
             }
             if (elements.header.timerBadge) {
@@ -6837,16 +6837,21 @@
         if (btnHardRefresh) {
             btnHardRefresh.addEventListener('click', async () => {
                 showToast('🔄 캐시를 완전히 비우고 최신 버전으로 즉시 새로고침합니다...');
-                if (window.caches) {
-                    try {
-                        const names = await caches.keys();
-                        await Promise.all(names.map(name => caches.delete(name)));
-                    } catch (e) {}
+                const targetBuild = (window.CloudSync && window.CloudSync.cloudBuild) || window.APP_BUILD_VERSION || Date.now();
+                if (typeof window.refreshToLatestVersion === 'function') {
+                    window.refreshToLatestVersion(targetBuild);
+                } else {
+                    if (window.caches) {
+                        try {
+                            const names = await caches.keys();
+                            await Promise.all(names.map(name => caches.delete(name)));
+                        } catch (e) {}
+                    }
+                    setTimeout(() => {
+                        const cleanUrl = window.location.origin + window.location.pathname + '?v=' + targetBuild + '&t=' + Date.now();
+                        window.location.replace(cleanUrl);
+                    }, 300);
                 }
-                setTimeout(() => {
-                    const cleanUrl = window.location.origin + window.location.pathname + '?t=' + Date.now();
-                    window.location.replace(cleanUrl);
-                }, 300);
             });
         }
 
@@ -7414,6 +7419,11 @@ ${q.tip ? `\n[일타 팁]\n${q.tip}` : ''}
                         if (status === 'update_required') {
                             icon.className = 'fa-solid fa-triangle-exclamation text-rose-500 animate-pulse';
                             elements.header.btnCloudSync.title = `🚨 최신 버전(${window.CloudSync.cloudVersion || '새 버전'}) 배포됨! 클릭 시 최신 버전으로 즉시 새로고침`;
+                            if (state.mode === 'home' && typeof window.refreshToLatestVersion === 'function' && window.CloudSync.cloudBuild) {
+                                console.log('⚡ Auto-refreshing home screen to latest build:', window.CloudSync.cloudBuild);
+                                window.refreshToLatestVersion(window.CloudSync.cloudBuild);
+                                return;
+                            }
                             showToast(`🚨 최신 버전(${window.CloudSync.cloudVersion || '새 버전'}) 배포됨! 상단 구름 아이콘을 눌러 새로고침하세요.`, 6000);
                         } else if (status === 'synced') {
                             icon.className = 'fa-solid fa-cloud text-emerald-400';
