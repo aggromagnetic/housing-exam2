@@ -34,6 +34,7 @@ import androidx.webkit.WebViewClientCompat
 class MainActivity : AppCompatActivity() {
 
     private lateinit var webView: StylusPalmRejectionWebView
+    fun getWebView(): StylusPalmRejectionWebView = webView
     private lateinit var assetLoader: WebViewAssetLoader
     private var lastBackPressTime: Long = 0
     private var networkCallback: ConnectivityManager.NetworkCallback? = null

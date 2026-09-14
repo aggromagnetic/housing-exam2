@@ -62,4 +62,28 @@ class WebAppInterface(private val context: Context) {
             }
         }
     }
+
+    @JavascriptInterface
+    fun printA4Document(docTitle: String) {
+        if (context is MainActivity) {
+            context.runOnUiThread {
+                try {
+                    val printManager = context.getSystemService(Context.PRINT_SERVICE) as? android.print.PrintManager
+                    val webView = context.getWebView()
+                    val printAdapter = webView.createPrintDocumentAdapter(docTitle)
+                    if (printManager != null) {
+                        val printAttributes = android.print.PrintAttributes.Builder()
+                            .setMediaSize(android.print.PrintAttributes.MediaSize.ISO_A4)
+                            .setColorMode(android.print.PrintAttributes.COLOR_MODE_COLOR)
+                            .build()
+                        printManager.print(docTitle, printAdapter, printAttributes)
+                    } else {
+                        Toast.makeText(context, "인쇄 서비스를 사용할 수 없습니다.", Toast.LENGTH_SHORT).show()
+                    }
+                } catch (e: Exception) {
+                    Toast.makeText(context, "인쇄 오류: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
 }
