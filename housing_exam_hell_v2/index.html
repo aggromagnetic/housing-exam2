@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="ko" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>주관사 2차 시험 문제지옥 V2 PRO (Obsidian Edition)</title>
+    
+    <!-- Google Fonts Pretendard / Noto Sans KR -->
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    
+    <!-- FontAwesome 6 Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <meta name="theme-color" content="#090d16">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!-- Cache Busting Headers for Android WebView / Web App -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    
+    <script>
+        // Automatic tablet cache buster: Forces tablet WebView to always fetch latest build
+        const CURRENT_BUILD = '2609142000';
+        const APP_SEMVER = 'v.2.0.0-PRO';
+        window.APP_BUILD_VERSION = CURRENT_BUILD;
+        window.APP_SEMVER = APP_SEMVER;
+
+        window.refreshToLatestVersion = function(targetBuild) {
+            const b = targetBuild || CURRENT_BUILD;
+            try {
+                localStorage.setItem('housing_exam_v2_build_version', b);
+            } catch (e) {}
+            if (window.caches) {
+                caches.keys().then(names => names.forEach(name => caches.delete(name))).catch(() => {});
+            }
+            window.location.replace(window.location.pathname + '?v=' + b + '&t=' + Date.now());
+        };
+
+        (function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const urlV = urlParams.get('v');
+            if (urlV !== CURRENT_BUILD) {
+                try {
+                    localStorage.setItem('housing_exam_v2_build_version', CURRENT_BUILD);
+                } catch (e) {}
+                if (window.caches) {
+                    caches.keys().then(names => names.forEach(name => caches.delete(name))).catch(() => {});
+                }
+                window.location.replace(window.location.pathname + '?v=' + CURRENT_BUILD + '&t=' + Date.now());
+                return;
+            }
+
+            // Realtime Cloud Version Guard: If cached HTML is older than Firestore, instant auto-reload
+            fetch('https://firestore.googleapis.com/v1/projects/housing-exam/databases/(default)/documents/exam_hell_sync/version_meta_v2?key=AIzaSyA7jlW5vM65IptoXqxl0oukRDCs-Ndzks0', { cache: 'no-store' })
+                .then(r => r.ok ? r.json() : null)
+                .then(data => {
+                    const cb = data?.fields?.latestBuild?.stringValue;
+                    if (cb && parseInt(cb, 10) > parseInt(CURRENT_BUILD, 10)) {
+                        console.log('⚡ Cloud build newer than local:', cb);
+                        window.refreshToLatestVersion(cb);
+                    }
+                })
+                .catch(() => {});
+        })();
+    </script>
+    
+    <!-- Ultra-Premium Obsidian Glass 2.0 Theme Styles (90Hz Low-Latency Optimized) -->
+    <link rel="stylesheet" href="css/dark-theme.css?v=2609142000">
+    <link rel="stylesheet" href="css/quiz-layout.css?v=2609142000">
+    <link rel="stylesheet" href="css/tablet-canvas.css?v=2609142000">
+</head>
+<body data-subject="관계법규">
+
+    <!-- Global App Header -->
+    <header class="app-header">
+        <div class="header-content">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <button id="btn-go-home" class="btn-icon" title="문제지옥 홈으로 이동">
+                    <i class="fa-solid fa-house"></i>
+                </button>
+                <a href="../index.html" class="btn-icon" title="강의 노트 뷰어로 이동" onclick="window.location.href='../index.html?t=' + Date.now(); return false;" style="display:inline-flex; align-items:center; justify-content:center; text-decoration:none; color:inherit;">
+                    <i class="fa-solid fa-book-open"></i>
+                </a>
+                <span id="header-brand-badge" class="brand-badge">관계법규</span>
+                <span id="header-mode-title" class="mode-title">
+                    <i class="fa-solid fa-fire text-amber-500 fire-anim-header"></i> 주관사 2차 문제지옥 <span class="version-tag">v.2.0.0-PRO</span>
+                </span>
+            </div>
+
+            <div class="header-actions">
+                <div id="header-timer" class="timer-badge">00:00</div>
+                <button id="btn-cloud-sync" class="btn-icon" title="클라우드 실시간 동기화 (클릭 시 지금 즉시 동기화)">
+                    <i class="fa-solid fa-cloud text-sky-400"></i>
+                </button>
+                <button id="btn-toggle-pen" class="btn-icon" title="태블릿 필기 모드 (S펜/애플펜슬)">
+                    <i class="fa-solid fa-pen-nib"></i>
+                </button>
+                <button id="btn-open-manager" class="btn-icon" title="오답 및 수정 필요 관리자 (PIN: 2834)">
+                    <i class="fa-solid fa-gear text-rose-400"></i>
+                </button>
+                <button id="btn-open-omr" class="btn-icon" title="OMR 카드 마킹 시트">
+                    <i class="fa-solid fa-table-cells"></i>
+                </button>
+                <button id="btn-hard-refresh" class="btn-icon" title="최신 버전 강제 새로고침 (태블릿 캐시 삭제)" style="color: #a78bfa;">
+                    <i class="fa-solid fa-arrows-rotate"></i>
+                </button>
+                <button id="btn-fullscreen" class="btn-icon" title="전체화면 전환">
+                    <i class="fa-solid fa-expand"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Blood Gauge Progress Bar -->
+        <div style="max-width: 960px; margin: 10px auto 0;">
+            <div class="blood-progress-container">
+                <div id="blood-progress-fill" class="blood-progress-fill" style="width: 0%;"></div>
+            </div>
+            <div style="display: flex; justify-content: flex-end; margin-top: 4px;">
+                <span id="blood-score-text" style="font-size: 0.72rem; font-weight: 700; color: var(--text-dim);">진행 대기 중</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Floating Stylus Toolbar (Tablet Canvas - Vertical Dock) -->
+    <div id="stylus-toolbar" class="stylus-toolbar">
+        <div class="stylus-drag-handle" title="드래그하여 위치 이동"><i class="fa-solid fa-grip-lines"></i></div>
+        <button class="stylus-btn active" data-tool="pen" title="펜"><i class="fa-solid fa-pen"></i></button>
+        <button class="stylus-btn" data-tool="eraser" title="지우개"><i class="fa-solid fa-eraser"></i></button>
+        <div class="stylus-divider"></div>
+        <div class="color-dot selected" data-color="#38BDF8" style="background: #38BDF8;" title="하늘색"></div>
+        <div class="color-dot" data-color="#F43F5E" style="background: #F43F5E;" title="빨간색"></div>
+        <div class="color-dot" data-color="#FBBF24" style="background: #FBBF24;" title="노란색"></div>
+        <div class="color-dot" data-color="#FFFFFF" style="background: #FFFFFF;" title="흰색"></div>
+        <div class="stylus-divider"></div>
+        <button class="stylus-btn" id="btn-stylus-only" title="S펜 전용 모드 (손터치 방지)"><i class="fa-solid fa-hand"></i></button>
+        <button class="stylus-btn" id="btn-clear-canvas" title="필기 전체 지우기"><i class="fa-solid fa-trash-can"></i></button>
+        <button class="stylus-btn" id="btn-close-stylus" title="필기 닫기"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+
+    <!-- Main Content Area -->
+    <main class="app-container">
+
+        <!-- 1. HOME SCREEN -->
+        <section id="screen-home" class="screen active">
+            <div class="home-hero">
+                <h1>주관사 2차 <span class="highlight-text">문제지옥 V2 PRO</span> <span class="fire-anim">🔥</span></h1>
+                <div style="font-size: 0.85rem; font-weight: 700; color: #94A3B8; margin-top: 8px; letter-spacing: -0.01em;">
+                    100만원 가치의 프리미엄 수험 솔루션 · Lenovo 90Hz 초고속 하드웨어 가속
+                </div>
+            </div>
+
+            <!-- Subject Switcher -->
+            <div class="subject-tabs">
+                <button class="subject-tab-btn active" data-subject="관계법규">
+                    <i class="fa-solid fa-scale-balanced"></i> 주택관리관계법규
+                </button>
+                <button class="subject-tab-btn" data-subject="관리실무">
+                    <i class="fa-solid fa-building-shield"></i> 공동주택관리실무
+                </button>
+            </div>
+
+            <!-- 5 Study Mode Selection Grid -->
+            <div class="mode-grid">
+                <!-- 헬 모드 (무한 풀이) -->
+                <div class="mode-card" data-mode="infinite">
+                    <div class="mode-icon" style="color: #EF4444 !important; background: rgba(239, 68, 68, 0.12);"><i class="fa-solid fa-skull"></i></div>
+                    <h3>무한 헬 모드 (전과목 융합)</h3>
+                    <p>관계법규+관리실무 세트가 끊임없이 무한 롤링됩니다</p>
+                    <span class="mode-badge" style="background: rgba(239, 68, 68, 0.15); color: #F87171;">주관식 50% · 안 푼 핵심 우선 융합</span>
+                </div>
+
+                <!-- 복습 학습 (오답 집중) -->
+                <div class="mode-card" data-mode="review">
+                    <div class="mode-icon"><i class="fa-solid fa-rotate-left"></i></div>
+                    <h3>복습 학습 (오답 집중)</h3>
+                    <p>틀렸던 약점 문제를 집중 훈련합니다</p>
+                    <span class="mode-badge">오답 가중치 룰렛 샘플링</span>
+                </div>
+
+                <!-- 실전 모의고사 -->
+                <div class="mode-card" data-mode="mock">
+                    <div class="mode-icon"><i class="fa-solid fa-stopwatch"></i></div>
+                    <h3>실전 모의고사 (40분)</h3>
+                    <p id="mock-mode-desc">출제비율을 반영한 40문항 <span class="text-sky-400" style="font-weight: 700;">관계법규</span> 실전 시험입니다</p>
+                    <span class="mode-badge">40문항 / 40분 제한시간</span>
+                </div>
+
+                <!-- 파트별 전수 풀이 -->
+                <div class="mode-card" data-mode="part">
+                    <div class="mode-icon"><i class="fa-solid fa-layer-group"></i></div>
+                    <h3>파트별 전수 풀이</h3>
+                    <p>선택한 단원의 객관식·주관식 전 문항을 완독합니다</p>
+                    <span class="mode-badge">단원별 100% 전수 완독</span>
+                </div>
+
+                <!-- 모의고사 MD 내려받기 -->
+                <div class="mode-card" data-mode="download_md">
+                    <div class="mode-icon" style="color: #10B981;"><i class="fa-solid fa-file-arrow-down"></i></div>
+                    <h3>모의고사 MD 다운로드 📥</h3>
+                    <p>실전 40문항 모의고사 문제지를 내려받습니다</p>
+                    <span class="mode-badge" style="background: rgba(16, 185, 129, 0.15); color: #34D399;">관계법규 / 관리실무 MD 출력</span>
+                </div>
+
+                <!-- 기능추가중 -->
+                <div class="mode-card" data-mode="coming_soon" style="border-style: dashed;">
+                    <div class="mode-icon" style="color: #A855F7;"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                    <h3>기능추가중</h3>
+                    <p>새로운 맞춤형 학습 기능이 업데이트될 예정입니다</p>
+                    <span class="mode-badge" style="background: rgba(168, 85, 247, 0.15); color: #C084FC;">COMING SOON</span>
+                </div>
+
+                <!-- 관리자 모드 (보안 잠금) -->
+                <div class="mode-card" data-mode="manage_wrong">
+                    <div class="mode-icon" style="color: #F43F5E;"><i class="fa-solid fa-list-check"></i></div>
+                    <h3>관리자 모드 🔒</h3>
+                    <p>오답 가중치 통계 및 기출/모의고사 문제 직접 수정</p>
+                    <span class="mode-badge" style="background: rgba(244, 63, 94, 0.15); color: #FDA4AF; margin-top: auto;">보안 PIN 잠금 🔒</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. QUIZ SCREEN -->
+        <section id="screen-quiz" class="screen">
+            <div id="quiz-card" class="quiz-card card-w1">
+                <!-- Tablet Canvas Overlay (Covers entire quiz card: Question + Passage + Options + Explanation) -->
+                <div class="canvas-overlay-container">
+                    <canvas id="drawing-canvas"></canvas>
+                </div>
+
+                <!-- Question Header Meta -->
+                <div class="question-meta">
+                    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                        <span id="q-num-text" class="q-badge">문항 1 / 40</span>
+                        <span id="q-chapter-badge" style="font-size: 0.8rem; color: var(--text-muted); font-weight: 700;">총칙</span>
+                        <span id="q-combo-badge" class="combo-badge" style="display: none;">🔥 2 COMBO</span>
+                    </div>
+                    <span id="q-weight-badge" class="weight-badge" style="background: rgba(255,255,255,0.06); color: var(--text-main);">
+                        🌱 기본
+                    </span>
+                </div>
+
+                <!-- Question Title -->
+                <h2 id="q-title-text" class="q-title">문제가 로딩 중입니다...</h2>
+
+                <!-- Passage Box (조건/지문/보기 박스) -->
+                <div id="q-passage-box" class="passage-box" style="display: none;"></div>
+
+                <!-- Multiple Choice (1-5) Container -->
+                <div id="q-options-container" class="options-list"></div>
+
+                <!-- Subjective (단답형/괄호) Container -->
+                <div id="q-subjective-container" class="subjective-container" style="display: none;"></div>
+
+                <!-- Explanation & Tip Card -->
+                <div id="explanation-card" class="explanation-card">
+                    <div class="exp-header">
+                        <span class="exp-title"><i class="fa-solid fa-lightbulb text-amber-400"></i> 정답 및 상세 해설</span>
+                        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                            <button id="btn-copy-question-ai" class="btn-ctrl-sm" title="문제·보기·정답·해설을 복사하여 AI(Gemini 등) 검증에 활용합니다.">
+                                <i class="fa-solid fa-copy"></i> 복사
+                            </button>
+                            <button id="btn-edit-question" class="btn-ctrl-sm" title="문제/정답/해설 오류를 직접 수정합니다.">
+                                <i class="fa-solid fa-pen-to-square"></i> 수정
+                            </button>
+                            <button id="btn-flag-needs-edit" class="btn-ctrl-sm" title="태블릿에서 발견한 문제/정답/해설 오류를 '수정 필요 목록'에 플래그합니다.">
+                                <i class="fa-solid fa-flag"></i> 수정필요
+                            </button>
+                            <button id="btn-exclude-question" class="btn-ctrl-sm" title="이 문제를 앞으로 모의고사 및 헬 모드 출제 풀에서 영구 제외(삭제)합니다." style="color: #F87171;">
+                                <i class="fa-solid fa-ban"></i> 출제제외
+                            </button>
+                            <button id="btn-retry-q" class="btn-override" style="display: none;" title="오답 기록은 유지한 채 다시 풀기">
+                                <i class="fa-solid fa-rotate-left"></i> 다시 풀기
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Prominent Target Correct Answer Display -->
+                    <div id="exp-answer-box" class="exp-answer-box"></div>
+                    <p id="exp-body-text" class="exp-body"></p>
+                    <div id="tip-box-text" class="tip-box" style="display: none;"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. RESULT SCREEN -->
+        <section id="screen-result" class="screen">
+            <div class="result-hero">
+                <h1 style="font-size: 1.5rem; font-weight: 800; color: var(--text-muted); margin-bottom: 8px;">시험 및 학습 종료</h1>
+                <div id="res-score-text" class="score-display">85점</div>
+                <div id="res-pass-pill" class="pass-pill pass"><i class="fa-solid fa-circle-check"></i> 최종 합격 (PASS)</div>
+
+                <div class="stats-row" style="grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));">
+                    <div class="stat-box">
+                        <div id="res-correct-count" class="val text-emerald-400">34개</div>
+                        <div class="lbl">맞은 문항</div>
+                    </div>
+                    <div class="stat-box">
+                        <div id="res-wrong-count" class="val text-rose-400">6개</div>
+                        <div class="lbl">틀린 문항</div>
+                    </div>
+                    <div class="stat-box">
+                        <div id="res-combo-count" class="val text-amber-400">0</div>
+                        <div class="lbl">최대 콤보 (MAX)</div>
+                    </div>
+                    <div class="stat-box">
+                        <div id="res-time-count" class="val text-sky-400">28분 14초</div>
+                        <div class="lbl">총 소요 시간</div>
+                    </div>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 10px; max-width: 480px; margin: 0 auto;">
+                    <div style="display: flex; gap: 10px;">
+                        <button id="btn-copy-ai-prompt" class="btn-ctrl btn-primary" style="flex: 1; justify-content: center; padding: 12px; font-size: 0.92rem;" title="틀린 문제와 분석 요청 프롬프트를 클립보드에 복사">
+                            <i class="fa-solid fa-copy"></i> AI 과외 요청서 복사
+                        </button>
+                        <button id="btn-download-ai-md" class="btn-ctrl" style="flex: 1; justify-content: center; padding: 12px; font-size: 0.92rem; background: rgba(56,189,248,0.15); color: #38BDF8; border-color: rgba(56,189,248,0.4);" title="틀린 문제와 분석 요청서를 Markdown(.md) 파일로 다운로드">
+                            <i class="fa-solid fa-file-arrow-down"></i> 오답 과외 MD 다운로드
+                        </button>
+                    </div>
+                    <button id="btn-print-result-a4" class="btn-ctrl" style="width: 100%; justify-content: center; padding: 12px; font-size: 0.92rem; background: rgba(244, 63, 94, 0.15); color: #FDA4AF; border-color: rgba(244, 63, 94, 0.4);" title="이번 시험 오답을 시험장 지참용 A4 2단 요약본으로 인쇄/PDF 저장">
+                        <i class="fa-solid fa-print"></i> 📄 이번 시험 오답 A4 인쇄 / PDF
+                    </button>
+                    <div style="display: flex; gap: 10px;">
+                        <button id="btn-retry-session" class="btn-ctrl" style="flex: 1; justify-content: center;">
+                            <i class="fa-solid fa-rotate-right"></i> 다시 풀기
+                        </button>
+                        <button id="btn-home-from-result" class="btn-ctrl" style="flex: 1; justify-content: center;">
+                            <i class="fa-solid fa-house"></i> 홈으로 이동
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. FULL-PAGE MANAGER & LIVE EDITOR SCREEN (Master-Detail Split View) -->
+        <section id="screen-manager" class="screen">
+            <div class="manager-layout">
+                <!-- LEFT SIDEBAR: Search & Question List -->
+                <aside class="manager-sidebar">
+                    <!-- Top Mode Switcher Tabs -->
+                    <div class="mgr-tabs-row">
+                        <button type="button" class="mgr-tab-btn active" data-tab="wrong" id="mgr-tab-wrong" title="오답 문제">
+                            <i class="fa-solid fa-triangle-exclamation text-rose-400"></i> 오답 <span id="mgr-cnt-wrong" class="mgr-tab-count"></span>
+                        </button>
+                        <button type="button" class="mgr-tab-btn" data-tab="needs_edit" id="mgr-tab-needs-edit" title="수정 필요 문제">
+                            <i class="fa-solid fa-flag text-amber-400"></i> 수정필요 <span id="mgr-cnt-needs-edit" class="mgr-tab-count"></span>
+                        </button>
+                        <button type="button" class="mgr-tab-btn" data-tab="custom_edits" id="mgr-tab-custom-edits" title="수정 완료 문제">
+                            <i class="fa-solid fa-pen-to-square text-emerald-400"></i> 수정완료 <span id="mgr-cnt-custom-edits" class="mgr-tab-count"></span>
+                        </button>
+                        <button type="button" class="mgr-tab-btn" data-tab="reports" id="mgr-tab-reports" title="오답 과외 보관함">
+                            <i class="fa-solid fa-book-bookmark text-purple-400"></i> 오답과외 <span id="mgr-cnt-reports" class="mgr-tab-count"></span>
+                        </button>
+                        <button type="button" class="mgr-tab-btn" data-tab="search_all" id="mgr-tab-search-all" title="전체 문제 검색">
+                            <i class="fa-solid fa-magnifying-glass text-sky-400"></i> 전체검색
+                        </button>
+                    </div>
+
+                    <!-- Search Box with Enter key / Button trigger -->
+                    <div class="mgr-search-box">
+                        <i class="fa-solid fa-magnifying-glass mgr-search-icon"></i>
+                        <input type="text" id="mgr-search-input" class="mgr-search-input" placeholder="🔍 검색어 입력 후 Enter..." autocomplete="off">
+                        <button type="button" id="mgr-btn-clear-search" class="mgr-clear-btn" title="검색어 지우기"><i class="fa-solid fa-xmark"></i></button>
+                        <button type="button" id="mgr-btn-search" class="mgr-search-btn" title="검색 실행">검색</button>
+                    </div>
+
+                    <!-- Backup & Restore Buttons Row -->
+                    <div style="display: flex; gap: 6px; padding: 0 4px 8px 4px; border-bottom: 1px solid rgba(255,255,255,0.06);">
+                        <button type="button" id="btn-export-backup" class="mgr-pill-btn" style="flex: 1; justify-content: center; background: rgba(56,189,248,0.12); color: #38BDF8; border-color: rgba(56,189,248,0.3); font-size: 0.74rem; padding: 4px 6px; display: inline-flex; align-items: center; gap: 4px;" title="수정한 문제, 오답 통계, 학습 기록을 JSON 파일로 내보내기">
+                            <i class="fa-solid fa-file-arrow-down"></i> 백업
+                        </button>
+                        <button type="button" id="btn-import-backup" class="mgr-pill-btn" style="flex: 1; justify-content: center; background: rgba(52,211,153,0.12); color: #34D399; border-color: rgba(52,211,153,0.3); font-size: 0.74rem; padding: 4px 6px; display: inline-flex; align-items: center; gap: 4px;" title="백업 파일(.json)을 불러와 복원">
+                            <i class="fa-solid fa-file-arrow-up"></i> 복원
+                        </button>
+                        <button type="button" id="btn-print-all-wrongs-a4" class="mgr-pill-btn" style="flex: 1.2; justify-content: center; background: rgba(244,63,94,0.15); color: #FDA4AF; border-color: rgba(244,63,94,0.35); font-size: 0.74rem; padding: 4px 8px; display: inline-flex; align-items: center; gap: 4px;" title="현재 목록의 문제를 시험장 지참용 A4 2단 요약본으로 인쇄/PDF 저장">
+                            <i class="fa-solid fa-print"></i> A4 인쇄
+                        </button>
+                        <input type="file" id="file-import-backup" accept=".json" style="display: none;">
+                    </div>
+
+                    <!-- Filter Bar -->
+                    <div class="mgr-filter-row">
+                        <div class="mgr-subject-pills">
+                            <button type="button" class="mgr-pill-btn active" data-subject="all">전체</button>
+                            <button type="button" class="mgr-pill-btn" data-subject="관계법규">관계법규</button>
+                            <button type="button" class="mgr-pill-btn" data-subject="관리실무">관리실무</button>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                            <button type="button" id="mgr-btn-clear-all-flags" class="mgr-pill-btn" style="display: none; background: rgba(244,63,94,0.15); color: #FB7185; border-color: rgba(244,63,94,0.3); font-size: 0.72rem; padding: 2px 6px;" title="수정 필요 목록 전체 초기화">전체 비우기</button>
+                            <div class="mgr-count-badge">
+                                표시: <span id="mgr-list-count" class="text-sky-400">0건</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Scrollable Question Items List -->
+                    <div id="mgr-items-list" class="mgr-items-list">
+                        <!-- Dynamic items -->
+                    </div>
+
+                    <!-- Pagination Controls -->
+                    <div id="mgr-pagination" class="mgr-pagination" style="display: none;">
+                        <button type="button" class="mgr-page-btn" id="mgr-page-prev" title="이전 페이지">
+                            <i class="fa-solid fa-chevron-left"></i>
+                        </button>
+                        <div id="mgr-page-numbers" class="mgr-page-numbers">
+                            <!-- e.g. [1] [2] [3] [4] [5] -->
+                        </div>
+                        <button type="button" class="mgr-page-btn" id="mgr-page-next" title="다음 페이지">
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </aside>
+
+                <!-- RIGHT MAIN PANEL: Live Question Editor & Preview -->
+                <main id="mgr-editor-panel" class="manager-editor-panel">
+                    <div id="mgr-editor-empty" class="mgr-editor-empty">
+                        <i class="fa-solid fa-arrow-left-long" style="font-size: 2.5rem; color: #38BDF8; margin-bottom: 16px;"></i>
+                        <h3 style="font-size: 1.15rem; font-weight: 800; color: #F1F5F9; margin-bottom: 6px;">왼쪽 목록에서 문제를 선택하세요</h3>
+                        <p style="font-size: 0.88rem; color: #64748B; max-width: 360px; line-height: 1.6;">
+                            문제를 클릭하면 지문, 선택 보기, 정답, 상세 해설 및 일타 팁을 확인하고 실시간으로 수정·저장할 수 있습니다.
+                        </p>
+                    </div>
+
+                    <form id="mgr-editor-form" class="mgr-editor-form" style="display: none;" onsubmit="return false;">
+                        <input type="hidden" id="mgr-edit-q-key" value="">
+                        
+                        <!-- Top Toolbar -->
+                        <div class="mgr-editor-header">
+                            <div class="mgr-meta-left">
+                                <span id="mgr-meta-subject" class="subject-badge law">관계법규</span>
+                                <span id="mgr-meta-chapter" class="mgr-meta-chapter">단원명</span>
+                                <span id="mgr-meta-type" class="mgr-meta-type">객관식 5지선다</span>
+                                <span id="mgr-meta-id" class="mgr-meta-id">[문항 ID: 1]</span>
+                                <span id="mgr-meta-flag-badge" class="mgr-status-flag" style="display:none;">🚩 수정요청</span>
+                                <span id="mgr-meta-edited-badge" class="mgr-status-edited" style="display:none;">✏️ 수정됨</span>
+                            </div>
+                            <div class="mgr-meta-actions">
+                                <button type="button" id="mgr-btn-delete-wrong" class="mgr-act-btn btn-danger-soft" title="오답 가중치 및 오답 기록 삭제 (초기화)" style="display:none;">
+                                    <i class="fa-solid fa-trash-can text-rose-400"></i> <span id="mgr-wrong-btn-text">오답 삭제</span>
+                                </button>
+                                <button type="button" id="mgr-btn-flag-toggle" class="mgr-act-btn" title="수정 필요 플래그 토글">
+                                    <i class="fa-solid fa-flag"></i> <span id="mgr-flag-text">수정필요</span>
+                                </button>
+                                <button type="button" id="mgr-btn-copy-ai" class="mgr-act-btn" title="Gemini/AI 검증용 복사">
+                                    <i class="fa-solid fa-copy"></i> AI 검증 복사
+                                </button>
+                                <button type="button" id="mgr-btn-reset-orig" class="mgr-act-btn btn-danger-soft" title="원본 기출로 복구">
+                                    <i class="fa-solid fa-rotate-left"></i> 원본 복구
+                                </button>
+                                <button type="button" id="mgr-btn-delete-q" class="mgr-act-btn btn-danger-soft" title="이 문제를 문제은행 및 모든 모의고사 출제에서 영구 제외/삭제합니다.">
+                                    <i class="fa-solid fa-trash text-rose-400"></i> 문항 제외
+                                </button>
+                                <button type="submit" id="mgr-btn-save-top" class="btn-ctrl btn-primary" style="padding: 7px 18px; font-weight: 800; font-size: 0.88rem;">
+                                    <i class="fa-solid fa-floppy-disk"></i> 저장하기
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Editor Scrollable Body -->
+                        <div id="mgr-editor-body" class="mgr-editor-body">
+                            <!-- 1. Question Title -->
+                            <div class="mgr-form-group">
+                                <label class="mgr-form-label"><i class="fa-solid fa-circle-question text-sky-400"></i> 문제 지문 (Title)</label>
+                                <textarea id="mgr-edit-title" class="mgr-textarea" rows="3" placeholder="문제 지문을 입력하세요" required></textarea>
+                            </div>
+
+                            <!-- 2. Passage Box (Optional) -->
+                            <div class="mgr-form-group">
+                                <label class="mgr-form-label"><i class="fa-solid fa-box-archive text-amber-400"></i> 지문 / 보기 박스 (Passage Box, 선택)</label>
+                                <textarea id="mgr-edit-passage" class="mgr-textarea font-mono" rows="4" placeholder="지문 박스 내용이나 괄호 보기 등이 있는 경우 입력하세요"></textarea>
+                            </div>
+
+                            <!-- 3. Choice Options (1~5) -->
+                            <div id="mgr-choice-options-group" class="mgr-form-group">
+                                <label class="mgr-form-label"><i class="fa-solid fa-list-ol text-emerald-400"></i> 선택 보기 (1~5번) 및 정답 라디오 선택</label>
+                                <div class="mgr-options-grid">
+                                    <div class="mgr-opt-row">
+                                        <label class="mgr-radio-label">
+                                            <input type="radio" name="mgr-choice-ans-radio" value="1">
+                                            <span class="mgr-opt-num">①</span>
+                                        </label>
+                                        <input type="text" id="mgr-opt-1" class="mgr-input" placeholder="1번 보기 내용">
+                                    </div>
+                                    <div class="mgr-opt-row">
+                                        <label class="mgr-radio-label">
+                                            <input type="radio" name="mgr-choice-ans-radio" value="2">
+                                            <span class="mgr-opt-num">②</span>
+                                        </label>
+                                        <input type="text" id="mgr-opt-2" class="mgr-input" placeholder="2번 보기 내용">
+                                    </div>
+                                    <div class="mgr-opt-row">
+                                        <label class="mgr-radio-label">
+                                            <input type="radio" name="mgr-choice-ans-radio" value="3">
+                                            <span class="mgr-opt-num">③</span>
+                                        </label>
+                                        <input type="text" id="mgr-opt-3" class="mgr-input" placeholder="3번 보기 내용">
+                                    </div>
+                                    <div class="mgr-opt-row">
+                                        <label class="mgr-radio-label">
+                                            <input type="radio" name="mgr-choice-ans-radio" value="4">
+                                            <span class="mgr-opt-num">④</span>
+                                        </label>
+                                        <input type="text" id="mgr-opt-4" class="mgr-input" placeholder="4번 보기 내용">
+                                    </div>
+                                    <div class="mgr-opt-row">
+                                        <label class="mgr-radio-label">
+                                            <input type="radio" name="mgr-choice-ans-radio" value="5">
+                                            <span class="mgr-opt-num">⑤</span>
+                                        </label>
+                                        <input type="text" id="mgr-opt-5" class="mgr-input" placeholder="5번 보기 내용">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 3-B. Subjective Blanks -->
+                            <div id="mgr-short-answers-group" class="mgr-form-group" style="display: none;">
+                                <label class="mgr-form-label"><i class="fa-solid fa-keyboard text-purple-400"></i> 주관식 빈칸 정답 (키=정답 형태, 쉼표 구분)</label>
+                                <input type="text" id="mgr-edit-short-ans" class="mgr-input" style="font-weight: 700;" placeholder="예: ㄱ=100, ㄴ=200, 1=국토교통부장관">
+                                <p class="mgr-form-hint">여러 개의 빈칸이 있는 경우 <code>ㄱ=정답1, ㄴ=정답2</code> 형태로 쉼표로 구분하여 입력하세요.</p>
+                            </div>
+
+                            <!-- 4. Detailed Explanation -->
+                            <div class="mgr-form-group">
+                                <label class="mgr-form-label"><i class="fa-solid fa-book-open text-sky-400"></i> 상세 해설 및 법령 근거 조문</label>
+                                <textarea id="mgr-edit-exp" class="mgr-textarea" rows="5" placeholder="상세 해설과 관련 법령 조문을 입력하세요"></textarea>
+                            </div>
+
+                            <!-- 5. Tip -->
+                            <div class="mgr-form-group">
+                                <label class="mgr-form-label"><i class="fa-solid fa-lightbulb text-amber-400"></i> 일타 족집게 팁 (선택)</label>
+                                <input type="text" id="mgr-edit-tip" class="mgr-input" placeholder="암기 비법이나 핵심 체크포인트를 입력하세요">
+                            </div>
+                        </div>
+
+                        <!-- Bottom Footer Action Bar -->
+                        <div class="mgr-editor-footer">
+                            <span class="mgr-save-hint" style="font-size: 0.8rem; color: #64748B;"><i class="fa-solid fa-circle-check text-emerald-400"></i> 저장 즉시 브라우저 저장소 및 시험 데이터셋에 실시간 반영됩니다.</span>
+                            <button type="submit" id="mgr-btn-save-bottom" class="btn-ctrl btn-primary" style="padding: 10px 24px; font-size: 0.95rem; font-weight: 800;">
+                                <i class="fa-solid fa-floppy-disk"></i> 변경사항 저장하기
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- REPORT VIEW PANEL (Tutoring Reports Archive Viewer) -->
+                    <div id="mgr-report-view-panel" style="display: none; padding: 20px 24px; overflow-y: auto; height: 100%; box-sizing: border-box;">
+                        <div class="mgr-editor-header" style="margin-bottom: 16px; border-radius: 10px; border: 1px solid #1E293B; background: #0F172A;">
+                            <div class="mgr-meta-left" style="gap: 8px;">
+                                <span id="mgr-report-subject" class="subject-badge law">관계법규</span>
+                                <span id="mgr-report-title-badge" style="font-size: 0.88rem; font-weight: 800; color: #F8FAFC;">08월30일 19:50_관리실무_실전모의고사</span>
+                                <span id="mgr-report-score-badge" style="font-size: 0.78rem; font-weight: 800; padding: 2px 8px; border-radius: 4px; background: rgba(52,211,153,0.15); color: #34D399; border: 1px solid rgba(52,211,153,0.3);">85점 (맞춤 34 / 틀림 6)</span>
+                            </div>
+                            <div class="mgr-meta-actions" style="gap: 6px;">
+                                <button type="button" id="mgr-report-btn-copy" class="mgr-act-btn" style="color: #38BDF8; border-color: rgba(56,189,248,0.3); background: rgba(56,189,248,0.1);" title="이 보고서 내용을 AI 과외 프롬프트로 복사">
+                                    <i class="fa-solid fa-copy"></i> AI 복사
+                                </button>
+                                <button type="button" id="mgr-report-btn-download" class="mgr-act-btn" style="color: #34D399; border-color: rgba(52,211,153,0.3); background: rgba(52,211,153,0.1);" title="마크다운(.md) 파일로 다운로드">
+                                    <i class="fa-solid fa-file-arrow-down"></i> MD 다운로드
+                                </button>
+                                <button type="button" id="mgr-report-btn-delete" class="mgr-act-btn btn-danger-soft" title="이 오답 과외 보고서 삭제">
+                                    <i class="fa-solid fa-trash-can text-rose-400"></i> 삭제
+                                </button>
+                            </div>
+                        </div>
+                        <div id="mgr-report-markdown-content" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 20px; color: #E2E8F0; line-height: 1.7; font-size: 0.92rem; white-space: pre-wrap; word-break: break-word; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, monospace;"></div>
+                    </div>
+                </main>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Sticky Bottom Controller (Quiz Mode) -->
+    <footer id="quiz-bottom-controls" class="quiz-controls">
+        <div class="controls-content">
+            <button id="btn-prev-q" class="btn-ctrl"><i class="fa-solid fa-chevron-left"></i> 이전</button>
+            <button id="btn-toggle-exp" class="btn-ctrl"><i class="fa-solid fa-lightbulb text-amber-400"></i> 정답·해설 (Space)</button>
+            <button id="btn-next-q" class="btn-ctrl btn-primary">다음 <i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+    </footer>
+
+    <!-- MODALS -->
+
+    <!-- OMR Sheet Modal -->
+    <div id="modal-omr" class="modal-overlay">
+        <div class="modal-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <h3 style="font-size: 1.15rem; font-weight: 800;"><i class="fa-solid fa-table-cells text-sky-400"></i> 실전 OMR 마킹 시트</h3>
+                <button class="btn-close-modal btn-icon"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">문항 번호를 클릭하면 해당 문제로 즉시 이동합니다.</p>
+            <div id="omr-grid-container" class="omr-grid"></div>
+        </div>
+    </div>
+
+    <!-- Download Mock MD Modal -->
+    <div id="modal-download-md" class="modal-overlay">
+        <div class="modal-card" style="max-width: 580px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <h3 style="font-size: 1.25rem; font-weight: 800; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-file-arrow-down text-emerald-400"></i> 실전 모의고사 MD 내려받기
+                </h3>
+                <button class="btn-close-modal btn-icon"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 20px; line-height: 1.6;">
+                실제 시험과 동일한 40문항(기출 배점 비율 100% 반영) 문제지와 상세 해설이 포함된 Markdown(.md) 파일을 다운로드합니다.
+            </p>
+            
+            <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px;">
+                <button type="button" id="btn-dl-md-law" class="md-dl-card-btn">
+                    <div style="display: flex; align-items: center; gap: 14px;">
+                        <span class="md-dl-badge law">관계법규</span>
+                        <div style="text-align: left;">
+                            <div style="font-weight: 800; font-size: 1.05rem; color: #FFF;">관계법규 실전 모의고사 40제 MD</div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px;">객관식 24문항 + 주관식 16문항 / 정답표 및 상세 해설 포함</div>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-download text-sky-400" style="font-size: 1.2rem;"></i>
+                </button>
+
+                <button type="button" id="btn-dl-md-gwanri" class="md-dl-card-btn">
+                    <div style="display: flex; align-items: center; gap: 14px;">
+                        <span class="md-dl-badge gwanri">관리실무</span>
+                        <div style="text-align: left;">
+                            <div style="font-weight: 800; font-size: 1.05rem; color: #FFF;">관리실무 실전 모의고사 40제 MD</div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px;">객관식 24문항 + 주관식 16문항 / 정답표 및 상세 해설 포함</div>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-download text-emerald-400" style="font-size: 1.2rem;"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Part Select Modal -->
+    <div id="modal-part-select" class="modal-overlay">
+        <div class="modal-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <h3 style="font-size: 1.15rem; font-weight: 800;"><i class="fa-solid fa-layer-group text-sky-400"></i> 집중 학습할 파트 선택</h3>
+                <button class="btn-close-modal btn-icon"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">원하는 단원을 선택하면 객관식+주관식 전 문항을 무작위로 완독합니다.</p>
+            <div id="part-list-container" style="display: flex; flex-direction: column; gap: 8px;"></div>
+        </div>
+    </div>
+
+    <!-- PIN Auth Modal (Password: 2834) -->
+    <div id="modal-pin-auth" class="modal-overlay">
+        <div class="modal-card" style="max-width: 380px; text-align: center;">
+            <div style="font-size: 2.2rem; color: #F43F5E; margin-bottom: 12px;">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <h3 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 6px;">보안 PIN 비밀번호 인증</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">문제 수정 및 관리 모드에 접근하려면 관리자 비밀번호(4자리)를 입력하세요.</p>
+
+            <form id="form-pin-auth" onsubmit="return false;" style="display: flex; flex-direction: column; gap: 14px;">
+                <input type="password" id="input-pin-code" class="blank-input" style="text-align: center; font-size: 1.8rem; letter-spacing: 0.35em; font-weight: 900; padding: 12px;" maxlength="4" placeholder="••••" autocomplete="off">
+                <div style="display: flex; gap: 10px;">
+                    <button type="button" class="btn-close-modal btn-ctrl" style="flex: 1; justify-content: center;">취소</button>
+                    <button type="submit" id="btn-submit-pin" class="btn-ctrl btn-primary" style="flex: 1; justify-content: center;">확인</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Wrong & Needs Edit Manager Modal -->
+    <div id="modal-wrong-manager" class="modal-overlay">
+        <div class="modal-card" style="max-width: 820px; max-height: 90vh;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
+                <div>
+                    <h3 style="font-size: 1.25rem; font-weight: 800; display: flex; align-items: center; gap: 8px;">
+                        <i class="fa-solid fa-list-check text-rose-500"></i> 오답 및 수정 필요 관리
+                    </h3>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">
+                        오답 가중치 목록과 태블릿에서 플래그한 수정 필요 문제를 확인·수정합니다.
+                    </p>
+                </div>
+                <button class="btn-close-modal btn-icon"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <!-- Top Level Mode Switcher Tabs -->
+            <div style="display: flex; gap: 8px; margin-bottom: 14px; border-bottom: 1px solid #334155; padding-bottom: 10px; flex-wrap: wrap;">
+                <button id="tab-btn-wrong-list" class="btn-main-tab active" data-tab="wrong">
+                    <i class="fa-solid fa-triangle-exclamation text-rose-400"></i> 오답 리스트 (<span id="cnt-wrong-tab">0</span>)
+                </button>
+                <button id="tab-btn-needs-edit" class="btn-main-tab" data-tab="needs_edit">
+                    <i class="fa-solid fa-flag text-amber-400"></i> 🚩 수정 필요 문제함 (<span id="cnt-needs-edit-tab">0</span>)
+                </button>
+                <button id="tab-btn-custom-edits" class="btn-main-tab" data-tab="custom_edits">
+                    <i class="fa-solid fa-pen-to-square text-emerald-400"></i> ✏️ 수정완료된 문제 (<span id="cnt-custom-edits-tab">0</span>)
+                </button>
+                <button id="tab-btn-search-all" class="btn-main-tab" data-tab="search_all">
+                    <i class="fa-solid fa-magnifying-glass text-sky-400"></i> 🔍 전체 문제 검색·수정
+                </button>
+            </div>
+
+            <!-- Search Input Box -->
+            <div style="margin-bottom: 12px; position: relative;">
+                <input type="text" id="input-wrong-manager-search" class="blank-input" placeholder="🔍 문제 지문, 단원명, 법률 조문, 정답 키워드 검색..." style="width: 100%; padding: 10px 14px 10px 38px; font-size: 0.92rem; border-radius: 10px; background: #0F172A; border: 1.5px solid #334155; color: #FFF;">
+                <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none;"></i>
+            </div>
+
+            <!-- Filter Bar (Subject) -->
+            <div class="wrong-filter-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px;">
+                <div class="filter-tabs" style="display: flex; gap: 6px;">
+                    <button class="btn-filter active" data-subject="all">전체 과목</button>
+                    <button class="btn-filter" data-subject="관계법규">관계법규</button>
+                    <button class="btn-filter" data-subject="관리실무">관리실무</button>
+                </div>
+                <div id="wrong-summary-count" style="font-size: 0.85rem; font-weight: 700; color: #F8FAFC;">
+                    표시 항목: <span class="text-sky-400" id="cnt-total-wrong">0</span>개
+                </div>
+            </div>
+
+            <!-- List Container -->
+            <div id="wrong-items-container" class="wrong-items-list" style="display: flex; flex-direction: column; gap: 10px; max-height: 55vh; overflow-y: auto;">
+                <!-- Dynamically rendered list items -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Question Detail Preview Modal -->
+    <div id="modal-question-preview" class="modal-overlay">
+        <div class="modal-card" style="max-width: 750px; max-height: 90vh; overflow-y: auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span id="prev-q-subject-badge" class="weight-badge" style="background: rgba(56,189,248,0.15); color: #38BDF8;">관계법규</span>
+                    <span id="prev-q-chapter-text" style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted);">총칙</span>
+                </div>
+                <button class="btn-close-modal btn-icon"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <h3 id="prev-q-title" style="font-size: 1.15rem; font-weight: 700; line-height: 1.6; margin-bottom: 14px; color: #FFF;"></h3>
+            <div id="prev-q-passage" class="passage-box" style="display: none; margin-bottom: 16px;"></div>
+            <div id="prev-q-options" class="options-list" style="margin-bottom: 16px;"></div>
+            <div id="prev-q-subjective" class="subjective-container" style="display: none; margin-bottom: 16px;"></div>
+
+            <div class="explanation-card" style="display: block; margin-top: 14px;">
+                <div class="exp-title" style="margin-bottom: 8px;"><i class="fa-solid fa-lightbulb text-amber-400"></i> 정답 및 상세 해설</div>
+                <div id="prev-q-answer-box" class="exp-answer-box" style="margin-bottom: 10px;"></div>
+                <div id="prev-q-explanation" class="exp-body" style="margin-bottom: 10px;"></div>
+                <div id="prev-q-tip-box" class="tip-box" style="display: none;"></div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 20px;">
+                <button type="button" id="btn-edit-from-preview" class="btn-ctrl btn-primary">
+                    <i class="fa-solid fa-pen-to-square"></i> 문제 수정
+                </button>
+                <button type="button" class="btn-close-modal btn-ctrl">닫기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Problem Edit Modal (Custom Question Override) -->
+    <div id="modal-edit-question" class="modal-overlay">
+        <div class="modal-card" style="max-width: 650px; max-height: 90vh; overflow-y: auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                <h3 style="font-size: 1.15rem; font-weight: 800;">
+                    <i class="fa-solid fa-pen-to-square text-sky-400"></i> 문제·정답·해설 직접 수정
+                </h3>
+                <button class="btn-close-modal btn-icon"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">
+                개정 법령 반영 또는 오탈자가 있는 경우 직접 수정하여 브라우저에 영구 저장할 수 있습니다.
+            </p>
+
+            <form id="form-edit-question">
+                <input type="hidden" id="edit-q-key">
+                
+                <div class="edit-form-group">
+                    <label class="edit-form-label">문제 지문 (Title)</label>
+                    <textarea id="edit-q-title" class="edit-form-textarea" rows="3" required></textarea>
+                </div>
+
+                <div class="edit-form-group">
+                    <label class="edit-form-label">조건/지문 박스 (Passage - 없을 경우 비워둠)</label>
+                    <textarea id="edit-q-passage" class="edit-form-textarea" rows="3"></textarea>
+                </div>
+
+                <div id="edit-options-group" class="edit-form-group">
+                    <label class="edit-form-label">객관식 보기 (1~5번)</label>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <input type="text" id="edit-opt-1" class="edit-form-input" placeholder="1번 보기">
+                        <input type="text" id="edit-opt-2" class="edit-form-input" placeholder="2번 보기">
+                        <input type="text" id="edit-opt-3" class="edit-form-input" placeholder="3번 보기">
+                        <input type="text" id="edit-opt-4" class="edit-form-input" placeholder="4번 보기">
+                        <input type="text" id="edit-opt-5" class="edit-form-input" placeholder="5번 보기">
+                    </div>
+                </div>
+
+                <div class="edit-form-group">
+                    <label class="edit-form-label">정답 (객관식: 1~5 숫자, 주관식: 키=정답 형태)</label>
+                    <input type="text" id="edit-q-answer" class="edit-form-input" required>
+                </div>
+
+                <div class="edit-form-group">
+                    <label class="edit-form-label">상세 해설</label>
+                    <textarea id="edit-q-explanation" class="edit-form-textarea" rows="4"></textarea>
+                </div>
+
+                <div class="edit-form-group">
+                    <label class="edit-form-label">일타 팁 (선택)</label>
+                    <input type="text" id="edit-q-tip" class="edit-form-input" placeholder="예: 암기 비법 or 관련 조문">
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 20px;">
+                    <button type="button" id="btn-reset-original-q" class="btn-ctrl" style="background: rgba(244,63,94,0.15); border-color: #F43F5E; color: #FDA4AF;">
+                        <i class="fa-solid fa-rotate-left"></i> 원본 복구
+                    </button>
+                    <div style="display: flex; gap: 10px;">
+                        <button type="button" class="btn-close-modal btn-ctrl">취소</button>
+                        <button type="submit" class="btn-ctrl btn-primary">
+                            <i class="fa-solid fa-floppy-disk"></i> 저장하기
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 📄 시험장 지참용 오답노트 A4 2단 인쇄 / PDF 미리보기 모달 -->
+    <div id="modal-a4-print" class="modal-overlay a4-print-overlay">
+        <div class="modal-card a4-print-card">
+            <div class="a4-print-controls no-print">
+                <div class="a4-ctrl-left">
+                    <h3 id="a4-print-title" class="a4-modal-title">
+                        <i class="fa-solid fa-print text-sky-400"></i> 시험장 지참용 A4 오답노트
+                    </h3>
+                    <span id="a4-print-count" class="a4-count-pill">0문제</span>
+                </div>
+                <div class="a4-ctrl-center">
+                    <label class="a4-check-opt">
+                        <input type="checkbox" id="a4-opt-show-exp" checked>
+                        <span>상세 해설 포함</span>
+                    </label>
+                    <label class="a4-check-opt">
+                        <input type="checkbox" id="a4-opt-mask-ans">
+                        <span>정답 가리기 (테스트용)</span>
+                    </label>
+                </div>
+                <div class="a4-ctrl-right">
+                    <button type="button" id="btn-trigger-a4-print" class="btn-ctrl btn-primary" style="padding: 8px 18px; font-size: 0.88rem; font-weight: 700;">
+                        <i class="fa-solid fa-print"></i> 인쇄 / PDF 저장
+                    </button>
+                    <button type="button" class="btn-close-modal btn-icon"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+            </div>
+            <div id="a4-print-paper-scroll" class="a4-print-paper-scroll">
+                <div id="a4-print-paper" class="a4-print-paper">
+                    <div id="a4-print-header" class="a4-sheet-header">
+                        <!-- Dynamic Title, Date, Subtitle -->
+                    </div>
+                    <div id="a4-print-content" class="a4-columns">
+                        <!-- 2-column questions dynamically injected -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🎲 4-Second Random Exam Loading Overlay Modal -->
+    <div id="modal-exam-loading" class="exam-loading-overlay" title="화면을 터치하면 바로 시작됩니다">
+        <div class="exam-loading-card">
+            <h3 id="loading-title" class="loading-title">🎲 문제 세트를 생성하는 중...</h3>
+            
+            <!-- Animated Dynamic Stage (Theme Swapped via JS) -->
+            <div id="loading-stage-container" class="loading-anim-stage">
+                <!-- Injected via JS -->
+            </div>
+
+            <!-- Humorous / Motivational Progress Subtitle -->
+            <p id="loading-subtext" class="loading-subtext">3,959개 기출·모의고사 문제은행을 믹싱하고 있습니다...</p>
+
+            <!-- Realtime Progress Bar -->
+            <div class="loading-progress-track">
+                <div id="loading-progress-bar" class="loading-progress-fill"></div>
+            </div>
+
+            <div class="loading-skip-hint">
+                <i class="fa-solid fa-hand-pointer"></i> 화면을 터치하면 즉시 입장합니다
+            </div>
+        </div>
+    </div>
+
+    <!-- High-Performance GPU Celebration Canvas (Zero-DOM 120FPS) -->
+    <canvas id="celebration-canvas" style="position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 99999; display: none;"></canvas>
+
+    <!-- Toast Notification -->
+    <div id="toast-msg" class="toast-msg">알림 메시지</div>
+
+    <!-- Firebase SDK (Compat) for Realtime Cloud Sync (Local Offline-First) -->
+    <script src="js/libs/firebase-app-compat.js"></script>
+    <script src="js/libs/firebase-firestore-compat.js"></script>
+    <script src="js/cloud-sync.js?v=2609142000"></script>
+
+    <!-- Master Exam Data Bundle (3,959 Questions) -->
+    <script src="data/exam_bank.js?v=2609142000"></script>
+
+    <!-- Core Keywords 300 DB (관계법규 300 + 관리실무 300) -->
+    <script src="data/core_keywords_db.js?v=2609142000"></script>
+
+    <!-- IndexedDB Storage Engine -->
+    <script src="js/idb-store.js?v=2609142000"></script>
+
+    <!-- Master Application Script -->
+    <script src="js/app.js?v=2609142000"></script>
+</body>
+</html>

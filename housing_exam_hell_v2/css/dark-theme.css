@@ -1,0 +1,157 @@
+/* ==========================================================================
+   Housing Exam Hell V2 - Obsidian Glass 2.0 Luxury Design System
+   Target: Commercial Grade (1,000,000 KRW Value) UI & Lenovo 90Hz Zero-Lag Engine
+   ========================================================================== */
+
+:root {
+    /* 🌌 Deep OLED Obsidian Surface Tokens */
+    --bg-base: #06080F;
+    --bg-surface: rgba(13, 19, 33, 0.82);
+    --bg-surface-elevated: rgba(20, 28, 48, 0.90);
+    --bg-surface-subtle: rgba(17, 24, 39, 0.55);
+    --bg-surface-hover: rgba(30, 42, 69, 0.85);
+    --bg-input: rgba(8, 12, 22, 0.95);
+    
+    /* 💎 Precision Border & Glass Highlight System */
+    --border-subtle: rgba(255, 255, 255, 0.08);
+    --border-medium: rgba(255, 255, 255, 0.14);
+    --border-highlight: rgba(255, 255, 255, 0.22);
+    --glass-inset: inset 0 1px 0 rgba(255, 255, 255, 0.12), inset 0 -1px 0 rgba(0, 0, 0, 0.4);
+    --glass-inset-glow: inset 0 1px 1px rgba(255, 255, 255, 0.2);
+
+    /* 🖋️ Typography & Legibility Hierarchy */
+    --text-pure: #FFFFFF;
+    --text-main: #F1F5F9;
+    --text-muted: #94A3B8;
+    --text-dim: #64748B;
+    --text-highlight: #38BDF8;
+
+    /* ⚡ Subject Palettes (Default: 관계법규 Electric Cyber Sapphire) */
+    --theme-primary: #38BDF8;
+    --theme-primary-hover: #0EA5E9;
+    --theme-gradient: linear-gradient(135deg, #38BDF8 0%, #0284C7 100%);
+    --theme-glow: rgba(56, 189, 248, 0.35);
+    --theme-glow-intense: rgba(56, 189, 248, 0.65);
+    --theme-badge-bg: rgba(56, 189, 248, 0.12);
+    --theme-border: rgba(56, 189, 248, 0.45);
+
+    /* 👑 VIP Masterclass Gold Tokens */
+    --gold-base: #F59E0B;
+    --gold-light: #FDE68A;
+    --gold-dark: #B45309;
+    --gold-gradient: linear-gradient(135deg, #FDE68A 0%, #F59E0B 50%, #D97706 100%);
+    --gold-glow: rgba(245, 158, 11, 0.35);
+    --gold-surface: rgba(36, 26, 9, 0.75);
+    --gold-border: rgba(245, 158, 11, 0.4);
+
+    /* 🟢 Correct & 🔴 Wrong Semantic States */
+    --color-correct: #10B981;
+    --color-correct-glow: rgba(16, 185, 129, 0.4);
+    --color-wrong: #F43F5E;
+    --color-wrong-glow: rgba(244, 63, 94, 0.45);
+    --color-warn: #F59E0B;
+    --color-purple: #A855F7;
+
+    /* 🏎️ Spaced Repetition Gemstone Glows */
+    --glow-w1: rgba(255, 255, 255, 0.05);
+    --glow-w2: rgba(245, 158, 11, 0.3);
+    --glow-w4: rgba(249, 115, 22, 0.45);
+    --glow-w6: rgba(244, 63, 94, 0.6);
+    --glow-w10: rgba(239, 68, 68, 0.85);
+
+    /* 📦 High-Performance Layer Shadows (GPU Compositing Friendly) */
+    --shadow-card: 0 16px 40px -12px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.06);
+    --shadow-floating: 0 20px 48px -10px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.1);
+    --shadow-button: 0 4px 14px rgba(0, 0, 0, 0.35);
+
+    /* ⏱️ 90Hz Performance Frame Timing */
+    --ease-tactile: cubic-bezier(0.16, 1, 0.3, 1);
+    --duration-snap: 120ms;
+    --duration-fluid: 220ms;
+}
+
+/* 🌿 공동주택관리실무 (Imperial Emerald Theme Override) */
+body[data-subject="관리실무"] {
+    --theme-primary: #10B981;
+    --theme-primary-hover: #059669;
+    --theme-gradient: linear-gradient(135deg, #34D399 0%, #059669 100%);
+    --theme-glow: rgba(16, 185, 129, 0.35);
+    --theme-glow-intense: rgba(16, 185, 129, 0.65);
+    --theme-badge-bg: rgba(16, 185, 129, 0.12);
+    --theme-border: rgba(16, 185, 129, 0.45);
+    --text-highlight: #34D399;
+}
+
+/* ==========================================================================
+   Global Reset & Anti-Aliased Rendering
+   ========================================================================== */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html {
+    font-size: 16px;
+    height: 100%;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Pretendard Variable", Pretendard, "Inter", "Noto Sans KR", system-ui, sans-serif;
+    background-color: var(--bg-base);
+    color: var(--text-main);
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    letter-spacing: -0.015em;
+    position: relative;
+}
+
+/* 🌌 Ambient Luxury Glow Layer (Top-centered radial gradient mesh) */
+body::before {
+    content: '';
+    position: fixed;
+    top: -20vh;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 140vw;
+    height: 60vh;
+    background: radial-gradient(ellipse at center, rgba(14, 165, 233, 0.08) 0%, rgba(6, 8, 15, 0) 70%);
+    pointer-events: none;
+    z-index: 0;
+    will-change: transform;
+}
+
+body[data-subject="관리실무"]::before {
+    background: radial-gradient(ellipse at center, rgba(16, 185, 129, 0.08) 0%, rgba(6, 8, 15, 0) 70%);
+}
+
+/* ==========================================================================
+   ⚡ 90Hz Lenovo TB335FC Low-Latency S-Pen Protection Engine
+   When stylus is drawing, suspend all heavy background blurs and animations!
+   ========================================================================== */
+body.stylus-mode-active .app-header,
+body.stylus-mode-active .quiz-card,
+body.stylus-mode-active .timer-badge,
+body.stylus-mode-active .passage-box,
+body.stylus-mode-active .option-item {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    transition: none !important;
+    animation: none !important;
+}
+
+/* Tabular figures for numbers to eliminate jitter */
+.timer-badge,
+.q-badge,
+.blood-score-text,
+.stat-val,
+.score-number {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+}
