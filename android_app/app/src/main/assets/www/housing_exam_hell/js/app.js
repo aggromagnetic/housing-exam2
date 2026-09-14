@@ -2771,6 +2771,7 @@
                 editQuestion: document.getElementById('modal-edit-question'),
                 downloadMd: document.getElementById('modal-download-md'),
                 a4Print: document.getElementById('modal-a4-print'),
+                a4RangeSelect: document.getElementById('modal-a4-range-select'),
                 questionPreview: document.getElementById('modal-question-preview'),
                 omrGrid: document.getElementById('omr-grid-container'),
                 partList: document.getElementById('part-list-container'),
@@ -2827,7 +2828,7 @@
             if (elements.body) elements.body.classList.add('manager-mode');
             if (appContainer) appContainer.classList.add('manager-active');
             if (elements.header.modeTitle) {
-                const semver = window.APP_SEMVER || 'v.0.260914.1740';
+                const semver = window.APP_SEMVER || 'v.0.260914.1815';
                 elements.header.modeTitle.innerHTML = `<i class="fa-solid fa-layer-group text-rose-500"></i> 오답 관리 & 전체 문제 에디터 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">${semver}</span>`;
             }
         } else {
@@ -2862,7 +2863,7 @@
             state.mode = 'home';
             clearInterval(state.timerInterval);
             if (elements.header.modeTitle) {
-                const semver = window.APP_SEMVER || 'v.0.260914.1740';
+                const semver = window.APP_SEMVER || 'v.0.260914.1815';
                 elements.header.modeTitle.innerHTML = `<i class="fa-solid fa-fire text-amber-500"></i> 주관사 2차 문제지옥 <span class="version-tag" style="font-size: 0.68rem; font-weight: 600; color: #94A3B8; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1);">${semver}</span>`;
             }
             if (elements.header.timerBadge) {
@@ -4858,6 +4859,176 @@
     }
 
     /**
+     * 📄 시험장 지참용 오답노트 A4 인쇄 범위 선택 모달
+     */
+    function openA4RangeSelectModal() {
+        const modal = document.getElementById('modal-a4-range-select');
+        if (!modal) return;
+
+        const { allPool } = getManagerPools();
+        const allWrong = allPool.filter(q => {
+            const stat = state.statsMap[q.qKey];
+            return stat && stat.wrongCount > 0;
+        });
+
+        if (allWrong.length === 0) {
+            showToast('인쇄할 오답 문제가 없습니다.');
+            return;
+        }
+
+        let currentSubj = state.managerFilter || 'all';
+
+        // 과목 버튼 이벤트 바인딩
+        const subjButtons = modal.querySelectorAll('.a4-sub-btn');
+        subjButtons.forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.subj === currentSubj);
+            btn.onclick = () => {
+                subjButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentSubj = btn.dataset.subj;
+                updateCounts();
+            };
+        });
+
+        // 라디오 카드 클릭 인터랙션
+        const optionCards = modal.querySelectorAll('.a4-range-option');
+        optionCards.forEach(card => {
+            card.onclick = (e) => {
+                const radio = card.querySelector('input[type="radio"]');
+                if (radio && e.target !== radio) {
+                    radio.checked = true;
+                }
+                syncOptionStyles();
+            };
+        });
+
+        function syncOptionStyles() {
+            optionCards.forEach(c => {
+                const r = c.querySelector('input[type="radio"]');
+                const isChecked = !!(r && r.checked);
+                c.classList.toggle('selected', isChecked);
+                c.style.background = isChecked ? 'rgba(56, 189, 248, 0.08)' : 'rgba(255, 255, 255, 0.03)';
+                c.style.borderColor = isChecked ? '#38BDF8' : 'rgba(255, 255, 255, 0.1)';
+            });
+        }
+
+        // 기본값: Top 50 선택
+        const defaultRadio = modal.querySelector('input[value="top50"]');
+        if (defaultRadio) {
+            defaultRadio.checked = true;
+        }
+        syncOptionStyles();
+
+        const now = Date.now();
+        const oneDayMs = 24 * 60 * 60 * 1000;
+        const twoDaysMs = 48 * 60 * 60 * 1000;
+
+        function updateCounts() {
+            let filtered = allWrong;
+            if (currentSubj !== 'all') {
+                filtered = filtered.filter(q => q.subject === currentSubj);
+            }
+
+            const todayWrong = filtered.filter(q => {
+                const stat = state.statsMap[q.qKey];
+                const t = getStatTime(stat);
+                return (now - t) <= oneDayMs;
+            });
+
+            const recent2Wrong = filtered.filter(q => {
+                const stat = state.statsMap[q.qKey];
+                const t = getStatTime(stat);
+                return (now - t) <= twoDaysMs;
+            });
+
+            const elTotal = document.getElementById('a4-range-total-count');
+            const elToday = document.getElementById('a4-range-cnt-today');
+            const elRecent2 = document.getElementById('a4-range-cnt-recent2');
+            const elAll = document.getElementById('a4-range-cnt-all');
+
+            if (elTotal) elTotal.textContent = `${filtered.length}문항`;
+            if (elToday) elToday.textContent = todayWrong.length;
+            if (elRecent2) elRecent2.textContent = recent2Wrong.length;
+            if (elAll) elAll.textContent = filtered.length;
+        }
+
+        updateCounts();
+
+        // 닫기 버튼
+        modal.querySelectorAll('.btn-close-modal').forEach(btn => {
+            btn.onclick = () => modal.classList.remove('active');
+        });
+
+        // 모달 확인 버튼
+        const btnSubmit = document.getElementById('btn-submit-a4-range');
+        if (btnSubmit) {
+            btnSubmit.onclick = () => {
+                const selectedRadio = modal.querySelector('input[name="a4-range-choice"]:checked');
+                const choice = selectedRadio ? selectedRadio.value : 'top50';
+
+                let pool = [...allWrong];
+                if (currentSubj !== 'all') {
+                    pool = pool.filter(q => q.subject === currentSubj);
+                }
+
+                // 오답 횟수 & 가중치 내림차순 정렬
+                pool.sort((a, b) => {
+                    const statA = state.statsMap[a.qKey] || {};
+                    const statB = state.statsMap[b.qKey] || {};
+                    const countA = statA.totalWrongCount || statA.wrongCount || 0;
+                    const countB = statB.totalWrongCount || statB.wrongCount || 0;
+                    if (countB !== countA) return countB - countA;
+                    const wA = statA.weight || 1;
+                    const wB = statB.weight || 1;
+                    return wB - wA;
+                });
+
+                let selectedQuestions = [];
+                let titlePrefix = '취약 오답 Top 50';
+
+                if (choice === 'top50') {
+                    selectedQuestions = pool.slice(0, 50);
+                    titlePrefix = '최다 취약 오답 Top 50';
+                } else if (choice === 'top30') {
+                    selectedQuestions = pool.slice(0, 30);
+                    titlePrefix = '시험장 직전 초압축 Top 30';
+                } else if (choice === 'today') {
+                    selectedQuestions = pool.filter(q => {
+                        const stat = state.statsMap[q.qKey];
+                        const t = getStatTime(stat);
+                        return (now - t) <= oneDayMs;
+                    });
+                    titlePrefix = '오늘 푼 취약 오답 총정리';
+                } else if (choice === 'recent2') {
+                    selectedQuestions = pool.filter(q => {
+                        const stat = state.statsMap[q.qKey];
+                        const t = getStatTime(stat);
+                        return (now - t) <= twoDaysMs;
+                    });
+                    titlePrefix = '최근 2일간 취약 오답 총정리';
+                } else {
+                    selectedQuestions = pool;
+                    titlePrefix = '전체 누적 오답 총정리';
+                }
+
+                if (selectedQuestions.length === 0) {
+                    showToast('선택한 범위에 해당하는 오답 문항이 없습니다.');
+                    return;
+                }
+
+                modal.classList.remove('active');
+                const subjTitle = currentSubj === 'all' ? '전 과목' : currentSubj;
+                openA4PrintView({
+                    title: `주택관리사 2차 ${titlePrefix} (${subjTitle})`,
+                    questions: selectedQuestions
+                });
+            };
+        }
+
+        modal.classList.add('active');
+    }
+
+    /**
      * 📄 시험장 지참용 오답노트 A4 2단 인쇄 / PDF 뷰어
      */
     function openA4PrintView({ title = '시험장 지참용 오답 총정리 노트', questions = [] }) {
@@ -5061,11 +5232,84 @@
             };
         }
 
-        // 7. Print Trigger Button
+        // 7. Print Trigger Button (Android PrintManager Bridge or window.print)
         const btnPrint = document.getElementById('btn-trigger-a4-print');
         if (btnPrint) {
             btnPrint.onclick = () => {
-                window.print();
+                const cleanTitle = title.replace(/[\/\\:*?"<>|]/g, '_');
+                if (window.AndroidBridge && typeof window.AndroidBridge.printA4Document === 'function') {
+                    window.AndroidBridge.printA4Document(cleanTitle);
+                } else {
+                    window.print();
+                }
+            };
+        }
+
+        // 7-1. Standalone HTML Offline Export Button
+        const btnDownloadHtml = document.getElementById('btn-download-a4-html');
+        if (btnDownloadHtml) {
+            btnDownloadHtml.onclick = () => {
+                const cleanTitle = title.replace(/[\/\\:*?"<>|]/g, '_');
+                const paperHtml = paperEl ? paperEl.innerHTML : '';
+                const isHideExp = paperEl && paperEl.classList.contains('hide-explanations');
+                const isMaskAns = paperEl && paperEl.classList.contains('mask-answers');
+                const fullHtml = `<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${escapeHtml(cleanTitle)}</title>
+<style>
+@page { size: A4 portrait; margin: 10mm 12mm 12mm 12mm; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Pretendard", "Noto Sans KR", sans-serif; background: #f8fafc; color: #0f172a; margin: 0; padding: 20px; font-size: 9pt; }
+.a4-print-paper { max-width: 210mm; margin: 0 auto; background: #ffffff; padding: 15mm 15mm; box-shadow: 0 4px 16px rgba(0,0,0,0.1); border-radius: 8px; }
+@media print { body { background: #fff; padding: 0; } .a4-print-paper { box-shadow: none; padding: 0; border-radius: 0; } }
+.sheet-title { font-size: 14pt; font-weight: 800; margin: 0 0 4px 0; color: #0284c7; }
+.sheet-meta { font-size: 8pt; color: #64748b; }
+.sheet-stats { text-align: right; font-size: 8.5pt; color: #334155; }
+.a4-sheet-header { display: flex; justify-content: space-between; align-items: flex-end; padding-bottom: 8px; border-bottom: 2px solid #0284c7; margin-bottom: 12px; }
+.a4-columns { column-count: 2; column-gap: 16px; column-rule: 1px dashed #cbd5e1; }
+.a4-q-item { break-inside: avoid; page-break-inside: avoid; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 0.5px solid #e2e8f0; font-size: 8.5pt; line-height: 1.45; }
+.a4-q-header { display: flex; align-items: center; gap: 4px; margin-bottom: 3px; font-size: 7.5pt; }
+.a4-badge-num { font-weight: 800; color: #0284c7; font-size: 9pt; }
+.a4-badge-subj { padding: 1px 4px; border-radius: 3px; font-weight: 700; }
+.a4-badge-subj.law { background: #e0f2fe; color: #0369a1; }
+.a4-badge-subj.gwanri { background: #dcfce7; color: #15803d; }
+.a4-badge-wrong { background: #ffe4e6; color: #e11d48; padding: 1px 4px; border-radius: 3px; font-weight: 700; }
+.a4-badge-chap { background: #f1f5f9; color: #475569; padding: 1px 4px; border-radius: 3px; }
+.a4-badge-core { background: #ffedd5; color: #c2410c; padding: 1px 4px; border-radius: 3px; font-weight: 700; }
+.a4-q-title { font-weight: 700; color: #0f172a; margin-bottom: 4px; line-height: 1.4; word-break: keep-all; }
+.a4-passage-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; padding: 6px 8px; font-size: 7.8pt; line-height: 1.4; margin-bottom: 4px; }
+.a4-options-list { margin: 4px 0 6px 0; }
+.a4-option-row { display: flex; gap: 4px; margin-bottom: 2px; }
+.a4-option-num { font-weight: 700; color: #64748b; min-width: 14px; }
+.a4-sa-blanks-box { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; padding: 4px 6px; border-radius: 4px; font-size: 7.5pt; font-weight: 600; margin-bottom: 4px; }
+.a4-ans-exp-box { background: #f8fafc; border-left: 2.5px solid #0284c7; padding: 4px 6px; margin-top: 4px; font-size: 7.8pt; }
+.a4-ans-row { display: flex; align-items: center; gap: 6px; font-weight: 700; color: #0284c7; }
+.a4-ans-tag { background: #0284c7; color: #fff; padding: 0 4px; border-radius: 2px; font-size: 7pt; }
+.a4-ans-val { color: #b91c1c; font-size: 8.5pt; font-weight: 800; }
+.a4-exp-box { margin-top: 3px; color: #334155; line-height: 1.4; }
+.a4-tip-box { margin-top: 3px; background: #fffbeb; border: 1px solid #fef3c7; color: #92400e; padding: 3px 5px; border-radius: 3px; font-size: 7.3pt; }
+.hide-explanations .a4-ans-exp-box { display: none !important; }
+.mask-answers .a4-ans-val { background: #cbd5e1 !important; color: transparent !important; user-select: none; border-radius: 2px; }
+</style>
+</head>
+<body>
+<div class="a4-print-paper ${isHideExp ? 'hide-explanations' : ''} ${isMaskAns ? 'mask-answers' : ''}">
+${paperHtml}
+</div>
+</body>
+</html>`;
+                const blob = new Blob([fullHtml], { type: 'text/html;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${cleanTitle}.html`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                showToast(`📥 [${cleanTitle}.html] 파일이 저장되었습니다!`);
             };
         }
 
@@ -6575,6 +6819,10 @@
 
         if (elements.manager.btnPrintA4) {
             elements.manager.btnPrintA4.addEventListener('click', () => {
+                if (state.managerTab === 'wrong') {
+                    openA4RangeSelectModal();
+                    return;
+                }
                 const questionsToPrint = (state.managerCurrentList && state.managerCurrentList.length > 0)
                     ? state.managerCurrentList
                     : [];
@@ -6583,8 +6831,7 @@
                     return;
                 }
                 const subTitle = state.managerFilter === 'all' ? '전 과목' : state.managerFilter;
-                const tabTitle = state.managerTab === 'wrong' ? '취약 오답 총정리' :
-                                 state.managerTab === 'needs_edit' ? '수정 필요 문항 정리' :
+                const tabTitle = state.managerTab === 'needs_edit' ? '수정 필요 문항 정리' :
                                  state.managerTab === 'custom_edits' ? '수정 완료 문항 정리' : '핵심 문항 정리';
                 openA4PrintView({
                     title: `주택관리사 2차 ${tabTitle} (${subTitle})`,
